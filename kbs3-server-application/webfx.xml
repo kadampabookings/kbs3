@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <exported-packages>
+        <source-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+
+        <!-- Allow configuration variables from environment and conf folder in Java executables (Vert.x) -->
+        <plugin-module executable-target="java">webfx-stack-conf-env-java</plugin-module>
+        <plugin-module executable-target="java">webfx-stack-conf-file-java</plugin-module>
+
+        <plugin-module>modality-base-server-application-all</plugin-module>
+        <plugin-module>modality-crm-server-application-all</plugin-module>
+        <plugin-module>modality-ecommerce-server-application-all</plugin-module>
+
+        <plugin-module>kbs3-server-podcastsimport</plugin-module>
+        <plugin-module>kbs3-server-newsimport</plugin-module>
+
+    </dependencies>
+</project>
