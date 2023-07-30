@@ -41,6 +41,7 @@
         <module>kbs3-backoffice-application-gluon</module>
         <module>kbs3-backoffice-application-gwt</module>
         <module>kbs3-backoffice-application-openjfx</module>
+        <module>kbs3-frontoffice-activities-home</module>
         <module>kbs3-frontoffice-application</module>
         <module>kbs3-frontoffice-application-gluon</module>
         <module>kbs3-frontoffice-application-gwt</module>

@@ -80,6 +80,13 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
+            <artifactId>kbs3-frontoffice-activities-home</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kadampabookings</groupId>
             <artifactId>kbs3-frontoffice-application</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -179,13 +186,6 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-frontoffice-activities-alerts</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>one.modality</groupId>
-            <artifactId>modality-base-frontoffice-activities-home</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>

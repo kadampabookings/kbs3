@@ -87,6 +87,11 @@
     <inherits name="com.google.gwt.user.User"/>
     <!--=================================< java-nio-emul >==================================-->
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
+    <!--========================< kbs3-frontoffice-activities-home >========================-->
+    <source path="org/kadampabookings/kbs3/frontoffice/activities/home"/>
+    <source path="org/kadampabookings/kbs3/frontoffice/activities/home/routing"/>
+    <source path="org/kadampabookings/kbs3/frontoffice/activities/home/views"/>
+    <source path="org/kadampabookings/kbs3/frontoffice/operations/routes/home"/>
     <!--==========================< kbs3-frontoffice-application >==========================-->
     <source path="org/kadampabookings/kbs/frontoffice"/>
     <!--=========================< modality-base-client-activity >==========================-->
@@ -178,11 +183,6 @@
     <source path="one/modality/base/frontoffice/activities/alerts"/>
     <source path="one/modality/base/frontoffice/activities/alerts/routing"/>
     <source path="one/modality/base/frontoffice/operations/routes/alerts"/>
-    <!--===================< modality-base-frontoffice-activities-home >====================-->
-    <source path="one/modality/base/frontoffice/activities/home"/>
-    <source path="one/modality/base/frontoffice/activities/home/routing"/>
-    <source path="one/modality/base/frontoffice/activities/home/views"/>
-    <source path="one/modality/base/frontoffice/operations/routes/home"/>
     <!--=======================< modality-base-frontoffice-utility >========================-->
     <source path="one/modality/base/frontoffice/entities"/>
     <source path="one/modality/base/frontoffice/fx"/>
