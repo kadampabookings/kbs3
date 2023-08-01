@@ -2,7 +2,7 @@ package org.kadampabookings.kbs.backoffice;
 
 import one.modality.base.backoffice.controls.masterslave.MasterSlaveView;
 import one.modality.base.client.application.ModalityClientStarterActivity;
-import one.modality.crm.backoffice2018.controls.bookingdetailspanel.BookingDetailsPanel;
+import one.modality.crm.backoffice.controls.bookingdetailspanel.BookingDetailsPanel;
 
 /**
  * @author Bruno Salmon
