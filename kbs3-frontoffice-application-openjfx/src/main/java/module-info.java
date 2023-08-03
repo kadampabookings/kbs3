@@ -45,7 +45,7 @@ module kbs3.frontoffice.application.openjfx {
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.conf.openjfx;
 
-    // Meta Resource package
+    // Resources packages
     opens dev.webfx.platform.meta.exe;
 
     // Provided services
