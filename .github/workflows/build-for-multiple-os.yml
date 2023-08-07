@@ -90,6 +90,7 @@ jobs:
       web-push-repository-owner: ${{ github.repository_owner }}
       web-push-username: ${{ github.actor }}
       web-push-email: ${{ secrets.API_GITHUB_EMAIL }}
+      web-push-branch: ${{ matrix.app.web-push-branch }}
       jdk-version: '19'
       xcode-version: '14.2.0'
       API_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
@@ -179,7 +180,7 @@ jobs:
       #                        Updating the Web build branch (will update the live demo)                               #
       ##################################################################################################################
 
-      - if: false && matrix.web-artifact-suffix != null && env.API_GITHUB_TOKEN != '' && ${{ matrix.app.web-push-branch }} != ''
+      - if: matrix.web-artifact-suffix != null && env.API_GITHUB_TOKEN != '' && env.web-push-branch != ''
         name: Push GWT build to ${{ matrix.app.web-push-branch }} branch
         uses: cpina/github-action-push-to-another-repository@master
         env:
