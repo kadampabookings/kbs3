@@ -35,8 +35,8 @@ jobs:
     strategy:
       matrix:
         app: [
-          { name: 'Kbs3BackOffice',  parent-module: "", module-token: 'kbs3-backoffice',  gwt-token: 'kbs3_backoffice',  gluon-token: 'Kbs3Backoffice',  android-package-name: 'org.kadampabookings.backoffice',  android-track: 'beta', ios-bundle-id: 'org.kadampabookings.backoffice',  version: '1.0.0-SNAPSHOT' },
-          { name: 'Kbs3FrontOffice', parent-module: "", module-token: 'kbs3-frontoffice', gwt-token: 'kbs3_frontoffice', gluon-token: 'Kbs3Frontoffice', android-package-name: 'org.kadampabookings.frontoffice', android-track: 'beta', ios-bundle-id: 'org.kadampabookings.frontoffice', version: '1.0.0-SNAPSHOT' }
+          { name: 'Kbs3BackOffice',  parent-module: '', module-token: 'kbs3-backoffice',  gwt-token: 'kbs3_backoffice',  gluon-token: 'Kbs3Backoffice',  web-push-branch: '', android-package-name: 'org.kadampabookings.backoffice',  android-track: 'beta', ios-bundle-id: 'org.kadampabookings.backoffice',  version: '1.0.0-SNAPSHOT' },
+          { name: 'Kbs3FrontOffice', parent-module: '', module-token: 'kbs3-frontoffice', gwt-token: 'kbs3_frontoffice', gluon-token: 'Kbs3Frontoffice', web-push-branch: '', android-package-name: 'org.kadampabookings.frontoffice', android-track: 'beta', ios-bundle-id: 'org.kadampabookings.frontoffice', version: '1.0.0-SNAPSHOT' }
         ]
         os-config:  [1, 2, 3, 4]
         include:
@@ -179,7 +179,7 @@ jobs:
       #                        Updating the Web build branch (will update the live demo)                               #
       ##################################################################################################################
 
-      - if: matrix.web-artifact-suffix != null && env.API_GITHUB_TOKEN != ''
+      - if: matrix.web-artifact-suffix != null && matrix.app.web-push-branch != null && env.API_GITHUB_TOKEN != ''
         name: Push GWT build to ${{ matrix.app.web-push-branch }} branch
         uses: cpina/github-action-push-to-another-repository@master
         env:
