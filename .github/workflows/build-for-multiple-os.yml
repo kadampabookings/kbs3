@@ -181,7 +181,7 @@ jobs:
       ##################################################################################################################
 
       - if: matrix.web-artifact-suffix != null && env.web-push-branch != null && env.API_GITHUB_TOKEN != ''
-        name: Push GWT build to ${{ matrix.app.web-push-branch }} branch
+        name: Push GWT build to ${{ matrix.app.web-push-branch }} branch - condition = ${{ matrix.web-artifact-suffix != null && env.web-push-branch != null && env.API_GITHUB_TOKEN != '' }} - ${{ matrix.web-artifact-suffix != null }} && ${{ env.web-push-branch != null }} && ${{ env.API_GITHUB_TOKEN != ''}}
         uses: cpina/github-action-push-to-another-repository@master
         env:
           API_TOKEN_GITHUB: ${{ env.API_GITHUB_TOKEN }}
