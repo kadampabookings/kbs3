@@ -20,9 +20,9 @@ module kbs3.backoffice.application {
     requires webfx.stack.orm.entity.controls;
 
     // Exported packages
-    exports org.kadampabookings.kbs.backoffice;
+    exports org.kadampabookings.kbs3.backoffice;
 
     // Provided services
-    provides javafx.application.Application with org.kadampabookings.kbs.backoffice.KBSBackOfficeApplication;
+    provides javafx.application.Application with org.kadampabookings.kbs3.backoffice.KBS3BackOfficeApplication;
 
 }

@@ -374,7 +374,7 @@
                         <list>one/modality/base/frontoffice/activities/account/images/[^/]+$</list>
                         <list>one/modality/base/shared/domainmodel/[^/]+$</list>
                     </resourcesList>
-                    <appIdentifier>org.kadampabookings.kbs.frontoffice</appIdentifier>
+                    <appIdentifier>org.kadampabookings.kbs3.frontoffice</appIdentifier>
                     <releaseConfiguration>
                         <!-- macOS/iOS -->
                         <bundleName>Kadampa bookings</bundleName>

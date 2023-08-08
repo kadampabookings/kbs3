@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.backoffice;
+package org.kadampabookings.kbs3.backoffice;
 
 import dev.webfx.extras.theme.layout.FXLayoutMode;
 import dev.webfx.extras.theme.luminance.LuminanceTheme;

@@ -10,7 +10,7 @@
     </dependencies>
 
     <providers>
-        <provider interface="dev.webfx.stack.conf.spi.ConfigurationSupplier">org.kadampabookings.kbs.frontoffice.conf.openjfx.KBSFrontOfficeEnvironmentConfigurationSupplier</provider>
+        <provider interface="dev.webfx.stack.conf.spi.ConfigurationSupplier">org.kadampabookings.kbs3.frontoffice.conf.openjfx.KBSFrontOfficeEnvironmentConfigurationSupplier</provider>
     </providers>
 
 </project>

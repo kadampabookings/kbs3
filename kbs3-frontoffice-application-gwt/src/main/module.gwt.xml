@@ -93,7 +93,7 @@
     <source path="org/kadampabookings/kbs3/frontoffice/activities/home/views"/>
     <source path="org/kadampabookings/kbs3/frontoffice/operations/routes/home"/>
     <!--==========================< kbs3-frontoffice-application >==========================-->
-    <source path="org/kadampabookings/kbs/frontoffice"/>
+    <source path="org/kadampabookings/kbs3/frontoffice"/>
     <!--=========================< modality-base-client-activity >==========================-->
     <source path="one/modality/base/client/activity"/>
     <source path="one/modality/base/client/activity/table"/>

@@ -373,7 +373,7 @@
                         <list>one/modality/base/client/services/i18n/dictionaries/[^/]+$</list>
                         <list>one/modality/base/shared/domainmodel/[^/]+$</list>
                     </resourcesList>
-                    <appIdentifier>org.kadampabookings.kbs.backoffice</appIdentifier>
+                    <appIdentifier>org.kadampabookings.kbs3.backoffice</appIdentifier>
                     <releaseConfiguration>
                         <!-- macOS/iOS -->
                         <bundleName>KBS</bundleName>

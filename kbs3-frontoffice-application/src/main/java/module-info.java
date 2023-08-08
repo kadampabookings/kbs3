@@ -11,9 +11,9 @@ module kbs3.frontoffice.application {
     requires webfx.stack.ui.action;
 
     // Exported packages
-    exports org.kadampabookings.kbs.frontoffice;
+    exports org.kadampabookings.kbs3.frontoffice;
 
     // Provided services
-    provides javafx.application.Application with org.kadampabookings.kbs.frontoffice.KBSFrontOfficeApplication;
+    provides javafx.application.Application with org.kadampabookings.kbs3.frontoffice.KBS3FrontOfficeApplication;
 
 }

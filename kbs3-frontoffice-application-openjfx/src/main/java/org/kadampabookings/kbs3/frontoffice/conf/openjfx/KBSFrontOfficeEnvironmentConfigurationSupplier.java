@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.frontoffice.conf.openjfx;
+package org.kadampabookings.kbs3.frontoffice.conf.openjfx;
 
 import dev.webfx.stack.conf.spi.impl.java.env.EnvironmentConfigurationSupplier;
 

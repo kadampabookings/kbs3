@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project applicationId="org.kadampabookings.kbs.backoffice" applicationLabel="KBS">
+<project applicationId="org.kadampabookings.kbs3.backoffice" applicationLabel="KBS">
 
     <exported-packages>
         <source-packages/>
     </exported-packages>
 
     <providers>
-        <provider interface="javafx.application.Application">org.kadampabookings.kbs.backoffice.KBSBackOfficeApplication</provider>
+        <provider interface="javafx.application.Application">org.kadampabookings.kbs3.backoffice.KBS3BackOfficeApplication</provider>
     </providers>
 
     <dependencies>

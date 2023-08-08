@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.backoffice;
+package org.kadampabookings.kbs3.backoffice;
 
 import one.modality.base.backoffice.controls.masterslave.MasterSlaveView;
 import one.modality.base.client.application.ModalityClientStarterActivity;

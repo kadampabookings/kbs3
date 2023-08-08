@@ -147,7 +147,7 @@
     <!--=================================< java-nio-emul >==================================-->
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
     <!--==========================< kbs3-backoffice-application >===========================-->
-    <source path="org/kadampabookings/kbs/backoffice"/>
+    <source path="org/kadampabookings/kbs3/backoffice"/>
     <!--==================< modality-base-backoffice-activities-filters >===================-->
     <source path="one/modality/base/backoffice/activities/filters"/>
     <source path="one/modality/base/backoffice/activities/filters/routing"/>

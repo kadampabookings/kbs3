@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.frontoffice;
+package org.kadampabookings.kbs3.frontoffice;
 
 import dev.webfx.extras.flexbox.FlexBox;
 import dev.webfx.platform.os.OperatingSystem;

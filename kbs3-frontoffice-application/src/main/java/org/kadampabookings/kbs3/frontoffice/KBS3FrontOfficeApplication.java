@@ -1,13 +1,13 @@
-package org.kadampabookings.kbs.frontoffice;
+package org.kadampabookings.kbs3.frontoffice;
 
 import one.modality.base.client.application.ModalityClientApplication;
 
 /**
  * @author Bruno Salmon
  */
-public class KBSFrontOfficeApplication extends ModalityClientApplication {
+public class KBS3FrontOfficeApplication extends ModalityClientApplication {
 
-    public KBSFrontOfficeApplication() {
+    public KBS3FrontOfficeApplication() {
         super(new ModalityFrontOfficeStarterActivity());
     }
 }

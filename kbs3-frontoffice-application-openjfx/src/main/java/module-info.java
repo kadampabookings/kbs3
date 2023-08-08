@@ -43,12 +43,12 @@ module kbs3.frontoffice.application.openjfx {
     requires webfx.stack.ui.fxraiser.json;
 
     // Exported packages
-    exports org.kadampabookings.kbs.frontoffice.conf.openjfx;
+    exports org.kadampabookings.kbs3.frontoffice.conf.openjfx;
 
     // Resources packages
     opens dev.webfx.platform.meta.exe;
 
     // Provided services
-    provides dev.webfx.stack.conf.spi.ConfigurationSupplier with org.kadampabookings.kbs.frontoffice.conf.openjfx.KBSFrontOfficeEnvironmentConfigurationSupplier;
+    provides dev.webfx.stack.conf.spi.ConfigurationSupplier with org.kadampabookings.kbs3.frontoffice.conf.openjfx.KBSFrontOfficeEnvironmentConfigurationSupplier;
 
 }
