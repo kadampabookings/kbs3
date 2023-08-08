@@ -180,7 +180,7 @@ jobs:
       #                        Updating the Web build branch (will update the live demo)                               #
       ##################################################################################################################
 
-      - if: matrix.web-artifact-suffix != null && env.API_GITHUB_TOKEN != '' && env.web-push-branch != ''
+      - if: matrix.web-artifact-suffix != null && env.web-push-branch != null && env.API_GITHUB_TOKEN != ''
         name: Push GWT build to ${{ matrix.app.web-push-branch }} branch
         uses: cpina/github-action-push-to-another-repository@master
         env:
@@ -189,7 +189,7 @@ jobs:
           source-directory: ${{ env.app-gwt-build-dir }}
           destination-repository-username: ${{ env.web-push-repository-owner }}
           destination-repository-name: ${{ env.web-push-repository-name }}
-          target-branch: ${{ matrix.app.web-push-branch }}
+          target-branch: ${{ env.web-push-branch }}
           destination-github-username: ${{ env.web-push-username }}
           user-email: ${{ env.web-push-email }}
 
