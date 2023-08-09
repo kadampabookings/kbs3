@@ -25,9 +25,9 @@ name: Build for Multiple OS
 
 on:
   push:
-    branches: [ main ]
+    branches: [ staging, prod ]
   pull_request_target:
-    branches: [ main ]
+    branches: [ staging ]
 
 jobs:
   build:
@@ -35,8 +35,8 @@ jobs:
     strategy:
       matrix:
         app: [
-          { name: 'Kbs3BackOffice',  parent-module: '', module-token: 'kbs3-backoffice',  gwt-token: 'kbs3_backoffice',  gluon-token: 'Kbs3Backoffice',  web-push-branch: '', android-package-name: 'org.kadampabookings.backoffice',  android-track: 'beta', ios-bundle-id: 'org.kadampabookings.backoffice',  version: '1.0.0-SNAPSHOT' },
-          { name: 'Kbs3FrontOffice', parent-module: '', module-token: 'kbs3-frontoffice', gwt-token: 'kbs3_frontoffice', gluon-token: 'Kbs3Frontoffice', web-push-branch: '', android-package-name: 'org.kadampabookings.frontoffice', android-track: 'beta', ios-bundle-id: 'org.kadampabookings.frontoffice', version: '1.0.0-SNAPSHOT' }
+          { name: 'KbsBackOffice',  parent-module: '', module-token: 'kbs-backoffice',  gwt-token: 'kbs_backoffice',  gluon-token: 'KbsBackoffice',  web-push-branch: '', android-package-name: 'org.kadampabookings.kbs.backoffice',  android-track: 'beta', ios-bundle-id: 'org.kadampabookings.kbs.backoffice',  version: '1.0.0-SNAPSHOT' },
+          { name: 'KbsFrontOffice', parent-module: '', module-token: 'kbs-frontoffice', gwt-token: 'kbs_frontoffice', gluon-token: 'KbsFrontoffice', web-push-branch: '', android-package-name: 'org.kadampabookings.kbs.frontoffice', android-track: 'beta', ios-bundle-id: 'org.kadampabookings.kbs.frontoffice', version: '1.0.0-SNAPSHOT' }
         ]
         os-config:  [1, 2, 3, 4]
         include:
