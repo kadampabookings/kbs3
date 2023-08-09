@@ -1,5 +1,5 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
-package kbs3.backoffice.application.gwt.embed;
+package kbs.frontoffice.application.gwt.embed;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
