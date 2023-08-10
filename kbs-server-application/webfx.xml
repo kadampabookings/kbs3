@@ -18,6 +18,7 @@
 
         <plugin-module>kbs-server-podcastsimport</plugin-module>
         <plugin-module>kbs-server-newsimport</plugin-module>
+        <plugin-module>kbs-server-kdmimport</plugin-module>
 
     </dependencies>
 </project>
