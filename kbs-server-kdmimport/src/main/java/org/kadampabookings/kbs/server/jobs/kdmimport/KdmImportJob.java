@@ -13,13 +13,15 @@ import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
+import one.modality.base.shared.entities.KdmCenter;
 import one.modality.base.shared.entities.Podcast;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Bruno Salmon
@@ -34,7 +36,7 @@ public class KdmImportJob implements ApplicationJob {
     @Override
     public void onStart() {
         importKdm();
-        importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importKdm);
+        //importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importKdm);
     }
 
     @Override
@@ -43,37 +45,48 @@ public class KdmImportJob implements ApplicationJob {
             importTimer.cancel();
     }
 
+    /*
+    EntityStore.create(dataSourceModel).<KdmCenter>executeQuery("select * from KdmCenter");
+    */
     public void importKdm() {
-        System.out.println("IMPORTING KDM DATA ----------");
 
-        /*
-        Retrieve all json objects
-        Loop through each object
-        If no matching ID then insert
-        If matching iD, then update all fields
-        */
 
         Fetch.fetch(KDM_FETCH_URL)
                 .onFailure(error -> Console.log("Error while fetching " + KDM_FETCH_URL, error))
                 .onSuccess(response -> response.jsonArray()
                         .onFailure(error -> Console.log("Error while parsing json array from " + KDM_FETCH_URL, error))
                         .onSuccess(webKdmJsonArray -> {
+                                    UpdateStore updateStore = UpdateStore.create(dataSourceModel);
                                     for (int i = 0; i < webKdmJsonArray.size(); i++) {
                                         ReadOnlyJsonObject kdmJson = webKdmJsonArray.getObject(i);
-                                        System.out.println(kdmJson.getString("id"));
-                                        // System.out.println(kdmJson.getString("name"));
-                                        //System.out.println(o.getString("address"));
-                                        //System.out.println(o.getString("city"));
-                                        //System.out.println(o.getString("zip"));
-                                        //System.out.println(o.getString("phone"));
-                                        //System.out.println(o.getString("email"));
-                                        //System.out.println(o.getString("website"));
-                                        //System.out.println(o.getString("lat"));
-                                        //System.out.println(o.getString("lng"));
+                                        KdmCenter kdmCenter = updateStore.insertEntity(KdmCenter.class);
+                                        kdmCenter.setKdmId(kdmJson.getInteger("id"));
+                                        kdmCenter.setName(kdmJson.getString("name"));
+                                        kdmCenter.setLat(kdmJson.getDouble("lat").floatValue());
+                                        kdmCenter.setLng(kdmJson.getDouble("lng").floatValue());
+                                        kdmCenter.setType(kdmJson.getString("type"));
+                                        kdmCenter.setMothercenter(kdmJson.getBoolean("mothercenter"));
+                                        kdmCenter.setAddress(kdmJson.getString("address"));
+                                        kdmCenter.setAddress2(kdmJson.getString("address2"));
+                                        kdmCenter.setAddress3(kdmJson.getString("address3"));
+                                        kdmCenter.setCity(kdmJson.getString("city"));
+                                        kdmCenter.setState(kdmJson.getString("state"));
+                                        kdmCenter.setPostal(kdmJson.getString("postal"));
+                                        kdmCenter.setEmail(kdmJson.getString("email"));
+                                        kdmCenter.setPhone(kdmJson.getString("phone"));
+                                        kdmCenter.setPhoto(kdmJson.getString("photo"));
+                                        kdmCenter.setWeb(kdmJson.getString("web"));
+                                        break;
+                                    }
+
+                                    if (updateStore.hasChanges()) {
+                                        updateStore.submitChanges()
+                                                .onFailure(Console::log)
+                                                .onSuccess(updateCount -> Console.log("Imported " + updateCount + " KDM data"));
+                                    } else {
+                                        Console.log("No new KDM data to import");
                                     }
                                 }));
-
-
 
 
         /*
