@@ -27,31 +27,55 @@ import java.util.Objects;
 public class KdmImportJob implements ApplicationJob {
 
     private static final String KDM_FETCH_URL = "https://kdm.kadampaweb.org/index.php/business/json";
-    private static final long IMPORT_PERIODICITY_MILLIS = 1000 * 3600 * 24 * 28; // 4weeks
+    private static final long IMPORT_PERIODICITY_MILLIS = 1000 * 3600 * 24 * 28; // 4x weeks
     private Scheduled importTimer;
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
-    private LocalDateTime fetchAfterParameter;
-
 
     @Override
     public void onStart() {
-        System.out.println("Starting KDM IMPORT----------");
-        /*
         importKdm();
         importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importKdm);
-        */
     }
 
     @Override
     public void onStop() {
-        System.out.println("Stopping KDM IMPORT----------");
-        /*
         if (importTimer != null)
             importTimer.cancel();
-        */
     }
 
     public void importKdm() {
+        System.out.println("IMPORTING KDM DATA ----------");
+
+        /*
+        Retrieve all json objects
+        Loop through each object
+        If no matching ID then insert
+        If matching iD, then update all fields
+        */
+
+        Fetch.fetch(KDM_FETCH_URL)
+                .onFailure(error -> Console.log("Error while fetching " + KDM_FETCH_URL, error))
+                .onSuccess(response -> response.jsonArray()
+                        .onFailure(error -> Console.log("Error while parsing json array from " + KDM_FETCH_URL, error))
+                        .onSuccess(webKdmJsonArray -> {
+                                    for (int i = 0; i < webKdmJsonArray.size(); i++) {
+                                        ReadOnlyJsonObject kdmJson = webKdmJsonArray.getObject(i);
+                                        System.out.println(kdmJson.getString("id"));
+                                        // System.out.println(kdmJson.getString("name"));
+                                        //System.out.println(o.getString("address"));
+                                        //System.out.println(o.getString("city"));
+                                        //System.out.println(o.getString("zip"));
+                                        //System.out.println(o.getString("phone"));
+                                        //System.out.println(o.getString("email"));
+                                        //System.out.println(o.getString("website"));
+                                        //System.out.println(o.getString("lat"));
+                                        //System.out.println(o.getString("lng"));
+                                    }
+                                }));
+
+
+
+
         /*
         // When this job starts, there is no fetchAfterParameter, so we initialize it with the latest podcast date
         // imported so far in the database.
