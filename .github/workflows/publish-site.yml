@@ -2,7 +2,7 @@ name: Build and publish Maven site
 
 on:
   push:
-    branches: [ main ]
+    branches: [ staging ]
 
 jobs:
   site:
@@ -12,7 +12,8 @@ jobs:
       # WebFX requires at least JDK 13 due to javac bugs in prior versions (otherwise JDK 11+ should be enough in theory)
       jdk-version: '19'
       repo-dir: .
-      target-javadoc-dir: './target/staging/kbs3'
+      target-site-dir: './target/staging/kbs3'
+      web-site-url: 'https://site-kbs3.modality.one'
       web-push-repository-name:  'modality-netlify'
       web-push-repository-owner: 'modalityone'
       web-push-branch: 'site-kbs3'
@@ -36,14 +37,14 @@ jobs:
 
       # Build Maven site
       - name: Build Maven site
-        run: mvn -B install site site:stage
+        run: mvn -B -Dplugin.site.param.topSiteURL=${{ env.web-site-url }} install site site:stage
 
       - name: Publish Maven site to ${{ env.web-push-branch }} branch
         uses: cpina/github-action-push-to-another-repository@master
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_GITHUB_TOKEN }}
         with:
-          source-directory: ${{ env.target-javadoc-dir }}
+          source-directory: ${{ env.target-site-dir }}
           destination-repository-username: ${{ env.web-push-repository-owner }}
           destination-repository-name: ${{ env.web-push-repository-name }}
           target-branch: ${{ env.web-push-branch }}
