@@ -10,6 +10,9 @@ import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import one.modality.base.shared.entities.KdmCenter;
+import one.modality.base.shared.entities.Organization;
+
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,7 +48,7 @@ public class KdmImportJob implements ApplicationJob {
                 .onSuccess(response -> response.jsonArray()
 
                         .onFailure(error -> Console.log("Error while parsing json array from " + KDM_FETCH_URL, error))
-                        .onSuccess(webKdmJsonArray -> EntityStore.create(dataSourceModel).<KdmCenter>executeQuery("select id,kdmId from KdmCenter")
+                        .onSuccess(webKdmJsonArray -> EntityStore.create(dataSourceModel).<KdmCenter>executeQuery("select id,kdmId,name,type from KdmCenter")
 
                                 .onFailure(error -> Console.log(error))
                                 .onSuccess(kdmCenters -> {
@@ -53,7 +56,9 @@ public class KdmImportJob implements ApplicationJob {
                                         Set<Integer> kdmIds = kdmCenters.stream().map(KdmCenter::getKdmId).collect(Collectors.toSet());
                                         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
 
-                                        for (int i = 0; i < webKdmJsonArray.size(); i++) {
+                                        // @TODO - restore this
+                                        for (int i = 0; i < 1; i++) {
+                                        // for (int i = 0; i < webKdmJsonArray.size(); i++) {
 
                                             ReadOnlyJsonObject kdmJson = webKdmJsonArray.getObject(i);
                                             int kdmId = kdmJson.getInteger("id");
@@ -107,7 +112,80 @@ public class KdmImportJob implements ApplicationJob {
                                             kdmCenter.setPhoto(kdmJson.getString("photo"));
                                             kdmCenter.setWeb(kdmJson.getString("web"));
                                         }
-                                        updateStore.submitChanges().onFailure(Console::log);
+
+                                        updateStore.submitChanges()
+                                                .onSuccess(result -> synchroniseOrganisations(kdmCenters))
+                                                .onFailure(Console::log);
                                 })));
+    }
+
+    protected void synchroniseOrganisations(dev.webfx.stack.orm.entity.EntityList<KdmCenter> kdmCenters) {
+        Console.log("GOT HERE-----1");
+
+        UpdateStore updateStore = UpdateStore.create(dataSourceModel);
+        EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,name,kdmCenter.id from Organization")
+
+                .onFailure(error -> Console.log(error))
+                .onSuccess(organizations -> {
+
+                    for (KdmCenter kdmCenter : kdmCenters) {
+
+                        // If the current kdmCenter is linked to an Organization, then update the Organization record
+                        String id = kdmCenter.getPrimaryKey().toString();
+                        Boolean isLinkedToOrg = false;
+
+                        for (Organization currentOrg : organizations) {
+
+                            if ((currentOrg.getKdmCenterId() != null) && (currentOrg.getKdmCenterId().getPrimaryKey().toString().equals(id))) {
+
+                                // @TODO - uncomment this
+                                //currentOrg = updateStore.updateEntity(currentOrg);
+                                //currentOrg.setName(kdmCenter.getName());
+                                isLinkedToOrg = true;
+                                break;
+                            }
+                        }
+
+                        if (isLinkedToOrg) {
+                            continue;
+                        }
+
+                        // If here, then the kdmCenter is not linked to an Organization, and so we should insert a new
+                        // Organization record for this, but only if the kdmCenter is not a branch.
+                        if (kdmCenter.getType().equals("BRANCH")) {
+                            // Console.log("KdmCenter is a branch, so will not create a new Organization for this");
+                            continue;
+                        }
+
+                        Console.log("Create a new Organization record for this KdmCenter: " + id);
+
+                        /*
+                        // @TODO - implement this
+                        Organization newOrg = updateStore.insertEntity(Organization.class);
+                        newOrg.setName(kdmCenter.getName());
+                        newOrg.setKdmCenterId(kdmCenter.getPrimaryKey());
+                        newOrg.setTypeId("type-id-lookup");
+                        newOrg.setCountryId();
+                        */
+                    }
+
+                    if (!updateStore.hasChanges()) {
+                        Console.log("No Organizations to update");
+                    }
+                    else {
+                        Console.log("Updating Organizations... ");
+                        // @TODO - uncomment this
+                        // updateStore.submitChanges().onFailure(Console::log);
+                    }
+                });
+
+
+        /*
+        select * from kdm_center
+        foreach kdm_center
+        select * from organization where name like 'current-kdm-center-substring%' and type_id = 'type-id-lookup';
+        if we have 1 result
+            update organization set kdm_center_id = kdm_i
+         */
     }
 }
