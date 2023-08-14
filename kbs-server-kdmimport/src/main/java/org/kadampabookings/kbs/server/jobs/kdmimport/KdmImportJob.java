@@ -119,8 +119,21 @@ public class KdmImportJob implements ApplicationJob {
                                 })));
     }
 
+    protected Integer getTypeIdFromKdmType(String type) {
+        switch (type) {
+            case "KMC":
+                return 2;
+            case "KBC":
+                return 3;
+            case "BRANCH":
+                return 4;
+            default:
+                // CORP
+                return 1;
+        }
+    }
+
     protected void synchroniseOrganisations(dev.webfx.stack.orm.entity.EntityList<KdmCenter> kdmCenters) {
-        Console.log("GOT HERE-----1");
 
         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
         EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,name,kdmCenter.id from Organization")
@@ -130,14 +143,18 @@ public class KdmImportJob implements ApplicationJob {
 
                     for (KdmCenter kdmCenter : kdmCenters) {
 
+                        // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
+                        if (kdmCenter.getType().equals("BRANCH")) {
+                            // Console.log("KdmCenter is a branch, so will not create a new Organization for this");
+                            continue;
+                        }
+
                         // If the current kdmCenter is linked to an Organization, then update the Organization record
                         String id = kdmCenter.getPrimaryKey().toString();
                         Boolean isLinkedToOrg = false;
-
                         for (Organization currentOrg : organizations) {
 
                             if ((currentOrg.getKdmCenterId() != null) && (currentOrg.getKdmCenterId().getPrimaryKey().toString().equals(id))) {
-
                                 // @TODO - uncomment this
                                 //currentOrg = updateStore.updateEntity(currentOrg);
                                 //currentOrg.setName(kdmCenter.getName());
@@ -150,23 +167,19 @@ public class KdmImportJob implements ApplicationJob {
                             continue;
                         }
 
-                        // If here, then the kdmCenter is not linked to an Organization, and so we should insert a new
-                        // Organization record for this, but only if the kdmCenter is not a branch.
-                        if (kdmCenter.getType().equals("BRANCH")) {
-                            // Console.log("KdmCenter is a branch, so will not create a new Organization for this");
-                            continue;
-                        }
-
-                        Console.log("Create a new Organization record for this KdmCenter: " + id);
-
-                        /*
                         // @TODO - implement this
+                        Console.log("Create a new Organization record for this KdmCenter ID: " + id);
+                        Console.log("The type is: " + kdmCenter.getType());
+                        Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
+                        /*
                         Organization newOrg = updateStore.insertEntity(Organization.class);
                         newOrg.setName(kdmCenter.getName());
-                        newOrg.setKdmCenterId(kdmCenter.getPrimaryKey());
-                        newOrg.setTypeId("type-id-lookup");
-                        newOrg.setCountryId();
+                        newOrg.setTypeId(getTypeIdFromKdmType(kdmCenter.getType()));
+                        newOrg.setKdmCenterId(id);
                         */
+                        // @TODO - implement this
+                        // newOrg.setCountryId();
+
                     }
 
                     if (!updateStore.hasChanges()) {
