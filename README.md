@@ -7,3 +7,5 @@
 ![Discover Vulnerabilities Using CodeQL](https://github.com/kadampabookings/kbs3/actions/workflows/discover-vulnerabilities.yml/badge.svg)
 
 # kbs3
+
+Contains the set of organisation-specific extensions to Modality.
