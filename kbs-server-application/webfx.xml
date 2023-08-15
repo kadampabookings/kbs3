@@ -22,7 +22,7 @@
         <plugin-module>kbs-server-kdmimport</plugin-module>
         -->
 
-        <plugin-module>kbs-server-geoimport</plugin-module>
+        <plugin-module>modality-base-server-geoimport</plugin-module>
 
     </dependencies>
 </project>
