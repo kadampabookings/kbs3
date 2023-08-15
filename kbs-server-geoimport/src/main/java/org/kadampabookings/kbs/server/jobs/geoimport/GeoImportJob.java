@@ -7,6 +7,7 @@ import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.Fetch;
 import dev.webfx.platform.fetch.Response;
 import dev.webfx.platform.json.Json;
+import dev.webfx.platform.json.JsonArray;
 import dev.webfx.platform.json.JsonObject;
 import dev.webfx.platform.json.ReadOnlyJsonObject;
 import dev.webfx.platform.scheduler.Scheduled;
@@ -17,6 +18,7 @@ import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
+import one.modality.base.shared.entities.Country;
 import one.modality.base.shared.entities.News;
 
 import java.time.LocalDate;
@@ -30,10 +32,7 @@ import java.util.Objects;
  */
 public class GeoImportJob implements ApplicationJob {
 
-    /*
-    https://kadampabookings.org/proxy/http/api.geonames.org/countryInfoJSON?username=emmanuel.rideau&featureCode=PCLI&country=[2-character-country-code]
-    */
-    private static final String GEO_FETCH_URL = "https://kadampabookings.org/proxy/http/api.geonames.org/countryInfoJSON?username=emmanuel.rideau&featureCode=PCLI&country=";
+    private static final String GEO_FETCH_URL = "http://api.geonames.org/countryInfoJSON?featureCode=PCLI&username=modality.one";
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
 
     @Override
@@ -42,6 +41,8 @@ public class GeoImportJob implements ApplicationJob {
     }
 
     public void importGeo() {
+
+        Console.log("IMPORTING GEO=============");
 
         // When this job starts, there is no fetchAfterParameter, so we initialize it with the latest podcast date
         // imported so far in the database.
@@ -61,12 +62,38 @@ public class GeoImportJob implements ApplicationJob {
         }
         */
 
+        EntityStore.create(dataSourceModel).<Country>executeQuery("select id,iso_alpha2,latitude,longitude from Country")
+
+                .onFailure(error -> Console.log(error))
+                .onSuccess(countries -> Fetch.fetch(GEO_FETCH_URL)
+
+                                .onFailure(error -> Console.log("Error while fetching " + GEO_FETCH_URL, error))
+                                .onSuccess(response -> response.jsonObject()
+
+                                        .onFailure(error -> Console.log("Error while parsing json object from " + GEO_FETCH_URL, error))
+                                        .onSuccess(geoJsonObject -> {
+
+                                            JsonArray geonames = (JsonArray) geoJsonObject.getArray("geonames");
+                                            for (int i = 0; i < geonames.size(); i++) {
+                                                JsonObject geonameCountry = (JsonObject) geonames.getObject(i);
+                                                String countryName = geonameCountry.getString("countryName");
+                                                String geonameId = geonameCountry.getString("geonameId");
+
+                                                Double north = geonameCountry.getDouble("north");
+                                                Double south = geonameCountry.getDouble("south");
+                                                Double east = geonameCountry.getDouble("east");
+                                                Double west = geonameCountry.getDouble("west");
+
+                                                Console.log("name=" + countryName + ", geonameId=" + geonameId + ", " + east);
+                                            }
+
+                                        })));
+
         // Creating the final fetch url with the additional query string (note: the number of podcasts returned by the
         // web service is 10 by default; this could be increased using &per_page=100 - 100 is the maximal value
         // authorized by the web service)
         /*
-        String fetchUrl = NEWS_FETCH_URL + "?order=asc&after=" + Dates.formatIso(fetchAfterParameter);
-        Fetch.fetch(fetchUrl)
+        Fetch.fetch(GEO_FETCH_URL)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
                 .onSuccess(response -> response.jsonArray()
                         .onFailure(error -> Console.log("Error while parsing json array from " + fetchUrl, error))
