@@ -56,6 +56,7 @@
         <module>kbs-server-kdmimport</module>
         <module>kbs-server-newsimport</module>
         <module>kbs-server-podcastsimport</module>
+        <module>../modality-fork/modality-base/modality-base-server-geoimport</module>
     </modules>
 
 </project>
