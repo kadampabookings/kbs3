@@ -9,12 +9,15 @@ import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
+import one.modality.base.shared.entities.Country;
 import one.modality.base.shared.entities.KdmCenter;
 import one.modality.base.shared.entities.Organization;
 
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.lang.Math.*;
 
 /**
  * @author bjvickers
@@ -48,7 +51,7 @@ public class KdmImportJob implements ApplicationJob {
                 .onSuccess(response -> response.jsonArray()
 
                         .onFailure(error -> Console.log("Error while parsing json array from " + KDM_FETCH_URL, error))
-                        .onSuccess(webKdmJsonArray -> EntityStore.create(dataSourceModel).<KdmCenter>executeQuery("select id,kdmId,name,type from KdmCenter")
+                        .onSuccess(webKdmJsonArray -> EntityStore.create(dataSourceModel).<KdmCenter>executeQuery("select id,kdmId,name,type,lat,lng from KdmCenter")
 
                                 .onFailure(error -> Console.log(error))
                                 .onSuccess(kdmCenters -> {
@@ -127,78 +130,142 @@ public class KdmImportJob implements ApplicationJob {
                 return 3;
             case "BRANCH":
                 return 4;
+            case "IRC":
+                return 5;
             default:
                 // CORP
                 return 1;
         }
     }
 
+    /*
+     * Uses the Haversine formula to determine the distance between two points on the planet.
+     */
+    private static double calculateDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
+        double radius = 6371; //radius of the earth in kilometers
+
+        double lat1Radians = Math.toRadians(latitude1);
+        double lat2Radians = Math.toRadians(latitude2);
+        double lon1Radians = Math.toRadians(longitude1);
+        double lon2Radians = Math.toRadians(longitude2);
+
+        double dLat = lat2Radians - lat1Radians;
+        double dLon = lon2Radians - lon1Radians;
+
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1Radians) * Math.cos(lat2Radians) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        return radius * c;
+    }
+
     protected void synchroniseOrganisations(dev.webfx.stack.orm.entity.EntityList<KdmCenter> kdmCenters) {
 
         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
-        EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,name,kdmCenter.id from Organization")
+        EntityStore.create(dataSourceModel).<Country>executeQuery("select id,iso_alpha2,latitude,longitude from Country")
 
                 .onFailure(error -> Console.log(error))
-                .onSuccess(organizations -> {
+                .onSuccess(countries -> {
 
-                    for (KdmCenter kdmCenter : kdmCenters) {
+                    EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,name,kdmCenter.id from Organization")
 
-                        // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
-                        if (kdmCenter.getType().equals("BRANCH")) {
-                            // Console.log("KdmCenter is a branch, so will not create a new Organization for this");
-                            continue;
-                        }
+                            .onFailure(error -> Console.log(error))
+                            .onSuccess(organizations -> {
 
-                        // If the current kdmCenter is linked to an Organization, then update the Organization record
-                        String id = kdmCenter.getPrimaryKey().toString();
-                        Boolean isLinkedToOrg = false;
-                        for (Organization currentOrg : organizations) {
+                                for (KdmCenter kdmCenter : kdmCenters) {
 
-                            if ((currentOrg.getKdmCenterId() != null) && (currentOrg.getKdmCenterId().getPrimaryKey().toString().equals(id))) {
-                                // @TODO - uncomment this
-                                //currentOrg = updateStore.updateEntity(currentOrg);
-                                //currentOrg.setName(kdmCenter.getName());
-                                isLinkedToOrg = true;
-                                break;
-                            }
-                        }
+                                    // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
+                                    if (kdmCenter.getType().equals("BRANCH")) {
+                                        Console.log("KdmCenter is a branch. Ignoring...");
+                                        continue;
+                                    }
 
-                        if (isLinkedToOrg) {
-                            continue;
-                        }
+                                    // If the current kdmCenter is linked to an Organization, then update the Organization record
+                                    String id = kdmCenter.getPrimaryKey().toString();
+                                    Boolean isLinkedToOrg = false;
+                                    for (Organization currentOrg : organizations) {
 
-                        // @TODO - implement this
-                        Console.log("Create a new Organization record for this KdmCenter ID: " + id);
-                        Console.log("The type is: " + kdmCenter.getType());
-                        Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
-                        /*
-                        Organization newOrg = updateStore.insertEntity(Organization.class);
-                        newOrg.setName(kdmCenter.getName());
-                        newOrg.setTypeId(getTypeIdFromKdmType(kdmCenter.getType()));
-                        newOrg.setKdmCenterId(id);
-                        */
-                        // @TODO - implement this
-                        // newOrg.setCountryId();
+                                        if ((currentOrg.getKdmCenterId() != null) && (currentOrg.getKdmCenterId().getPrimaryKey().toString().equals(id))) {
+                                            // @TODO - uncomment this
+                                            //currentOrg = updateStore.updateEntity(currentOrg);
+                                            //currentOrg.setName(kdmCenter.getName());
+                                            isLinkedToOrg = true;
+                                            break;
+                                        }
+                                    }
 
-                    }
+                                    if (isLinkedToOrg) {
+                                        continue;
+                                    }
 
-                    if (!updateStore.hasChanges()) {
-                        Console.log("No Organizations to update");
-                    }
-                    else {
-                        Console.log("Updating Organizations... ");
-                        // @TODO - uncomment this
-                        // updateStore.submitChanges().onFailure(Console::log);
-                    }
+                                    // @TODO - implement this
+                                    Console.log("Create a new Organization record for this KdmCenter ID: " + id);
+                                    Console.log("The type is: " + kdmCenter.getType());
+                                    Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
+
+                                    // Use the Haversine formula to determine in which country the KDM centre is located.
+                                    Country closestCountry = null;
+                                    for (Country currentCountry : countries) {
+
+                                        if (closestCountry == null) {
+                                            closestCountry = currentCountry;
+                                            continue;
+                                        }
+
+                                        // closestCountry.getLatitude() = 42.5;
+                                        // closestCountry.getLongitude() = 1.5;
+                                        // closestCountry.getIsoAlpha2() = "ad";
+
+                                        // currentCountry.getLatitude() = 24;
+                                        // currentCountry.getLongitude() = 54;
+                                        // currentCountry.getIsoAlpha2() = "ae";
+
+                                        // kdmLat = 33.66986;
+                                        // kdmLng = -84.42035;
+                                        // kdmCountry = ?
+
+                                        Float lat1 = closestCountry.getLatitude();
+                                        Float lon1 = closestCountry.getLongitude();
+
+                                        Float lat2 = currentCountry.getLatitude();
+                                        Float lon2 = currentCountry.getLongitude();
+
+                                        Float lat3 = kdmCenter.getLat();
+                                        Float lon3 = kdmCenter.getLng();
+
+                                        if (lat1 == null || lon1 == null || lat2 == null || lon2 == null || lat3 == null || lon3 == null) {
+                                            continue;
+                                        }
+
+                                        double distance1 = calculateDistance(lat1, lon1, lat3, lon3);
+                                        double distance2 = calculateDistance(lat2, lon2, lat3, lon3);
+
+                                        // Console.log("DISTANCE 1----: " + distance1);
+                                        // Console.log("DISTANCE 2----: " + distance2);
+
+                                        if (distance1 < distance2) {
+                                            continue;
+                                        }
+                                        closestCountry = currentCountry;
+                                    }
+
+                                    Console.log("The selected country is=====: " + closestCountry.getIsoAlpha2());
+
+                                    //Organization newOrg = updateStore.insertEntity(Organization.class);
+                                    //newOrg.setName(kdmCenter.getName());
+                                    //newOrg.setTypeId(getTypeIdFromKdmType(kdmCenter.getType()));
+                                    //newOrg.setKdmCenterId(id);
+                                    // newOrg.setCountryId(closestCountry.getId());
+
+                                }
+
+                                if (!updateStore.hasChanges()) {
+                                    Console.log("No Organizations to update");
+                                } else {
+                                    Console.log("Updating Organizations... ");
+                                    // @TODO - uncomment this
+                                    // updateStore.submitChanges().onFailure(Console::log);
+                                }
+                            });
                 });
-
-
-        /*
-        select * from kdm_center
-        foreach kdm_center
-        select * from organization where name like 'current-kdm-center-substring%' and type_id = 'type-id-lookup';
-        if we have 1 result
-            update organization set kdm_center_id = kdm_i
-         */
     }
 }
