@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="kbs3">
 
+    <description>Kadampa Booking System (3rd generation) built on top of Modality &amp; WebFX.</description>
+
     <parent name="webfx-parent"/>
 
     <groupId>org.kadampabookings</groupId>

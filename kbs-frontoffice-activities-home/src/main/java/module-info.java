@@ -1,5 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+/**
+ * The customized home page of the KBS Front-Office that displays the Kadampa news &amp; podcasts.
+ */
 module kbs.frontoffice.activities.home {
 
     // Direct dependencies modules

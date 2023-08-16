@@ -13,6 +13,8 @@
 
     <artifactId>kbs-backoffice-application-gluon</artifactId>
 
+    <description>The Gluon executable module of the KBS Back-Office (for tablets).</description>
+
     <name>KbsBackoffice</name>
 
     <dependencies>

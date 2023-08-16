@@ -1,5 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+/**
+ * The Gluon executable module of the KBS Front-Office (for mobiles &amp; tablets).
+ */
 module kbs.frontoffice.application.gluon {
 
     // Direct dependencies modules

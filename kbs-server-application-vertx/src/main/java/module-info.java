@@ -1,5 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+/**
+ * The Vert.x executable module of the KBS Server.
+ */
 module kbs.server.application.vertx {
 
     // Direct dependencies modules

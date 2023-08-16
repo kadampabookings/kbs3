@@ -16,6 +16,8 @@
     <artifactId>kbs3</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
+    <description>Kadampa Booking System (3rd generation) built on top of Modality &amp; WebFX.</description>
+
     <repositories>
         <repository>
             <id>webfx-snapshots</id>

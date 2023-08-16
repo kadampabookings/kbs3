@@ -13,6 +13,8 @@
 
     <artifactId>kbs-server-application-vertx</artifactId>
 
+    <description>The Vert.x executable module of the KBS Server.</description>
+
     <dependencies>
 
         <dependency>

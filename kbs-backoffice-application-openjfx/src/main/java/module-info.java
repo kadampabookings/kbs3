@@ -1,5 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+/**
+ * The OpenJFX executable module of the KBS Back-Office (for desktops &amp; development).
+ */
 module kbs.backoffice.application.openjfx {
 
     // Direct dependencies modules

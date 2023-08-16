@@ -1,5 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+/**
+ * The server module that regularly imports the podcasts from kadampa.org to the database.
+ */
 module kbs.server.podcastsimport {
 
     // Direct dependencies modules

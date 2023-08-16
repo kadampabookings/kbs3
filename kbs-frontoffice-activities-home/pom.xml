@@ -13,6 +13,8 @@
 
     <artifactId>kbs-frontoffice-activities-home</artifactId>
 
+    <description>The customized home page of the KBS Front-Office that displays the Kadampa news &amp; podcasts.</description>
+
     <dependencies>
 
         <dependency>

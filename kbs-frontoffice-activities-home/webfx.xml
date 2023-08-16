@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
 
+    <description>The customized home page of the KBS Front-Office that displays the Kadampa news &amp; podcasts.</description>
+
     <exported-packages>
         <source-packages/>
     </exported-packages>

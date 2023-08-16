@@ -13,6 +13,8 @@
 
     <artifactId>kbs-frontoffice-application-gwt</artifactId>
 
+    <description>The GWT executable module of the KBS Front-Office (for browsers).</description>
+
     <packaging>gwt-app</packaging>
 
     <dependencies>

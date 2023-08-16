@@ -13,6 +13,8 @@
 
     <artifactId>kbs-server-newsimport</artifactId>
 
+    <description>The server module that regularly imports the news from kadampa.org to the database.</description>
+
     <dependencies>
 
         <dependency>

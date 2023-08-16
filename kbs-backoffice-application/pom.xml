@@ -13,6 +13,8 @@
 
     <artifactId>kbs-backoffice-application</artifactId>
 
+    <description>The KBS Back-Office application (cross-platform non-executable module).</description>
+
     <dependencies>
 
         <dependency>
