@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
 
+    <description>The server module that regularly imports the news from kadampa.org to the database.</description>
+
     <exported-packages>
         <source-packages/>
     </exported-packages>

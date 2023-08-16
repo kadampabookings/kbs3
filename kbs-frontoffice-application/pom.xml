@@ -13,6 +13,8 @@
 
     <artifactId>kbs-frontoffice-application</artifactId>
 
+    <description>The KBS Front-Office application (cross-platform non-executable module).</description>
+
     <dependencies>
 
         <dependency>

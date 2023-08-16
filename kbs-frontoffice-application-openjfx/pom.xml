@@ -13,6 +13,8 @@
 
     <artifactId>kbs-frontoffice-application-openjfx</artifactId>
 
+    <description>The OpenJFX executable module of the KBS Front-Office (for development).</description>
+
     <dependencies>
 
         <dependency>

@@ -13,6 +13,8 @@
 
     <artifactId>kbs-frontoffice-application-gluon</artifactId>
 
+    <description>The Gluon executable module of the KBS Front-Office (for mobiles &amp; tablets).</description>
+
     <name>KbsFrontoffice</name>
 
     <dependencies>

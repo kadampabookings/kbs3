@@ -1,5 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+/**
+ * The server module that regularly imports the news from kadampa.org to the database.
+ */
 module kbs.server.newsimport {
 
     // Direct dependencies modules
