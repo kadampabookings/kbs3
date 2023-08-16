@@ -32,6 +32,7 @@ public class KdmImportJob implements ApplicationJob {
     @Override
     public void onStart() {
         importKdm();
+
         // @TODO
         // The following creates an exception - Bruno to investigate
         //importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importKdm);
@@ -122,46 +123,10 @@ public class KdmImportJob implements ApplicationJob {
                                 })));
     }
 
-    protected Integer getTypeIdFromKdmType(String type) {
-        switch (type) {
-            case "KMC":
-                return 2;
-            case "KBC":
-                return 3;
-            case "BRANCH":
-                return 4;
-            case "IRC":
-                return 5;
-            default:
-                // CORP
-                return 1;
-        }
-    }
-
-    /*
-     * Uses the Haversine formula to determine the distance between two points on the planet.
-     */
-    private static double calculateDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
-        double radius = 6371; //radius of the earth in kilometers
-
-        double lat1Radians = Math.toRadians(latitude1);
-        double lat2Radians = Math.toRadians(latitude2);
-        double lon1Radians = Math.toRadians(longitude1);
-        double lon2Radians = Math.toRadians(longitude2);
-
-        double dLat = lat2Radians - lat1Radians;
-        double dLon = lon2Radians - lon1Radians;
-
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1Radians) * Math.cos(lat2Radians) * Math.sin(dLon/2) * Math.sin(dLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-        return radius * c;
-    }
-
     protected void synchroniseOrganisations(dev.webfx.stack.orm.entity.EntityList<KdmCenter> kdmCenters) {
 
         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
-        EntityStore.create(dataSourceModel).<Country>executeQuery("select id,iso_alpha2,latitude,longitude from Country")
+        EntityStore.create(dataSourceModel).<Country>executeQuery("select id,iso_alpha2,latitude,longitude,north,south,east,west from Country")
 
                 .onFailure(error -> Console.log(error))
                 .onSuccess(countries -> {
@@ -172,6 +137,15 @@ public class KdmImportJob implements ApplicationJob {
                             .onSuccess(organizations -> {
 
                                 for (KdmCenter kdmCenter : kdmCenters) {
+
+                                    // @TODO remove this
+                                    /*
+                                    if (!kdmCenter.getPrimaryKey().toString().equals("2629")) {
+                                        continue;
+                                    }
+                                    Console.log("PROCESSING THE CHILE CENTER........");
+                                    */
+
 
                                     // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
                                     if (kdmCenter.getType().equals("BRANCH")) {
@@ -197,65 +171,65 @@ public class KdmImportJob implements ApplicationJob {
                                         continue;
                                     }
 
-                                    // @TODO - implement this
                                     Console.log("Create a new Organization record for this KdmCenter ID: " + id);
+                                    Console.log("The name is: " + kdmCenter.getName());
                                     Console.log("The type is: " + kdmCenter.getType());
                                     Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
 
-                                    // Use the Haversine formula to determine in which country the KDM centre is located.
-                                    Country closestCountry = null;
-                                    for (Country currentCountry : countries) {
+                                    Country enclosingCountry = null;
+                                    int noOfMatches = 0;
+                                    double smallestRectangleSurface = 0.0;
+                                    double sizeOfCurrentRectangleSurface = 0.0;
 
-                                        if (closestCountry == null) {
-                                            closestCountry = currentCountry;
-                                            continue;
+                                    if (kdmCenter.getLat() != null && kdmCenter.getLng() != null) {
+
+                                        for (Country currentCountry : countries) {
+                                            boolean isEnclosed = isPointInRectangle(
+                                                    kdmCenter.getLat(),
+                                                    kdmCenter.getLng(),
+                                                    currentCountry.getNorth(),
+                                                    currentCountry.getSouth(),
+                                                    currentCountry.getEast(),
+                                                    currentCountry.getWest());
+
+                                            if (isEnclosed) {
+
+                                                Console.log("ENCLOSURE FOUND=======");
+
+                                                noOfMatches++;
+                                                sizeOfCurrentRectangleSurface = getSurfaceOfRectangle(
+                                                        currentCountry.getNorth(),
+                                                        currentCountry.getSouth(),
+                                                        currentCountry.getEast(),
+                                                        currentCountry.getWest());
+
+                                                Console.log("SIZE OF ENCLOSURE =======" + sizeOfCurrentRectangleSurface);
+                                                Console.log("NAME OF ENCLOSURE =======" + currentCountry.getIsoAlpha2());
+
+                                                if (smallestRectangleSurface == 0.0) {
+                                                    smallestRectangleSurface = sizeOfCurrentRectangleSurface;
+                                                    enclosingCountry = currentCountry;
+                                                } else if (sizeOfCurrentRectangleSurface < smallestRectangleSurface) {
+                                                    smallestRectangleSurface = sizeOfCurrentRectangleSurface;
+                                                    enclosingCountry = currentCountry;
+                                                }
+                                            }
                                         }
-
-                                        // closestCountry.getLatitude() = 42.5;
-                                        // closestCountry.getLongitude() = 1.5;
-                                        // closestCountry.getIsoAlpha2() = "ad";
-
-                                        // currentCountry.getLatitude() = 24;
-                                        // currentCountry.getLongitude() = 54;
-                                        // currentCountry.getIsoAlpha2() = "ae";
-
-                                        // kdmLat = 33.66986;
-                                        // kdmLng = -84.42035;
-                                        // kdmCountry = ?
-
-                                        Float lat1 = closestCountry.getLatitude();
-                                        Float lon1 = closestCountry.getLongitude();
-
-                                        Float lat2 = currentCountry.getLatitude();
-                                        Float lon2 = currentCountry.getLongitude();
-
-                                        Float lat3 = kdmCenter.getLat();
-                                        Float lon3 = kdmCenter.getLng();
-
-                                        if (lat1 == null || lon1 == null || lat2 == null || lon2 == null || lat3 == null || lon3 == null) {
-                                            continue;
-                                        }
-
-                                        double distance1 = calculateDistance(lat1, lon1, lat3, lon3);
-                                        double distance2 = calculateDistance(lat2, lon2, lat3, lon3);
-
-                                        // Console.log("DISTANCE 1----: " + distance1);
-                                        // Console.log("DISTANCE 2----: " + distance2);
-
-                                        if (distance1 < distance2) {
-                                            continue;
-                                        }
-                                        closestCountry = currentCountry;
                                     }
 
-                                    Console.log("The selected country is=====: " + closestCountry.getIsoAlpha2());
+                                    if (noOfMatches > 1) {
+                                        Console.log("The selected KdmCenter has multiple country matches ===========");
+                                        //continue;
+                                    }
 
+                                    Console.log("The selected country is=====: " + (enclosingCountry == null ? "null" : enclosingCountry.getIsoAlpha2()));
+
+                                    // @TODO - uncomment this
                                     //Organization newOrg = updateStore.insertEntity(Organization.class);
                                     //newOrg.setName(kdmCenter.getName());
                                     //newOrg.setTypeId(getTypeIdFromKdmType(kdmCenter.getType()));
-                                    //newOrg.setKdmCenterId(id);
-                                    // newOrg.setCountryId(closestCountry.getId());
-
+                                    //newOrg.setKdmCenter(kdmCenter);
+                                    //newOrg.setCountry(enclosingCountry);
                                 }
 
                                 if (!updateStore.hasChanges()) {
@@ -267,5 +241,51 @@ public class KdmImportJob implements ApplicationJob {
                                 }
                             });
                 });
+    }
+
+    private boolean isPointInRectangle(double latitude, double longitude, double north, double south, double east, double west) {
+        if (south <= latitude && latitude <= north) {
+            if (west <= east) {
+                if (west <= longitude && longitude <= east) {
+                    return true;
+                }
+            } else {
+                if ((west <= longitude && longitude <= 180) || (-180 <= longitude && longitude <= east)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private double getSurfaceOfRectangle(double north, double south, double east, double west) {
+        double radius = 6378137.0;
+        double height = radius * 2 * Math.asin(
+                Math.sqrt(
+                        Math.sin((north - south) * Math.PI / 180.0) * Math.sin((north - south) * Math.PI / 180.0)
+                                + Math.cos(north * Math.PI / 180.0) * Math.cos(south * Math.PI / 180.0)
+                                * Math.sin((east - west) * Math.PI / 180.0) * Math.sin((east - west) * Math.PI / 180.0)));
+        double width = radius * 2 * Math.asin(
+                Math.sqrt(
+                        Math.sin((east - west) * Math.PI / 180.0) * Math.sin((east - west) * Math.PI / 180.0)
+                                + Math.cos(east * Math.PI / 180.0) * Math.cos(west * Math.PI / 180.0)
+                                * Math.sin((south - north) * Math.PI / 180.0) * Math.sin((south - north) * Math.PI / 180.0)));
+        return height * width;
+    }
+
+    private Integer getTypeIdFromKdmType(String type) {
+        switch (type) {
+            case "KMC":
+                return 2;
+            case "KBC":
+                return 3;
+            case "BRANCH":
+                return 4;
+            case "IRC":
+                return 5;
+            default:
+                // CORP
+                return 1;
+        }
     }
 }
