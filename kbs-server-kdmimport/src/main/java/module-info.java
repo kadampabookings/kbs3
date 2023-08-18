@@ -16,6 +16,7 @@ module kbs.server.kdmimport {
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
+    requires webfx.extras.webtext.util;
 
     // Exported packages
     exports org.kadampabookings.kbs.server.jobs.kdmimport;

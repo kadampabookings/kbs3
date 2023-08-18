@@ -12,6 +12,7 @@ import dev.webfx.stack.orm.entity.UpdateStore;
 import one.modality.base.shared.entities.Country;
 import one.modality.base.shared.entities.KdmCenter;
 import one.modality.base.shared.entities.Organization;
+import dev.webfx.extras.webtext.util.WebTextUtil;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -79,16 +80,16 @@ public class KdmImportJob implements ApplicationJob {
                                                 }
                                                 kdmCenter.setType(kdmJson.getString("type"));
                                                 kdmCenter.setMothercenter(kdmJson.getBoolean("mothercenter"));
-                                                kdmCenter.setAddress(kdmJson.getString("address"));
-                                                kdmCenter.setAddress2(kdmJson.getString("address2"));
-                                                kdmCenter.setAddress3(kdmJson.getString("address3"));
-                                                kdmCenter.setCity(kdmJson.getString("city"));
-                                                kdmCenter.setState(kdmJson.getString("state"));
-                                                kdmCenter.setPostal(kdmJson.getString("postal"));
+                                                kdmCenter.setAddress(WebTextUtil.unescapeHtml(kdmJson.getString("address")));
+                                                kdmCenter.setAddress2(WebTextUtil.unescapeHtml(kdmJson.getString("address2")));
+                                                kdmCenter.setAddress3(WebTextUtil.unescapeHtml(kdmJson.getString("address3")));
+                                                kdmCenter.setCity(WebTextUtil.unescapeHtml(kdmJson.getString("city")));
+                                                kdmCenter.setState(WebTextUtil.unescapeHtml(kdmJson.getString("state")));
+                                                kdmCenter.setPostal(WebTextUtil.unescapeHtml(kdmJson.getString("postal")));
                                                 kdmCenter.setEmail(kdmJson.getString("email"));
                                                 kdmCenter.setPhone(kdmJson.getString("phone"));
                                                 kdmCenter.setPhoto(kdmJson.getString("photo"));
-                                                kdmCenter.setWeb(kdmJson.getString("web"));
+                                                kdmCenter.setWeb(cleanUrl(kdmJson.getString("web")));
                                                 continue;
                                             }
 
@@ -104,19 +105,20 @@ public class KdmImportJob implements ApplicationJob {
                                             }
                                             kdmCenter.setType(kdmJson.getString("type"));
                                             kdmCenter.setMothercenter(kdmJson.getBoolean("mothercenter"));
-                                            kdmCenter.setAddress(kdmJson.getString("address"));
-                                            kdmCenter.setAddress2(kdmJson.getString("address2"));
-                                            kdmCenter.setAddress3(kdmJson.getString("address3"));
-                                            kdmCenter.setCity(kdmJson.getString("city"));
-                                            kdmCenter.setState(kdmJson.getString("state"));
-                                            kdmCenter.setPostal(kdmJson.getString("postal"));
+                                            kdmCenter.setAddress(WebTextUtil.unescapeHtml(kdmJson.getString("address")));
+                                            kdmCenter.setAddress2(WebTextUtil.unescapeHtml(kdmJson.getString("address2")));
+                                            kdmCenter.setAddress3(WebTextUtil.unescapeHtml(kdmJson.getString("address3")));
+                                            kdmCenter.setCity(WebTextUtil.unescapeHtml(kdmJson.getString("city")));
+                                            kdmCenter.setState(WebTextUtil.unescapeHtml(kdmJson.getString("state")));
+                                            kdmCenter.setPostal(WebTextUtil.unescapeHtml(kdmJson.getString("postal")));
                                             kdmCenter.setEmail(kdmJson.getString("email"));
                                             kdmCenter.setPhone(kdmJson.getString("phone"));
                                             kdmCenter.setPhoto(kdmJson.getString("photo"));
-                                            kdmCenter.setWeb(kdmJson.getString("web"));
+                                            kdmCenter.setWeb(cleanUrl(kdmJson.getString("web")));
                                         }
 
                                         updateStore.submitChanges()
+
                                                 .onSuccess(result -> synchroniseOrganisations(kdmCenters))
                                                 .onFailure(Console::log);
                                 })));
@@ -137,18 +139,8 @@ public class KdmImportJob implements ApplicationJob {
 
                                 for (KdmCenter kdmCenter : kdmCenters) {
 
-                                    /*
-                                    // @TODO remove this
-                                    if (!kdmCenter.getPrimaryKey().toString().equals("2629")) {
-                                        continue;
-                                    }
-                                    Console.log("PROCESSING THE CHILE CENTER........");
-                                    */
-
-
                                     // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
                                     if (kdmCenter.getType().equals("BRANCH")) {
-                                        //Console.log("KdmCenter is a branch. Ignoring...");
                                         continue;
                                     }
 
@@ -172,10 +164,10 @@ public class KdmImportJob implements ApplicationJob {
                                         continue;
                                     }
 
-                                    Console.log("Create a new Organization record for this KdmCenter ID: " + id);
-                                    Console.log("The name is: " + kdmCenter.getName());
-                                    Console.log("The type is: " + kdmCenter.getType());
-                                    Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
+                                    // Console.log("Create a new Organization record for this KdmCenter ID: " + id);
+                                    // Console.log("The name is: " + kdmCenter.getName());
+                                    // Console.log("The type is: " + kdmCenter.getType());
+                                    // Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
 
                                     Country enclosingCountry = null;
                                     StringBuilder multipleMatchingCountries = new StringBuilder();
@@ -196,8 +188,6 @@ public class KdmImportJob implements ApplicationJob {
 
                                             if (isEnclosed) {
 
-                                                Console.log("ENCLOSURE FOUND=======");
-
                                                 noOfMatches++;
                                                 multipleMatchingCountries.append(currentCountry.getIsoAlpha2()).append(",");
                                                 sizeOfCurrentRectangleSurface = getSurfaceOfRectangle(
@@ -206,8 +196,8 @@ public class KdmImportJob implements ApplicationJob {
                                                         currentCountry.getEast(),
                                                         currentCountry.getWest());
 
-                                                Console.log("SIZE OF ENCLOSURE =======" + sizeOfCurrentRectangleSurface);
-                                                Console.log("NAME OF ENCLOSURE =======" + currentCountry.getIsoAlpha2());
+                                                // Console.log("SIZE OF ENCLOSURE: " + sizeOfCurrentRectangleSurface);
+                                                // Console.log("NAME OF ENCLOSURE: " + currentCountry.getIsoAlpha2());
 
                                                 if (smallestRectangleSurface == 0.0) {
                                                     smallestRectangleSurface = sizeOfCurrentRectangleSurface;
@@ -220,8 +210,6 @@ public class KdmImportJob implements ApplicationJob {
                                         }
                                     }
 
-                                    Console.log("The selected country is=====: " + (enclosingCountry == null ? "null" : enclosingCountry.getIsoAlpha2()));
-
                                     Organization newOrganisation = updateStore.insertEntity(Organization.class);
                                     newOrganisation.setName(kdmCenter.getName());
                                     newOrganisation.setType(getTypeIdFromKdmType(kdmCenter.getType()));
@@ -231,14 +219,11 @@ public class KdmImportJob implements ApplicationJob {
                                     newOrganisation.setCountry(enclosingCountry);
 
                                     if (noOfMatches > 1) {
-                                        Console.log("The selected KdmCenter has multiple country matches ===========");
                                         newOrganisation.setImportIssue("Multiple matching countries found: " + multipleMatchingCountries);
                                     }
                                 }
 
-                                if (!updateStore.hasChanges()) {
-                                    Console.log("No Organizations to update");
-                                } else {
+                                if (updateStore.hasChanges()) {
                                     Console.log("Updating Organizations... ");
                                     updateStore.submitChanges().onFailure(Console::log);
                                 }
@@ -290,5 +275,9 @@ public class KdmImportJob implements ApplicationJob {
                 // CORP
                 return 1;
         }
+    }
+
+    private static String cleanUrl(String url) {
+        return url == null ? null : url.replace("\\", "");
     }
 }
