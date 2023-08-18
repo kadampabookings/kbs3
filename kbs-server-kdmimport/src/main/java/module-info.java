@@ -1,5 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+/**
+ * 
+ */
 module kbs.server.kdmimport {
 
     // Direct dependencies modules

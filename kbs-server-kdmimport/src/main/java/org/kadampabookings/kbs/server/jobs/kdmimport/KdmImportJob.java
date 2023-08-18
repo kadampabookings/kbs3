@@ -60,17 +60,15 @@ public class KdmImportJob implements ApplicationJob {
                                         Set<Integer> kdmIds = kdmCenters.stream().map(KdmCenter::getKdmId).collect(Collectors.toSet());
                                         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
 
-                                        // @TODO - restore this
-                                        for (int i = 0; i < 1; i++) {
-                                        // for (int i = 0; i < webKdmJsonArray.size(); i++) {
+                                        for (int i = 0; i < webKdmJsonArray.size(); i++) {
 
                                             ReadOnlyJsonObject kdmJson = webKdmJsonArray.getObject(i);
                                             int kdmId = kdmJson.getInteger("id");
                                             if (kdmIds.contains(kdmId)) {
 
+                                                // Update an existing KdmCenter record
                                                 KdmCenter kdmCenter = kdmCenters.stream().filter(center -> center.getKdmId() == kdmId).findFirst().get();
                                                 kdmCenter = updateStore.updateEntity(kdmCenter);
-
                                                 kdmCenter.setKdmId(kdmJson.getInteger("id"));
                                                 kdmCenter.setName(kdmJson.getString("name"));
                                                 if (kdmJson.getDouble("lat") != null) {
@@ -94,6 +92,7 @@ public class KdmImportJob implements ApplicationJob {
                                                 continue;
                                             }
 
+                                            // Create a new KdmCenter record
                                             KdmCenter kdmCenter = updateStore.insertEntity(KdmCenter.class);
                                             kdmCenter.setKdmId(kdmJson.getInteger("id"));
                                             kdmCenter.setName(kdmJson.getString("name"));
@@ -131,15 +130,15 @@ public class KdmImportJob implements ApplicationJob {
                 .onFailure(error -> Console.log(error))
                 .onSuccess(countries -> {
 
-                    EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,name,kdmCenter.id from Organization")
+                    EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,name,importIssue,kdmCenter.id from Organization")
 
                             .onFailure(error -> Console.log(error))
                             .onSuccess(organizations -> {
 
                                 for (KdmCenter kdmCenter : kdmCenters) {
 
-                                    // @TODO remove this
                                     /*
+                                    // @TODO remove this
                                     if (!kdmCenter.getPrimaryKey().toString().equals("2629")) {
                                         continue;
                                     }
@@ -149,25 +148,27 @@ public class KdmImportJob implements ApplicationJob {
 
                                     // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
                                     if (kdmCenter.getType().equals("BRANCH")) {
-                                        Console.log("KdmCenter is a branch. Ignoring...");
+                                        //Console.log("KdmCenter is a branch. Ignoring...");
                                         continue;
                                     }
 
                                     // If the current kdmCenter is linked to an Organization, then update the Organization record
                                     String id = kdmCenter.getPrimaryKey().toString();
-                                    Boolean isLinkedToOrg = false;
-                                    for (Organization currentOrg : organizations) {
+                                    Boolean isLinkedToOrganisation = false;
+                                    for (Organization current : organizations) {
 
-                                        if ((currentOrg.getKdmCenterId() != null) && (currentOrg.getKdmCenterId().getPrimaryKey().toString().equals(id))) {
-                                            // @TODO - uncomment this
-                                            //currentOrg = updateStore.updateEntity(currentOrg);
-                                            //currentOrg.setName(kdmCenter.getName());
-                                            isLinkedToOrg = true;
+                                        if ((current.getKdmCenterId() != null) && (current.getKdmCenterId().getPrimaryKey().toString().equals(id))) {
+                                            current = updateStore.updateEntity(current);
+                                            current.setName(kdmCenter.getName());
+                                            current.setType(getTypeIdFromKdmType(kdmCenter.getType()));
+                                            current.setLatitude(kdmCenter.getLat());
+                                            current.setLongitude(kdmCenter.getLng());
+                                            isLinkedToOrganisation = true;
                                             break;
                                         }
                                     }
 
-                                    if (isLinkedToOrg) {
+                                    if (isLinkedToOrganisation) {
                                         continue;
                                     }
 
@@ -177,6 +178,7 @@ public class KdmImportJob implements ApplicationJob {
                                     Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
 
                                     Country enclosingCountry = null;
+                                    StringBuilder multipleMatchingCountries = new StringBuilder();
                                     int noOfMatches = 0;
                                     double smallestRectangleSurface = 0.0;
                                     double sizeOfCurrentRectangleSurface = 0.0;
@@ -197,6 +199,7 @@ public class KdmImportJob implements ApplicationJob {
                                                 Console.log("ENCLOSURE FOUND=======");
 
                                                 noOfMatches++;
+                                                multipleMatchingCountries.append(currentCountry.getIsoAlpha2()).append(",");
                                                 sizeOfCurrentRectangleSurface = getSurfaceOfRectangle(
                                                         currentCountry.getNorth(),
                                                         currentCountry.getSouth(),
@@ -217,27 +220,27 @@ public class KdmImportJob implements ApplicationJob {
                                         }
                                     }
 
-                                    if (noOfMatches > 1) {
-                                        Console.log("The selected KdmCenter has multiple country matches ===========");
-                                        //continue;
-                                    }
-
                                     Console.log("The selected country is=====: " + (enclosingCountry == null ? "null" : enclosingCountry.getIsoAlpha2()));
 
-                                    // @TODO - uncomment this
-                                    //Organization newOrg = updateStore.insertEntity(Organization.class);
-                                    //newOrg.setName(kdmCenter.getName());
-                                    //newOrg.setTypeId(getTypeIdFromKdmType(kdmCenter.getType()));
-                                    //newOrg.setKdmCenter(kdmCenter);
-                                    //newOrg.setCountry(enclosingCountry);
+                                    Organization newOrganisation = updateStore.insertEntity(Organization.class);
+                                    newOrganisation.setName(kdmCenter.getName());
+                                    newOrganisation.setType(getTypeIdFromKdmType(kdmCenter.getType()));
+                                    newOrganisation.setKdmCenter(kdmCenter);
+                                    newOrganisation.setLatitude(kdmCenter.getLat());
+                                    newOrganisation.setLongitude(kdmCenter.getLng());
+                                    newOrganisation.setCountry(enclosingCountry);
+
+                                    if (noOfMatches > 1) {
+                                        Console.log("The selected KdmCenter has multiple country matches ===========");
+                                        newOrganisation.setImportIssue("Multiple matching countries found: " + multipleMatchingCountries);
+                                    }
                                 }
 
                                 if (!updateStore.hasChanges()) {
                                     Console.log("No Organizations to update");
                                 } else {
                                     Console.log("Updating Organizations... ");
-                                    // @TODO - uncomment this
-                                    // updateStore.submitChanges().onFailure(Console::log);
+                                    updateStore.submitChanges().onFailure(Console::log);
                                 }
                             });
                 });
