@@ -14,11 +14,8 @@ import one.modality.base.shared.entities.KdmCenter;
 import one.modality.base.shared.entities.Organization;
 import dev.webfx.extras.webtext.util.WebTextUtil;
 
-import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.lang.Math.*;
 
 /**
  * @author bjvickers
@@ -29,6 +26,7 @@ public class KdmImportJob implements ApplicationJob {
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private static final long IMPORT_PERIODICITY_MILLIS = 1000 * 3600 * 24 * 28; // 4x weeks
     private Scheduled importTimer;
+    private boolean isDebugMode = false;
 
     @Override
     public void onStart() {
@@ -164,10 +162,11 @@ public class KdmImportJob implements ApplicationJob {
                                         continue;
                                     }
 
-                                    // Console.log("Create a new Organization record for this KdmCenter ID: " + id);
-                                    // Console.log("The name is: " + kdmCenter.getName());
-                                    // Console.log("The type is: " + kdmCenter.getType());
-                                    // Console.log("The type ID is: " + getTypeIdFromKdmType(kdmCenter.getType()));
+                                    if (isDebugMode) {
+                                        Console.log("Creating a new Organization record for KdmCenter ID: " + id);
+                                        Console.log("Organization name: " + kdmCenter.getName());
+                                        Console.log("Organization type is: " + getTypeIdFromKdmType(kdmCenter.getType()));
+                                    }
 
                                     Country enclosingCountry = null;
                                     StringBuilder multipleMatchingCountries = new StringBuilder();
@@ -196,9 +195,6 @@ public class KdmImportJob implements ApplicationJob {
                                                         currentCountry.getEast(),
                                                         currentCountry.getWest());
 
-                                                // Console.log("SIZE OF ENCLOSURE: " + sizeOfCurrentRectangleSurface);
-                                                // Console.log("NAME OF ENCLOSURE: " + currentCountry.getIsoAlpha2());
-
                                                 if (smallestRectangleSurface == 0.0) {
                                                     smallestRectangleSurface = sizeOfCurrentRectangleSurface;
                                                     enclosingCountry = currentCountry;
@@ -224,7 +220,6 @@ public class KdmImportJob implements ApplicationJob {
                                 }
 
                                 if (updateStore.hasChanges()) {
-                                    Console.log("Updating Organizations... ");
                                     updateStore.submitChanges().onFailure(Console::log);
                                 }
                             });
