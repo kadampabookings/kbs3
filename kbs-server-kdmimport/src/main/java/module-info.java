@@ -8,6 +8,7 @@ module kbs.server.kdmimport {
     // Direct dependencies modules
     requires java.base;
     requires modality.base.shared.entities;
+    requires webfx.extras.webtext.util;
     requires webfx.platform.boot;
     requires webfx.platform.console;
     requires webfx.platform.fetch;
@@ -16,7 +17,6 @@ module kbs.server.kdmimport {
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
-    requires webfx.extras.webtext.util;
 
     // Exported packages
     exports org.kadampabookings.kbs.server.jobs.kdmimport;
