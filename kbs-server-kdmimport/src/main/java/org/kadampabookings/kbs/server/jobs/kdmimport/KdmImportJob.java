@@ -13,7 +13,6 @@ import one.modality.base.shared.entities.Country;
 import one.modality.base.shared.entities.KdmCenter;
 import one.modality.base.shared.entities.Organization;
 import dev.webfx.extras.webtext.util.WebTextUtil;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 

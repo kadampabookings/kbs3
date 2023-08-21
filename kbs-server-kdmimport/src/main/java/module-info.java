@@ -1,8 +1,4 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
-
-/**
- * 
- */
 module kbs.server.kdmimport {
 
     // Direct dependencies modules
@@ -14,6 +10,7 @@ module kbs.server.kdmimport {
     requires webfx.platform.fetch;
     requires webfx.platform.json;
     requires webfx.platform.scheduler;
+    requires webfx.platform.util;
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
