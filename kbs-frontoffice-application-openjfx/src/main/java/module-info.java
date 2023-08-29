@@ -11,10 +11,8 @@ module kbs.frontoffice.application.openjfx {
     requires webfx.extras.webtext.peers.openjfx;
     requires webfx.kit.openjfx;
     requires webfx.kit.platform.visibility.openjfx;
-    requires webfx.platform.blob.java;
     requires webfx.platform.boot.java;
     requires webfx.platform.console.java;
-    requires webfx.platform.fetch.java;
     requires webfx.platform.json.java;
     requires webfx.platform.os.java;
     requires webfx.platform.resource.java;
@@ -33,9 +31,6 @@ module kbs.frontoffice.application.openjfx {
     requires webfx.stack.com.bus.json.client;
     requires webfx.stack.com.bus.json.client.websocket.java;
     requires webfx.stack.com.websocket.java;
-    requires webfx.stack.conf;
-    requires webfx.stack.conf.env.java;
-    requires webfx.stack.conf.format.json;
     requires webfx.stack.db.query.buscall;
     requires webfx.stack.db.querysubmit.java.jdbc;
     requires webfx.stack.db.submit.buscall;
@@ -44,14 +39,5 @@ module kbs.frontoffice.application.openjfx {
     requires webfx.stack.orm.dql.submit.interceptor;
     requires webfx.stack.session.client;
     requires webfx.stack.ui.fxraiser.json;
-
-    // Exported packages
-    exports org.kadampabookings.kbs.frontoffice.conf.openjfx;
-
-    // Resources packages
-    opens dev.webfx.platform.meta.exe;
-
-    // Provided services
-    provides dev.webfx.stack.conf.spi.ConfigurationSupplier with org.kadampabookings.kbs.frontoffice.conf.openjfx.KBSFrontOfficeEnvironmentConfigurationSupplier;
 
 }

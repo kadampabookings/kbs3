@@ -7,21 +7,19 @@
         <source-packages/>
     </exported-packages>
 
-    <providers>
-        <provider interface="javafx.application.Application">org.kadampabookings.kbs.frontoffice.KbsFrontOfficeApplication</provider>
-    </providers>
-
     <dependencies>
         <used-by-source-modules/>
 
-        <!-- Allow configuration variables from environment in Java executables (OpenJFX or Gluon) -->
-        <plugin-module executable-target="java">webfx-stack-conf-env-java</plugin-module>
+        <plugin-module>kbs-client-conf</plugin-module>
+
+        <plugin-module>modality-base-frontoffice-application</plugin-module>
 
         <!-- Kadampa home page -->
         <plugin-module>kbs-frontoffice-activities-home</plugin-module>
 
         <!-- Event activities -->
         <plugin-module>modality-event-frontoffice-activities-booking</plugin-module>
+
         <plugin-module>modality-base-frontoffice-activities-alerts</plugin-module>
         <plugin-module>modality-base-frontoffice-activities-account</plugin-module>
     </dependencies>

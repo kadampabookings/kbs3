@@ -48,6 +48,7 @@
         <module>kbs-backoffice-application-gluon</module>
         <module>kbs-backoffice-application-gwt</module>
         <module>kbs-backoffice-application-openjfx</module>
+        <module>kbs-client-conf</module>
         <module>kbs-frontoffice-activities-home</module>
         <module>kbs-frontoffice-application</module>
         <module>kbs-frontoffice-application-gluon</module>
