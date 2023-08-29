@@ -68,7 +68,7 @@ public class KdmImportJob implements ApplicationJob {
                                                 KdmCenter kdmCenter = kdmCenters.stream().filter(center -> center.getKdmId() == kdmId).findFirst().get();
                                                 kdmCenter = updateStore.updateEntity(kdmCenter);
                                                 kdmCenter.setKdmId(kdmJson.getInteger("id"));
-                                                kdmCenter.setName(kdmJson.getString("name"));
+                                                kdmCenter.setName(WebTextUtil.unescapeHtml(kdmJson.getString("name")));
                                                 if (kdmJson.getDouble("lat") != null) {
                                                     kdmCenter.setLat(kdmJson.getDouble("lat").floatValue());
                                                 }
@@ -93,7 +93,7 @@ public class KdmImportJob implements ApplicationJob {
                                             // Create a new KdmCenter record
                                             KdmCenter kdmCenter = updateStore.insertEntity(KdmCenter.class);
                                             kdmCenter.setKdmId(kdmJson.getInteger("id"));
-                                            kdmCenter.setName(kdmJson.getString("name"));
+                                            kdmCenter.setName(WebTextUtil.unescapeHtml(kdmJson.getString("name")));
                                             if (kdmJson.getDouble("lat") != null) {
                                                 kdmCenter.setLat(kdmJson.getDouble("lat").floatValue());
                                             }
