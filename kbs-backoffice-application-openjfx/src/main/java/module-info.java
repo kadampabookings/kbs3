@@ -7,8 +7,6 @@ module kbs.backoffice.application.openjfx {
 
     // Direct dependencies modules
     requires kbs.backoffice.application;
-    requires modality.ecommerce.payment.custom.buscall;
-    requires modality.ecommerce.payment.custom.remote;
     requires webfx.extras.webtext.peers.openjfx;
     requires webfx.kit.openjfx;
     requires webfx.kit.platform.visibility.openjfx;
