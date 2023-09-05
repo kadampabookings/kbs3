@@ -4,8 +4,8 @@ import dev.webfx.platform.boot.spi.ApplicationJob;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
-import dev.webfx.platform.util.keyobject.ReadOnlyIndexedArray;
-import dev.webfx.platform.util.keyobject.ReadOnlyKeyObject;
+import dev.webfx.platform.ast.ReadOnlyAstArray;
+import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityList;
@@ -61,7 +61,7 @@ public class KdmImportJob implements ApplicationJob {
                                 // @TODO - UNCOMMENT ====================
                                 for (int i = 0; i < webKdmJsonArray.size(); i++) {
 
-                                    ReadOnlyKeyObject kdmJson = webKdmJsonArray.getObject(i);
+                                    ReadOnlyAstObject kdmJson = webKdmJsonArray.getObject(i);
                                     int kdmId = kdmJson.getInteger("id");
                                     if (kdmIds.contains(kdmId)) {
 
@@ -123,7 +123,7 @@ public class KdmImportJob implements ApplicationJob {
                         }));
     }
 
-    private void processClosedCentres(ReadOnlyIndexedArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
+    private void processClosedCentres(ReadOnlyAstArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
 
         Console.log("GOT HERE 2--------");
         List<Integer> closedCentreIds = getClosedCentreIds(latestCentresList, currentCentresList);
@@ -154,7 +154,7 @@ public class KdmImportJob implements ApplicationJob {
         Console.log("GOT HERE 5--------");
     }
 
-    private List<Integer> getClosedCentreIds(ReadOnlyIndexedArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
+    private List<Integer> getClosedCentreIds(ReadOnlyAstArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
 
         List<Integer> closedCentreIds = new ArrayList<>();
         for (KdmCenter currentCentre: currentCentresList) {
@@ -162,7 +162,7 @@ public class KdmImportJob implements ApplicationJob {
             boolean isClosed = true;
             for (int i = 0; i < latestCentresList.size(); i++) {
 
-                ReadOnlyKeyObject latestCentre = latestCentresList.getObject(i);
+                ReadOnlyAstObject latestCentre = latestCentresList.getObject(i);
                 if (currentCentre.getKdmId().equals(latestCentre.getInteger("kdm_id"))) {
                     isClosed = false;
                     break;

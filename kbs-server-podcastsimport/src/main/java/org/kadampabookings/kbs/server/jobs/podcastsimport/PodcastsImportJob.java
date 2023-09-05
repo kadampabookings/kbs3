@@ -7,8 +7,8 @@ import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Dates;
-import dev.webfx.platform.util.keyobject.AST;
-import dev.webfx.platform.util.keyobject.ReadOnlyKeyObject;
+import dev.webfx.platform.ast.AST;
+import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
@@ -78,7 +78,7 @@ public class PodcastsImportJob implements ApplicationJob {
                             LocalDateTime maxPodcastDate = fetchAfterParameter;
 
                             for (int i = 0; i < webPodcastsJsonArray.size(); i++) {
-                                ReadOnlyKeyObject podcastJson = webPodcastsJsonArray.getObject(i);
+                                ReadOnlyAstObject podcastJson = webPodcastsJsonArray.getObject(i);
                                 String id = podcastJson.getString("id");
 
                                 // Skipping the podcasts already present in the database

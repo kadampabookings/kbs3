@@ -9,8 +9,8 @@ import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Dates;
-import dev.webfx.platform.util.keyobject.AST;
-import dev.webfx.platform.util.keyobject.ReadOnlyKeyObject;
+import dev.webfx.platform.ast.AST;
+import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
@@ -77,10 +77,10 @@ public class NewsImportJob implements ApplicationJob {
                         .onSuccess(dbNews -> {
 
                             // Collecting the new news and their media ids (will need to be fetched)
-                            List<ReadOnlyKeyObject> newWebNews = new ArrayList<>();
+                            List<ReadOnlyAstObject> newWebNews = new ArrayList<>();
                             List<String> mediaIds = new ArrayList<>();
                             for (int i = 0; i < webNewsJsonArray.size(); i++) {
-                                ReadOnlyKeyObject webNewsJson = webNewsJsonArray.getObject(i);
+                                ReadOnlyAstObject webNewsJson = webNewsJsonArray.getObject(i);
                                 String id = webNewsJson.getString("id");
                                 // Ignoring the news
                                 if (dbNews.stream().noneMatch(news -> Objects.equals(id, news.getChannelNewsId()))) {
@@ -97,7 +97,7 @@ public class NewsImportJob implements ApplicationJob {
                             // Creating a batch of those media ids
                             Batch<String> mediaIdsInputBatch = new Batch<>(mediaIds.toArray(new String[0]));
                             // Execute all individual fetches in parallel
-                            mediaIdsInputBatch.executeParallel(ReadOnlyKeyObject[]::new, mediaId ->
+                            mediaIdsInputBatch.executeParallel(ReadOnlyAstObject[]::new, mediaId ->
                                             mediaId == null ? Future.succeededFuture(null) : JsonFetch.fetchJsonObject(MEDIA_FETCH_URL + "/" + mediaId))
                                     .onFailure(e -> Console.log("Error while fetching news medias", e))
                                     .onSuccess(webMediasJsonBatch -> {
@@ -107,9 +107,9 @@ public class NewsImportJob implements ApplicationJob {
                                         LocalDateTime maxNewsDate = fetchAfterParameter;
 
                                         // Creating the new News entities to insert in the database
-                                        ReadOnlyKeyObject[] mediasJson = webMediasJsonBatch.getArray();
+                                        ReadOnlyAstObject[] mediasJson = webMediasJsonBatch.getArray();
                                         for (int i = 0; i < mediasJson.length; i++) {
-                                            ReadOnlyKeyObject newsJson = newWebNews.get(i);
+                                            ReadOnlyAstObject newsJson = newWebNews.get(i);
                                             String id = newsJson.getString("id");
                                             News n = updateStore.insertEntity(News.class);
                                             n.setChannel(1);

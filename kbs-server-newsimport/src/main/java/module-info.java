@@ -9,10 +9,11 @@ module kbs.server.newsimport {
     requires java.base;
     requires modality.base.shared.entities;
     requires webfx.extras.webtext.util;
+    requires webfx.platform.ast;
     requires webfx.platform.async;
     requires webfx.platform.boot;
     requires webfx.platform.console;
-    requires webfx.platform.fetch.json;
+    requires webfx.platform.fetch.ast.json;
     requires webfx.platform.scheduler;
     requires webfx.platform.util;
     requires webfx.stack.orm.datasourcemodel.service;

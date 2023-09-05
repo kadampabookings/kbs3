@@ -2,7 +2,7 @@ package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.json.JsonFetch;
-import dev.webfx.platform.util.keyobject.ReadOnlyKeyObject;
+import dev.webfx.platform.ast.ReadOnlyAstObject;
 import javafx.collections.ObservableList;
 import one.modality.base.frontoffice.entities.Center;
 
@@ -38,7 +38,7 @@ public class HomeUtility {
                 .onSuccess(jsonArray -> {
                     System.out.println("KDM size = " + jsonArray.size());
                     for (int i = 0; i < jsonArray.size(); i++) {
-                        ReadOnlyKeyObject o = jsonArray.getObject(i);
+                        ReadOnlyAstObject o = jsonArray.getObject(i);
                         Center c = new Center(o.getString("name"), o.getDouble("lat"), o.getDouble("lng"), o.getString("type"), o.getString("city"));
                         centers.add(c);
                         System.out.println(i);
