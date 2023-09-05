@@ -1,18 +1,16 @@
 package org.kadampabookings.kbs.server.jobs.newsimport;
 
+import dev.webfx.extras.webtext.util.WebTextUtil;
 import dev.webfx.platform.async.Batch;
 import dev.webfx.platform.async.Future;
 import dev.webfx.platform.boot.spi.ApplicationJob;
 import dev.webfx.platform.console.Console;
-import dev.webfx.platform.fetch.Fetch;
-import dev.webfx.platform.fetch.Response;
-import dev.webfx.platform.json.Json;
-import dev.webfx.platform.json.JsonObject;
-import dev.webfx.platform.json.ReadOnlyJsonObject;
+import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Dates;
-import dev.webfx.extras.webtext.util.WebTextUtil;
+import dev.webfx.platform.util.keyobject.AST;
+import dev.webfx.platform.util.keyobject.ReadOnlyKeyObject;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
@@ -70,78 +68,75 @@ public class NewsImportJob implements ApplicationJob {
         // web service is 10 by default; this could be increased using &per_page=100 - 100 is the maximal value
         // authorized by the web service)
         String fetchUrl = NEWS_FETCH_URL + "?order=asc&after=" + Dates.formatIso(fetchAfterParameter);
-        Fetch.fetch(fetchUrl)
+        JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
-                .onSuccess(response -> response.jsonArray()
-                        .onFailure(error -> Console.log("Error while parsing json array from " + fetchUrl, error))
-                        // Fetching the latest news from the database in order to determine those that are not yet imported
-                        .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
-                                        "select channelNewsId from News where date >= ? order by date limit ?", fetchAfterParameter, webNewsJsonArray.size()
-                                )
-                                .onFailure(e -> Console.log("Error while reading news from database", e))
-                                .onSuccess(dbNews -> {
+                .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
+                                "select channelNewsId from News where date >= ? order by date limit ?", fetchAfterParameter, webNewsJsonArray.size()
+                        )
+                        .onFailure(e -> Console.log("Error while reading news from database", e))
+                        .onSuccess(dbNews -> {
 
-                                    // Collecting the new news and their media ids (will need to be fetched)
-                                    List<ReadOnlyJsonObject> newWebNews = new ArrayList<>();
-                                    List<String> mediaIds = new ArrayList<>();
-                                    for (int i = 0; i < webNewsJsonArray.size(); i++) {
-                                        ReadOnlyJsonObject webNewsJson = webNewsJsonArray.getObject(i);
-                                        String id = webNewsJson.getString("id");
-                                        // Ignoring the news
-                                        if (dbNews.stream().noneMatch(news -> Objects.equals(id, news.getChannelNewsId()))) {
-                                            newWebNews.add(webNewsJson);
-                                            mediaIds.add(webNewsJson.getString("featured_media"));
+                            // Collecting the new news and their media ids (will need to be fetched)
+                            List<ReadOnlyKeyObject> newWebNews = new ArrayList<>();
+                            List<String> mediaIds = new ArrayList<>();
+                            for (int i = 0; i < webNewsJsonArray.size(); i++) {
+                                ReadOnlyKeyObject webNewsJson = webNewsJsonArray.getObject(i);
+                                String id = webNewsJson.getString("id");
+                                // Ignoring the news
+                                if (dbNews.stream().noneMatch(news -> Objects.equals(id, news.getChannelNewsId()))) {
+                                    newWebNews.add(webNewsJson);
+                                    mediaIds.add(webNewsJson.getString("featured_media"));
+                                }
+                            }
+
+                            if (newWebNews.isEmpty()) {
+                                Console.log("No new news to import");
+                                return;
+                            }
+
+                            // Creating a batch of those media ids
+                            Batch<String> mediaIdsInputBatch = new Batch<>(mediaIds.toArray(new String[0]));
+                            // Execute all individual fetches in parallel
+                            mediaIdsInputBatch.executeParallel(ReadOnlyKeyObject[]::new, mediaId ->
+                                            mediaId == null ? Future.succeededFuture(null) : JsonFetch.fetchJsonObject(MEDIA_FETCH_URL + "/" + mediaId))
+                                    .onFailure(e -> Console.log("Error while fetching news medias", e))
+                                    .onSuccess(webMediasJsonBatch -> {
+
+                                        // Preparing the update store for the database submit
+                                        UpdateStore updateStore = UpdateStore.createAbove(dbNews.getStore());
+                                        LocalDateTime maxNewsDate = fetchAfterParameter;
+
+                                        // Creating the new News entities to insert in the database
+                                        ReadOnlyKeyObject[] mediasJson = webMediasJsonBatch.getArray();
+                                        for (int i = 0; i < mediasJson.length; i++) {
+                                            ReadOnlyKeyObject newsJson = newWebNews.get(i);
+                                            String id = newsJson.getString("id");
+                                            News n = updateStore.insertEntity(News.class);
+                                            n.setChannel(1);
+                                            n.setChannelNewsId(id);
+                                            n.setTitle(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "title.rendered")));
+                                            n.setExcerpt(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "excerpt.rendered")));
+                                            LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
+                                            if (dateTime.isAfter(maxNewsDate))
+                                                maxNewsDate = dateTime;
+                                            n.setDate(LocalDate.from(dateTime));
+                                            n.setLinkUrl(cleanUrl(AST.lookupString(newsJson, "guid.rendered")));
+                                            n.setImageUrl(cleanUrl(AST.lookupString(mediasJson[i], "media_details.sizes.medium.source_url")));
                                         }
-                                    }
 
-                                    if (newWebNews.isEmpty()) {
-                                        Console.log("No new news to import");
-                                        return;
-                                    }
+                                        LocalDateTime finalMaxNewsDate = maxNewsDate;
 
-                                    // Creating a batch of those media ids
-                                    Batch<String> mediaIdsInputBatch = new Batch<>(mediaIds.toArray(new String[0]));
-                                    // Execute all individual fetches in parallel
-                                    mediaIdsInputBatch.executeParallel(JsonObject[]::new, mediaId ->
-                                                    mediaId == null ? Future.succeededFuture(null) : Fetch.fetch(MEDIA_FETCH_URL + "/" + mediaId).compose(Response::jsonObject))
-                                            .onFailure(e -> Console.log("Error while fetching news medias" , e))
-                                            .onSuccess(webMediasJsonBatch -> {
+                                        updateStore.submitChanges()
+                                                .onFailure(e -> Console.log("Error while inserting news in database", e))
+                                                .onSuccess(insertBatch -> {
+                                                    int newNewsCount = insertBatch.getArray().length;
+                                                    Console.log(newNewsCount + " new news imported in database");
+                                                    fetchAfterParameter = finalMaxNewsDate;
+                                                    importNews();
+                                                });
 
-                                                // Preparing the update store for the database submit
-                                                UpdateStore updateStore = UpdateStore.createAbove(dbNews.getStore());
-                                                LocalDateTime maxNewsDate = fetchAfterParameter;
-
-                                                // Creating the new News entities to insert in the database
-                                                JsonObject[] mediasJson = webMediasJsonBatch.getArray();
-                                                for (int i = 0; i < mediasJson.length; i++) {
-                                                    ReadOnlyJsonObject newsJson = newWebNews.get(i);
-                                                    String id = newsJson.getString("id");
-                                                    News n = updateStore.insertEntity(News.class);
-                                                    n.setChannel(1);
-                                                    n.setChannelNewsId(id);
-                                                    n.setTitle(WebTextUtil.unescapeHtml(Json.lookupString(newsJson, "title.rendered")));
-                                                    n.setExcerpt(WebTextUtil.unescapeHtml(Json.lookupString(newsJson, "excerpt.rendered")));
-                                                    LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
-                                                    if (dateTime.isAfter(maxNewsDate))
-                                                        maxNewsDate = dateTime;
-                                                    n.setDate(LocalDate.from(dateTime));
-                                                    n.setLinkUrl(cleanUrl(Json.lookupString(newsJson, "guid.rendered")));
-                                                    n.setImageUrl(cleanUrl(Json.lookupString(mediasJson[i], "media_details.sizes.medium.source_url")));
-                                                }
-
-                                                LocalDateTime finalMaxNewsDate = maxNewsDate;
-
-                                                updateStore.submitChanges()
-                                                        .onFailure(e -> Console.log("Error while inserting news in database", e))
-                                                        .onSuccess(insertBatch -> {
-                                                            int newNewsCount = insertBatch.getArray().length;
-                                                            Console.log(newNewsCount + " new news imported in database");
-                                                            fetchAfterParameter = finalMaxNewsDate;
-                                                            importNews();
-                                                        });
-
-                                            });
-                                })));
+                                    });
+                        }));
     }
 
     private static String cleanUrl(String url) {

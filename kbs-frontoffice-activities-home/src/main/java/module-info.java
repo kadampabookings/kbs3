@@ -20,8 +20,7 @@ module kbs.frontoffice.activities.home {
     requires webfx.kit.util;
     requires webfx.platform.async;
     requires webfx.platform.console;
-    requires webfx.platform.fetch;
-    requires webfx.platform.json;
+    requires webfx.platform.fetch.json;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.orm.domainmodel.activity;

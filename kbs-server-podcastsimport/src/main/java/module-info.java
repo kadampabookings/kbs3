@@ -11,8 +11,7 @@ module kbs.server.podcastsimport {
     requires webfx.extras.webtext.util;
     requires webfx.platform.boot;
     requires webfx.platform.console;
-    requires webfx.platform.fetch;
-    requires webfx.platform.json;
+    requires webfx.platform.fetch.json;
     requires webfx.platform.scheduler;
     requires webfx.platform.util;
     requires webfx.stack.orm.datasourcemodel.service;
