@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <description>Some configuration settings common to the KBS Back-Office &amp; Front-Office.</description>
+
+    <exported-packages>
+        <source-packages/>
+        <resource-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+
+        <!-- Allow configuration variables from environment in OpenJFX executable (on dev machines through IDEA config) -->
+        <plugin-module executable-target="openjfx">webfx-platform-substitution-var-env-plugin</plugin-module>
+        <plugin-module>webfx-platform-substitution-var-conf-plugin</plugin-module> <!-- Ex: BUS_SERVER_HOST -->
+
+        <!-- Allow configuration variables from local storage in GWT executables -->
+        <plugin-module executable-target="gwt">webfx-platform-substitution-var-localstorage-plugin</plugin-module>
+        <plugin-module executable-target="gwt">webfx-platform-substitution-var-windowlocation-plugin</plugin-module>
+
+    </dependencies>
+
+</project>

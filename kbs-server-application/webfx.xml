@@ -10,14 +10,14 @@
     <dependencies>
         <used-by-source-modules/>
 
-        <plugin-module>modality-base-server-application-all</plugin-module> <!-- includes some standard configuration -->
-        <plugin-module>modality-crm-server-application-all</plugin-module>
-        <plugin-module>modality-ecommerce-server-application-all</plugin-module>
+        <plugin-module>modality-base-server-max-plugin</plugin-module> <!-- includes some standard configuration -->
+        <plugin-module>modality-crm-server-max-plugin</plugin-module>
+        <plugin-module>modality-ecommerce-server-max-plugin</plugin-module>
 
-        <plugin-module>kbs-server-podcastsimport</plugin-module>
-        <plugin-module>kbs-server-newsimport</plugin-module>
-        <plugin-module>kbs-server-kdmimport</plugin-module>
-        <plugin-module>kbs-server-organisation-update</plugin-module>
+        <plugin-module>kbs-server-podcastsimport-plugin</plugin-module>
+        <plugin-module>kbs-server-newsimport-plugin</plugin-module>
+        <plugin-module>kbs-server-kdmimport-plugin</plugin-module>
+        <plugin-module>kbs-server-organisation-update-plugin</plugin-module>
 
     </dependencies>
 </project>

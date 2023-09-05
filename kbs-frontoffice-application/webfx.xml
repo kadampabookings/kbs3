@@ -10,18 +10,16 @@
     <dependencies>
         <used-by-source-modules/>
 
-        <plugin-module>kbs-client-conf</plugin-module>
+        <plugin-module>kbs-client-conf-plugin</plugin-module>
 
-        <plugin-module>modality-base-frontoffice-application</plugin-module>
+        <plugin-module>modality-base-frontoffice-max-plugin</plugin-module>
 
         <!-- Kadampa home page -->
-        <plugin-module>kbs-frontoffice-activities-home</plugin-module>
+        <plugin-module>kbs-frontoffice-activity-home-plugin</plugin-module>
 
         <!-- Event activities -->
-        <plugin-module>modality-event-frontoffice-activities-booking</plugin-module>
+        <plugin-module>modality-event-frontoffice-max-plugin</plugin-module>
 
-        <plugin-module>modality-base-frontoffice-activities-alerts</plugin-module>
-        <plugin-module>modality-base-frontoffice-activities-account</plugin-module>
     </dependencies>
 
 

@@ -30,7 +30,7 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-crm-server-authz</artifactId>
+            <artifactId>modality-crm-server-authz-required-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -150,7 +150,7 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-stack-http-server-vertx</artifactId>
+            <artifactId>webfx-stack-http-server-vertx-plugin</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 

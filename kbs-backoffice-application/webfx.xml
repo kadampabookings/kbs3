@@ -10,26 +10,24 @@
     <dependencies>
         <used-by-source-modules/>
 
-        <plugin-module>kbs-client-conf</plugin-module>
-
-        <plugin-module>modality-base-backoffice-application</plugin-module>
+        <plugin-module>kbs-client-conf-plugin</plugin-module>
 
         <!-- Base activities -->
-        <plugin-module>modality-base-backoffice-activities-all</plugin-module>
+        <plugin-module>modality-base-backoffice-max-plugin</plugin-module>
 
         <!-- CRM activities -->
 
         <!-- Ecommerce activities -->
-        <plugin-module>modality-ecommerce-backoffice-activities-all</plugin-module>
+        <plugin-module>modality-ecommerce-backoffice-max-plugin</plugin-module>
 
         <!-- Hotel activities -->
-        <plugin-module>modality-hotel-backoffice-activities-all</plugin-module>
+        <plugin-module>modality-hotel-backoffice-max-plugin</plugin-module>
 
         <!-- Event activities -->
-        <plugin-module>modality-event-backoffice-activities-all</plugin-module>
+        <plugin-module>modality-event-backoffice-max-plugin</plugin-module>
 
         <!-- Catering activities -->
-        <plugin-module>modality-catering-backoffice-activities-all</plugin-module>
+        <plugin-module>modality-catering-backoffice-max-plugin</plugin-module>
 
     </dependencies>
 
