@@ -17,7 +17,7 @@ import one.modality.base.shared.entities.Organization;
 public class OrganisationUpdateJob implements ApplicationJob {
 
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
-    private static final long UPDATE_PERIODICITY_MILLIS = 1000 * 3600 * 24; // 1x week
+    private static final long UPDATE_PERIODICITY_MILLIS = 1000 * 3600 * 24 * 3; // 3x day
     private Scheduled importTimer;
     private boolean isDebugMode = true;
 
@@ -54,6 +54,8 @@ public class OrganisationUpdateJob implements ApplicationJob {
                                         .onFailure(error -> Console.log(error))
                                         .onSuccess(kdmCenters -> {
 
+                                            // @TODO - uncomment ==================
+                                            /*
                                             for (KdmCenter kdmCenter : kdmCenters) {
 
                                                 // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
@@ -137,6 +139,7 @@ public class OrganisationUpdateJob implements ApplicationJob {
                                                     newOrganisation.setImportIssue("Multiple matching countries found: " + multipleMatchingCountries);
                                                 }
                                             }
+                                            */
 
                                             if (updateStore.hasChanges()) {
                                                 updateStore.submitChanges().onFailure(Console::log);

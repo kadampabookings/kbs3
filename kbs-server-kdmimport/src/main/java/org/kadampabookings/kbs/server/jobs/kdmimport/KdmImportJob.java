@@ -3,14 +3,21 @@ package org.kadampabookings.kbs.server.jobs.kdmimport;
 import dev.webfx.platform.boot.spi.ApplicationJob;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.Fetch;
+import dev.webfx.platform.json.JsonArray;
 import dev.webfx.platform.json.ReadOnlyJsonObject;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
+import dev.webfx.stack.orm.entity.Entity;
+import dev.webfx.stack.orm.entity.EntityList;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import one.modality.base.shared.entities.KdmCenter;
 import dev.webfx.extras.webtext.util.WebTextUtil;
+import one.modality.base.shared.entities.Organization;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +28,7 @@ public class KdmImportJob implements ApplicationJob {
 
     private static final String KDM_FETCH_URL = "https://kdm.kadampaweb.org/index.php/business/json";
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
-    private static final long IMPORT_PERIODICITY_MILLIS = 1000 * 3600 * 24 * 28; // 4x weeks
+    private static final long IMPORT_PERIODICITY_MILLIS = 1000 * 3600 * 24 * 3; // 3x day
     private Scheduled importTimer;
     private boolean isDebugMode = true;
 
@@ -56,6 +63,8 @@ public class KdmImportJob implements ApplicationJob {
                                         Set<Integer> kdmIds = kdmCenters.stream().map(KdmCenter::getKdmId).collect(Collectors.toSet());
                                         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
 
+                                        // @TODO - UNCOMMENT ====================
+                                        /*
                                         for (int i = 0; i < webKdmJsonArray.size(); i++) {
 
                                             ReadOnlyJsonObject kdmJson = webKdmJsonArray.getObject(i);
@@ -111,9 +120,68 @@ public class KdmImportJob implements ApplicationJob {
                                             kdmCenter.setPhoto(kdmJson.getString("photo"));
                                             kdmCenter.setWeb(cleanUrl(kdmJson.getString("web")));
                                         }
+                                        */
 
-                                        updateStore.submitChanges().onFailure(Console::log);
+                                        Console.log("GOT HERE 1--------");
+                                        updateStore.submitChanges()
+
+                                                .onFailure(Console::log)
+                                                .onSuccess(result -> processClosedCentres(webKdmJsonArray, kdmCenters));
                                 })));
+    }
+
+    private void processClosedCentres(JsonArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
+
+        Console.log("GOT HERE 2--------");
+        List<Integer> closedCentreIds = getClosedCentreIds(latestCentresList, currentCentresList);
+        Console.log("GOT HERE 3--------");
+        if (!closedCentreIds.isEmpty()) {
+
+            Console.log("GOT HERE 4--------");
+
+            /*
+            String commaSeparatedString = closedCentreIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization WHERE kdm_center_id in ?", commaSeparatedString)
+            */
+            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization where kdmCenter in (?)", (Object) closedCentreIds.toArray(new Integer[0]))
+
+                    .onFailure(error -> Console.log(error))
+                    .onSuccess(organizations -> {
+
+                        UpdateStore updateStore = UpdateStore.create(dataSourceModel);
+                        for(Organization organization : organizations) {
+                            organization = updateStore.updateEntity(organization);
+                            organization.setClosed(true);
+                        }
+
+                        // @TODO - uncomment the following ================
+                        // updateStore.submitChanges().onFailure(Console::log);
+                    });
+        }
+        Console.log("GOT HERE 5--------");
+    }
+
+    private List<Integer> getClosedCentreIds(JsonArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
+
+        List<Integer> closedCentreIds = new ArrayList<>();
+        for (KdmCenter currentCentre: currentCentresList) {
+
+            boolean isClosed = true;
+            for (int i = 0; i < latestCentresList.size(); i++) {
+
+                ReadOnlyJsonObject latestCentre = latestCentresList.getObject(i);
+                if (currentCentre.getKdmId().equals(latestCentre.getInteger("kdm_id"))) {
+                    isClosed = false;
+                    break;
+                }
+            }
+
+            if (isClosed) {
+                Console.log("Found a closed centre with ID: " + currentCentre.getKdmId());
+                closedCentreIds.add(currentCentre.getKdmId());
+            }
+        }
+        return closedCentreIds;
     }
 
     private static String cleanUrl(String url) {
