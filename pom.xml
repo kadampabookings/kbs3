@@ -56,7 +56,9 @@
         <module>kbs-frontoffice-application-openjfx</module>
         <module>kbs-server-application</module>
         <module>kbs-server-application-vertx</module>
+        <module>kbs-server-kdmimport</module>
         <module>kbs-server-newsimport</module>
+        <module>kbs-server-organisation-update</module>
         <module>kbs-server-podcastsimport</module>
     </modules>
 
