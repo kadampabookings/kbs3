@@ -8,7 +8,6 @@ import dev.webfx.platform.json.ReadOnlyJsonObject;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
-import dev.webfx.stack.orm.entity.Entity;
 import dev.webfx.stack.orm.entity.EntityList;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
@@ -63,8 +62,6 @@ public class KdmImportJob implements ApplicationJob {
                                         Set<Integer> kdmIds = kdmCenters.stream().map(KdmCenter::getKdmId).collect(Collectors.toSet());
                                         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
 
-                                        // @TODO - UNCOMMENT ====================
-                                        /*
                                         for (int i = 0; i < webKdmJsonArray.size(); i++) {
 
                                             ReadOnlyJsonObject kdmJson = webKdmJsonArray.getObject(i);
@@ -120,9 +117,7 @@ public class KdmImportJob implements ApplicationJob {
                                             kdmCenter.setPhoto(kdmJson.getString("photo"));
                                             kdmCenter.setWeb(cleanUrl(kdmJson.getString("web")));
                                         }
-                                        */
 
-                                        Console.log("GOT HERE 1--------");
                                         updateStore.submitChanges()
 
                                                 .onFailure(Console::log)
@@ -132,18 +127,13 @@ public class KdmImportJob implements ApplicationJob {
 
     private void processClosedCentres(JsonArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
 
-        Console.log("GOT HERE 2--------");
         List<Integer> closedCentreIds = getClosedCentreIds(latestCentresList, currentCentresList);
-        Console.log("GOT HERE 3--------");
         if (!closedCentreIds.isEmpty()) {
 
-            Console.log("GOT HERE 4--------");
-
-            /*
-            String commaSeparatedString = closedCentreIds.stream().map(String::valueOf).collect(Collectors.joining(","));
-            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization WHERE kdm_center_id in ?", commaSeparatedString)
-            */
-            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization where kdmCenter in (?)", (Object) closedCentreIds.toArray(new Integer[0]))
+            // @TODO
+            // @Bruno - you may want to use a better way to embed the string list arguments
+            String closedCentreIdsString = closedCentreIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization where kdmCenter in (" + closedCentreIdsString + ")")
 
                     .onFailure(error -> Console.log(error))
                     .onSuccess(organizations -> {
@@ -153,12 +143,9 @@ public class KdmImportJob implements ApplicationJob {
                             organization = updateStore.updateEntity(organization);
                             organization.setClosed(true);
                         }
-
-                        // @TODO - uncomment the following ================
-                        // updateStore.submitChanges().onFailure(Console::log);
+                        updateStore.submitChanges().onFailure(Console::log);
                     });
         }
-        Console.log("GOT HERE 5--------");
     }
 
     private List<Integer> getClosedCentreIds(JsonArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
@@ -170,7 +157,7 @@ public class KdmImportJob implements ApplicationJob {
             for (int i = 0; i < latestCentresList.size(); i++) {
 
                 ReadOnlyJsonObject latestCentre = latestCentresList.getObject(i);
-                if (currentCentre.getKdmId().equals(latestCentre.getInteger("kdm_id"))) {
+                if (currentCentre.getKdmId().equals(latestCentre.getInteger("id"))) {
                     isClosed = false;
                     break;
                 }
