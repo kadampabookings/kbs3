@@ -29,7 +29,6 @@ public class KdmImportJob implements ApplicationJob {
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private static final long IMPORT_PERIODICITY_MILLIS = 1000 * 3600 * 24 * 3; // 3x day
     private Scheduled importTimer;
-    private boolean isDebugMode = true;
 
     @Override
     public void onStart() {
@@ -37,7 +36,7 @@ public class KdmImportJob implements ApplicationJob {
 
         // @TODO
         // The following creates an exception - Bruno to investigate
-        //importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importKdm);
+        // importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importKdm);
     }
 
     @Override
@@ -49,6 +48,7 @@ public class KdmImportJob implements ApplicationJob {
     public void importKdm() {
 
         JsonFetch.fetchJsonArray(KDM_FETCH_URL)
+
                 .onFailure(error -> Console.log("Error while fetching " + KDM_FETCH_URL, error))
                 .onSuccess(webKdmJsonArray -> EntityStore.create(dataSourceModel).<KdmCenter>executeQuery("select id,kdmId,name,type,lat,lng from KdmCenter")
 
@@ -58,7 +58,6 @@ public class KdmImportJob implements ApplicationJob {
                                 Set<Integer> kdmIds = kdmCenters.stream().map(KdmCenter::getKdmId).collect(Collectors.toSet());
                                 UpdateStore updateStore = UpdateStore.create(dataSourceModel);
 
-                                // @TODO - UNCOMMENT ====================
                                 for (int i = 0; i < webKdmJsonArray.size(); i++) {
 
                                     ReadOnlyAstObject kdmJson = webKdmJsonArray.getObject(i);
@@ -115,7 +114,6 @@ public class KdmImportJob implements ApplicationJob {
                                     kdmCenter.setWeb(cleanUrl(kdmJson.getString("web")));
                                 }
 
-                                Console.log("GOT HERE 1--------");
                                 updateStore.submitChanges()
 
                                         .onFailure(Console::log)
@@ -125,20 +123,13 @@ public class KdmImportJob implements ApplicationJob {
 
     private void processClosedCentres(ReadOnlyAstArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
 
-        Console.log("GOT HERE 2--------");
         List<Integer> closedCentreIds = getClosedCentreIds(latestCentresList, currentCentresList);
-        Console.log("GOT HERE 3--------");
         if (!closedCentreIds.isEmpty()) {
 
-            Console.log("GOT HERE 4--------");
+            String closedCentreIdsString = closedCentreIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization where kdmCenter in (" + closedCentreIdsString + ")")
 
-            /*
-            String commaSeparatedString = closedCentreIds.stream().map(String::valueOf).collect(Collectors.joining(","));
-            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization WHERE kdm_center_id in ?", commaSeparatedString)
-            */
-            EntityStore.create(dataSourceModel).<Organization>executeQuery("select id,kdmCenter.id from Organization where kdmCenter in (?)", (Object) closedCentreIds.toArray(new Integer[0]))
-
-                    .onFailure(Console::log)
+                    .onFailure(error -> Console.log(error))
                     .onSuccess(organizations -> {
 
                         UpdateStore updateStore = UpdateStore.create(dataSourceModel);
@@ -146,12 +137,9 @@ public class KdmImportJob implements ApplicationJob {
                             organization = updateStore.updateEntity(organization);
                             organization.setClosed(true);
                         }
-
-                        // @TODO - uncomment the following ================
-                        // updateStore.submitChanges().onFailure(Console::log);
+                        updateStore.submitChanges().onFailure(Console::log);
                     });
         }
-        Console.log("GOT HERE 5--------");
     }
 
     private List<Integer> getClosedCentreIds(ReadOnlyAstArray latestCentresList, EntityList<KdmCenter> currentCentresList) {
@@ -163,7 +151,7 @@ public class KdmImportJob implements ApplicationJob {
             for (int i = 0; i < latestCentresList.size(); i++) {
 
                 ReadOnlyAstObject latestCentre = latestCentresList.getObject(i);
-                if (currentCentre.getKdmId().equals(latestCentre.getInteger("kdm_id"))) {
+                if (currentCentre.getKdmId().equals(latestCentre.getInteger("id"))) {
                     isClosed = false;
                     break;
                 }

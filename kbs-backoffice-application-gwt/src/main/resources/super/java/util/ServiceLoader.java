@@ -12,7 +12,7 @@ public class ServiceLoader<S> implements Iterable<S> {
             case "dev.webfx.kit.launcher.spi.WebFxKitLauncherProvider": return new ServiceLoader<S>(dev.webfx.kit.launcher.spi.impl.gwt.GwtWebFxKitLauncherProvider::new);
             case "dev.webfx.kit.mapper.spi.WebFxKitMapperProvider": return new ServiceLoader<S>(dev.webfx.kit.mapper.spi.impl.gwt.GwtWebFxKitHtmlMapperProvider::new);
             case "dev.webfx.platform.ast.formatter.spi.AstFormatterProvider": return new ServiceLoader<S>(dev.webfx.platform.ast.json.JsonFormatterProvider::new);
-            case "dev.webfx.platform.ast.json.spi.JsonProvider": return new ServiceLoader<S>(dev.webfx.platform.ast.json.spi.impl.gwt.GwtJsonObject::create);
+            case "dev.webfx.platform.ast.json.spi.JsonProvider": return new ServiceLoader<S>(dev.webfx.platform.ast.json.spi.impl.gwt.GwtJsonObject::new);
             case "dev.webfx.platform.ast.parser.spi.AstParserProvider": return new ServiceLoader<S>(dev.webfx.platform.ast.json.JsonAstParserProvider::new);
             case "dev.webfx.platform.boot.spi.ApplicationBooterProvider": return new ServiceLoader<S>(dev.webfx.platform.boot.spi.impl.gwt.GwtApplicationBooterProvider::new);
             case "dev.webfx.platform.boot.spi.ApplicationJob": return new ServiceLoader<S>(one.modality.crm.backoffice.controls.bookingdetailspanel.BookingDetailsPanelApplicationJob::new);
