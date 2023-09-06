@@ -391,6 +391,7 @@
     <!--========================< webfx-platform-substitution-var >=========================-->
     <source path="dev/webfx/platform/substitution/spi/impl/var"/>
     <source path="dev/webfx/platform/substitution/var/spi"/>
+    <source path="dev/webfx/platform/substitution/var/spi/impl"/>
     <!--==================< webfx-platform-substitution-var-conf-plugin >===================-->
     <source path="dev/webfx/platform/substitution/var/spi/impl/conf"/>
     <!--==============< webfx-platform-substitution-var-localstorage-plugin >===============-->
