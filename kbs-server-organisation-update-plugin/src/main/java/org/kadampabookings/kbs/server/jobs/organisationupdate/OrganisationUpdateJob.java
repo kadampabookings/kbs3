@@ -54,7 +54,6 @@ public class OrganisationUpdateJob implements ApplicationJob {
                                         .onFailure(Console::log)
                                         .onSuccess(kdmCenters -> {
 
-                                            // @TODO - uncomment ==================
                                             for (KdmCenter kdmCenter : kdmCenters) {
 
                                                 // Ignore all branches (these are sites rather than Organizations and so should be stored separately)
