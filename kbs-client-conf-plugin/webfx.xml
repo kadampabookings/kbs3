@@ -19,6 +19,7 @@
         <plugin-module executable-target="gwt">webfx-platform-substitution-var-localstorage-plugin</plugin-module>
         <plugin-module executable-target="gwt">webfx-platform-substitution-var-windowlocation-plugin</plugin-module>
 
+        <plugin-module>webfx-platform-ast-yaml-plugin</plugin-module>
     </dependencies>
 
 </project>

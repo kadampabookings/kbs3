@@ -151,9 +151,9 @@
     <source path="one/modality/base/backoffice/activities/filters/routing"/>
     <source path="one/modality/base/backoffice/operations/routes/filters"/>
     <!--=================< modality-base-backoffice-activity-home-plugin >==================-->
-    <source path="one/modality/catering/backoffice/activities/home"/>
-    <source path="one/modality/catering/backoffice/activities/home/routing"/>
-    <source path="one/modality/catering/backoffice/operations/routes/home"/>
+    <source path="one/modality/base/backoffice/activities/home"/>
+    <source path="one/modality/base/backoffice/activities/home/routing"/>
+    <source path="one/modality/base/backoffice/operations/routes/home"/>
     <!--==============< modality-base-backoffice-activity-operations-plugin >===============-->
     <source path="one/modality/base/backoffice/activities/operations"/>
     <source path="one/modality/base/backoffice/activities/operations/routing"/>
@@ -165,6 +165,14 @@
     <source path="one/modality/base/backoffice/ganttcanvas/spi"/>
     <resource path="one/modality/base/backoffice/ganttcanvas/images/s32"/>
     <public includes="one/modality/base/backoffice/ganttcanvas/images/s32/" path=""/>
+    <!--==================< modality-base-backoffice-mainframe-activity >===================-->
+    <source path="one/modality/base/backoffice/activities/mainframe"/>
+    <resource path="one/modality/base/backoffice/activities/mainframe"/>
+    <public includes="one/modality/base/backoffice/activities/mainframe/" path=""/>
+    <!--=====================< modality-base-backoffice-mainframe-fx >======================-->
+    <source path="one/modality/base/backoffice/activities/mainframe/fx"/>
+    <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
+    <source path="one/modality/base/backoffice/activities/mainframe/headernode"/>
     <!--======================< modality-base-backoffice-masterslave >======================-->
     <source path="one/modality/base/backoffice/controls/masterslave"/>
     <source path="one/modality/base/backoffice/controls/masterslave/group"/>
@@ -172,6 +180,8 @@
     <source path="one/modality/base/backoffice/operations/entities/filters"/>
     <!--==================< modality-base-backoffice-operations-generic >===================-->
     <source path="one/modality/base/backoffice/operations/entities/generic"/>
+    <!--=========================< modality-base-backoffice-tile >==========================-->
+    <source path="one/modality/base/backoffice/tile"/>
     <!--=========================< modality-base-client-activity >==========================-->
     <source path="one/modality/base/client/activity"/>
     <source path="one/modality/base/client/activity/table"/>
@@ -372,7 +382,6 @@
     <!--==========================< webfx-extras-materialdesign >===========================-->
     <source path="dev/webfx/extras/materialdesign/textfield"/>
     <source path="dev/webfx/extras/materialdesign/util"/>
-    <source path="dev/webfx/extras/materialdesign/util/background"/>
     <source path="dev/webfx/extras/materialdesign/util/layout"/>
     <source path="dev/webfx/extras/materialdesign/util/scene"/>
     <!--=============================< webfx-extras-scalepane >=============================-->
@@ -418,6 +427,8 @@
     <source path="dev/webfx/extras/util/layout"/>
     <!--============================< webfx-extras-util-paint >=============================-->
     <source path="dev/webfx/extras/util/paint"/>
+    <!--=============================< webfx-extras-util-pane >=============================-->
+    <source path="dev/webfx/extras/util/pane"/>
     <!--============================< webfx-extras-util-scene >=============================-->
     <source path="dev/webfx/extras/util/scene"/>
     <!--==============================< webfx-extras-visual >===============================-->
@@ -509,6 +520,11 @@
     <source path="dev/webfx/platform/ast/json/parser/jflex"/>
     <source path="dev/webfx/platform/ast/json/spi"/>
     <source path="dev/webfx/platform/ast/json/spi/impl/listmap"/>
+    <!--=========================< webfx-platform-ast-yaml-plugin >=========================-->
+    <source path="dev/webfx/platform/ast/yaml/formatter"/>
+    <source path="dev/webfx/platform/ast/yaml/parser"/>
+    <source path="dev/webfx/platform/ast/yaml/parser/javacup"/>
+    <source path="dev/webfx/platform/ast/yaml/parser/jflex"/>
     <!--==============================< webfx-platform-async >==============================-->
     <source path="dev/webfx/platform/async"/>
     <source path="dev/webfx/platform/async/impl"/>
@@ -641,8 +657,6 @@
     <source path="dev/webfx/stack/authn/login/ui/spi/impl/gateway/webview/spi/impl/gwt"/>
     <!--=======================< webfx-stack-authn-login-ui-portal >========================-->
     <source path="dev/webfx/stack/authn/login/ui/spi/impl/portal"/>
-    <!--========================< webfx-stack-authn-logout-client >=========================-->
-    <source path="dev/webfx/stack/authn/logout/client/operation"/>
     <!--============================< webfx-stack-authn-remote >============================-->
     <source path="dev/webfx/stack/authn/spi/impl/remote"/>
     <!--============================< webfx-stack-authz-client >============================-->
