@@ -12,7 +12,7 @@ module kbs.frontoffice.application.gluon {
     requires webfx.extras.visual.grid.peers.openjfx;
     requires webfx.extras.webtext.peers.openjfx;
     requires webfx.kit.openjfx;
-    requires webfx.platform.ast.json.java;
+    requires webfx.platform.ast.factory.generic;
     requires webfx.platform.audio.gluon;
     requires webfx.platform.blob.java;
     requires webfx.platform.boot.java;
