@@ -20,6 +20,9 @@
         <plugin-module executable-target="gwt">webfx-platform-substitution-var-windowlocation-plugin</plugin-module>
 
         <plugin-module>webfx-platform-ast-yaml-plugin</plugin-module>
+
+        <!-- This is to avoid "No SerialCodec found for id: 'ModalityUserPrincipal'" on front-office -->
+        <plugin-module>modality-crm-shared-authn</plugin-module>
     </dependencies>
 
 </project>

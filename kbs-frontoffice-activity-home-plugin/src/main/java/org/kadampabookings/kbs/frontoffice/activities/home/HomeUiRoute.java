@@ -13,7 +13,7 @@ public class HomeUiRoute extends UiRouteImpl {
 
     public static UiRoute<?> uiRoute() {
         return UiRoute.create(HomeRouting.getPath()
-                , true
+                , false
                 , HomeActivity::new
                 , ViewDomainActivityContextFinal::new
         );

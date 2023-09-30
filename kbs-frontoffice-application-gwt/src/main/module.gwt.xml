@@ -152,9 +152,15 @@
     <source path="one/modality/base/client/operationactionsloading"/>
     <!--=====================< modality-base-client-presentationmodel >=====================-->
     <source path="one/modality/base/client/presentationmodel"/>
+    <!--========================< modality-base-client-profile-fx >=========================-->
+    <source path="one/modality/base/client/profile/fx"/>
     <!--===============< modality-base-frontoffice-activity-account-plugin >================-->
     <source path="one/modality/base/frontoffice/activities/account"/>
+    <source path="one/modality/base/frontoffice/activities/account/friendsfamily"/>
+    <source path="one/modality/base/frontoffice/activities/account/friendsfamily/edit"/>
+    <source path="one/modality/base/frontoffice/activities/account/personalinfo"/>
     <source path="one/modality/base/frontoffice/activities/account/routing"/>
+    <source path="one/modality/base/frontoffice/activities/account/settings"/>
     <source path="one/modality/base/frontoffice/operations/routes/account"/>
     <resource path="one/modality/base/frontoffice/activities/account/images"/>
     <public includes="one/modality/base/frontoffice/activities/account/images/" path=""/>
@@ -188,6 +194,9 @@
     <source path="one/modality/crm/client/activities/unauthorized"/>
     <!--===================< modality-crm-client-authz-required-plugin >====================-->
     <source path="one/modality/crm/client/services/authz"/>
+    <!--===========================< modality-crm-shared-authn >============================-->
+    <source path="one/modality/crm/shared/services/authn"/>
+    <source path="one/modality/crm/shared/services/authn/serial"/>
     <!--===============< modality-event-frontoffice-activity-booking-plugin >===============-->
     <source path="one/modality/event/frontoffice/activities/booking"/>
     <source path="one/modality/event/frontoffice/activities/booking/routing"/>
@@ -200,6 +209,8 @@
     <source path="dev/webfx/extras/cell/rowstyle"/>
     <!--==============================< webfx-extras-flexbox >==============================-->
     <source path="dev/webfx/extras/flexbox"/>
+    <!--=============================< webfx-extras-flippane >==============================-->
+    <source path="dev/webfx/extras/flippane"/>
     <!--============================< webfx-extras-imagestore >=============================-->
     <source path="dev/webfx/extras/imagestore"/>
     <!--===============================< webfx-extras-label >===============================-->
@@ -232,6 +243,8 @@
     <source path="dev/webfx/extras/util/layout"/>
     <!--============================< webfx-extras-util-paint >=============================-->
     <source path="dev/webfx/extras/util/paint"/>
+    <!--=============================< webfx-extras-util-pane >=============================-->
+    <source path="dev/webfx/extras/util/pane"/>
     <!--============================< webfx-extras-util-scene >=============================-->
     <source path="dev/webfx/extras/util/scene"/>
     <!--==============================< webfx-extras-visual >===============================-->
