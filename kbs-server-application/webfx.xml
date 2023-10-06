@@ -16,8 +16,10 @@
 
         <plugin-module>kbs-server-podcastsimport-plugin</plugin-module>
         <plugin-module>kbs-server-newsimport-plugin</plugin-module>
+<!--
         <plugin-module>kbs-server-kdmimport-plugin</plugin-module>
         <plugin-module>kbs-server-organisation-update-plugin</plugin-module>
+-->
 
         <!-- Adding config resolutions from environment variables (used in AWS) -->
         <plugin-module>webfx-platform-substitution-var-env-plugin</plugin-module>
