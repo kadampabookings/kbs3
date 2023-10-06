@@ -32,14 +32,6 @@ public class PodcastsImportJob implements ApplicationJob {
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private LocalDateTime fetchAfterParameter;
 
-    {
-        ReadOnlyAstObject parsed = AST.parseObject("x: \n" +
-                " - tata\n" +
-                " - titi\n" +
-                " - toto", "yaml");
-        System.out.println("AST result = " + parsed);
-    }
-
     @Override
     public void onStart() {
         importPodcasts();
