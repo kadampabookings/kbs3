@@ -23,6 +23,9 @@
 
         <!-- This is to avoid "No SerialCodec found for id: 'ModalityUserPrincipal'" on front-office -->
         <plugin-module>modality-crm-shared-authn</plugin-module>
+
+        <!--  -->
+        <plugin-module>modality-crm-client-profile-plugin</plugin-module>
     </dependencies>
 
 </project>
