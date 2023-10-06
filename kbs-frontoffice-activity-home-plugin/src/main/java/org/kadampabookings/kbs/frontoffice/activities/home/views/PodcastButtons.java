@@ -1,6 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.activities.home.views;
 
-import dev.webfx.extras.scalepane.ScalePane;
+import dev.webfx.extras.panes.ScalePane;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;

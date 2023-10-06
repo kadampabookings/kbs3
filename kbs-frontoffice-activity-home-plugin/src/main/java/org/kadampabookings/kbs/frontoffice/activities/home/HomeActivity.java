@@ -1,7 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.imagestore.ImageStore;
-import dev.webfx.extras.scalepane.ScalePane;
+import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.extras.util.layout.LayoutUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.async.Handler;
