@@ -16,7 +16,7 @@ module kbs.frontoffice.activity.home.plugin {
     requires modality.base.shared.entities;
     requires webfx.extras.imagestore;
     requires webfx.extras.panes;
-    requires webfx.extras.util.layout;
+    requires webfx.extras.util.control;
     requires webfx.kit.util;
     requires webfx.platform.ast;
     requires webfx.platform.async;

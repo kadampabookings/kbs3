@@ -2,7 +2,7 @@ package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.extras.panes.ScalePane;
-import dev.webfx.extras.util.layout.LayoutUtil;
+import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.async.Handler;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
@@ -21,19 +21,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
-import org.kadampabookings.kbs.frontoffice.activities.home.views.NewsView;
-import org.kadampabookings.kbs.frontoffice.activities.home.views.PodcastView;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.frontoffice.utility.SvgUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Podcast;
+import org.kadampabookings.kbs.frontoffice.activities.home.views.NewsView;
+import org.kadampabookings.kbs.frontoffice.activities.home.views.PodcastView;
 
 public final class HomeActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
@@ -91,7 +94,7 @@ public final class HomeActivity extends ViewDomainActivityBase implements Operat
             GeneralUtility.screenChangeListened(width);
         }, pageContainer.widthProperty());
 
-        ScrollPane scrollPane = LayoutUtil.createVerticalScrollPane(pageContainer);
+        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(pageContainer);
 
         homeContainer.setCenter(scrollPane);
 
