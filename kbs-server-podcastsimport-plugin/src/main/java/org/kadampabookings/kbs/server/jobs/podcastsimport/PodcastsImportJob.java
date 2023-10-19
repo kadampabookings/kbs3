@@ -87,16 +87,18 @@ public class PodcastsImportJob implements ApplicationJob {
                                 Podcast p = updateStore.insertEntity(Podcast.class);
                                 p.setChannel(2);
                                 p.setChannelPodcastId(id);
-                                String text1 = AST.lookupString(podcastJson, "title.rendered");
-                                p.setTitle(WebTextUtil.unescapeHtml(text1));
-                                String text = AST.lookupString(podcastJson, "excerpt.rendered");
-                                p.setExcerpt(WebTextUtil.unescapeHtml(text));
+                                String title = AST.lookupString(podcastJson, "title.rendered");
+                                p.setTitle(WebTextUtil.unescapeHtml(title));
+                                String excerpt = AST.lookupString(podcastJson, "excerpt.rendered");
+                                p.setExcerpt(WebTextUtil.unescapeHtml(excerpt));
                                 LocalDateTime dateTime = Dates.parseIsoLocalDateTime(podcastJson.getString("date"));
                                 if (dateTime.isAfter(maxPodcastDate))
                                     maxPodcastDate = dateTime;
                                 p.setDate(LocalDate.from(dateTime));
-                                p.setImageUrl(cleanUrl(podcastJson.getString("episode_featured_image")));
-                                p.setAudioUrl(cleanUrl(podcastJson.getString("player_link")));
+                                String imageUrl = podcastJson.getString("episode_featured_image");
+                                p.setImageUrl(cleanUrl(imageUrl));
+                                String audioUrl = AST.lookupString(podcastJson, "meta.audio_file");
+                                p.setAudioUrl(cleanUrl(audioUrl));
                                 try {
                                     String durationString = AST.lookupString(podcastJson, "meta.duration");
                                     Duration duration = Duration.between(LocalTime.MIN, LocalTime.parse(durationString));
