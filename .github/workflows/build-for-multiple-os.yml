@@ -25,9 +25,9 @@ name: Build for Multiple OS
 
 on:
   push:
-    branches: [ staging, prod ]
+    branches: [ prod ]
   pull_request_target:
-    branches: [ staging ]
+    branches: [ prod ]
 
 jobs:
   build:

@@ -2,7 +2,7 @@ name: Build and publish JavaDoc
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ prod ]
 
 jobs:
   javadoc:

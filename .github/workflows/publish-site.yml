@@ -2,7 +2,7 @@ name: Build and publish Maven site
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ prod ]
 
 jobs:
   site:
