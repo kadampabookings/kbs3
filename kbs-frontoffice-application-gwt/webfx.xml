@@ -11,4 +11,10 @@
         <used-by-source-modules/>
     </dependencies>
 
+    <html>
+        <head>
+            <title>Kadampa Bookings</title>
+        </head>
+    </html>
+
 </project>
