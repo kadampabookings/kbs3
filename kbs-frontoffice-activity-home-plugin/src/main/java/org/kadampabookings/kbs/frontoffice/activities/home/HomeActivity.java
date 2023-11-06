@@ -95,7 +95,7 @@ public final class HomeActivity extends ViewDomainActivityBase implements Operat
         }, pageContainer.widthProperty());
 
         // Setting a max width for big desktop screens
-        pageContainer.setMaxWidth(1245); // Same value as our website
+        pageContainer.setMaxWidth(1200); // Similar value as our website
 
         // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
         // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
