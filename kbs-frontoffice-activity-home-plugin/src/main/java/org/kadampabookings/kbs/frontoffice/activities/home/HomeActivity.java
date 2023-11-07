@@ -5,6 +5,7 @@ import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.async.Handler;
+import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import dev.webfx.stack.orm.dql.DqlStatement;
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntityToObjectMapper;
@@ -32,7 +33,6 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
-import one.modality.base.frontoffice.utility.SvgUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Podcast;
 import org.kadampabookings.kbs.frontoffice.activities.home.views.NewsView;
@@ -49,7 +49,7 @@ public final class HomeActivity extends ViewDomainActivityBase implements Operat
 
     @Override
     public Node buildUi() {
-        Text headerText = new Text("KEEP UP TO WHAT'S GOING ON IN THE KADAMPA WORLD");
+        Text headerText = I18n.bindI18nProperties(new Text(), "frontOfficeHomeHeaderText");
         headerText.setFill(Color.web(StyleUtility.MAIN_BLUE));
         headerText.setFont(Font.font(StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32));
         headerText.setStyle("-fx-font-family: " + StyleUtility.TEXT_FAMILY + "; -fx-font-weight: bold; -fx-font-size: 32");
@@ -63,8 +63,7 @@ public final class HomeActivity extends ViewDomainActivityBase implements Operat
         StackPane.setMargin(headerText, new Insets(150, 0, 0, 0));
         headerPane.setMaxHeight(600);
 
-        Label podcastLabel = GeneralUtility.createLabel("Kadampa Podcast", Color.web(StyleUtility.MAIN_BLUE), 21);
-        podcastLabel.setGraphic(GeneralUtility.createSvgPath(SvgUtility.KADAMPA_PODCAST, StyleUtility.MAIN_BLUE));
+        Label podcastLabel = GeneralUtility.createLabel("podcastLabel", Color.web(StyleUtility.MAIN_BLUE), 21);
         VBox.setMargin(podcastLabel, new Insets(100, 0, 50, 0));
 
         Button loadMoreNewsButton = createLoadMoreButton(newsLimitProperty);

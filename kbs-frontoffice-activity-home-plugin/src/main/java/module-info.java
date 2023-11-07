@@ -24,6 +24,7 @@ module kbs.frontoffice.activity.home.plugin {
     requires webfx.platform.fetch.ast.json;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
+    requires webfx.stack.i18n;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
     requires webfx.stack.orm.reactive.entities;
