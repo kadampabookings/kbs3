@@ -92,6 +92,9 @@
     <source path="org/kadampabookings/kbs/frontoffice/activities/home/routing"/>
     <source path="org/kadampabookings/kbs/frontoffice/activities/home/views"/>
     <source path="org/kadampabookings/kbs/frontoffice/operations/routes/home"/>
+    <!--==========================< kbs-frontoffice-application >===========================-->
+    <resource path="org/kadampabookings/frontoffice/booking"/>
+    <public includes="org/kadampabookings/frontoffice/booking/" path=""/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->
