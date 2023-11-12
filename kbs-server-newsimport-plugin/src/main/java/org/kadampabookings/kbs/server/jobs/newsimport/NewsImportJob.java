@@ -49,16 +49,16 @@ public class NewsImportJob implements ApplicationJob {
     }
 
     public void importNews() {
-        // When this job starts, there is no fetchAfterParameter, so we initialize it with the latest podcast date
+        // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
         if (fetchAfterParameter == null) {
             EntityStore.create(dataSourceModel).<News>executeQuery("select id,date from News order by date desc limit 1")
                     .onFailure(error -> Console.log("Error while reading latest podcast", error))
                     .onSuccess(news -> {
-                        if (news.isEmpty()) // Means that there is no podcast in the database
+                        if (news.isEmpty()) // Means that there is no news in the database
                             fetchAfterParameter = LocalDate.of(2000, 1, 1).atStartOfDay(); // The web service raise an error with dates before 2000
                         else
-                            fetchAfterParameter = news.get(0).getDate().atStartOfDay();
+                            fetchAfterParameter = news.get(0).getDate().atStartOfDay().plusDays(1);
                         // Now that fetchAfterParameter is set, we can call importNews() again.
                         importNews();
                     });
