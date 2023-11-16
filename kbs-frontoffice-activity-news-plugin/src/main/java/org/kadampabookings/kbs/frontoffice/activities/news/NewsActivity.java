@@ -43,7 +43,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
     @Override
     public Node buildUi() {
-        Text headerText = I18n.bindI18nProperties(new Text(), "frontOfficeHomeHeaderText");
+        Text headerText = I18n.bindI18nProperties(new Text(), "newsHeaderText");
         headerText.setFill(Color.web(StyleUtility.MAIN_BLUE));
         headerText.setFont(Font.font(StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32));
         headerText.setStyle("-fx-font-family: " + StyleUtility.TEXT_FAMILY + "; -fx-font-weight: bold; -fx-font-size: 32");
