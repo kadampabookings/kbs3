@@ -4,14 +4,12 @@ import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
-import dev.webfx.platform.async.Handler;
 import dev.webfx.platform.conf.SourcesConfig;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import dev.webfx.stack.orm.dql.DqlStatement;
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntityToObjectMapper;
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
-import dev.webfx.stack.routing.router.RoutingContext;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -28,11 +26,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.web.WebView;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.shared.entities.News;
-import org.kadampabookings.kbs.frontoffice.activities.news.views.NewsView;
 
 public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
@@ -90,16 +86,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         });
 
         homeContainer.setCenter(scrollPane);
-
-        getUiRouter().getRouter().route().handler(new Handler<RoutingContext>() {
-            @Override
-            public void handle(RoutingContext ctx) {
-                homeContainer.setCenter(scrollPane);
-                ctx.next();
-            }
-        });
-
-        return WEB_VIEW_CONTAINER = homeContainer;
+        return homeContainer;
     }
 
     @Override
@@ -108,21 +95,8 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
                 .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
                 .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(org.kadampabookings.kbs.frontoffice.activities.news.views.NewsView::new, org.kadampabookings.kbs.frontoffice.activities.news.views.NewsView::setNews, NewsView::getView))
+                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
                 .storeMappedObjectsInto(newsContainer.getChildren())
                 .start();
-    }
-
-    private static BorderPane WEB_VIEW_CONTAINER;
-    private static WebView WEB_VIEW;
-    private static String URL;
-
-    public static void browse(String url) {
-        if (WEB_VIEW == null)
-            WEB_VIEW = new WebView();
-        if (!url.equals(URL)) {
-            WEB_VIEW.getEngine().load(URL = url);
-        }
-        WEB_VIEW_CONTAINER.setCenter(WEB_VIEW);
     }
 }

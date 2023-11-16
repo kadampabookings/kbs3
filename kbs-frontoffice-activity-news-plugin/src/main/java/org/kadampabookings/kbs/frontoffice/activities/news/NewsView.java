@@ -1,7 +1,8 @@
-package org.kadampabookings.kbs.frontoffice.activities.news.views;
+package org.kadampabookings.kbs.frontoffice.activities.news;
 
 import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.platform.util.Objects;
+import dev.webfx.platform.windowhistory.spi.BrowsingHistory;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
@@ -10,16 +11,18 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import org.kadampabookings.kbs.frontoffice.activities.news.NewsActivity;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.frontoffice.utility.TextUtility;
 import one.modality.base.shared.entities.News;
+import org.kadampabookings.kbs.frontoffice.operations.routes.news.RouteToArticleRequest;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
 public final class NewsView {
+
+    private final BrowsingHistory history;
     private News news;
     private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_BLUE);
     private final Text dateText = TextUtility.getSubText(null);
@@ -66,13 +69,14 @@ public final class NewsView {
 
     private double screenPressedY;
 
-    {
+    public NewsView(BrowsingHistory history) {
+        this.history = history;
         imageView.setPreserveRatio(true);
         newsContainer.setCursor(Cursor.HAND);
         newsContainer.setOnMousePressed(e -> screenPressedY = e.getScreenY());
         newsContainer.setOnMouseReleased(e -> {
             if (Math.abs(e.getScreenY() - screenPressedY) < 10)
-                browseNews();
+                browseArticle();
         });
     }
 
@@ -89,8 +93,9 @@ public final class NewsView {
         return newsContainer;
     }
 
-    private void browseNews() {
-        NewsActivity.browse(news.getLinkUrl());
+    private void browseArticle() {
+        FXArticle.setArticle(news);
+        new RouteToArticleRequest(news, history).execute();
     }
 
     private static void updateText(Text text, String newContent) {
