@@ -87,11 +87,16 @@
     <inherits name="com.google.gwt.user.User"/>
     <!--=================================< java-nio-emul >==================================-->
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
-    <!--======================< kbs-frontoffice-activity-home-plugin >======================-->
-    <source path="org/kadampabookings/kbs/frontoffice/activities/home"/>
-    <source path="org/kadampabookings/kbs/frontoffice/activities/home/routing"/>
-    <source path="org/kadampabookings/kbs/frontoffice/activities/home/views"/>
-    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/home"/>
+    <!--======================< kbs-frontoffice-activity-news-plugin >======================-->
+    <source path="org/kadampabookings/kbs/frontoffice/activities/news"/>
+    <source path="org/kadampabookings/kbs/frontoffice/activities/news/routing"/>
+    <source path="org/kadampabookings/kbs/frontoffice/activities/news/views"/>
+    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/news"/>
+    <!--====================< kbs-frontoffice-activity-podcast-plugin >=====================-->
+    <source path="org/kadampabookings/kbs/frontoffice/activities/podcast"/>
+    <source path="org/kadampabookings/kbs/frontoffice/activities/podcast/routing"/>
+    <source path="org/kadampabookings/kbs/frontoffice/activities/podcast/views"/>
+    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/podcast"/>
     <!--==========================< kbs-frontoffice-application >===========================-->
     <resource path="org/kadampabookings/frontoffice/booking"/>
     <public includes="org/kadampabookings/frontoffice/booking/" path=""/>

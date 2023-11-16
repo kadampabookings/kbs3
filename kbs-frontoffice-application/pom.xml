@@ -26,7 +26,14 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-frontoffice-activity-home-plugin</artifactId>
+            <artifactId>kbs-frontoffice-activity-news-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kadampabookings</groupId>
+            <artifactId>kbs-frontoffice-activity-podcast-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>

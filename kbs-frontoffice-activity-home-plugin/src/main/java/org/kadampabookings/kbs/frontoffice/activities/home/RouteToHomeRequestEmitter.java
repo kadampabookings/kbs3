@@ -7,10 +7,6 @@ import org.kadampabookings.kbs.frontoffice.operations.routes.home.RouteToHomeReq
 
 public class RouteToHomeRequestEmitter implements RouteRequestEmitter {
 
-    public RouteToHomeRequestEmitter() {
-        System.out.println();
-    }
-
     @Override
     public RouteRequest instantiateRouteRequest(UiRouteActivityContext context) {
         return new RouteToHomeRequest(context.getHistory());
