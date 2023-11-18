@@ -13,6 +13,7 @@ module kbs.server.newsimport.plugin {
     requires webfx.platform.async;
     requires webfx.platform.boot;
     requires webfx.platform.console;
+    requires webfx.platform.fetch;
     requires webfx.platform.fetch.ast.json;
     requires webfx.platform.scheduler;
     requires webfx.platform.util;

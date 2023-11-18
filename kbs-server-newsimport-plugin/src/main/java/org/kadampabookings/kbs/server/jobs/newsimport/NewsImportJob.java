@@ -1,18 +1,22 @@
 package org.kadampabookings.kbs.server.jobs.newsimport;
 
 import dev.webfx.extras.webtext.util.WebTextUtil;
+import dev.webfx.platform.ast.AST;
+import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.platform.async.Batch;
 import dev.webfx.platform.async.Future;
 import dev.webfx.platform.boot.spi.ApplicationJob;
 import dev.webfx.platform.console.Console;
+import dev.webfx.platform.fetch.Fetch;
+import dev.webfx.platform.fetch.Response;
 import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Dates;
-import dev.webfx.platform.ast.AST;
-import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
+import dev.webfx.stack.orm.entity.Entity;
+import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import one.modality.base.shared.entities.News;
@@ -53,7 +57,7 @@ public class NewsImportJob implements ApplicationJob {
         // imported so far in the database.
         if (fetchAfterParameter == null) {
             EntityStore.create(dataSourceModel).<News>executeQuery("select id,date from News order by date desc limit 1")
-                    .onFailure(error -> Console.log("Error while reading latest podcast", error))
+                    .onFailure(error -> Console.log("Error while reading latest news", error))
                     .onSuccess(news -> {
                         if (news.isEmpty()) // Means that there is no news in the database
                             fetchAfterParameter = LocalDate.of(2000, 1, 1).atStartOfDay(); // The web service raise an error with dates before 2000
@@ -64,7 +68,7 @@ public class NewsImportJob implements ApplicationJob {
                     });
             return;
         }
-        // Creating the final fetch url with the additional query string (note: the number of podcasts returned by the
+        // Creating the final fetch url with the additional query string (note: the number of news returned by the
         // web service is 10 by default; this could be increased using &per_page=100 - 100 is the maximal value
         // authorized by the web service)
         String fetchUrl = NEWS_FETCH_URL + "?order=asc&after=" + Dates.formatIso(fetchAfterParameter);
@@ -108,6 +112,7 @@ public class NewsImportJob implements ApplicationJob {
 
                                         // Creating the new News entities to insert in the database
                                         ReadOnlyAstObject[] mediasJson = webMediasJsonBatch.getArray();
+                                        List<String> linkUrls = new ArrayList<>();
                                         for (int i = 0; i < mediasJson.length; i++) {
                                             ReadOnlyAstObject newsJson = newWebNews.get(i);
                                             String id = newsJson.getString("id");
@@ -122,6 +127,7 @@ public class NewsImportJob implements ApplicationJob {
                                             n.setDate(LocalDate.from(dateTime));
                                             n.setLinkUrl(cleanUrl(AST.lookupString(newsJson, "guid.rendered")));
                                             n.setImageUrl(cleanUrl(AST.lookupString(mediasJson[i], "media_details.sizes.medium.source_url")));
+                                            linkUrls.add(cleanUrl(newsJson.getString("link")));
                                         }
 
                                         LocalDateTime finalMaxNewsDate = maxNewsDate;
@@ -132,6 +138,24 @@ public class NewsImportJob implements ApplicationJob {
                                                     int newNewsCount = insertBatch.getArray().length;
                                                     Console.log(newNewsCount + " new news imported in database");
                                                     fetchAfterParameter = finalMaxNewsDate;
+                                                    for (int i = 0; i < newNewsCount; i++) {
+                                                        String linkUrl = linkUrls.get(i);
+                                                        if (linkUrl != null) {
+                                                            Object newsKey = insertBatch.getArray()[i].getGeneratedKeys()[0];
+                                                            Fetch.fetch(linkUrl).compose(Response::text).onSuccess(text -> {
+                                                                boolean hasVideo = text != null && text.contains("wistia");
+                                                                Console.log("News " + newsKey + " has video: " + hasVideo);
+                                                                if (hasVideo) {
+                                                                    UpdateStore updateStore2 = UpdateStore.create(dataSourceModel);
+                                                                    Entity news = updateStore2.updateEntity(EntityId.create(News.class, newsKey));
+                                                                    news.setFieldValue("containsVideos", true);
+                                                                    updateStore2.submitChanges()
+                                                                            .onFailure(Console::log)
+                                                                            .onSuccess(x -> Console.log("News " + newsKey + " video updated"));
+                                                                }
+                                                            });
+                                                        }
+                                                    }
                                                     importNews();
                                                 });
 
