@@ -154,12 +154,14 @@ public final class PodcastView {
         mediaPlayer = new MediaPlayer(new Media(podcast.getAudioUrl()));
 
         FXProperties.runNowAndOnPropertiesChange(() -> {
-            MediaPlayer.Status status = mediaPlayer.getStatus();
+            MediaPlayer.Status status = mediaPlayer == null ? null : mediaPlayer.getStatus();
             boolean isPlaying = status == MediaPlayer.Status.PLAYING;
             pauseButton.setVisible(isPlaying);
             playButton.setVisible(!isPlaying);
             if (isPlaying)
                 updateElapsedTimeAndProgressBar(mediaPlayer.getCurrentTime());
+            else if (mediaPlayer == null)
+                progressBar.setProgress(0);
             else {
                 if (status == null || status == MediaPlayer.Status.UNKNOWN)
                     progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
