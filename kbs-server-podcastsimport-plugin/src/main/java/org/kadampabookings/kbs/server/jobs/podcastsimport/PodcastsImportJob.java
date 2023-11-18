@@ -1,14 +1,15 @@
 package org.kadampabookings.kbs.server.jobs.podcastsimport;
 
 import dev.webfx.extras.webtext.util.WebTextUtil;
+import dev.webfx.platform.ast.AST;
+import dev.webfx.platform.ast.ReadOnlyAstArray;
+import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.platform.boot.spi.ApplicationJob;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Dates;
-import dev.webfx.platform.ast.AST;
-import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
@@ -19,6 +20,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -31,6 +33,15 @@ public class PodcastsImportJob implements ApplicationJob {
     private Scheduled importTimer;
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private LocalDateTime fetchAfterParameter;
+    private final Map<Integer, Integer> seriesToTeacher = Map.of(
+            426, 2, // Gen-la Dekyong
+            455, 3, // Gen-la Kunsang
+            443, 4, // Gen-la Khyenrab
+            450, 29, // Gen-la Jampa
+            425, 79, // Gen-la Thubten
+            427, 84, // Gen Rabten
+            551, 98 // Kadam Morten
+    );
 
     @Override
     public void onStart() {
@@ -105,6 +116,16 @@ public class PodcastsImportJob implements ApplicationJob {
                                     p.setDurationMillis(duration.toMillis());
                                 } catch (Exception e) {
                                     Console.log("WARNING: No or wrong duration for podcast " + id);
+                                }
+                                ReadOnlyAstArray series = podcastJson.getArray("series");
+                                for (Object s : series) {
+                                    if (s instanceof Number) {
+                                        Integer teacherId = seriesToTeacher.get(((Number) s).intValue());
+                                        if (teacherId != null) {
+                                            p.setTeacher(teacherId);
+                                            break;
+                                        }
+                                    }
                                 }
                             }
 
