@@ -50,8 +50,9 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
                 .onFailure(Console::log)
                 .onSuccess(teachers -> Platform.runLater(() -> {
                     TabsBar<Teacher> tabsBar = new TabsBar<>(PodcastActivity.this, teacherProperty::set);
-                    tabsPane.getChildren().setAll(createTeacherTab(tabsBar, null));
-                    tabsPane.getChildren().addAll(Collections.map(teachers, t -> createTeacherTab(tabsBar, t)));
+                    tabsBar.setTabs(createTeacherTab(tabsBar, null));
+                    tabsBar.addTabs(Collections.map(teachers, t -> createTeacherTab(tabsBar, t)));
+                    tabsPane.getChildren().setAll(tabsBar.getTabs());
                 }));
 
         Label podcastLabel = GeneralUtility.createLabel("podcastLabel", Color.web(StyleUtility.MAIN_BLUE), 21);

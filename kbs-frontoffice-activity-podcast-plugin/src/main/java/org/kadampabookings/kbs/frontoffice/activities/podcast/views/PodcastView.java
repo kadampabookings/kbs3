@@ -144,7 +144,7 @@ public final class PodcastView {
             PLAYING_MEDIA_PLAYER.pause();
         // Memorizing the new playing player
         PLAYING_MEDIA_PLAYER = mediaPlayer;
-        // Ans
+        // Finally starting playing the podcast
         mediaPlayer.play();
     }
 
