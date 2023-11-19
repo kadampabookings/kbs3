@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.frontoffice.activities.podcast.views;
 
 import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.kit.util.properties.FXProperties;
+import dev.webfx.kit.util.properties.Unregisterable;
 import dev.webfx.platform.util.Objects;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -22,10 +23,21 @@ import one.modality.base.shared.entities.Podcast;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class PodcastView {
-    private static MediaPlayer PLAYING_MEDIA_PLAYER;
+    private static MediaPlayer PLAYING_MEDIA_PLAYER; // will hold the player currently playing (only one player can be playing at one time)
+    // Keeping all media players in memory (even if paused) to hold their states (ex: current time). There shouldn't be
+    // that many because we create the media players only when the user actually presses the podcast play button.
+    private static final Map<String /* audioUrl */, MediaPlayer> MEDIA_PLAYERS = new HashMap<>();
+    // The media player associated with this particular podcast. Note that this podcast view can be recycled, which
+    // means its associated podcast can change (through setPodcast()). When recycled, the media player can eventually
+    // be retrieved from the already existing media players (if the user already played that podcast) so its visual
+    // state can be re-established in that case. Otherwise - if the podcast hasn't been played so far in this session -
+    // the media player will be null until the user presses the play button.
     private MediaPlayer mediaPlayer;
+    private Unregisterable mediaPlayerBinding; // will allow to unbind a recycled view from its previous associated media player.
     private Podcast podcast;
     private Duration podcastDuration;
     private final ImageView authorImageView = new ImageView();
@@ -98,14 +110,24 @@ public final class PodcastView {
 
     public void setPodcast(Podcast podcast) {
         this.podcast = podcast;
+        // Updating all fields and UI from the podcast
         podcastDuration = Duration.millis(podcast.getDurationMillis());
         authorImageView.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
         updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(podcast.getDate()));
         updateLabel(titleLabel, podcast.getTitle().toUpperCase());
         updateLabel(excerptLabel, podcast.getExcerpt());
-        if (mediaPlayer == null || !mediaPlayer.getMedia().getSource().equals(podcast.getAudioUrl())) {
-            disposePlayer();
-            updateElapsedTimeAndProgressBar(Duration.ZERO);
+        // We check if the podcast has already been played
+        String audioUrl = podcast.getAudioUrl();
+        MediaPlayer playedMediaPlayer = MEDIA_PLAYERS.get(audioUrl);
+        // If yes, we associate this podcast view with that player
+        if (playedMediaPlayer != null) {
+            mediaPlayer = playedMediaPlayer;
+            bindMediaPlayer(); // Will restore the visual state from the player (play/pause button & progress bar)
+        } else { // If no, the player associated with this podcast should be null
+            // If this podcast view was previously associated with a player, we unbind it.
+            unbindMediaPlayer(); // will unregister the possible existing binding, and reset the visual state
+            // This podcast hasn't been played so far, so its associated media player is now null
+            mediaPlayer = null;
         }
     }
 
@@ -114,11 +136,15 @@ public final class PodcastView {
     }
 
     private void play() {
+        // Creating the media player if not already done
         if (mediaPlayer == null)
             createMediaPlayer();
+        // If another player was playing, we pause it (keeping only one player playing at one time)
         if (PLAYING_MEDIA_PLAYER != null && PLAYING_MEDIA_PLAYER != mediaPlayer)
             PLAYING_MEDIA_PLAYER.pause();
+        // Memorizing the new playing player
         PLAYING_MEDIA_PLAYER = mediaPlayer;
+        // Ans
         mediaPlayer.play();
     }
 
@@ -140,35 +166,41 @@ public final class PodcastView {
         }
     }
 
-    private void disposePlayer() {
-        if (mediaPlayer != null) {
-            if (PLAYING_MEDIA_PLAYER == mediaPlayer)
-                PLAYING_MEDIA_PLAYER = null;
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-            mediaPlayer = null;
-        }
+    private void createMediaPlayer() {
+        String audioUrl = podcast.getAudioUrl();
+        mediaPlayer = new MediaPlayer(new Media(audioUrl));
+        mediaPlayer.setOnEndOfMedia(mediaPlayer::stop); // Forcing stop status (sometimes this doesn't happen automatically for any reason)
+        // Memorizing this new media player for possible further reuse on subsequent view recycling
+        MEDIA_PLAYERS.put(audioUrl, mediaPlayer);
+        // Binding this media player with this podcast view
+        bindMediaPlayer();
     }
 
-    private void createMediaPlayer() {
-        mediaPlayer = new MediaPlayer(new Media(podcast.getAudioUrl()));
-
-        FXProperties.runNowAndOnPropertiesChange(() -> {
-            MediaPlayer.Status status = mediaPlayer == null ? null : mediaPlayer.getStatus();
+    private void bindMediaPlayer() {
+        unbindMediaPlayer(); // in case this view was previously bound with another player
+        mediaPlayerBinding = FXProperties.runNowAndOnPropertiesChange(() -> {
+            MediaPlayer.Status status = mediaPlayer.getStatus();
             boolean isPlaying = status == MediaPlayer.Status.PLAYING;
-            pauseButton.setVisible(isPlaying);
-            playButton.setVisible(!isPlaying);
-            if (isPlaying)
-                updateElapsedTimeAndProgressBar(mediaPlayer.getCurrentTime());
-            else if (mediaPlayer == null)
-                progressBar.setProgress(0);
-            else {
-                if (status == null || status == MediaPlayer.Status.UNKNOWN)
-                    progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-            }
+            updatePlayPauseButtons(isPlaying);
+            if (status == null || status == MediaPlayer.Status.UNKNOWN)
+                progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+            else
+                updateElapsedTimeAndProgressBar(isPlaying || status == MediaPlayer.Status.PAUSED ? mediaPlayer.getCurrentTime() : podcastDuration);
         }, mediaPlayer.statusProperty(), mediaPlayer.currentTimeProperty());
+    }
 
-        mediaPlayer.setOnEndOfMedia(mediaPlayer::stop); // Forcing stop status (sometimes this doesn't happen automatically for any reason)
+    private void unbindMediaPlayer() {
+        if (mediaPlayerBinding != null) {
+            mediaPlayerBinding.unregister();
+            mediaPlayerBinding = null;
+        }
+        updatePlayPauseButtons(false);
+        updateElapsedTimeAndProgressBar(Duration.ZERO);
+    }
+
+    private void updatePlayPauseButtons(boolean isPlaying) {
+        pauseButton.setVisible(isPlaying);
+        playButton.setVisible(!isPlaying);
     }
 
     private void updateElapsedTimeAndProgressBar(Duration elapsed) {
