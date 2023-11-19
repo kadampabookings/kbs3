@@ -44,6 +44,9 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
     @Override
     public Node buildUi() {
 
+        Label podcastLabel = GeneralUtility.createLabel("podcastLabel", Color.web(StyleUtility.MAIN_BLUE), 21);
+        VBox.setMargin(podcastLabel, new Insets(50, 0, 50, 0));
+
         FlexPane tabsPane = new FlexPane();
         EntityStore.create(DataSourceModelService.getDefaultDataSourceModel())
                 .<Teacher>executeQuery("select name from Teacher t where (select count(1) from Podcast where teacher = t) > 10 order by id")
@@ -54,9 +57,6 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
                     tabsBar.addTabs(Collections.map(teachers, t -> createTeacherTab(tabsBar, t)));
                     tabsPane.getChildren().setAll(tabsBar.getTabs());
                 }));
-
-        Label podcastLabel = GeneralUtility.createLabel("podcastLabel", Color.web(StyleUtility.MAIN_BLUE), 21);
-        VBox.setMargin(podcastLabel, new Insets(50, 0, 50, 0));
 
         pageContainer.setAlignment(Pos.CENTER);
         Insets containerMargins = new Insets(30, 20, 10, 20);
@@ -92,6 +92,7 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
     private static Tab createTeacherTab(TabsBar<Teacher> tabsBar, Teacher teacher) {
         Tab tab = tabsBar.createTab(teacher == null ? "All" : teacher.getName(), teacher);
         tab.setPadding(new Insets(5));
+        tab.setTextFill(Color.GRAY);
         return tab;
     }
 

@@ -30,10 +30,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
+import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.shared.entities.News;
+
 public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private final BorderPane homeContainer = new BorderPane();
@@ -63,7 +65,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         headerScalePane.setBackground(Background.fill(Color.WHITE));
 
         TabsBar<Boolean> tabsBar = new TabsBar<>(this, videosProperty::set);
-        tabsBar.setTabs(tabsBar.createTab("All", false), tabsBar.createTab("Videos", true));
+        tabsBar.setTabs(createNewsTab(tabsBar, "All", false), createNewsTab(tabsBar, "Videos", true));
         ColumnsPane tabsPane = new ColumnsPane();
         tabsPane.getChildren().setAll(tabsBar.getTabs());
 
@@ -99,6 +101,14 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         homeContainer.setCenter(scrollPane);
         return homeContainer;
     }
+
+    private static Tab createNewsTab(TabsBar<Boolean> tabsBar, String text, Boolean value) {
+        Tab tab = tabsBar.createTab(text, value);
+        tab.setPadding(new Insets(5));
+        tab.setTextFill(Color.GRAY);
+        return tab;
+    }
+
 
     @Override
     protected void startLogic() {
