@@ -20,35 +20,35 @@ public final class FXFavoriteNews {
     private static final ObservableList<Object> favoriteNewsIds = FXCollections.observableArrayList();
 
     static {
-        ReadOnlyAstArray storedFavoriteNews = Json.parseArraySilently(LocalStorage.getItem(LOCAL_STORAGE_KEY));
-        if (storedFavoriteNews != null) {
-            storedFavoriteNews.forEach(favoriteNewsIds::add);
+        ReadOnlyAstArray storedFavoriteNewsIds = Json.parseArraySilently(LocalStorage.getItem(LOCAL_STORAGE_KEY));
+        if (storedFavoriteNewsIds != null) {
+            storedFavoriteNewsIds.forEach(favoriteNewsIds::add);
         }
         favoriteNewsIds.addListener((InvalidationListener) observable -> {
-            AstArray storedFavoriteNews1 = AST.createArray();
-            favoriteNewsIds.forEach(storedFavoriteNews1::push);
-            LocalStorage.setItem(LOCAL_STORAGE_KEY, Json.formatArray(storedFavoriteNews1));
+            AstArray newIds = AST.createArray();
+            favoriteNewsIds.forEach(newIds::push);
+            LocalStorage.setItem(LOCAL_STORAGE_KEY, Json.formatArray(newIds));
         });
     }
 
-    public static void addFavoriteNews(News favoriteNews) {
-        if (favoriteNews != null)
-            favoriteNewsIds.add(favoriteNews.getPrimaryKey());
+    public static void markNewsAsFavorite(News news) {
+        if (news != null)
+            favoriteNewsIds.add(news.getPrimaryKey());
     }
 
-    public static void removeFavoriteNews(News favoriteNews) {
-        if (favoriteNews != null)
-            favoriteNewsIds.remove(favoriteNews.getPrimaryKey());
+    public static void unmarkNewsAsFavorites(News news) {
+        if (news != null)
+            favoriteNewsIds.remove(news.getPrimaryKey());
     }
 
-    public static void toggleFavoriteNews(News news) {
-        if (isFavoriteNews(news))
-            removeFavoriteNews(news);
+    public static void toggleNewsAsFavorite(News news) {
+        if (isNewsMarkedAsFavorite(news))
+            unmarkNewsAsFavorites(news);
         else
-            addFavoriteNews(news);
+            markNewsAsFavorite(news);
     }
 
-    public static boolean isFavoriteNews(News news) {
+    public static boolean isNewsMarkedAsFavorite(News news) {
         if (news == null)
             return false;
         Object primaryKey = news.getPrimaryKey();

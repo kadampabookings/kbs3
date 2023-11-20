@@ -83,16 +83,16 @@ public final class NewsView {
         imageView.setPreserveRatio(true);
         favoriteSvgPath.setContent(FAVORITE_PATH);
         favoriteSvgPath.setStrokeWidth(2);
+        favoritePane.setOnMousePressed(e -> {
+            FXFavoriteNews.toggleNewsAsFavorite(news);
+            updateFavorite();
+            e.consume();
+        });
         newsContainer.setCursor(Cursor.HAND);
         newsContainer.setOnMousePressed(e -> screenPressedY = e.getScreenY());
         newsContainer.setOnMouseReleased(e -> {
             if (Math.abs(e.getScreenY() - screenPressedY) < 10) // This is to avoid browsing the article when the user just wants to scroll
                 browseArticle();
-        });
-        favoritePane.setOnMousePressed(e -> {
-            FXFavoriteNews.toggleFavoriteNews(news);
-            updateFavorite();
-            e.consume();
         });
     }
 
@@ -115,7 +115,7 @@ public final class NewsView {
     }
 
     private void updateFavorite() {
-        boolean isFavorite = FXFavoriteNews.isFavoriteNews(news);
+        boolean isFavorite = FXFavoriteNews.isNewsMarkedAsFavorite(news);
         favoriteSvgPath.setStroke(isFavorite ? Color.RED : Color.GRAY);
         favoriteSvgPath.setFill(isFavorite ? Color.RED : null);
     }
