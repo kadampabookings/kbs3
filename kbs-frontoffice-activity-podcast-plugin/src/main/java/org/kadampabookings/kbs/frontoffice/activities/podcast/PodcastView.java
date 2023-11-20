@@ -1,6 +1,7 @@
-package org.kadampabookings.kbs.frontoffice.activities.podcast.views;
+package org.kadampabookings.kbs.frontoffice.activities.podcast;
 
 import dev.webfx.extras.imagestore.ImageStore;
+import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.kit.util.properties.Unregisterable;
 import dev.webfx.platform.util.Objects;
@@ -13,7 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import one.modality.base.frontoffice.utility.GeneralUtility;
@@ -27,6 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class PodcastView {
+
+    private final static String FAVORITE_PATH = "M 24.066331,0 C 21.212473,0 18.540974,1.2921301 16.762259,3.4570778 14.983544,1.2920563 12.312119,0 9.4581876,0 4.2429514,0 0,4.2428782 0,9.4581873 0,13.54199 2.4351327,18.265558 7.237612,23.497667 c 3.695875,4.026405 7.716386,7.143963 8.860567,8.003592 L 16.762038,32 17.425897,31.501333 c 1.144181,-0.859629 5.164839,-3.977113 8.860788,-8.003518 4.802627,-5.23211 7.237834,-9.955751 7.237834,-14.0396277 C 33.524519,4.2428782 29.281567,0 24.066331,0 Z";
+
     private static MediaPlayer PLAYING_MEDIA_PLAYER; // will hold the player currently playing (only one player can be playing at one time)
     // Keeping all media players in memory (even if paused) to hold their states (ex: current time). There shouldn't be
     // that many because we create the media players only when the user actually presses the podcast play button.
@@ -51,6 +57,8 @@ public final class PodcastView {
     private final Pane backwardButton = PodcastButtons.createBackwardButton();
     private final ProgressBar progressBar = new ProgressBar();
     private final Text elapsedTimeText = TextUtility.getSubText(null, StyleUtility.ELEMENT_GRAY);
+    private final SVGPath favoriteSvgPath = new SVGPath();
+    private final Pane favoritePane = new MonoPane(favoriteSvgPath);
 
     {
         authorImageView.setPreserveRatio(true);
@@ -63,10 +71,18 @@ public final class PodcastView {
         backwardButton.setOnMouseClicked(e -> seekRelative(-10));
         progressBar   .setOnMouseClicked(e -> seekX(e.getX()));
         progressBar   .setOnMouseDragged(e -> seekX(e.getX()));
+        favoriteSvgPath.setContent(FAVORITE_PATH);
+        favoriteSvgPath.setStrokeWidth(2);
+        updateFavorite();
+        favoritePane.setOnMousePressed(e -> {
+            FXFavoritePodcast.togglePodcastAsFavorite(podcast);
+            updateFavorite();
+            e.consume();
+        });
     }
 
-    private final Pane podcastContainer = new Pane(authorImageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText) {
-        private double imageY, imageSize, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize;
+    private final Pane podcastContainer = new Pane(authorImageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
+        private double imageY, imageSize, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
 
         @Override
         protected void layoutChildren() {
@@ -88,12 +104,13 @@ public final class PodcastView {
             progressBar.setPrefWidth(rightWidth - 6 * (buttonSize + 5));
             layoutInArea(progressBar, rightX + 3 * (buttonSize + 5), buttonY, progressBar.getPrefWidth(), buttonSize, 0, HPos.LEFT, VPos.CENTER);
             layoutInArea(elapsedTimeText, rightX + 3 * (buttonSize + 5), buttonY + buttonSize, rightWidth, buttonSize, 0, HPos.LEFT, VPos.TOP);
+            layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
         }
 
         @Override
         protected double computePrefHeight(double width) {
             computeLayout(width);
-            return Math.max(imageY + imageSize, buttonY + buttonSize);
+            return Math.max(imageY + imageSize, favoriteY + favoriteHeight);
         }
 
         private void computeLayout(double width) {
@@ -105,6 +122,7 @@ public final class PodcastView {
             /* Title: */      titleY = dateY + dateHeight + 10;         titleHeight = titleLabel.prefHeight(rightWidth);
             /* Excerpt: */    excerptY = titleY + titleHeight + 10;     excerptHeight = excerptLabel.prefHeight(rightWidth);
             /* Buttons: */    buttonY = excerptY + excerptHeight + 10;  buttonSize = 32;
+            /* Favorite: */   favoriteY = buttonY + buttonSize + 30;    favoriteHeight = 32;
         }
     };
 
@@ -116,6 +134,7 @@ public final class PodcastView {
         updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(podcast.getDate()));
         updateLabel(titleLabel, podcast.getTitle().toUpperCase());
         updateLabel(excerptLabel, podcast.getExcerpt());
+        updateFavorite();
         // We check if the podcast has already been played
         String audioUrl = podcast.getAudioUrl();
         MediaPlayer playedMediaPlayer = MEDIA_PLAYERS.get(audioUrl);
@@ -133,6 +152,12 @@ public final class PodcastView {
 
     public Node getView() {
         return podcastContainer;
+    }
+
+    private void updateFavorite() {
+        boolean isFavorite = FXFavoritePodcast.isPodcastMarkedAsFavorite(podcast);
+        favoriteSvgPath.setStroke(isFavorite ? Color.RED : Color.GRAY);
+        favoriteSvgPath.setFill(isFavorite ? Color.RED : null);
     }
 
     private void play() {

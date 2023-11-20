@@ -19,7 +19,10 @@ module kbs.frontoffice.activity.podcast.plugin {
     requires webfx.extras.panes;
     requires webfx.extras.util.control;
     requires webfx.kit.util;
+    requires webfx.platform.ast;
+    requires webfx.platform.ast.json.plugin;
     requires webfx.platform.console;
+    requires webfx.platform.storage;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.orm.datasourcemodel.service;
@@ -35,7 +38,6 @@ module kbs.frontoffice.activity.podcast.plugin {
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.podcast;
     exports org.kadampabookings.kbs.frontoffice.activities.podcast.routing;
-    exports org.kadampabookings.kbs.frontoffice.activities.podcast.views;
     exports org.kadampabookings.kbs.frontoffice.operations.routes.podcast;
 
     // Provided services

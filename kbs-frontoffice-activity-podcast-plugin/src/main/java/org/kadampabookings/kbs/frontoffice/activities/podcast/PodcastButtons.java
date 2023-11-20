@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.frontoffice.activities.podcast.views;
+package org.kadampabookings.kbs.frontoffice.activities.podcast;
 
 import dev.webfx.extras.panes.ScalePane;
 import javafx.scene.Cursor;

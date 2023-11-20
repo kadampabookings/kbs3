@@ -31,7 +31,7 @@ import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
 import one.modality.base.shared.entities.Teacher;
-import org.kadampabookings.kbs.frontoffice.activities.podcast.views.PodcastView;
+import one.modality.base.shared.entities.impl.TeacherImpl;
 
 public final class PodcastActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, one.modality.base.client.activity.ModalityButtonFactoryMixin {
 
@@ -40,6 +40,7 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
     private final VBox podcastsContainer = new VBox(20);
     public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(5);
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
+    private static final Teacher FAVORITE_TAB_TEACHER = new TeacherImpl(null, null);
 
     @Override
     public Node buildUi() {
@@ -55,6 +56,7 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
                     TabsBar<Teacher> tabsBar = new TabsBar<>(PodcastActivity.this, teacherProperty::set);
                     tabsBar.setTabs(createTeacherTab(tabsBar, null));
                     tabsBar.addTabs(Collections.map(teachers, t -> createTeacherTab(tabsBar, t)));
+                    tabsBar.addTabs(createTeacherTab(tabsBar, FAVORITE_TAB_TEACHER));
                     tabsPane.getChildren().setAll(tabsBar.getTabs());
                 }));
 
@@ -90,7 +92,7 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
     }
 
     private static Tab createTeacherTab(TabsBar<Teacher> tabsBar, Teacher teacher) {
-        Tab tab = tabsBar.createTab(teacher == null ? "All" : teacher.getName(), teacher);
+        Tab tab = tabsBar.createTab(teacher == null ? "All" : teacher == FAVORITE_TAB_TEACHER ? "Favorites" : teacher.getName(), teacher);
         tab.setPadding(new Insets(5));
         tab.setTextFill(Color.GRAY);
         return tab;
@@ -98,11 +100,10 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
 
     @Override
     protected void startLogic() {
-
         ReactiveObjectsMapper.<Podcast, Node>createPushReactiveChain(this)
-                .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, durationMillis', orderBy: 'date desc, id desc'}")
+                .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, durationMillis', where: 'durationMillis != null', orderBy: 'date desc, id desc'}")
                 .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .ifNotNull(teacherProperty, teacher -> DqlStatement.where("teacher = ?", teacher))
+                .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcast.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setPodcast, PodcastView::getView))
                 .storeMappedObjectsInto(podcastsContainer.getChildren())
                 .start();

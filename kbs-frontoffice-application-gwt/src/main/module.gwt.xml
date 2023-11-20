@@ -94,7 +94,6 @@
     <!--====================< kbs-frontoffice-activity-podcast-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/podcast"/>
     <source path="org/kadampabookings/kbs/frontoffice/activities/podcast/routing"/>
-    <source path="org/kadampabookings/kbs/frontoffice/activities/podcast/views"/>
     <source path="org/kadampabookings/kbs/frontoffice/operations/routes/podcast"/>
     <!--==========================< kbs-frontoffice-application >===========================-->
     <resource path="org/kadampabookings/frontoffice/booking"/>
