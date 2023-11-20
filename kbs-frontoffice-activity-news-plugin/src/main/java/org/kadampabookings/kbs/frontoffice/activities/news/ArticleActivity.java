@@ -23,12 +23,12 @@ public class ArticleActivity extends ViewDomainActivityBase implements Operation
     public ArticleActivity() {
         // We keep the WebView synchronized with the article to display (held by FXArticle)
         FXProperties.runNowAndOnPropertiesChange(() -> {
-            News article = FXArticle.getArticle();
+            News article = FXDisplayedArticle.getDisplayedArticle();
             String url = article == null ? null : article.getLinkUrl();
             if (!Objects.equals(url, this.url)) {
                 webView.getEngine().load(this.url = url);
             }
-        }, FXArticle.articleProperty());
+        }, FXDisplayedArticle.displayedArticleProperty());
         // We set the front-office background node to that WebView.
         FXBackgroundNode.setBackgroundNode(webView);
     }
@@ -44,6 +44,6 @@ public class ArticleActivity extends ViewDomainActivityBase implements Operation
         // Normally FXArticle is already set when the user clicks on the News page, but this is important to consider it
         // again here in case the user refreshes the browser. Then setting the articleId will cause FXArticle to load
         // the article url again from the database, which will then make the WebView react and display that url content.
-        FXArticle.setArticleId(getParameter("articleId"));
+        FXDisplayedArticle.setDisplayedArticleId(getParameter("articleId"));
     }
 }

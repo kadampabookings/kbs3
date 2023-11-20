@@ -21,7 +21,10 @@ module kbs.frontoffice.activity.news.plugin {
     requires webfx.extras.panes;
     requires webfx.extras.util.control;
     requires webfx.kit.util;
+    requires webfx.platform.ast;
+    requires webfx.platform.ast.json.plugin;
     requires webfx.platform.conf;
+    requires webfx.platform.storage;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;

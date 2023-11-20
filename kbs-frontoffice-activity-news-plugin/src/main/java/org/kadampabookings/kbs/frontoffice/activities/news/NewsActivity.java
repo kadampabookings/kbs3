@@ -12,10 +12,10 @@ import dev.webfx.stack.orm.dql.DqlStatement;
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntityToObjectMapper;
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -38,10 +38,11 @@ import one.modality.base.shared.entities.News;
 
 public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
+    private enum NewsTab { ALL, VIDEOS, FAVORITES }
     private final BorderPane homeContainer = new BorderPane();
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox newsContainer = new VBox(40);
-    private final BooleanProperty videosProperty = new SimpleBooleanProperty();
+    private final ObjectProperty<NewsTab> selectedTab = new SimpleObjectProperty<>();
     public final IntegerProperty newsLimitProperty = new SimpleIntegerProperty(5);
 
     @Override
@@ -64,8 +65,12 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         ScalePane headerScalePane = new ScalePane(headerPane);
         headerScalePane.setBackground(Background.fill(Color.WHITE));
 
-        TabsBar<Boolean> tabsBar = new TabsBar<>(this, videosProperty::set);
-        tabsBar.setTabs(createNewsTab(tabsBar, "All", false), createNewsTab(tabsBar, "Videos", true));
+        TabsBar<NewsTab> tabsBar = new TabsBar<>(this, selectedTab::set);
+        tabsBar.setTabs(
+                createNewsTab(tabsBar, "All", NewsTab.ALL),
+                createNewsTab(tabsBar, "Videos", NewsTab.VIDEOS),
+                createNewsTab(tabsBar, "Favorites", NewsTab.FAVORITES)
+        );
         ColumnsPane tabsPane = new ColumnsPane();
         tabsPane.getChildren().setAll(tabsBar.getTabs());
 
@@ -102,7 +107,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         return homeContainer;
     }
 
-    private static Tab createNewsTab(TabsBar<Boolean> tabsBar, String text, Boolean value) {
+    private static Tab createNewsTab(TabsBar<NewsTab> tabsBar, String text, NewsTab value) {
         Tab tab = tabsBar.createTab(text, value);
         tab.setPadding(new Insets(5));
         tab.setTextFill(Color.GRAY);
@@ -115,7 +120,8 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
                 .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
                 .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .ifTrue(videosProperty, DqlStatement.where("containsVideos"))
+                .ifEquals(selectedTab, NewsTab.VIDEOS, DqlStatement.where("containsVideos"))
+                .ifEquals(selectedTab, NewsTab.FAVORITES, () -> DqlStatement.whereFieldIn("id", FXFavoriteNews.getFavoriteNewsIds().toArray()))
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
                 .storeMappedObjectsInto(newsContainer.getChildren())
                 .start();
