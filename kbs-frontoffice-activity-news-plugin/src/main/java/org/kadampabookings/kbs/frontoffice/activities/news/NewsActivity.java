@@ -68,7 +68,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         TabsBar<NewsTab> tabsBar = new TabsBar<>(this, selectedTab::set);
         tabsBar.setTabs(
                 createNewsTab(tabsBar, "All", NewsTab.ALL),
-                createNewsTab(tabsBar, "Videos", NewsTab.VIDEOS),
+                createNewsTab(tabsBar, "With videos", NewsTab.VIDEOS),
                 createNewsTab(tabsBar, "Favorites", NewsTab.FAVORITES)
         );
         ColumnsPane tabsPane = new ColumnsPane();
@@ -120,7 +120,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
                 .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
                 .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .ifEquals(selectedTab, NewsTab.VIDEOS, DqlStatement.where("containsVideos"))
+                .ifEquals(selectedTab, NewsTab.VIDEOS, DqlStatement.where("withVideos"))
                 .ifEquals(selectedTab, NewsTab.FAVORITES, () -> DqlStatement.whereFieldIn("id", FXFavoriteNews.getFavoriteNewsIds().toArray()))
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
                 .storeMappedObjectsInto(newsContainer.getChildren())
