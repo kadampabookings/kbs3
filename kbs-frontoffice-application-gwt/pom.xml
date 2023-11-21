@@ -82,13 +82,6 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-client-conf-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.kadampabookings</groupId>
             <artifactId>kbs-frontoffice-activity-news-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>

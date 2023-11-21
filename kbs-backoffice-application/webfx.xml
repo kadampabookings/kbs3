@@ -10,7 +10,7 @@
     <dependencies>
         <used-by-source-modules/>
 
-        <plugin-module>kbs-client-conf-plugin</plugin-module>
+        <plugin-module executable-target="gluon">kbs-client-conf-plugin</plugin-module>
 
         <!-- Base activities -->
         <plugin-module>modality-base-backoffice-max-plugin</plugin-module>
