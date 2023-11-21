@@ -95,7 +95,7 @@ public final class PodcastActivity extends ViewDomainActivityBase implements Ope
     }
 
     private static Tab createTeacherTab(TabsBar<Teacher> tabsBar, Teacher teacher) {
-        Tab tab = tabsBar.createTab(teacher == null ? "All" : teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? "Favorites" : teacher.getName(), teacher);
+        Tab tab = tabsBar.createTab(teacher == null ? "All" : teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? "Favorites" : teacher.getName().replace("Kelsang ", "") /* removing Kelsang to increase breathing area */, teacher);
         tab.setPadding(new Insets(5));
         tab.setTextFill(Color.GRAY);
         return tab;

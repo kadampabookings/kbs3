@@ -121,7 +121,7 @@ public final class PodcastView {
             /* Date: */       dateY = 0;                                dateHeight = dateText.prefHeight(rightWidth);
             /* Title: */      titleY = dateY + dateHeight + 10;         titleHeight = titleLabel.prefHeight(rightWidth);
             /* Excerpt: */    excerptY = titleY + titleHeight + 10;     excerptHeight = excerptLabel.prefHeight(rightWidth);
-            /* Buttons: */    buttonY = excerptY + excerptHeight + 10;  buttonSize = 32;
+            /* Buttons: */    buttonY = excerptY + excerptHeight + 30;  buttonSize = 32;
             /* Favorite: */   favoriteY = buttonY + buttonSize + 30;    favoriteHeight = 32;
         }
     };
