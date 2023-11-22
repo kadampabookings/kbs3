@@ -21,7 +21,7 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-client-conf-plugin</artifactId>
+            <artifactId>kbs-client-conf-gluon-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>

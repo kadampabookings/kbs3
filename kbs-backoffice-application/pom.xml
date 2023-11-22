@@ -18,6 +18,13 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.kadampabookings</groupId>
+            <artifactId>kbs-client-conf-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-backoffice-max-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>

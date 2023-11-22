@@ -11,7 +11,8 @@
     <dependencies>
         <used-by-source-modules/>
 
-        <plugin-module executable-target="gluon">kbs-client-conf-plugin</plugin-module>
+        <plugin-module>kbs-client-conf-plugin</plugin-module>
+        <plugin-module executable-target="gluon">kbs-client-conf-gluon-plugin</plugin-module>
 
         <plugin-module>modality-base-frontoffice-max-plugin</plugin-module>
 
