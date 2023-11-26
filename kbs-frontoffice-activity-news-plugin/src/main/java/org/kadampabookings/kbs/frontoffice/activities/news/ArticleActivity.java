@@ -21,6 +21,8 @@ public class ArticleActivity extends ViewDomainActivityBase implements Operation
     private String url;
 
     public ArticleActivity() {
+        // We use the "replace" webfx loading mode for the web version (iFrame) to not interfere with the main navigation history
+        webView.getProperties().put("webfx-loadingMode", "replace");
         // We keep the WebView synchronized with the article to display (held by FXArticle)
         FXProperties.runNowAndOnPropertiesChange(() -> {
             News article = FXDisplayedArticle.getDisplayedArticle();
