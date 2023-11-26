@@ -6,6 +6,7 @@
 module kbs.frontoffice.application {
 
     // Resources packages
+    opens images.organizations;
     opens org.kadampabookings.frontoffice.booking;
 
 }
