@@ -164,7 +164,7 @@ public class NewsImportJob implements ApplicationJob {
     }
 
     private static String cleanUrl(String url) {
-        return url == null ? null : url.replace("\\", "");
+        return url == null ? null : WebTextUtil.unescapeUnicodes(url).replace("\\", "");
     }
 
 }
