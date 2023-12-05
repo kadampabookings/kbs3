@@ -29,7 +29,7 @@ import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class PodcastsView {
+public final class PodcastView {
 
     private final static String FAVORITE_PATH = "M 24.066331,0 C 21.212473,0 18.540974,1.2921301 16.762259,3.4570778 14.983544,1.2920563 12.312119,0 9.4581876,0 4.2429514,0 0,4.2428782 0,9.4581873 0,13.54199 2.4351327,18.265558 7.237612,23.497667 c 3.695875,4.026405 7.716386,7.143963 8.860567,8.003592 L 16.762038,32 17.425897,31.501333 c 1.144181,-0.859629 5.164839,-3.977113 8.860788,-8.003518 4.802627,-5.23211 7.237834,-9.955751 7.237834,-14.0396277 C 33.524519,4.2428782 29.281567,0 24.066331,0 Z";
 
@@ -212,6 +212,7 @@ public final class PodcastsView {
             else
                 updateElapsedTimeAndProgressBar(isPlaying || status == MediaPlayer.Status.PAUSED ? mediaPlayer.getCurrentTime() : podcastDuration);
         }, mediaPlayer.statusProperty(), mediaPlayer.currentTimeProperty());
+        //mediaPlayer.setOnError(() -> System.out.println("An error occurred: " + mediaPlayer.getError()));
     }
 
     private void unbindMediaPlayer() {
