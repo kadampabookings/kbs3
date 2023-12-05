@@ -94,10 +94,10 @@
     <source path="org/kadampabookings/kbs/frontoffice/activities/news"/>
     <source path="org/kadampabookings/kbs/frontoffice/activities/news/routing"/>
     <source path="org/kadampabookings/kbs/frontoffice/operations/routes/news"/>
-    <!--====================< kbs-frontoffice-activity-podcast-plugin >=====================-->
-    <source path="org/kadampabookings/kbs/frontoffice/activities/podcast"/>
-    <source path="org/kadampabookings/kbs/frontoffice/activities/podcast/routing"/>
-    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/podcast"/>
+    <!--====================< kbs-frontoffice-activity-podcasts-plugin >====================-->
+    <source path="org/kadampabookings/kbs/frontoffice/activities/podcasts"/>
+    <source path="org/kadampabookings/kbs/frontoffice/activities/podcasts/routing"/>
+    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/podcasts"/>
     <!--==========================< kbs-frontoffice-application >===========================-->
     <resource path="images/organizations"/>
     <public includes="images/organizations/" path=""/>

@@ -103,7 +103,7 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-frontoffice-activity-podcast-plugin</artifactId>
+            <artifactId>kbs-frontoffice-activity-podcasts-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>

@@ -25,7 +25,7 @@
         <plugin-module>kbs-frontoffice-activity-news-plugin</plugin-module>
 
         <!-- Kadampa Podcast -->
-        <plugin-module>kbs-frontoffice-activity-podcast-plugin</plugin-module>
+        <plugin-module>kbs-frontoffice-activity-podcasts-plugin</plugin-module>
 
         <!-- Event activities -->
         <plugin-module>modality-event-frontoffice-max-plugin</plugin-module>
