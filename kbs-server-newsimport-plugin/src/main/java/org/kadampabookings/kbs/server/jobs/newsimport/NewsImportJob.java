@@ -143,15 +143,15 @@ public class NewsImportJob implements ApplicationJob {
                                                         if (linkUrl != null) {
                                                             Object newsKey = insertBatch.getArray()[i].getGeneratedKeys()[0];
                                                             Fetch.fetch(linkUrl).compose(Response::text).onSuccess(text -> {
-                                                                boolean hasVideo = text != null && text.contains("wistia");
-                                                                Console.log("News " + newsKey + " has video: " + hasVideo);
-                                                                if (hasVideo) {
+                                                                boolean withVideos = text != null && text.contains("wistia");
+                                                                Console.log("News " + newsKey + " has videos: " + withVideos);
+                                                                if (withVideos) {
                                                                     UpdateStore updateStore2 = UpdateStore.create(dataSourceModel);
                                                                     Entity news = updateStore2.updateEntity(EntityId.create(News.class, newsKey));
-                                                                    news.setFieldValue("containsVideos", true);
+                                                                    news.setFieldValue("withVideos", true);
                                                                     updateStore2.submitChanges()
                                                                             .onFailure(Console::log)
-                                                                            .onSuccess(x -> Console.log("News " + newsKey + " video updated"));
+                                                                            .onSuccess(x -> Console.log("News " + newsKey + " withVideos updated"));
                                                                 }
                                                             });
                                                         }
