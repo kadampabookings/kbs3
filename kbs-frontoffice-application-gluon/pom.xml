@@ -414,9 +414,9 @@
                     <appIdentifier>org.kadampabookings.kbs.frontoffice</appIdentifier>
                     <releaseConfiguration>
                         <!-- macOS/iOS -->
-                        <bundleName>Kadampa bookings</bundleName>
+                        <bundleName>Kadampa Bookings</bundleName>
                         <!-- Android -->
-                        <appLabel>Kadampa bookings</appLabel>
+                        <appLabel>Kadampa Bookings</appLabel>
                     </releaseConfiguration>
 
                 </configuration>

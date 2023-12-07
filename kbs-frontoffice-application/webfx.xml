@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project applicationId="org.kadampabookings.kbs.frontoffice" applicationLabel="Kadampa bookings">
+<project applicationId="org.kadampabookings.kbs.frontoffice" applicationLabel="Kadampa Bookings">
 
     <description>The KBS Front-Office application (cross-platform non-executable module).</description>
 
