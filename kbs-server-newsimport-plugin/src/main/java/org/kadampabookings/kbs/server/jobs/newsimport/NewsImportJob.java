@@ -127,6 +127,8 @@ public class NewsImportJob implements ApplicationJob {
                                             n.setDate(LocalDate.from(dateTime));
                                             n.setLinkUrl(cleanUrl(AST.lookupString(newsJson, "guid.rendered")));
                                             n.setImageUrl(cleanUrl(AST.lookupString(mediasJson[i], "media_details.sizes.medium_large.source_url")));
+                                            if (n.getImageUrl() == null)
+                                                n.setImageUrl(cleanUrl(AST.lookupString(mediasJson[i], "media_details.sizes.full.source_url")));
                                             linkUrls.add(cleanUrl(newsJson.getString("link")));
                                         }
 
