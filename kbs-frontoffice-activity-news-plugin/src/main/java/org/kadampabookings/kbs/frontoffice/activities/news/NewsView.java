@@ -31,7 +31,7 @@ public final class NewsView {
     private News news;
     private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_BLUE);
     private final Text dateText = TextUtility.getSubText(null);
-    private final Label excerptLabel = GeneralUtility.getMainLabel(null, StyleUtility.VICTOR_BATTLE_BLACK);
+    private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.VICTOR_BATTLE_BLACK);
     private final ImageView imageView = new ImageView();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
@@ -70,8 +70,8 @@ public final class NewsView {
             /* Image: */       imageY = 0;                                 imageWidth = width / 3;
             /* Right side: */  rightX = imageWidth + 20;                   rightWidth = width - rightX;
             /* Title: */       titleY = 0;                                titleHeight = titleLabel.prefHeight(rightWidth);
-            /* Date: */         dateY = titleY + titleHeight + 5;          dateHeight = dateText.prefHeight(rightWidth);
-            /* Excerpt: */   excerptY = dateY + dateHeight + 5;         excerptHeight = excerptLabel.prefHeight(rightWidth);
+            /* Date: */         dateY = titleY + titleHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
+            /* Excerpt: */   excerptY = dateY + dateHeight + 20;        excerptHeight = excerptLabel.prefHeight(rightWidth);
             /* Favorite: */ favoriteY = excerptY + excerptHeight + 20; favoriteHeight = 32;
         }
     };

@@ -18,6 +18,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
@@ -47,7 +48,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     @Override
     public Node buildUi() {
 
-        Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", Color.web(StyleUtility.MAIN_BLUE), 21);
+        Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", Color.web(StyleUtility.MAIN_ORANGE),  true, 21);
+        podcastsLabel.setContentDisplay(ContentDisplay.TOP);
 
         Text teacherPrefixText = I18n.bindI18nProperties(new Text(), "teacher");
         teacherPrefixText.setFill(Color.GRAY);
@@ -85,7 +87,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         pageContainer.setMaxWidth(1200); // Similar value as our website
         pageContainer.setAlignment(Pos.CENTER);
         BorderPane.setMargin(pageContainer, new Insets(0, 20, 0, 20)); // Global page padding
-        VBox.setMargin(podcastsLabel, new Insets(50, 0, 40, 0));
+        VBox.setMargin(podcastsLabel, new Insets(20, 0, 40, 0));
         VBox.setMargin(podcastsContainer, new Insets(80, 0, 10, 0));
         pageContainer.getChildren().setAll(
                 podcastsLabel,

@@ -50,7 +50,7 @@ public final class PodcastView {
     private final Rectangle authorImageClip = new Rectangle();
     private final Text dateText = TextUtility.getSubText(null);
     private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_BLUE);
-    private final Label excerptLabel = GeneralUtility.getMainLabel(null, StyleUtility.ELEMENT_GRAY);
+    private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.ELEMENT_GRAY);
     private final Pane playButton = PodcastsButtons.createPlayButton();
     private final Pane pauseButton = PodcastsButtons.createPauseButton();
     private final Pane forwardButton = PodcastsButtons.createForwardButton();

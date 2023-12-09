@@ -48,10 +48,10 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     @Override
     public Node buildUi() {
         Text headerText = I18n.bindI18nProperties(new Text(), "newsHeaderText");
-        headerText.setFill(Color.web(StyleUtility.MAIN_BLUE));
+        headerText.setFill(Color.web(StyleUtility.MAIN_ORANGE));
         headerText.setFont(Font.font(StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32));
         headerText.setStyle("-fx-font-family: " + StyleUtility.TEXT_FAMILY + "; -fx-font-weight: bold; -fx-font-size: 32");
-        headerText.setWrappingWidth(210);
+        headerText.setWrappingWidth(250);
         String headerImageUrl = SourcesConfig.getSourcesRootConfig().childConfigAt("kbs.frontoffice.activity.news").getString("headerImageUrl");
         ImageView headerImageView = ImageStore.createImageView(headerImageUrl);
         headerImageView.setPreserveRatio(true);
