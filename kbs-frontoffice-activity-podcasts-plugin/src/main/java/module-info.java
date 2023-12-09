@@ -21,6 +21,8 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.kit.util;
     requires webfx.platform.ast;
     requires webfx.platform.ast.json.plugin;
+    requires webfx.platform.browser;
+    requires webfx.platform.console;
     requires webfx.platform.storage;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
