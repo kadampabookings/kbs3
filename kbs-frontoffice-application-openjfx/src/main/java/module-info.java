@@ -12,6 +12,7 @@ module kbs.frontoffice.application.openjfx {
     requires webfx.extras.visual.grid.peers.openjfx;
     requires webfx.extras.webtext.peers.openjfx;
     requires webfx.kit.openjfx;
+    requires webfx.kit.platform.browser.openjfx;
     requires webfx.kit.platform.visibility.openjfx;
     requires webfx.platform.ast.factory.generic;
     requires webfx.platform.blob.java;

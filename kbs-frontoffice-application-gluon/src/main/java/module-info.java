@@ -16,6 +16,7 @@ module kbs.frontoffice.application.gluon {
     requires webfx.platform.audio.gluon;
     requires webfx.platform.blob.java;
     requires webfx.platform.boot.java;
+    requires webfx.platform.browser.gluon;
     requires webfx.platform.console.java;
     requires webfx.platform.fetch.java;
     requires webfx.platform.os.gluon;
