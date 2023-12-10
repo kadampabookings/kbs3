@@ -2,17 +2,20 @@ package org.kadampabookings.kbs.frontoffice.activities.news;
 
 import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.extras.panes.MonoPane;
+import dev.webfx.platform.util.Arrays;
 import dev.webfx.platform.util.Objects;
 import dev.webfx.platform.windowhistory.spi.BrowsingHistory;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
@@ -29,14 +32,15 @@ public final class NewsView {
 
     private final BrowsingHistory history;
     private News news;
-    private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_BLUE);
+    private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE);
     private final Text dateText = TextUtility.getSubText(null);
     private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.VICTOR_BATTLE_BLACK);
     private final ImageView imageView = new ImageView();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
-    private final Pane newsContainer = new Pane(imageView, titleLabel, dateText, excerptLabel, favoritePane) {
-        private double imageY, imageWidth, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight;
+    private final Hyperlink readMoreLink = GeneralUtility.setupLabeled(new Hyperlink(), "readMore", Color.web(StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE), FontWeight.SEMI_BOLD, 10);
+    private final Pane newsContainer = new Pane(imageView, titleLabel, dateText, excerptLabel, favoritePane, readMoreLink) {
+        private double imageY, imageWidth, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight, readMoreX, readMoreY, readMoreHeight;
         @Override
         protected void layoutChildren() {
             computeLayout(getWidth());
@@ -46,6 +50,7 @@ public final class NewsView {
             layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
+            layoutInArea(readMoreLink, readMoreX, readMoreY, rightWidth, readMoreHeight, 0, HPos.LEFT, VPos.TOP);
         }
 
         @Override
@@ -73,6 +78,9 @@ public final class NewsView {
             /* Date: */         dateY = titleY + titleHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
             /* Excerpt: */   excerptY = dateY + dateHeight + 20;        excerptHeight = excerptLabel.prefHeight(rightWidth);
             /* Favorite: */ favoriteY = excerptY + excerptHeight + 20; favoriteHeight = 32;
+            /* ReadMore: */ readMoreY = favoriteY;                     readMoreHeight = favoriteHeight;
+                            readMoreX = rightX + 50;
+
         }
     };
 
@@ -88,17 +96,23 @@ public final class NewsView {
             updateFavorite();
             e.consume();
         });
-        newsContainer.setCursor(Cursor.HAND);
-        newsContainer.setOnMousePressed(e -> screenPressedY = e.getScreenY());
-        newsContainer.setOnMouseReleased(e -> {
-            if (Math.abs(e.getScreenY() - screenPressedY) < 10) // This is to avoid browsing the article when the user just wants to scroll
-                browseArticle();
+        armBrowsingNode(titleLabel, imageView, readMoreLink);
+    }
+
+    private void armBrowsingNode(Node...nodes) {
+        Arrays.forEach(nodes, node -> {
+            node.setCursor(Cursor.HAND);
+            node.setOnMousePressed(e -> screenPressedY = e.getScreenY());
+            node.setOnMouseReleased(e -> {
+                if (Math.abs(e.getScreenY() - screenPressedY) < 10) // This is to avoid browsing the article when the user just wants to scroll
+                    browseArticle();
+            });
         });
     }
 
     public void setNews(News news) {
         this.news = news;
-        updateLabel(titleLabel, news.getTitle().toUpperCase());
+        updateLabel(titleLabel, news.getTitle());
         updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(news.getDate()));
         updateLabel(excerptLabel, news.getExcerpt());
         imageView.setImage(ImageStore.getOrCreateImage(news.getImageUrl()));

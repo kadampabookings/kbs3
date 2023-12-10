@@ -1,9 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.activities.podcasts;
 
-import dev.webfx.extras.panes.FlexPane;
-import dev.webfx.extras.panes.MonoPane;
-import dev.webfx.extras.panes.ScaleMode;
-import dev.webfx.extras.panes.ScalePane;
+import dev.webfx.extras.panes.*;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.browser.Browser;
@@ -30,6 +27,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.mainframe.dialogarea.fx.FXMainFrameDialogArea;
 import one.modality.base.frontoffice.utility.GeneralUtility;
@@ -53,13 +51,14 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", Color.web(StyleUtility.MAIN_ORANGE),  true, 21);
         podcastsLabel.setContentDisplay(ContentDisplay.TOP);
+        podcastsLabel.setTextAlignment(TextAlignment.CENTER);
 
         Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", Color.web(StyleUtility.MAIN_ORANGE),  false, 8);
         FlexPane podcastsChannelPane = new FlexPane(
-                createPodcastsChannelButton("Spotify", "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
+                createPodcastsChannelButton("Spotify",       "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
                 createPodcastsChannelButton("ApplePodcasts", "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
-                createPodcastsChannelButton("AmazonMusic", "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
-                createPodcastsChannelButton("PocketCasts", "https://pca.st/9yuq0l0p"));
+                createPodcastsChannelButton("AmazonMusic",   "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
+                createPodcastsChannelButton("PocketCasts",   "https://pca.st/9yuq0l0p"));
         podcastsChannelPane.setMaxWidth(Double.MAX_VALUE);
         podcastsChannelPane.setHorizontalSpace(10);
         podcastsChannelPane.setVerticalSpace(10);

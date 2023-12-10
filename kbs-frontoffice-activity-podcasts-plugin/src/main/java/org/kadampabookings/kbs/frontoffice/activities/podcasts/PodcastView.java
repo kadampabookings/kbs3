@@ -49,8 +49,8 @@ public final class PodcastView {
     private final ImageView authorImageView = new ImageView();
     private final Rectangle authorImageClip = new Rectangle();
     private final Text dateText = TextUtility.getSubText(null);
-    private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_BLUE);
-    private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.ELEMENT_GRAY);
+    private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE);
+    private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.VICTOR_BATTLE_BLACK);
     private final Pane playButton = PodcastsButtons.createPlayButton();
     private final Pane pauseButton = PodcastsButtons.createPauseButton();
     private final Pane forwardButton = PodcastsButtons.createForwardButton();
@@ -101,9 +101,10 @@ public final class PodcastView {
             layoutInArea(playButton, rightX + buttonSize + 5, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(pauseButton, rightX + buttonSize + 5, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(forwardButton, rightX + 2 * (buttonSize + 5), buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
-            progressBar.setPrefWidth(rightWidth - 6 * (buttonSize + 5));
-            layoutInArea(progressBar, rightX + 3 * (buttonSize + 5), buttonY, progressBar.getPrefWidth(), buttonSize, 0, HPos.LEFT, VPos.CENTER);
-            layoutInArea(elapsedTimeText, rightX + 3 * (buttonSize + 5), buttonY + buttonSize, rightWidth, buttonSize, 0, HPos.LEFT, VPos.TOP);
+            double progressBarX = rightX + 3 * (buttonSize + 5);
+            progressBar.setPrefWidth(getWidth() - progressBarX);
+            layoutInArea(progressBar, progressBarX, buttonY, progressBar.getPrefWidth(), buttonSize, 0, HPos.LEFT, VPos.CENTER);
+            layoutInArea(elapsedTimeText, progressBarX, buttonY + buttonSize, rightWidth, buttonSize, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
         }
 
@@ -118,9 +119,9 @@ public final class PodcastView {
                 width = getWidth();
             /* Image: */      imageY = 0;                               imageSize = width / 4;
             /* Right side: */ rightX = imageSize + 20;                  rightWidth = width - rightX;
-            /* Date: */       dateY = 0;                                dateHeight = dateText.prefHeight(rightWidth);
-            /* Title: */      titleY = dateY + dateHeight + 10;         titleHeight = titleLabel.prefHeight(rightWidth);
-            /* Excerpt: */    excerptY = titleY + titleHeight + 10;     excerptHeight = excerptLabel.prefHeight(rightWidth);
+            /* Date: */       titleY = 0;                               titleHeight = titleLabel.prefHeight(rightWidth);
+            /* Title: */      dateY = titleY + titleHeight + 10;        dateHeight = dateText.prefHeight(rightWidth);
+            /* Excerpt: */    excerptY = dateY + dateHeight + 10;       excerptHeight = excerptLabel.prefHeight(rightWidth);
             /* Buttons: */    buttonY = excerptY + excerptHeight + 30;  buttonSize = 32;
             /* Favorite: */   favoriteY = buttonY + buttonSize + 30;    favoriteHeight = 32;
         }
@@ -132,7 +133,7 @@ public final class PodcastView {
         podcastDuration = Duration.millis(podcast.getDurationMillis());
         authorImageView.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
         updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(podcast.getDate()));
-        updateLabel(titleLabel, podcast.getTitle().toUpperCase());
+        updateLabel(titleLabel, podcast.getTitle());
         updateLabel(excerptLabel, podcast.getExcerpt());
         updateFavorite();
         // We check if the podcast has already been played
