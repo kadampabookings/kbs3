@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -32,7 +33,7 @@ public final class NewsView {
 
     private final BrowsingHistory history;
     private News news;
-    private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE);
+    private final Hyperlink titleLabel = GeneralUtility.setupLabeled(new Hyperlink(), null, Color.web(StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE), FontWeight.SEMI_BOLD, StyleUtility.MAIN_TEXT_SIZE);
     private final Text dateText = TextUtility.getSubText(null);
     private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.VICTOR_BATTLE_BLACK);
     private final ImageView imageView = new ImageView();
@@ -80,7 +81,6 @@ public final class NewsView {
             /* Favorite: */ favoriteY = excerptY + excerptHeight + 20; favoriteHeight = 32;
             /* ReadMore: */ readMoreY = favoriteY;                     readMoreHeight = favoriteHeight;
                             readMoreX = rightX + 50;
-
         }
     };
 
@@ -112,9 +112,9 @@ public final class NewsView {
 
     public void setNews(News news) {
         this.news = news;
-        updateLabel(titleLabel, news.getTitle());
+        updateLabeled(titleLabel, news.getTitle());
         updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(news.getDate()));
-        updateLabel(excerptLabel, news.getExcerpt());
+        updateLabeled(excerptLabel, news.getExcerpt());
         imageView.setImage(ImageStore.getOrCreateImage(news.getImageUrl()));
         updateFavorite();
     }
@@ -139,8 +139,8 @@ public final class NewsView {
             text.setText(newContent);
     }
 
-    private static void updateLabel(Label label, String newContent) {
-        if (!Objects.areEquals(newContent, label.getText()))
-            label.setText(newContent);
+    private static void updateLabeled(Labeled labeled, String newContent) {
+        if (!Objects.areEquals(newContent, labeled.getText()))
+            labeled.setText(newContent);
     }
 }
