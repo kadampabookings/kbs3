@@ -41,8 +41,8 @@ public class NewsImportJob implements ApplicationJob {
 
     @Override
     public void onStart() {
-        importNews();
-        importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importNews);
+        importNews("en");
+        importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, () -> importNews("en"));
     }
 
     @Override
@@ -51,11 +51,11 @@ public class NewsImportJob implements ApplicationJob {
             importTimer.cancel();
     }
 
-    public void importNews() {
+    public void importNews(String lang) {
         // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
         if (fetchAfterParameter == null) {
-            EntityStore.create(dataSourceModel).<News>executeQuery("select id,date from News order by date desc limit 1")
+            EntityStore.create(dataSourceModel).<News>executeQuery("select id,date from News where lang=? order by date desc limit 1", lang)
                     .onFailure(error -> Console.log("Error while reading latest news", error))
                     .onSuccess(news -> {
                         if (news.isEmpty()) // Means that there is no news in the database
@@ -63,18 +63,18 @@ public class NewsImportJob implements ApplicationJob {
                         else
                             fetchAfterParameter = news.get(0).getDate().atStartOfDay().plusDays(1);
                         // Now that fetchAfterParameter is set, we can call importNews() again.
-                        importNews();
+                        importNews(lang);
                     });
             return;
         }
         // Creating the final fetch url with the additional query string (note: the number of news returned by the
         // web service is 10 by default; this could be increased using &per_page=100 - 100 is the maximal value
         // authorized by the web service)
-        String fetchUrl = NEWS_FETCH_URL + "?order=asc&after=" + Dates.formatIso(fetchAfterParameter);
+        String fetchUrl = NEWS_FETCH_URL + "?lang=" + lang + "&order=asc&after=" + Dates.formatIso(fetchAfterParameter);
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
                 .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
-                                "select channelNewsId from News where date >= ? order by date limit ?", fetchAfterParameter, webNewsJsonArray.size()
+                                "select channelNewsId from News where lang=? and date >= ? order by date limit ?", lang, fetchAfterParameter, webNewsJsonArray.size()
                         )
                         .onFailure(e -> Console.log("Error while reading news from database", e))
                         .onSuccess(dbNews -> {
@@ -118,6 +118,7 @@ public class NewsImportJob implements ApplicationJob {
                                             News n = updateStore.insertEntity(News.class);
                                             n.setChannel(1);
                                             n.setChannelNewsId(id);
+                                            n.setLang(lang);
                                             LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
                                             if (dateTime.isAfter(maxNewsDate))
                                                 maxNewsDate = dateTime;
@@ -127,7 +128,10 @@ public class NewsImportJob implements ApplicationJob {
                                                 n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.full.source_url")));
                                             n.setTitle(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "title.rendered")));
                                             n.setExcerpt(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "excerpt.rendered")));
-                                            n.setLinkUrl(cleanUrl(AST.lookupString(newsJson, "guid.rendered")));
+                                            String linkUrl = cleanUrl(AST.lookupString(newsJson, "guid.rendered"));
+                                            if (!"en".equals(lang))
+                                                linkUrl = linkUrl.replace("kadampa.org", "kadampa.org/" + lang);
+                                            n.setLinkUrl(linkUrl);
                                             directLinkUrlsForVideoCheck.add(cleanUrl(newsJson.getString("link")));
                                         }
 
@@ -159,7 +163,7 @@ public class NewsImportJob implements ApplicationJob {
                                                             });
                                                         }
                                                     }
-                                                    importNews();
+                                                    importNews(lang);
                                                 });
 
                                     });

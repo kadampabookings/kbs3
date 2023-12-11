@@ -119,6 +119,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     protected void startLogic() {
         ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
                 .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
+                .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
                 .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
                 .ifEquals(selectedTab, NewsTab.VIDEOS, DqlStatement.where("withVideos"))
                 .ifEquals(selectedTab, NewsTab.FAVORITES, () -> DqlStatement.whereFieldIn("id", FXFavoriteNews.getFavoriteNewsIds().toArray()))
