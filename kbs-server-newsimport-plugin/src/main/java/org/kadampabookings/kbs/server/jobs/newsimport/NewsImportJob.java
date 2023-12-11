@@ -15,7 +15,6 @@ import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Dates;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
-import dev.webfx.stack.orm.entity.Entity;
 import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
@@ -80,27 +79,27 @@ public class NewsImportJob implements ApplicationJob {
                         .onFailure(e -> Console.log("Error while reading news from database", e))
                         .onSuccess(dbNews -> {
 
-                            // Collecting the new news and their media ids (will need to be fetched)
-                            List<ReadOnlyAstObject> newWebNews = new ArrayList<>();
+                            // Checking if there are new news to import from the website, and collecting their media ids (will need to be fetched)
+                            List<ReadOnlyAstObject> newWebsiteNews = new ArrayList<>();
                             List<String> mediaIds = new ArrayList<>();
                             for (int i = 0; i < webNewsJsonArray.size(); i++) {
-                                ReadOnlyAstObject webNewsJson = webNewsJsonArray.getObject(i);
-                                String id = webNewsJson.getString("id");
-                                // Ignoring the news
+                                ReadOnlyAstObject websiteNewsJson = webNewsJsonArray.getObject(i);
+                                String id = websiteNewsJson.getString("id");
+                                // We filter only the news not yet imported in the database
                                 if (dbNews.stream().noneMatch(news -> Objects.equals(id, news.getChannelNewsId()))) {
-                                    newWebNews.add(webNewsJson);
-                                    mediaIds.add(webNewsJson.getString("featured_media"));
+                                    newWebsiteNews.add(websiteNewsJson);
+                                    mediaIds.add(websiteNewsJson.getString("featured_media"));
                                 }
                             }
 
-                            if (newWebNews.isEmpty()) {
+                            if (newWebsiteNews.isEmpty()) {
                                 Console.log("No new news to import");
                                 return;
                             }
 
                             // Creating a batch of those media ids
                             Batch<String> mediaIdsInputBatch = new Batch<>(mediaIds.toArray(new String[0]));
-                            // Execute all individual fetches in parallel
+                            // Executing all individual media fetches in parallel
                             mediaIdsInputBatch.executeParallel(ReadOnlyAstObject[]::new, mediaId ->
                                             mediaId == null ? Future.succeededFuture(null) : JsonFetch.fetchJsonObject(MEDIA_FETCH_URL + "/" + mediaId))
                                     .onFailure(e -> Console.log("Error while fetching news medias", e))
@@ -111,25 +110,25 @@ public class NewsImportJob implements ApplicationJob {
                                         LocalDateTime maxNewsDate = fetchAfterParameter;
 
                                         // Creating the new News entities to insert in the database
-                                        ReadOnlyAstObject[] mediasJson = webMediasJsonBatch.getArray();
-                                        List<String> linkUrls = new ArrayList<>();
-                                        for (int i = 0; i < mediasJson.length; i++) {
-                                            ReadOnlyAstObject newsJson = newWebNews.get(i);
+                                        ReadOnlyAstObject[] mediasJsonArray = webMediasJsonBatch.getArray();
+                                        List<String> directLinkUrlsForVideoCheck = new ArrayList<>();
+                                        for (int i = 0; i < mediasJsonArray.length; i++) {
+                                            ReadOnlyAstObject newsJson = newWebsiteNews.get(i);
                                             String id = newsJson.getString("id");
                                             News n = updateStore.insertEntity(News.class);
                                             n.setChannel(1);
                                             n.setChannelNewsId(id);
-                                            n.setTitle(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "title.rendered")));
-                                            n.setExcerpt(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "excerpt.rendered")));
                                             LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
                                             if (dateTime.isAfter(maxNewsDate))
                                                 maxNewsDate = dateTime;
                                             n.setDate(LocalDate.from(dateTime));
-                                            n.setLinkUrl(cleanUrl(AST.lookupString(newsJson, "guid.rendered")));
-                                            n.setImageUrl(cleanUrl(AST.lookupString(mediasJson[i], "media_details.sizes.medium_large.source_url")));
+                                            n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.medium_large.source_url")));
                                             if (n.getImageUrl() == null)
-                                                n.setImageUrl(cleanUrl(AST.lookupString(mediasJson[i], "media_details.sizes.full.source_url")));
-                                            linkUrls.add(cleanUrl(newsJson.getString("link")));
+                                                n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.full.source_url")));
+                                            n.setTitle(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "title.rendered")));
+                                            n.setExcerpt(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "excerpt.rendered")));
+                                            n.setLinkUrl(cleanUrl(AST.lookupString(newsJson, "guid.rendered")));
+                                            directLinkUrlsForVideoCheck.add(cleanUrl(newsJson.getString("link")));
                                         }
 
                                         LocalDateTime finalMaxNewsDate = maxNewsDate;
@@ -140,20 +139,22 @@ public class NewsImportJob implements ApplicationJob {
                                                     int newNewsCount = insertBatch.getArray().length;
                                                     Console.log(newNewsCount + " new news imported in database");
                                                     fetchAfterParameter = finalMaxNewsDate;
+                                                    // Updating the newly imported new by setting 1) withVideos field & 2) reading translations
                                                     for (int i = 0; i < newNewsCount; i++) {
-                                                        String linkUrl = linkUrls.get(i);
+                                                        Object newsPrimaryKey = insertBatch.getArray()[i].getGeneratedKeys()[0];
+                                                        // 1) Setting withVideos field
+                                                        String linkUrl = directLinkUrlsForVideoCheck.get(i);
                                                         if (linkUrl != null) {
-                                                            Object newsKey = insertBatch.getArray()[i].getGeneratedKeys()[0];
                                                             Fetch.fetch(linkUrl).compose(Response::text).onSuccess(text -> {
                                                                 boolean withVideos = text != null && text.contains("wistia");
-                                                                Console.log("News " + newsKey + " has videos: " + withVideos);
+                                                                Console.log("News " + newsPrimaryKey + " has videos: " + withVideos);
                                                                 if (withVideos) {
                                                                     UpdateStore updateStore2 = UpdateStore.create(dataSourceModel);
-                                                                    Entity news = updateStore2.updateEntity(EntityId.create(News.class, newsKey));
+                                                                    News news = updateStore2.updateEntity(EntityId.create(News.class, newsPrimaryKey));
                                                                     news.setFieldValue("withVideos", true);
                                                                     updateStore2.submitChanges()
                                                                             .onFailure(Console::log)
-                                                                            .onSuccess(x -> Console.log("News " + newsKey + " withVideos updated"));
+                                                                            .onSuccess(x -> Console.log("News " + newsPrimaryKey + " withVideos updated"));
                                                                 }
                                                             });
                                                         }
