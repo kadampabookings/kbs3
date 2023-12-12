@@ -107,6 +107,8 @@ public class PodcastsImportJob implements ApplicationJob {
                                     maxPodcastDate = dateTime;
                                 p.setDate(LocalDate.from(dateTime));
                                 String imageUrl = podcastJson.getString("episode_featured_image");
+                                if (imageUrl == null || !imageUrl.startsWith("http"))
+                                    imageUrl = podcastJson.getString("episode_player_image");
                                 p.setImageUrl(cleanUrl(imageUrl));
                                 String audioUrl = AST.lookupString(podcastJson, "meta.audio_file");
                                 p.setAudioUrl(cleanUrl(audioUrl));
