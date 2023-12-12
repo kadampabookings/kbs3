@@ -19,10 +19,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
@@ -34,6 +31,7 @@ import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
 import one.modality.base.shared.entities.Teacher;
+import one.modality.base.shared.entities.Topic;
 import one.modality.base.shared.entities.impl.TeacherImpl;
 
 public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
@@ -45,6 +43,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     private final VBox podcastsContainer = new VBox(20);
     public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(5);
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
 
     @Override
     public Node buildUi() {
@@ -100,6 +99,38 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         teacherProperty.bind(teacherButtonSelector.selectedItemProperty());
 
+        Text topicPrefixText = I18n.bindI18nProperties(new Text(), "topic");
+        topicPrefixText.setFill(Color.GRAY);
+        EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
+                "{class: 'Topic', alias: 't', columns: 'name', orderBy: 'id'}",
+                this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
+        ) { // Overriding the button content to add the "Teacher" prefix text
+            @Override
+            protected Node getOrCreateButtonContentFromSelectedItem() {
+                return new HBox(10, topicPrefixText, super.getOrCreateButtonContentFromSelectedItem());
+            }
+        }.appendNullEntity(true); // Also adding null entity that will represent all teachers
+        // Creating a virtual teacher named "All" that will be used to select all teachers
+        store = topicButtonSelector.getStore();
+        Topic allTopic = store.createEntity(Topic.class);
+        topicButtonSelector.setVisualNullEntity(allTopic);
+        // Binding teacher name with "all" i18n key
+        StringProperty allTopicNameProperty; // keeping a reference to prevent GC
+        I18n.bindI18nTextProperty(allTopicNameProperty = new SimpleStringProperty() {
+            @Override
+            protected void invalidated() {
+                allTopic.setName(get()); // Updating teacher name
+                topicButtonSelector.updateButtonContentFromSelectedItem(); // Refreshing button content in case it was the selected teacher
+            }
+        }, "all");
+
+        Button topicButton = topicButtonSelector.getButton();
+        topicButton.getProperties().put("dontGarbage", allTopicNameProperty);
+        topicButton.setMaxWidth(Region.USE_PREF_SIZE);
+        ScalePane scaledTopicButton = new ScalePane(ScaleMode.FIT_WIDTH, topicButton);
+
+        topicProperty.bind(topicButtonSelector.selectedItemProperty());
+
         // Setting a max width for big desktop screens
         pageContainer.setMaxWidth(1200); // Similar value as our website
         pageContainer.setAlignment(Pos.CENTER);
@@ -114,7 +145,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 alsoAvailableOnLabel,
                 podcastsChannelPane,
                 separatorLine,
-                scaledTeacherButton,
+                new ColumnsPane(scaledTeacherButton, scaledTopicButton),
                 podcastsContainer
         );
 
@@ -124,6 +155,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             scaledTeacherButton.setMaxScale(scale);
+            scaledTopicButton.setMaxScale(scale);
             // Also the space above and below
             VBox.setMargin(separatorLine, new Insets(10, 0, 40 * scale, 0));
             VBox.setMargin(podcastsContainer, new Insets(40 * scale, 0, 10, 0));
@@ -172,6 +204,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, durationMillis', where: 'durationMillis != null', orderBy: 'date desc, id desc'}")
                 .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
                 .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
+                .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setPodcast, PodcastView::getView))
                 .storeMappedObjectsInto(podcastsContainer.getChildren())
                 .start();
