@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.server.jobs.newsimport;
 
 import dev.webfx.extras.webtext.util.WebTextUtil;
 import dev.webfx.platform.ast.AST;
+import dev.webfx.platform.ast.ReadOnlyAstArray;
 import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.platform.async.Batch;
 import dev.webfx.platform.async.Future;
@@ -19,6 +20,7 @@ import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import one.modality.base.shared.entities.News;
+import one.modality.base.shared.entities.Topic;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,13 +38,14 @@ public class NewsImportJob implements ApplicationJob {
     private static final long IMPORT_PERIODICITY_MILLIS = 3600 * 1000; // every 1h
     private Scheduled importTimer;
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
+    private List<Topic> newsTopics;
     private LocalDateTime fetchAfterParameter;
 
 
     @Override
     public void onStart() {
-        importNews("en");
-        importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, () -> importNews("en"));
+        importNews();
+        importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importNews);
     }
 
     @Override
@@ -51,7 +54,20 @@ public class NewsImportJob implements ApplicationJob {
             importTimer.cancel();
     }
 
-    public void importNews(String lang) {
+    private void importNews() {
+        if (newsTopics != null)
+            importLangNews("en");
+        else {
+            EntityStore.create(dataSourceModel).<Topic>executeQuery("select id,channelTopicId from Topic where channelTopicId!=null")
+                    .onFailure(error -> Console.log("Error while reading news topics", error))
+                    .onSuccess(dbNewsTopics -> {
+                        newsTopics = dbNewsTopics;
+                        importNews();
+                    });
+        }
+    }
+
+    public void importLangNews(String lang) {
         // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
         if (fetchAfterParameter == null) {
@@ -63,7 +79,7 @@ public class NewsImportJob implements ApplicationJob {
                         else
                             fetchAfterParameter = news.get(0).getDate().atStartOfDay().plusDays(1);
                         // Now that fetchAfterParameter is set, we can call importNews() again.
-                        importNews(lang);
+                        importLangNews(lang);
                     });
             return;
         }
@@ -132,6 +148,15 @@ public class NewsImportJob implements ApplicationJob {
                                             if (!"en".equals(lang))
                                                 linkUrl = linkUrl.replace("kadampa.org", "kadampa.org/" + lang);
                                             n.setLinkUrl(linkUrl);
+                                            ReadOnlyAstArray projectArray = newsJson.getArray("project");
+                                            if (projectArray != null && !projectArray.isEmpty()) {
+                                                String channelTopicId = projectArray.getString(0);
+                                                if (channelTopicId != null) {
+                                                    Topic newsTopic = newsTopics.stream().filter(t -> Objects.equals(channelTopicId, t.getChannelTopicId())).findFirst().orElse(null);
+                                                    if (newsTopic != null)
+                                                        n.setTopic(newsTopic);
+                                                }
+                                            }
                                             directLinkUrlsForVideoCheck.add(cleanUrl(newsJson.getString("link")));
                                         }
 
@@ -163,7 +188,7 @@ public class NewsImportJob implements ApplicationJob {
                                                             });
                                                         }
                                                     }
-                                                    importNews(lang);
+                                                    importLangNews(lang);
                                                 });
 
                                     });
