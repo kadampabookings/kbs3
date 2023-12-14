@@ -53,14 +53,15 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         podcastsLabel.setTextAlignment(TextAlignment.CENTER);
 
         Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", Color.web(StyleUtility.MAIN_ORANGE),  false, 8);
-        FlexPane podcastsChannelPane = new FlexPane(
+        FlexPane podcastsChannelsPane = new FlexPane(
                 createPodcastsChannelButton("Spotify",       "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
                 createPodcastsChannelButton("ApplePodcasts", "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
                 createPodcastsChannelButton("AmazonMusic",   "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
                 createPodcastsChannelButton("PocketCasts",   "https://pca.st/9yuq0l0p"));
-        podcastsChannelPane.setMaxWidth(Double.MAX_VALUE);
-        podcastsChannelPane.setHorizontalSpace(10);
-        podcastsChannelPane.setVerticalSpace(10);
+        podcastsChannelsPane.setMaxWidth(Double.MAX_VALUE);
+        podcastsChannelsPane.setHorizontalSpace(10);
+        podcastsChannelsPane.setVerticalSpace(10);
+        podcastsChannelsPane.setDistributeRemainingRowSpace(true);
 
         Region separatorLine = new Region();
         separatorLine.setBackground(Background.fill(Color.web(StyleUtility.MAIN_ORANGE)));
@@ -94,8 +95,10 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         Button teacherButton = teacherButtonSelector.getButton();
         teacherButton.getProperties().put("dontGarbage", allTeacherNameProperty);
+        teacherButton.setMinWidth(Region.USE_PREF_SIZE);
         teacherButton.setMaxWidth(Region.USE_PREF_SIZE);
         ScalePane scaledTeacherButton = new ScalePane(ScaleMode.FIT_WIDTH, teacherButton);
+        scaledTeacherButton.setCanShrink(false);
 
         teacherProperty.bind(teacherButtonSelector.selectedItemProperty());
 
@@ -126,8 +129,10 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         Button topicButton = topicButtonSelector.getButton();
         topicButton.getProperties().put("dontGarbage", allTopicNameProperty);
+        topicButton.setMinWidth(Region.USE_PREF_SIZE);
         topicButton.setMaxWidth(Region.USE_PREF_SIZE);
         ScalePane scaledTopicButton = new ScalePane(ScaleMode.FIT_WIDTH, topicButton);
+        scaledTopicButton.setCanShrink(false);
 
         topicProperty.bind(topicButtonSelector.selectedItemProperty());
 
@@ -136,16 +141,21 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         pageContainer.setAlignment(Pos.CENTER);
         BorderPane.setMargin(pageContainer, new Insets(0, 20, 0, 20)); // Global page padding
         VBox.setMargin(podcastsLabel, new Insets(20, 0, 20, 0));
-        VBox.setMargin(podcastsChannelPane, new Insets(20, 0, 20, 0));
+        VBox.setMargin(podcastsChannelsPane, new Insets(20, 0, 20, 0));
         VBox.setMargin(separatorLine, new Insets(10, 0, 40, 0));
         VBox.setMargin(podcastsContainer, new Insets(40, 0, 10, 0));
+
+        FlexPane buttonsFlexPane = new FlexPane(scaledTeacherButton, scaledTopicButton);
+        buttonsFlexPane.setHorizontalSpace(10);
+        buttonsFlexPane.setVerticalSpace(10);
+        buttonsFlexPane.setDistributeRemainingRowSpace(true);
 
         pageContainer.getChildren().setAll(
                 podcastsLabel,
                 alsoAvailableOnLabel,
-                podcastsChannelPane,
+                podcastsChannelsPane,
                 separatorLine,
-                new ColumnsPane(scaledTeacherButton, scaledTopicButton),
+                buttonsFlexPane,
                 podcastsContainer
         );
 
@@ -193,10 +203,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             }
         });
         button.setCursor(Cursor.HAND);
-        // Embedding the button in an extensible mono pane (because the button itself is not)
-        MonoPane monoPane = new MonoPane(button);
-        monoPane.setMaxWidth(Double.MAX_VALUE); // Will be extended by the flex pane
-        return monoPane;
+        return button;
     }
 
     @Override
