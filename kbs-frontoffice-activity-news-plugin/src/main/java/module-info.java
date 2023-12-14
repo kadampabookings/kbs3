@@ -12,14 +12,17 @@ module kbs.frontoffice.activity.news.plugin {
     requires javafx.graphics;
     requires javafx.web;
     requires modality.base.client.activity;
-    requires modality.base.client.tile;
+    requires modality.base.client.mainframe.dialogarea.fx;
     requires modality.base.client.util;
     requires modality.base.frontoffice.mainframe.backgroundnode.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires webfx.extras.imagestore;
     requires webfx.extras.panes;
+    requires webfx.extras.type;
     requires webfx.extras.util.control;
+    requires webfx.extras.visual;
+    requires webfx.extras.visual.grid;
     requires webfx.kit.util;
     requires webfx.platform.ast;
     requires webfx.platform.ast.json.plugin;
@@ -32,6 +35,7 @@ module kbs.frontoffice.activity.news.plugin {
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
     requires webfx.stack.orm.entity;
+    requires webfx.stack.orm.entity.controls;
     requires webfx.stack.orm.reactive.entities;
     requires webfx.stack.routing.router.client;
     requires webfx.stack.routing.uirouter;
