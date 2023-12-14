@@ -102,7 +102,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         Text topicPrefixText = I18n.bindI18nProperties(new Text(), "topic");
         topicPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
-                "{class: 'Topic', alias: 't', columns: 'name', orderBy: 'id'}",
+                "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",
                 this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
             @Override
@@ -167,8 +167,9 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         homeContainer.setCenter(scrollPane);
         // Automatically increasing the podcast list when the user scroll down up to bottom
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
-            if (vValue.doubleValue() >= scrollPane.getVmax() * 0.999)
-                podcastsLimitProperty.set(podcastsLimitProperty.get() + 5);
+            int currentLimit = podcastsLimitProperty.get();
+            if (vValue.doubleValue() >= scrollPane.getVmax() * 0.999 && podcastsContainer.getChildren().size() == currentLimit)
+                podcastsLimitProperty.set(currentLimit + 5);
         });
 
         return homeContainer;
