@@ -19,10 +19,8 @@ module kbs.frontoffice.activity.news.plugin {
     requires modality.base.shared.entities;
     requires webfx.extras.imagestore;
     requires webfx.extras.panes;
-    requires webfx.extras.type;
+    requires webfx.extras.switches;
     requires webfx.extras.util.control;
-    requires webfx.extras.visual;
-    requires webfx.extras.visual.grid;
     requires webfx.kit.util;
     requires webfx.platform.ast;
     requires webfx.platform.ast.json.plugin;
@@ -31,6 +29,7 @@ module kbs.frontoffice.activity.news.plugin {
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;
+    requires webfx.stack.i18n.controls;
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
