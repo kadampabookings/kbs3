@@ -13,6 +13,7 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires javafx.media;
     requires modality.base.client.activity;
     requires modality.base.client.mainframe.dialogarea.fx;
+    requires modality.base.client.tile;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires webfx.extras.imagestore;

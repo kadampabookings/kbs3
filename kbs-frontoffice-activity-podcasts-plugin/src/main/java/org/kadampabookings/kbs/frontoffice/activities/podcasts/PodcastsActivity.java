@@ -15,6 +15,7 @@ import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntit
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.beans.property.*;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -27,6 +28,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.mainframe.dialogarea.fx.FXMainFrameDialogArea;
+import one.modality.base.client.tile.Tab;
+import one.modality.base.client.tile.TabsBar;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
@@ -44,6 +47,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(5);
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
+    private final BooleanProperty virtuousTopicProperty = new SimpleBooleanProperty();
 
     @Override
     public Node buildUi() {
@@ -102,17 +106,41 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         teacherProperty.bind(teacherButtonSelector.selectedItemProperty());
 
+        TabsBar<Boolean> topicTabsBar = new TabsBar<>(this, virtuousTopicProperty::set);
+        topicTabsBar.setTabs(
+                createTopicTab(topicTabsBar, "nonVirtuousTopic", false),
+                createTopicTab(topicTabsBar, "virtuousTopic", true)
+        );
+        ColumnsPane topicTabsPane = new ColumnsPane();
+        topicTabsPane.getChildren().setAll(topicTabsBar.getTabs());
+        topicTabsPane.setOnMouseClicked(Event::consume);
+
+        Text allTopicText = new Text("All");
+        MonoPane allTopicPane = new MonoPane(allTopicText);
+        allTopicPane.setMaxWidth(Double.MAX_VALUE);
+        allTopicPane.setMinHeight(40);
+        allTopicPane.setOnMouseClicked(e -> topicProperty.set(null));
+        allTopicPane.setCursor(Cursor.HAND);
         Text topicPrefixText = I18n.bindI18nProperties(new Text(), "topic");
         topicPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
                 "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",
                 this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
+            private final BorderPane bp = new BorderPane();
+
             @Override
             protected Node getOrCreateButtonContentFromSelectedItem() {
                 return new HBox(10, topicPrefixText, super.getOrCreateButtonContentFromSelectedItem());
             }
-        }.appendNullEntity(true); // Also adding null entity that will represent all teachers
+
+            @Override
+            protected Region getOrCreateDialogContent() {
+                bp.setTop(new VBox(allTopicPane, topicTabsPane));
+                bp.setCenter(super.getOrCreateDialogContent());
+                return bp;
+            }
+        }.always(virtuousTopicProperty, virtuous -> DqlStatement.where("virtuous=?", virtuous));
         // Creating a virtual teacher named "All" that will be used to select all teachers
         store = topicButtonSelector.getStore();
         Topic allTopic = store.createEntity(Topic.class);
@@ -134,7 +162,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         ScalePane scaledTopicButton = new ScalePane(ScaleMode.FIT_WIDTH, topicButton);
         scaledTopicButton.setCanShrink(false);
 
-        topicProperty.bind(topicButtonSelector.selectedItemProperty());
+        topicProperty.bindBidirectional(topicButtonSelector.selectedItemProperty());
 
         // Setting a max width for big desktop screens
         pageContainer.setMaxWidth(1200); // Similar value as our website
@@ -204,6 +232,13 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         });
         button.setCursor(Cursor.HAND);
         return button;
+    }
+
+    private static Tab createTopicTab(TabsBar<Boolean> tabsBar, String text, boolean virtuous) {
+        Tab tab = tabsBar.createTab(text, virtuous);
+        tab.setPadding(new Insets(5));
+        tab.setTextFill(Color.GRAY);
+        return tab;
     }
 
     @Override
