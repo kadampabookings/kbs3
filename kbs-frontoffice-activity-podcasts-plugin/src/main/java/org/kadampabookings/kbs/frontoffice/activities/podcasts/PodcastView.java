@@ -6,6 +6,7 @@ import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.kit.util.properties.Unregisterable;
 import dev.webfx.platform.util.Objects;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 import javafx.util.Duration;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
@@ -45,7 +47,10 @@ public final class PodcastView {
     private MediaPlayer mediaPlayer;
     private Unregisterable mediaPlayerBinding; // will allow to unbind a recycled view from its previous associated media player.
     private Podcast podcast;
+    private boolean isVideo;
     private Duration podcastDuration;
+    private final MonoPane podcastContainer = new MonoPane();
+    private Pane podcastPane;
     private final ImageView authorImageView = new ImageView();
     private final Rectangle authorImageClip = new Rectangle();
     private final Text dateText = TextUtility.getSubText(null);
@@ -59,6 +64,8 @@ public final class PodcastView {
     private final Text elapsedTimeText = TextUtility.getSubText(null, StyleUtility.ELEMENT_GRAY);
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
+    private final ImageView videoThumbnail = new ImageView();
+    private WebView video;
 
     {
         authorImageView.setPreserveRatio(true);
@@ -81,73 +88,138 @@ public final class PodcastView {
         });
     }
 
-    private final Pane podcastContainer = new Pane(authorImageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
-        private double imageY, imageSize, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
-
-        @Override
-        protected void layoutChildren() {
-            computeLayout(getWidth());
-            authorImageView.setFitWidth(imageSize);
-            authorImageClip.setWidth(imageSize);
-            authorImageClip.setHeight(imageSize);
-            double arcWidthHeight = imageSize / 4;
-            authorImageClip.setArcWidth(arcWidthHeight);
-            authorImageClip.setArcHeight(arcWidthHeight);
-            layoutInArea(authorImageView, 0, imageY, imageSize, imageSize, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(backwardButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(playButton, rightX + buttonSize + 5, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(pauseButton, rightX + buttonSize + 5, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(forwardButton, rightX + 2 * (buttonSize + 5), buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
-            double progressBarX = rightX + 3 * (buttonSize + 5), progressBarHeight = 10, progressBarY = buttonY + buttonSize / 2 - progressBarHeight / 2;
-            progressBar.setPrefWidth(getWidth() - progressBarX);
-            layoutInArea(progressBar, progressBarX, progressBarY, progressBar.getPrefWidth(), progressBarHeight, 0, HPos.LEFT, VPos.CENTER);
-            layoutInArea(elapsedTimeText, progressBarX, buttonY + buttonSize, rightWidth, buttonSize, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
-        }
-
-        @Override
-        protected double computePrefHeight(double width) {
-            computeLayout(width);
-            return Math.max(imageY + imageSize, favoriteY + favoriteHeight);
-        }
-
-        private void computeLayout(double width) {
-            if (width == -1)
-                width = getWidth();
-            /* Image: */      imageY = 0;                               imageSize = width / 4;
-            /* Right side: */ rightX = imageSize + 20;                  rightWidth = width - rightX;
-            /* Date: */       titleY = 0;                               titleHeight = titleLabel.prefHeight(rightWidth);
-            /* Title: */      dateY = titleY + titleHeight + 10;        dateHeight = dateText.prefHeight(rightWidth);
-            /* Excerpt: */    excerptY = dateY + dateHeight + 10;       excerptHeight = excerptLabel.prefHeight(rightWidth);
-            /* Buttons: */    buttonY = excerptY + excerptHeight + 30;  buttonSize = 32;
-            /* Favorite: */   favoriteY = buttonY + buttonSize + 30;    favoriteHeight = 32;
-        }
-    };
-
     public void setPodcast(Podcast podcast) {
+        if (podcast == this.podcast)
+            return;
         this.podcast = podcast;
+        setIsVideo(podcast.getWistiaVideoId() != null);
         // Updating all fields and UI from the podcast
-        podcastDuration = Duration.millis(podcast.getDurationMillis());
-        authorImageView.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
         updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(podcast.getDate()));
         updateLabel(titleLabel, podcast.getTitle());
         updateLabel(excerptLabel, podcast.getExcerpt());
         updateFavorite();
-        // We check if the podcast has already been played
-        String audioUrl = podcast.getAudioUrl();
-        MediaPlayer playedMediaPlayer = MEDIA_PLAYERS.get(audioUrl);
-        // If yes, we associate this podcast view with that player
-        if (playedMediaPlayer != null) {
-            mediaPlayer = playedMediaPlayer;
-            bindMediaPlayer(); // Will restore the visual state from the player (play/pause button & progress bar)
-        } else { // If no, the player associated with this podcast should be null
-            // If this podcast view was previously associated with a player, we unbind it.
-            unbindMediaPlayer(); // will unregister the possible existing binding, and reset the visual state
-            // This podcast hasn't been played so far, so its associated media player is now null
-            mediaPlayer = null;
+        if (!isVideo) {
+            podcastDuration = Duration.millis(podcast.getDurationMillis());
+            authorImageView.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
+            // We check if the podcast has already been played
+            String audioUrl = podcast.getAudioUrl();
+            MediaPlayer playedMediaPlayer = MEDIA_PLAYERS.get(audioUrl);
+            // If yes, we associate this podcast view with that player
+            if (playedMediaPlayer != null) {
+                mediaPlayer = playedMediaPlayer;
+                bindMediaPlayer(); // Will restore the visual state from the player (play/pause button & progress bar)
+            } else { // If no, the player associated with this podcast should be null
+                // If this podcast view was previously associated with a player, we unbind it.
+                unbindMediaPlayer(); // will unregister the possible existing binding, and reset the visual state
+                // This podcast hasn't been played so far, so its associated media player is now null
+                mediaPlayer = null;
+            }
+        } else {
+            videoThumbnail.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
+            videoThumbnail.setVisible(true);
+            videoThumbnail.setOnMouseClicked(e -> {
+                video = new WebView();
+                video.getEngine().load("https://fast.wistia.net/embed/iframe/" + podcast.getWistiaVideoId() + "?autoplay=true");
+                podcastPane.getChildren().setAll(video, dateText, titleLabel, excerptLabel, favoritePane);
+                videoThumbnail.setVisible(false);
+            });
+            video = null;
+            podcastPane.getChildren().setAll(videoThumbnail, dateText, titleLabel, excerptLabel, favoritePane);
+        }
+    }
+
+    public void setIsVideo(boolean isVideo) {
+        if (this.isVideo != isVideo || podcastPane == null) {
+            this.isVideo = isVideo;
+            if (!isVideo) {
+                podcastPane = new Pane(authorImageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
+                    private double imageY, imageSize, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
+
+                    @Override
+                    protected void layoutChildren() {
+                        computeLayout(getWidth());
+                        authorImageView.setFitWidth(imageSize);
+                        authorImageClip.setWidth(imageSize);
+                        authorImageClip.setHeight(imageSize);
+                        double arcWidthHeight = imageSize / 4;
+                        authorImageClip.setArcWidth(arcWidthHeight);
+                        authorImageClip.setArcHeight(arcWidthHeight);
+                        layoutInArea(authorImageView, 0, imageY, imageSize, imageSize, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(backwardButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(playButton, rightX + buttonSize + 5, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(pauseButton, rightX + buttonSize + 5, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(forwardButton, rightX + 2 * (buttonSize + 5), buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
+                        double progressBarX = rightX + 3 * (buttonSize + 5), progressBarHeight = 10, progressBarY = buttonY + buttonSize / 2 - progressBarHeight / 2;
+                        progressBar.setPrefWidth(getWidth() - progressBarX);
+                        layoutInArea(progressBar, progressBarX, progressBarY, progressBar.getPrefWidth(), progressBarHeight, 0, HPos.LEFT, VPos.CENTER);
+                        layoutInArea(elapsedTimeText, progressBarX, buttonY + buttonSize, rightWidth, buttonSize, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
+                    }
+
+                    @Override
+                    protected double computePrefHeight(double width) {
+                        computeLayout(width);
+                        return Math.max(imageY + imageSize, favoriteY + favoriteHeight);
+                    }
+
+                    private void computeLayout(double width) {
+                        if (width == -1)
+                            width = getWidth();
+                        /*Image:*/       imageY = 0;                               imageSize = width / 4;
+                        /*Right side:*/  rightX = imageSize + 20;                  rightWidth = width - rightX;
+                        /*Date:*/        titleY = 0;                               titleHeight = titleLabel.prefHeight(rightWidth);
+                        /*Title:*/       dateY = titleY + titleHeight + 10;        dateHeight = dateText.prefHeight(rightWidth);
+                        /*Excerpt:*/     excerptY = dateY + dateHeight + 10;       excerptHeight = excerptLabel.prefHeight(rightWidth);
+                        /*Buttons:*/     buttonY = excerptY + excerptHeight + 30;  buttonSize = 32;
+                        /*Favorite:*/    favoriteY = buttonY + buttonSize + 30;    favoriteHeight = 32;
+                    }
+                };
+            } else {
+                podcastPane = new Pane(videoThumbnail, dateText, titleLabel, excerptLabel, favoritePane) {
+
+                    private double videoWidth, videoHeight;
+                    private double rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, favoriteY, excerptHeight, favoriteHeight;
+
+                    @Override
+                    protected void layoutChildren() {
+                        videoThumbnail.setFitWidth(videoWidth);
+                        videoThumbnail.setFitHeight(videoHeight);
+                        layoutInArea(videoThumbnail, 0, 0, videoWidth, videoHeight, 0, HPos.CENTER, VPos.CENTER);
+                        if (video != null)
+                            layoutInArea(video, 0, 0, videoWidth, videoHeight, 0, HPos.CENTER, VPos.CENTER);
+                        layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
+                    }
+
+                    @Override
+                    public Orientation getContentBias() {
+                        return Orientation.HORIZONTAL;
+                    }
+
+                    private void computeLayout(double width) {
+                        if (width == -1)
+                            width = getWidth();
+                        /* video: */      videoWidth = width / 2;                    videoHeight = videoWidth / 16 * 9;
+                        /* Right side: */ rightX = videoWidth + 20;                  rightWidth = width - rightX;
+                        /* Date: */       titleY = 0;                                titleHeight = titleLabel.prefHeight(rightWidth);
+                        /* Title: */      dateY = titleY + titleHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
+                        /* Excerpt: */    excerptY = dateY + dateHeight + 10;        excerptHeight = excerptLabel.prefHeight(rightWidth);
+                        /* Favorite: */   favoriteY = excerptY + excerptHeight + 30; favoriteHeight = 32;
+                    }
+
+                    @Override
+                    protected double computePrefHeight(double width) {
+                        computeLayout(width);
+                        return Math.max(videoHeight, favoriteY + favoriteHeight);
+                    }
+                };
+            }
+            podcastContainer.setContent(podcastPane);
         }
     }
 

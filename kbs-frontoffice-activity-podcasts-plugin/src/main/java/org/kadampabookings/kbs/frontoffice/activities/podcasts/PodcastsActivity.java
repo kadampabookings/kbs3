@@ -1,11 +1,13 @@
 package org.kadampabookings.kbs.frontoffice.activities.podcasts;
 
 import dev.webfx.extras.panes.*;
+import dev.webfx.extras.switches.Switch;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.browser.Browser;
 import dev.webfx.platform.console.Console;
 import dev.webfx.stack.i18n.I18n;
+import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import dev.webfx.stack.orm.dql.DqlStatement;
 import dev.webfx.stack.orm.entity.EntityId;
@@ -20,7 +22,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
@@ -44,6 +49,9 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox podcastsContainer = new VBox(20);
     public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(5);
+    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "videos");
+    private final Switch videosSwitch = new Switch();
+
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
     private final BooleanProperty virtuousTopicProperty = new SimpleBooleanProperty();
@@ -70,6 +78,15 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         separatorLine.setBackground(Background.fill(Color.web(StyleUtility.MAIN_ORANGE)));
         separatorLine.setMinHeight(1);
         separatorLine.setPrefWidth(Double.MAX_VALUE);
+
+        videosSwitch.setSelectedBackgroundFill(Color.web(StyleUtility.MAIN_ORANGE));
+        videosSwitch.setCursor(Cursor.HAND);
+        HBox switchBox = new HBox(10, videosLabel, videosSwitch);
+        switchBox.setMinWidth(Region.USE_PREF_SIZE);
+        switchBox.setMaxWidth(Region.USE_PREF_SIZE);
+        switchBox.setAlignment(Pos.CENTER);
+        ScalePane scaledSwitchBox = new ScalePane(ScaleMode.FIT_HEIGHT, switchBox);
+        scaledSwitchBox.setCanShrink(false);
 
         Text teacherPrefixText = I18n.bindI18nProperties(new Text(), "teacher");
         teacherPrefixText.setFill(Color.GRAY);
@@ -172,17 +189,19 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         VBox.setMargin(separatorLine, new Insets(10, 0, 40, 0));
         VBox.setMargin(podcastsContainer, new Insets(40, 0, 10, 0));
 
-        FlexPane buttonsFlexPane = new FlexPane(scaledTeacherButton, scaledTopicButton);
-        buttonsFlexPane.setHorizontalSpace(10);
-        buttonsFlexPane.setVerticalSpace(10);
-        buttonsFlexPane.setDistributeRemainingRowSpace(true);
+        FlexPane filterBar = new FlexPane(scaledSwitchBox, scaledTeacherButton, scaledTopicButton);
+        filterBar.setHorizontalSpace(10);
+        filterBar.setVerticalSpace(10);
+        filterBar.setAlignment(Pos.CENTER);
+        filterBar.setDistributeRemainingRowSpace(true);
+        VBox.setMargin(filterBar, new Insets(20));
 
         pageContainer.getChildren().setAll(
                 podcastsLabel,
                 alsoAvailableOnLabel,
                 podcastsChannelsPane,
                 separatorLine,
-                buttonsFlexPane,
+                filterBar,
                 podcastsContainer
         );
 
@@ -243,8 +262,10 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     @Override
     protected void startLogic() {
         ReactiveObjectsMapper.<Podcast, Node>createPushReactiveChain(this)
-                .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, durationMillis', where: 'durationMillis != null', orderBy: 'date desc, id desc'}")
+                .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
                 .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
+                .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
+                .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
                 .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
                 .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setPodcast, PodcastView::getView))

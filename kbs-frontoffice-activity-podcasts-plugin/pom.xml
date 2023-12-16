@@ -42,6 +42,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-client-activity</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -80,6 +86,12 @@
         <dependency>
             <groupId>dev.webfx</groupId>
             <artifactId>webfx-extras-panes</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-extras-switches</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
@@ -140,6 +152,12 @@
         <dependency>
             <groupId>dev.webfx</groupId>
             <artifactId>webfx-stack-i18n</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-stack-i18n-controls</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 

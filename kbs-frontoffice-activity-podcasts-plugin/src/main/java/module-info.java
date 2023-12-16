@@ -11,6 +11,7 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
+    requires javafx.web;
     requires modality.base.client.activity;
     requires modality.base.client.mainframe.dialogarea.fx;
     requires modality.base.client.tile;
@@ -18,6 +19,7 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires modality.base.shared.entities;
     requires webfx.extras.imagestore;
     requires webfx.extras.panes;
+    requires webfx.extras.switches;
     requires webfx.extras.util.control;
     requires webfx.kit.util;
     requires webfx.platform.ast;
@@ -28,6 +30,7 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;
+    requires webfx.stack.i18n.controls;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
     requires webfx.stack.orm.entity;
