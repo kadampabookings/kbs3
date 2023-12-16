@@ -41,7 +41,6 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
     private static final Teacher FAVORITE_TAB_VIRTUAL_TEACHER = new TeacherImpl(EntityId.create(Teacher.class), null);
 
-    private final BorderPane homeContainer = new BorderPane();
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox podcastsContainer = new VBox(20);
     public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(5);
@@ -202,7 +201,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
         // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
         ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(new BorderPane(pageContainer));
-        homeContainer.setCenter(scrollPane);
+
         // Automatically increasing the podcast list when the user scroll down up to bottom
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = podcastsLimitProperty.get();
@@ -210,7 +209,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 podcastsLimitProperty.set(currentLimit + 5);
         });
 
-        return homeContainer;
+        return scrollPane;
     }
 
     private Node createPodcastsChannelButton(String i18nKey, String url) {
