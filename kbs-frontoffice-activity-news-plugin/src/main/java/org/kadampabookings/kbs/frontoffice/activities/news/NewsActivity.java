@@ -42,11 +42,12 @@ import one.modality.base.shared.entities.Topic;
 
 public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
+    private static final int INITIAL_LIMIT = 5;
     private final static String SEARCH_ICON_SVG_PATH = "m 15.559797,15.559797 c -0.586939,0.586937 -1.538283,0.586937 -2.125253,0 l -2.65194,-2.651972 C 9.692322,13.607263 8.4035396,14.023982 7.0120069,14.023982 3.1396594,14.023982 0,10.884761 0,7.0119756 0,3.1391906 3.1396594,0 7.0120069,0 c 3.8728471,0 7.0120071,3.139128 7.0120071,7.0119756 0,1.391064 -0.417251,2.6803464 -1.116189,3.7711284 l 2.651972,2.651972 c 0.586937,0.586938 0.586937,1.537782 0,2.124721 z M 7.0120069,2.0034082 c -2.7659715,0 -5.0085674,2.242096 -5.0085674,5.0085362 0,2.7664401 2.2426272,5.0085676 5.0085674,5.0085676 2.766409,0 5.0085361,-2.2421275 5.0085361,-5.0085676 0,-2.7664402 -2.2421271,-5.0085362 -5.0085361,-5.0085362 z";
 
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox newsContainer = new VBox(40);
-    public final IntegerProperty newsLimitProperty = new SimpleIntegerProperty(5);
+    public final IntegerProperty newsLimitProperty = new SimpleIntegerProperty(INITIAL_LIMIT);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
     private final Label withVideosLabel = I18nControls.bindI18nProperties(new Label(), "withVideos");
     private final Switch withVideosSwitch = new Switch();
@@ -176,13 +177,18 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
     @Override
     protected void startLogic() {
+        // Resetting news limit to initial value whenever the user plays with filters
+        FXProperties.runOnPropertiesChange(() ->
+                        newsLimitProperty.set(INITIAL_LIMIT)
+                , searchTextField.textProperty(), topicProperty, withVideosSwitch.selectedProperty());
+
         ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
                 .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
                 .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
                 .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
+                .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> { String searchLike = "%" + searchText.toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
                 .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
                 .ifTrue(withVideosSwitch.selectedProperty(), DqlStatement.where("withVideos"))
-                .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> { String searchLike = "%" + searchText.toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
                 .storeMappedObjectsInto(newsContainer.getChildren())
                 .start();

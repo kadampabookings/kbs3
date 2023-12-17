@@ -44,11 +44,12 @@ import one.modality.base.shared.entities.impl.TeacherImpl;
 
 public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
+    private static final int INITIAL_LIMIT = 5;
     private static final Teacher FAVORITE_TAB_VIRTUAL_TEACHER = new TeacherImpl(EntityId.create(Teacher.class), null);
 
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox podcastsContainer = new VBox(20);
-    public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(5);
+    public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(INITIAL_LIMIT);
     private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "videos");
     private final Switch videosSwitch = new Switch();
 
@@ -262,13 +263,18 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
     @Override
     protected void startLogic() {
+        // Resetting podcasts limit to initial value whenever the user plays with filters
+        FXProperties.runOnPropertiesChange(() ->
+                        podcastsLimitProperty.set(INITIAL_LIMIT)
+                , teacherProperty, topicProperty, videosSwitch.selectedProperty());
+
         ReactiveObjectsMapper.<Podcast, Node>createPushReactiveChain(this)
                 .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
                 .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
-                .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
                 .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
                 .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
+                .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
+                .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setPodcast, PodcastView::getView))
                 .storeMappedObjectsInto(podcastsContainer.getChildren())
                 .start();
