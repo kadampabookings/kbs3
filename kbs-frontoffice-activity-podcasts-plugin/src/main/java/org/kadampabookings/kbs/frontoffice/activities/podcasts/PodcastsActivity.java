@@ -189,7 +189,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         VBox.setMargin(separatorLine, new Insets(10, 0, 40, 0));
         VBox.setMargin(podcastsContainer, new Insets(40, 0, 10, 0));
 
-        FlexPane filterBar = new FlexPane(scaledSwitchBox, scaledTeacherButton, scaledTopicButton);
+        FlexPane filterBar = new FlexPane(scaledTeacherButton, scaledTopicButton, scaledSwitchBox);
         filterBar.setHorizontalSpace(10);
         filterBar.setVerticalSpace(10);
         filterBar.setAlignment(Pos.CENTER);
@@ -212,6 +212,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             scaledTeacherButton.setMaxScale(scale);
             scaledTopicButton.setMaxScale(scale);
+            scaledSwitchBox.setMaxScale(scale);
             // Also the space above and below
             VBox.setMargin(separatorLine, new Insets(10, 0, 40 * scale, 0));
             VBox.setMargin(podcastsContainer, new Insets(40 * scale, 0, 10, 0));
