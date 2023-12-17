@@ -28,7 +28,6 @@ import one.modality.base.frontoffice.utility.TextUtility;
 import one.modality.base.shared.entities.Podcast;
 
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,7 +98,7 @@ public final class PodcastView {
         this.podcast = podcast;
         setIsVideo(podcast.getWistiaVideoId() != null);
         // Updating all fields and UI from the podcast
-        updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(podcast.getDate()));
+        updateText(dateText, DateTimeFormatter.ofPattern("d MMMM yyyy").format(podcast.getDate()));
         updateLabel(titleLabel, podcast.getTitle());
         updateLabel(excerptLabel, podcast.getExcerpt());
         podcastDuration = Duration.millis(podcast.getDurationMillis());

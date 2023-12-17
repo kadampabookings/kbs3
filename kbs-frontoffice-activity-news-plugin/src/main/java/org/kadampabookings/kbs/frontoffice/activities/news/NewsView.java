@@ -25,7 +25,6 @@ import one.modality.base.shared.entities.News;
 import org.kadampabookings.kbs.frontoffice.operations.routes.news.RouteToArticleRequest;
 
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 public final class NewsView {
 
@@ -113,7 +112,7 @@ public final class NewsView {
     public void setNews(News news) {
         this.news = news;
         updateLabeled(titleLabel, news.getTitle());
-        updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(news.getDate()));
+        updateText(dateText, DateTimeFormatter.ofPattern("d MMMM yyyy").format(news.getDate()));
         updateLabeled(excerptLabel, news.getExcerpt());
         imageView.setImage(ImageStore.getOrCreateImage(news.getImageUrl()));
         updateFavorite();
