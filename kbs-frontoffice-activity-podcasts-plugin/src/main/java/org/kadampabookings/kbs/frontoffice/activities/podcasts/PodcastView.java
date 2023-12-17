@@ -102,10 +102,10 @@ public final class PodcastView {
         updateText(dateText, DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(podcast.getDate()));
         updateLabel(titleLabel, podcast.getTitle());
         updateLabel(excerptLabel, podcast.getExcerpt());
+        podcastDuration = Duration.millis(podcast.getDurationMillis());
         updateFavorite();
         if (!isVideo) {
             video = null;
-            podcastDuration = Duration.millis(podcast.getDurationMillis());
             authorImageView.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
             // We check if the podcast has already been played
             String audioUrl = podcast.getAudioUrl();
@@ -132,6 +132,7 @@ public final class PodcastView {
                 podcastPane.getChildren().set(0, videoThumbnail);
             playButton.setVisible(video == null);
             pauseButton.setVisible(video != null);
+            elapsedTimeText.setText(formatDuration(podcastDuration));
         }
     }
 
@@ -185,7 +186,7 @@ public final class PodcastView {
                     }
                 };
             } else {
-                podcastPane = new Pane(videoThumbnail, dateText, titleLabel, excerptLabel, pauseButton, playButton, favoritePane) {
+                podcastPane = new Pane(videoThumbnail, dateText, titleLabel, excerptLabel, pauseButton, playButton, elapsedTimeText, favoritePane) {
 
                     private double videoWidth, videoHeight;
                     private double rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, buttonY, buttonSize, favoriteY, excerptHeight, favoriteHeight;
@@ -202,6 +203,7 @@ public final class PodcastView {
                         layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
                         layoutInArea(playButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
                         layoutInArea(pauseButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(elapsedTimeText, rightX + buttonSize + 20, buttonY, rightWidth, buttonSize, 0, HPos.LEFT, VPos.CENTER);
                         layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
                     }
 
