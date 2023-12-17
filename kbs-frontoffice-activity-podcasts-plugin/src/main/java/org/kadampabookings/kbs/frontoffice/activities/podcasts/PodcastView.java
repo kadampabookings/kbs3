@@ -8,6 +8,7 @@ import dev.webfx.platform.util.Objects;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -47,7 +48,6 @@ public final class PodcastView {
     private MediaPlayer mediaPlayer;
     private Unregisterable mediaPlayerBinding; // will allow to unbind a recycled view from its previous associated media player.
     private Podcast podcast;
-    private boolean isVideo;
     private Duration podcastDuration;
     private final MonoPane podcastContainer = new MonoPane();
     private Pane podcastPane;
@@ -64,6 +64,9 @@ public final class PodcastView {
     private final Text elapsedTimeText = TextUtility.getSubText(null, StyleUtility.ELEMENT_GRAY);
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
+
+    private static WebView PLAYING_VIDEO_PLAYER;
+    private boolean isVideo;
     private final ImageView videoThumbnail = new ImageView();
     private WebView video;
 
@@ -80,6 +83,8 @@ public final class PodcastView {
         progressBar   .setOnMouseDragged(e -> seekX(e.getX()));
         favoriteSvgPath.setContent(FAVORITE_PATH);
         favoriteSvgPath.setStrokeWidth(2);
+        videoThumbnail.setOnMouseClicked(e -> play());
+        videoThumbnail.setCursor(Cursor.HAND);
         updateFavorite();
         favoritePane.setOnMousePressed(e -> {
             FXFavoritePodcasts.togglePodcastAsFavorite(podcast);
@@ -99,6 +104,7 @@ public final class PodcastView {
         updateLabel(excerptLabel, podcast.getExcerpt());
         updateFavorite();
         if (!isVideo) {
+            video = null;
             podcastDuration = Duration.millis(podcast.getDurationMillis());
             authorImageView.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
             // We check if the podcast has already been played
@@ -115,16 +121,17 @@ public final class PodcastView {
                 mediaPlayer = null;
             }
         } else {
-            videoThumbnail.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
-            videoThumbnail.setVisible(true);
-            videoThumbnail.setOnMouseClicked(e -> {
-                video = new WebView();
-                video.getEngine().load("https://fast.wistia.net/embed/iframe/" + podcast.getWistiaVideoId() + "?autoplay=true");
-                podcastPane.getChildren().setAll(video, dateText, titleLabel, excerptLabel, favoritePane);
-                videoThumbnail.setVisible(false);
-            });
+            mediaPlayer = null;
             video = null;
-            podcastPane.getChildren().setAll(videoThumbnail, dateText, titleLabel, excerptLabel, favoritePane);
+            videoThumbnail.setImage(ImageStore.getOrCreateImage(podcast.getImageUrl()));
+            if (PLAYING_VIDEO_PLAYER != null && Objects.areEquals(PLAYING_VIDEO_PLAYER.getProperties().get("wistiaVideoId"), podcast.getWistiaVideoId()))
+                video = PLAYING_VIDEO_PLAYER;
+            if (video != null)
+                podcastPane.getChildren().set(0, video);
+            else
+                podcastPane.getChildren().set(0, videoThumbnail);
+            playButton.setVisible(video == null);
+            pauseButton.setVisible(video != null);
         }
     }
 
@@ -178,10 +185,10 @@ public final class PodcastView {
                     }
                 };
             } else {
-                podcastPane = new Pane(videoThumbnail, dateText, titleLabel, excerptLabel, favoritePane) {
+                podcastPane = new Pane(videoThumbnail, dateText, titleLabel, excerptLabel, pauseButton, playButton, favoritePane) {
 
                     private double videoWidth, videoHeight;
-                    private double rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, favoriteY, excerptHeight, favoriteHeight;
+                    private double rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, buttonY, buttonSize, favoriteY, excerptHeight, favoriteHeight;
 
                     @Override
                     protected void layoutChildren() {
@@ -193,6 +200,8 @@ public final class PodcastView {
                         layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
                         layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
                         layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(playButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
+                        layoutInArea(pauseButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
                         layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
                     }
 
@@ -209,7 +218,8 @@ public final class PodcastView {
                         /* Date: */       titleY = 0;                                titleHeight = titleLabel.prefHeight(rightWidth);
                         /* Title: */      dateY = titleY + titleHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
                         /* Excerpt: */    excerptY = dateY + dateHeight + 10;        excerptHeight = excerptLabel.prefHeight(rightWidth);
-                        /* Favorite: */   favoriteY = excerptY + excerptHeight + 30; favoriteHeight = 32;
+                        /*Buttons:*/      buttonY = excerptY + excerptHeight + 30;   buttonSize = 32;
+                        /* Favorite: */   favoriteY = buttonY + buttonSize + 30;     favoriteHeight = 32;
                     }
 
                     @Override
@@ -234,20 +244,50 @@ public final class PodcastView {
     }
 
     private void play() {
-        // Creating the media player if not already done
-        if (mediaPlayer == null)
-            createMediaPlayer();
         // If another player was playing, we pause it (keeping only one player playing at one time)
         if (PLAYING_MEDIA_PLAYER != null && PLAYING_MEDIA_PLAYER != mediaPlayer)
             PLAYING_MEDIA_PLAYER.pause();
-        // Memorizing the new playing player
-        PLAYING_MEDIA_PLAYER = mediaPlayer;
-        // Finally starting playing the podcast
-        mediaPlayer.play();
+        if (PLAYING_VIDEO_PLAYER != null) {
+            PodcastView podcastView = (PodcastView) PLAYING_VIDEO_PLAYER.getProperties().get("podcastView");
+            if (podcastView.video == PLAYING_VIDEO_PLAYER)
+                podcastView.pause();
+            else {
+                PLAYING_VIDEO_PLAYER.getEngine().load(null);
+                PLAYING_VIDEO_PLAYER.getProperties().remove("wistiaVideoId");
+            }
+        }
+        if (isVideo) {
+            if (video == null) {
+                video = new WebView();
+                video.getProperties().put("podcastView", this);
+            }
+            video.getEngine().load("https://fast.wistia.net/embed/iframe/" + podcast.getWistiaVideoId() + "?autoplay=true");
+            video.getProperties().put("wistiaVideoId", podcast.getWistiaVideoId());
+            podcastPane.getChildren().set(0, video);
+            playButton.setVisible(false);
+            pauseButton.setVisible(true);
+            PLAYING_VIDEO_PLAYER = video;
+        } else {
+            // Creating the media player if not already done
+            if (mediaPlayer == null)
+                createMediaPlayer();
+            // Memorizing the new playing player
+            PLAYING_MEDIA_PLAYER = mediaPlayer;
+            // Finally starting playing the podcast
+            mediaPlayer.play();
+        }
     }
 
     private void pause() {
-        if (mediaPlayer != null)
+        if (isVideo) {
+            if (video != null) {
+                video.getEngine().load(null);
+                video.getProperties().remove("wistiaVideoId");
+            }
+            podcastPane.getChildren().set(0, videoThumbnail);
+            playButton.setVisible(true);
+            pauseButton.setVisible(false);
+        } else if (mediaPlayer != null)
             mediaPlayer.pause();
     }
 
@@ -277,6 +317,8 @@ public final class PodcastView {
     private void bindMediaPlayer() {
         unbindMediaPlayer(); // in case this view was previously bound with another player
         mediaPlayerBinding = FXProperties.runNowAndOnPropertiesChange(() -> {
+            if (mediaPlayer == null)
+                return;
             MediaPlayer.Status status = mediaPlayer.getStatus();
             boolean isPlaying = status == MediaPlayer.Status.PLAYING;
             updatePlayPauseButtons(isPlaying);
