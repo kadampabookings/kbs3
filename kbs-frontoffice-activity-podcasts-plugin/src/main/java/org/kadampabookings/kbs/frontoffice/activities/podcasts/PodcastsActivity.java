@@ -81,7 +81,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         videosSwitch.setSelectedBackgroundFill(Color.web(StyleUtility.MAIN_ORANGE));
         videosSwitch.setCursor(Cursor.HAND);
-        HBox switchBox = new HBox(10, videosLabel, videosSwitch);
+        HBox switchBox = new HBox(5, videosLabel, videosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);
         switchBox.setMaxWidth(Region.USE_PREF_SIZE);
         switchBox.setAlignment(Pos.CENTER);

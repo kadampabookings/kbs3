@@ -125,7 +125,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
         withVideosSwitch.setSelectedBackgroundFill(Color.web(StyleUtility.MAIN_ORANGE));
         withVideosSwitch.setCursor(Cursor.HAND);
-        HBox switchBox = new HBox(10, withVideosLabel, withVideosSwitch);
+        HBox switchBox = new HBox(5, withVideosLabel, withVideosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);
         switchBox.setMaxWidth(Region.USE_PREF_SIZE);
         switchBox.setAlignment(Pos.CENTER);
