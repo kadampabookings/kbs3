@@ -261,7 +261,7 @@ public final class PodcastView {
                 video = new WebView();
                 video.getProperties().put("podcastView", this);
             }
-            video.getEngine().load("https://fast.wistia.net/embed/iframe/" + podcast.getWistiaVideoId() + "?autoplay=true");
+            video.getEngine().load("https://fast.wistia.net/embed/iframe/" + podcast.getWistiaVideoId() + "?autoplay=true&playerColor=EE7130");
             video.getProperties().put("wistiaVideoId", podcast.getWistiaVideoId());
             podcastPane.getChildren().set(0, video);
             playButton.setVisible(false);
