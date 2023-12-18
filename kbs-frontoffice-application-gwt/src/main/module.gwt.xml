@@ -260,6 +260,16 @@
     <source path="dev/webfx/extras/materialdesign/util"/>
     <!--===============================< webfx-extras-panes >===============================-->
     <source path="dev/webfx/extras/panes"/>
+    <!--==============================< webfx-extras-player >===============================-->
+    <source path="dev/webfx/extras/player"/>
+    <source path="dev/webfx/extras/player/impl"/>
+    <!--========================< webfx-extras-player-audio-media >=========================-->
+    <source path="dev/webfx/extras/player/audio/media"/>
+    <!--===========================< webfx-extras-player-video >============================-->
+    <source path="dev/webfx/extras/player/video"/>
+    <source path="dev/webfx/extras/player/video/impl"/>
+    <!--========================< webfx-extras-player-video-wistia >========================-->
+    <source path="dev/webfx/extras/player/video/wistia"/>
     <!--=============================< webfx-extras-switches >==============================-->
     <source path="dev/webfx/extras/switches"/>
     <!--===============================< webfx-extras-theme >===============================-->
