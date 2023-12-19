@@ -13,6 +13,7 @@ import dev.webfx.platform.fetch.Response;
 import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
+import dev.webfx.platform.util.Arrays;
 import dev.webfx.platform.util.Dates;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
@@ -33,6 +34,7 @@ import java.util.Objects;
  */
 public class NewsImportJob implements ApplicationJob {
 
+    private static final String[] languages = {"en", "fr"};
     private static final String NEWS_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/posts";
     private static final String MEDIA_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/media";
     private static final long IMPORT_PERIODICITY_MILLIS = 3600 * 1000; // every 1h
@@ -109,7 +111,12 @@ public class NewsImportJob implements ApplicationJob {
                             }
 
                             if (newWebsiteNews.isEmpty()) {
-                                Console.log("No new news to import");
+                                Console.log("No new news to import for lang=" + lang);
+                                int langIndex = Arrays.indexOf(languages, lang);
+                                if (langIndex >= 0 && langIndex < languages.length - 1) {
+                                    fetchAfterParameter = null;
+                                    importLangNews(languages[langIndex + 1]);
+                                }
                                 return;
                             }
 
