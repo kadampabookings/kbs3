@@ -89,7 +89,7 @@ public class PodcastsImportJob implements ApplicationJob {
 
                             for (int i = 0; i < webPodcastsJsonArray.size(); i++) {
                                 ReadOnlyAstObject podcastJson = webPodcastsJsonArray.getObject(i);
-                                String id = podcastJson.getString("id");
+                                int id = podcastJson.getInteger("id");
 
                                 // Skipping the podcasts already present in the database
                                 if (dbPodcasts.stream().anyMatch(p -> Objects.equals(id, p.getChannelPodcastId())))
