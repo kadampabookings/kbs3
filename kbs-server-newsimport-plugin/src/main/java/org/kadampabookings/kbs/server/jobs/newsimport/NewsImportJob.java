@@ -41,7 +41,8 @@ public class NewsImportJob implements ApplicationJob {
     private Scheduled importTimer;
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private List<Topic> newsTopics;
-    private LocalDateTime fetchAfterParameter;
+    private LocalDateTime latestNewsDateTime;
+    private int latestChannelNewsId;
 
 
     @Override
@@ -72,14 +73,18 @@ public class NewsImportJob implements ApplicationJob {
     public void importLangNews(String lang) {
         // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
-        if (fetchAfterParameter == null) {
-            EntityStore.create(dataSourceModel).<News>executeQuery("select id,date from News where lang=? order by date desc limit 1", lang)
+        if (latestNewsDateTime == null) {
+            EntityStore.create(dataSourceModel).<News>executeQuery("select date,channelNewsId from News where lang=? order by channelNewsId desc, date desc limit 1", lang)
                     .onFailure(error -> Console.log("Error while reading latest news", error))
                     .onSuccess(news -> {
-                        if (news.isEmpty()) // Means that there is no news in the database
-                            fetchAfterParameter = LocalDate.of(2000, 1, 1).atStartOfDay(); // The web service raise an error with dates before 2000
-                        else
-                            fetchAfterParameter = news.get(0).getDate().atStartOfDay().plusDays(1);
+                        if (news.isEmpty()) { // Means that there is no news in the database
+                            latestNewsDateTime = LocalDate.of(2000, 1, 1).atStartOfDay(); // The web service raise an error with dates before 2000
+                            latestChannelNewsId = 0;
+                        } else {
+                            News lastestNews = news.get(0);
+                            latestNewsDateTime = lastestNews.getDate().atStartOfDay();
+                            latestChannelNewsId = lastestNews.getChannelNewsId();
+                        }
                         // Now that fetchAfterParameter is set, we can call importNews() again.
                         importLangNews(lang);
                     });
@@ -88,11 +93,11 @@ public class NewsImportJob implements ApplicationJob {
         // Creating the final fetch url with the additional query string (note: the number of news returned by the
         // web service is 10 by default; this could be increased using &per_page=100 - 100 is the maximal value
         // authorized by the web service)
-        String fetchUrl = NEWS_FETCH_URL + "?lang=" + lang + "&order=asc&after=" + Dates.formatIso(fetchAfterParameter);
+        String fetchUrl = NEWS_FETCH_URL + "?lang=" + lang + "&order=asc&after=" + Dates.formatIso(latestNewsDateTime);
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
                 .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
-                                "select channelNewsId from News where lang=? and date >= ? order by date limit ?", lang, fetchAfterParameter, webNewsJsonArray.size()
+                                "select channelNewsId from News where lang=? and channelNewsId >= ? order by date limit ?", lang, latestChannelNewsId, webNewsJsonArray.size()
                         )
                         .onFailure(e -> Console.log("Error while reading news from database", e))
                         .onSuccess(dbNews -> {
@@ -114,7 +119,7 @@ public class NewsImportJob implements ApplicationJob {
                                 Console.log("No new news to import for lang=" + lang);
                                 int langIndex = Arrays.indexOf(languages, lang);
                                 if (langIndex >= 0 && langIndex < languages.length - 1) {
-                                    fetchAfterParameter = null;
+                                    latestNewsDateTime = null;
                                     importLangNews(languages[langIndex + 1]);
                                 }
                                 return;
@@ -130,21 +135,23 @@ public class NewsImportJob implements ApplicationJob {
 
                                         // Preparing the update store for the database submit
                                         UpdateStore updateStore = UpdateStore.createAbove(dbNews.getStore());
-                                        LocalDateTime maxNewsDate = fetchAfterParameter;
+                                        LocalDateTime maxNewsDateTime = latestNewsDateTime;
+                                        int maxChannelNewsId = latestChannelNewsId;
 
                                         // Creating the new News entities to insert in the database
                                         ReadOnlyAstObject[] mediasJsonArray = webMediasJsonBatch.getArray();
                                         List<String> directLinkUrlsForVideoCheck = new ArrayList<>();
                                         for (int i = 0; i < mediasJsonArray.length; i++) {
                                             ReadOnlyAstObject newsJson = newWebsiteNews.get(i);
-                                            String id = newsJson.getString("id");
+                                            int id = newsJson.getInteger("id");
                                             News n = updateStore.insertEntity(News.class);
                                             n.setChannel(1);
                                             n.setChannelNewsId(id);
+                                            maxChannelNewsId = Math.max(maxChannelNewsId, id);
                                             n.setLang(lang);
                                             LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
-                                            if (dateTime.isAfter(maxNewsDate))
-                                                maxNewsDate = dateTime;
+                                            if (dateTime.isAfter(maxNewsDateTime))
+                                                maxNewsDateTime = dateTime;
                                             n.setDate(LocalDate.from(dateTime));
                                             n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.medium_large.source_url")));
                                             if (n.getImageUrl() == null)
@@ -167,14 +174,16 @@ public class NewsImportJob implements ApplicationJob {
                                             directLinkUrlsForVideoCheck.add(cleanUrl(newsJson.getString("link")));
                                         }
 
-                                        LocalDateTime finalMaxNewsDate = maxNewsDate;
+                                        LocalDateTime finalMaxNewsDateTime = maxNewsDateTime;
+                                        int finalMaxChannelNewsId = maxChannelNewsId;
 
                                         updateStore.submitChanges()
                                                 .onFailure(e -> Console.log("Error while inserting news in database", e))
                                                 .onSuccess(insertBatch -> {
                                                     int newNewsCount = insertBatch.getArray().length;
                                                     Console.log(newNewsCount + " new news imported in database");
-                                                    fetchAfterParameter = finalMaxNewsDate;
+                                                    latestNewsDateTime = finalMaxNewsDateTime;
+                                                    latestChannelNewsId = finalMaxChannelNewsId;
                                                     // Updating the newly imported new by setting 1) withVideos field & 2) reading translations
                                                     for (int i = 0; i < newNewsCount; i++) {
                                                         Object newsPrimaryKey = insertBatch.getArray()[i].getGeneratedKeys()[0];
