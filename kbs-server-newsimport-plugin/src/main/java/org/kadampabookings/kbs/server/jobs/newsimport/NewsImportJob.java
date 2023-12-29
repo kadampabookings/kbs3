@@ -58,9 +58,10 @@ public class NewsImportJob implements ApplicationJob {
     }
 
     private void importNews() {
-        if (newsTopics != null)
+        if (newsTopics != null) {
+            latestNewsDateTime = null;
             importLangNews("en");
-        else {
+        } else {
             EntityStore.create(dataSourceModel).<Topic>executeQuery("select id,channelTopicId from Topic where channelTopicId!=null")
                     .onFailure(error -> Console.log("Error while reading news topics", error))
                     .onSuccess(dbNewsTopics -> {
@@ -118,10 +119,9 @@ public class NewsImportJob implements ApplicationJob {
                             if (newWebsiteNews.isEmpty()) {
                                 Console.log("No new news to import for lang=" + lang);
                                 int langIndex = Arrays.indexOf(languages, lang);
-                                if (langIndex >= 0 && langIndex < languages.length - 1) {
-                                    latestNewsDateTime = null;
+                                latestNewsDateTime = null;
+                                if (langIndex >= 0 && langIndex < languages.length - 1)
                                     importLangNews(languages[langIndex + 1]);
-                                }
                                 return;
                             }
 
