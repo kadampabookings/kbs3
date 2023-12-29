@@ -191,7 +191,7 @@ public class NewsImportJob implements ApplicationJob {
                                                         String linkUrl = directLinkUrlsForVideoCheck.get(i);
                                                         if (linkUrl != null) {
                                                             Fetch.fetch(linkUrl).compose(Response::text).onSuccess(text -> {
-                                                                boolean withVideos = text != null && (text.contains("wistia") || text.contains("</video>"));
+                                                                boolean withVideos = text != null && (text.contains("wistia") || text.contains("src=\"https://www.youtube.com/"));
                                                                 Console.log("News " + newsPrimaryKey + " has videos: " + withVideos);
                                                                 if (withVideos) {
                                                                     UpdateStore updateStore2 = UpdateStore.create(dataSourceModel);
