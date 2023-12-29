@@ -97,7 +97,7 @@ public class NewsImportJob implements ApplicationJob {
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
                 .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
-                                "select channelNewsId from News where lang=? and channelNewsId >= ? order by date limit ?", lang, latestChannelNewsId, webNewsJsonArray.size()
+                                "select channelNewsId,date from News where lang=? and date >= ? order by date limit ?", lang, latestNewsDateTime, webNewsJsonArray.size()
                         )
                         .onFailure(e -> Console.log("Error while reading news from database", e))
                         .onSuccess(dbNews -> {
@@ -107,7 +107,7 @@ public class NewsImportJob implements ApplicationJob {
                             List<String> mediaIds = new ArrayList<>();
                             for (int i = 0; i < webNewsJsonArray.size(); i++) {
                                 ReadOnlyAstObject websiteNewsJson = webNewsJsonArray.getObject(i);
-                                String id = websiteNewsJson.getString("id");
+                                Integer id = websiteNewsJson.getInteger("id");
                                 // We filter only the news not yet imported in the database
                                 if (dbNews.stream().noneMatch(news -> Objects.equals(id, news.getChannelNewsId()))) {
                                     newWebsiteNews.add(websiteNewsJson);
@@ -146,9 +146,9 @@ public class NewsImportJob implements ApplicationJob {
                                             int id = newsJson.getInteger("id");
                                             News n = updateStore.insertEntity(News.class);
                                             n.setChannel(1);
+                                            n.setLang(lang);
                                             n.setChannelNewsId(id);
                                             maxChannelNewsId = Math.max(maxChannelNewsId, id);
-                                            n.setLang(lang);
                                             LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
                                             if (dateTime.isAfter(maxNewsDateTime))
                                                 maxNewsDateTime = dateTime;
