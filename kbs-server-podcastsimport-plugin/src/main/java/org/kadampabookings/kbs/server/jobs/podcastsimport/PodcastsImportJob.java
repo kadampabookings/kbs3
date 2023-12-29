@@ -65,7 +65,7 @@ public class PodcastsImportJob implements ApplicationJob {
                         if (podcasts.isEmpty()) // Means that there is no podcast in the database
                             fetchAfterParameter = LocalDate.of(2000, 1, 1).atStartOfDay(); // The web service raise an error with dates before 2000
                         else
-                            fetchAfterParameter = podcasts.get(0).getDate().atStartOfDay();
+                            fetchAfterParameter = podcasts.get(0).getDate();
                         // Now that fetchAfterParameter is set, we can call importPodcasts() again.
                         importPodcasts();
                     });
@@ -105,7 +105,7 @@ public class PodcastsImportJob implements ApplicationJob {
                                 LocalDateTime dateTime = Dates.parseIsoLocalDateTime(podcastJson.getString("date"));
                                 if (dateTime.isAfter(maxPodcastDate))
                                     maxPodcastDate = dateTime;
-                                p.setDate(LocalDate.from(dateTime));
+                                p.setDate(dateTime);
                                 String imageUrl = podcastJson.getString("episode_featured_image");
                                 if (imageUrl == null || !imageUrl.startsWith("http"))
                                     imageUrl = podcastJson.getString("episode_player_image");

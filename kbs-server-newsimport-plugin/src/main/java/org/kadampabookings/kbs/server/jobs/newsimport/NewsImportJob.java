@@ -82,7 +82,7 @@ public class NewsImportJob implements ApplicationJob {
                             latestChannelNewsId = 0;
                         } else {
                             News lastestNews = news.get(0);
-                            latestNewsDateTime = lastestNews.getDate().atStartOfDay();
+                            latestNewsDateTime = lastestNews.getDate();
                             latestChannelNewsId = lastestNews.getChannelNewsId();
                         }
                         // Now that fetchAfterParameter is set, we can call importNews() again.
@@ -152,7 +152,7 @@ public class NewsImportJob implements ApplicationJob {
                                             LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
                                             if (dateTime.isAfter(maxNewsDateTime))
                                                 maxNewsDateTime = dateTime;
-                                            n.setDate(LocalDate.from(dateTime));
+                                            n.setDate(dateTime);
                                             n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.medium_large.source_url")));
                                             if (n.getImageUrl() == null)
                                                 n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.full.source_url")));
