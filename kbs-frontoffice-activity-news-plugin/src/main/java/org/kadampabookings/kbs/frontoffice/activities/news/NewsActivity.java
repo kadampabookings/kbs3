@@ -151,7 +151,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             double width = pageContainer.getWidth();
             double maxHeight = width < 600 ? width : 600;
             headerScalePane.setMaxHeight(maxHeight);
-            headerText.setTranslateX(Math.max(0, (width - 600) * 0.5));
+            headerText.setTranslateX(Math.max(20, (width - 600) * 0.5));
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 1.75));
             scaledTopicButton.setMaxScale(scale);

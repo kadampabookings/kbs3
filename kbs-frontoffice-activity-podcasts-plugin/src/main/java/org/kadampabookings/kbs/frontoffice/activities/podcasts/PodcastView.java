@@ -13,7 +13,6 @@ import dev.webfx.kit.util.properties.Unregisterable;
 import dev.webfx.platform.util.Objects;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -109,34 +108,38 @@ public final class PodcastView {
         private void computeLayout(double width) {
             if (width == -1)
                 width = getWidth();
-            /*Image:*/       imageY = 0;                                                imageWidth = isVideo ? width / 2 : width / 4; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth;
-            /*Right side:*/  rightX = imageWidth + 20;                                  rightWidth = width - rightX;
-            /*Date:*/        titleY = 0;                                                titleHeight = titleLabel.prefHeight(rightWidth);
-            /*Title:*/       dateY = titleY + titleHeight + 10;                         dateHeight = dateText.prefHeight(rightWidth);
-            /*Excerpt:*/     excerptY = dateY + dateHeight + 10;                        excerptHeight = excerptLabel.prefHeight(rightWidth);
-            /*Buttons:*/     buttonY = excerptY + excerptHeight + (isAudio ? 30 : 20);  buttonSize = 32;
-            /*Favorite:*/    favoriteY = buttonY + buttonSize + (isAudio ? 30 : 20);    favoriteHeight = 32;
+            if (width <= 400) { // Small screen => vertical alignment: image above title, date, excerpt, buttons & favorite
+            /*Image:*/       imageY = 0;                                                 imageWidth = width; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth;
+            /*Right side:*/  rightX = 0; /* Actually no right side */                    rightWidth = width - rightX;
+            /*Tile:*/        titleY = imageY + imageHeight + 10;                        titleHeight = titleLabel.prefHeight(rightWidth);
+            } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
+            /*Image:*/       imageY = 0;                                                 imageWidth = isVideo ? width / 2 : width / 4; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth;
+            /*Right side:*/  rightX = imageWidth + 20;                                   rightWidth = width - rightX;
+            /*Tile:*/        titleY = 0;       titleHeight = titleLabel.prefHeight(rightWidth);
+            }
+            /*Date:*/         dateY = titleY + titleHeight + 10;                         dateHeight = dateText.prefHeight(rightWidth);
+            /*Excerpt:*/   excerptY = dateY + dateHeight + 10;                        excerptHeight = excerptLabel.prefHeight(rightWidth);
+            /*Buttons:*/    buttonY = excerptY + excerptHeight + (isAudio ? 30 : 20);    buttonSize = 32;
+            /*Favorite:*/ favoriteY = buttonY + buttonSize + (isAudio ? 30 : 20);    favoriteHeight = 32;
         }
     };
 
     {
         TextUtility.setFontFamily(elapsedTimeText, StyleUtility.CLOCK_FAMILY, 9);
         // Arming buttons
-        playButton    .setOnMouseClicked(e -> play());
-        pauseButton   .setOnMouseClicked(e -> pause());
-        forwardButton .setOnMouseClicked(e -> seekRelative(30));
-        backwardButton.setOnMouseClicked(e -> seekRelative(-10));
-        progressBar   .setOnMouseClicked(e -> seekX(e.getX()));
-        progressBar   .setOnMouseDragged(e -> seekX(e.getX()));
-        imageView     .setOnMouseClicked(e -> play());
-        favoritePane  .setOnMousePressed(e -> {
+        GeneralUtility.onNodeClickedWithoutScroll(e -> play(), playButton, imageView);
+        GeneralUtility.onNodeClickedWithoutScroll(e -> pause(), pauseButton);
+        GeneralUtility.onNodeClickedWithoutScroll(e -> seekRelative(30), forwardButton);
+        GeneralUtility.onNodeClickedWithoutScroll(e -> seekRelative(-10), backwardButton);
+        GeneralUtility.onNodeClickedWithoutScroll(e -> seekX(e.getX()), progressBar);
+        progressBar   .setOnMouseDragged(         e -> seekX(e.getX()));
+        GeneralUtility.onNodeClickedWithoutScroll(e -> {
             FXFavoritePodcasts.togglePodcastAsFavorite(podcast);
             updateFavorite();
             e.consume();
-        });
+        }, favoritePane);
         favoriteSvgPath.setContent(FAVORITE_PATH);
         favoriteSvgPath.setStrokeWidth(2);
-        imageView.setCursor(Cursor.HAND);
         updateFavorite();
     }
 
