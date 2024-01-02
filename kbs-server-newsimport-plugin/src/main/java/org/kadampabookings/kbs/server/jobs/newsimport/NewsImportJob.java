@@ -74,7 +74,7 @@ public class NewsImportJob implements ApplicationJob {
         // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
         if (latestNewsDateTime == null) {
-            EntityStore.create(dataSourceModel).<News>executeQuery("select date,channelNewsId from News where lang=? order by date desc limit 1", lang)
+            EntityStore.create(dataSourceModel).<News>executeQuery("select date from News where lang=? order by date desc limit 1", lang)
                     .onFailure(error -> Console.log("Error while reading latest news", error))
                     .onSuccess(news -> {
                         if (news.isEmpty()) { // Means that there is no news in the database
@@ -95,7 +95,7 @@ public class NewsImportJob implements ApplicationJob {
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
                 .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
-                                "select channelNewsId,date from News where lang=? and date >= ? order by date limit ?", lang, latestNewsDateTime, webNewsJsonArray.size()
+                                "select channelNewsId from News where lang=? and date >= ? order by date limit ?", lang, latestNewsDateTime, webNewsJsonArray.size()
                         )
                         .onFailure(e -> Console.log("Error while reading news from database", e))
                         .onSuccess(dbNews -> {
