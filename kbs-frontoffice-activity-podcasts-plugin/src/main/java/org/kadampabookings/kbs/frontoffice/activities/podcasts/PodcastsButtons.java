@@ -27,13 +27,13 @@ public final class PodcastsButtons {
     public static Pane createBackwardButton() {
         return embedButton(new StackPane(
                 createSVGButton(BACKWARD_BUTTON_PATH_32, Color.BLACK, null),
-                TextUtility.getText("10", 5, "gray")));
+                TextUtility.getText("10", 5, Color.GRAY)));
     }
 
     public static Pane createForwardButton() {
         return embedButton(new StackPane(
                 createSVGButton(FORWARD_BUTTON_PATH_32, Color.BLACK, null),
-                translateX(TextUtility.getText("30", 5, "gray"), 2) // Needs to be translated a bit to look centered with SVG
+                translateX(TextUtility.getText("30", 5, Color.GRAY), 2) // Needs to be translated a bit to look centered with SVG
         ));
     }
 

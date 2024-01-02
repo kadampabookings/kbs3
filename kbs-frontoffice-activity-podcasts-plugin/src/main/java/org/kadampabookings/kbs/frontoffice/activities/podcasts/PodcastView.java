@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import one.modality.base.frontoffice.utility.GeneralUtility;
@@ -53,18 +54,19 @@ public final class PodcastView {
     private final MonoPane videoContainer = new MonoPane();
     private final ImageView imageView = new ImageView();
     private final Rectangle imageClip = new Rectangle();
-    private final Text dateText = createDateText();
-    private final Label titleLabel = createTitleLabel();
-    private final Label excerptLabel = createExcerptLabel();
+    private final Text dateText = TextUtility.createText(StyleUtility.ELEMENT_GRAY_COLOR);
+    private final Label titleLabel = GeneralUtility.createLabel(StyleUtility.MAIN_ORANGE_COLOR);
+    private final Label excerptLabel = GeneralUtility.createLabel(Color.BLACK);
     private final Pane playButton = PodcastsButtons.createPlayButton();
     private final Pane pauseButton = PodcastsButtons.createPauseButton();
     private final Pane forwardButton = PodcastsButtons.createForwardButton();
     private final Pane backwardButton = PodcastsButtons.createBackwardButton();
     private final ProgressBar progressBar = new ProgressBar();
-    private final Text elapsedTimeText = createElapsedTimeText();
+    private final Text elapsedTimeText = TextUtility.createText(StyleUtility.ELEMENT_GRAY_COLOR);
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
     private final Pane podcastPane = new Pane(videoContainer, imageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
+        private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
 
         @Override
@@ -108,6 +110,15 @@ public final class PodcastView {
         private void computeLayout(double width) {
             if (width == -1)
                 width = getWidth();
+            /* Updating fonts if necessary (required before layout) */
+            double fontFactor = GeneralUtility.computeFontRatio(width);
+            if (fontFactor != this.fontFactor) {
+                this.fontFactor = fontFactor;
+                GeneralUtility.setLabeledFont(  titleLabel, StyleUtility.TEXT_FAMILY,  FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
+                TextUtility.setTextFont(          dateText, StyleUtility.TEXT_FAMILY,  FontWeight.NORMAL,    fontFactor * StyleUtility.SUB_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY,  FontWeight.NORMAL,    fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                TextUtility.setTextFont(   elapsedTimeText, StyleUtility.CLOCK_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.SUB_TEXT_SIZE);
+            }
             if (width <= 400) { // Small screen => vertical alignment: image above title, date, excerpt, buttons & favorite
             /*Image:*/       imageY = 0;                                                 imageWidth = width; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth;
             /*Right side:*/  rightX = 0; /* Actually no right side */                    rightWidth = width - rightX;
@@ -125,7 +136,6 @@ public final class PodcastView {
     };
 
     {
-        TextUtility.setFontFamily(elapsedTimeText, StyleUtility.CLOCK_FAMILY, 9);
         // Arming buttons
         GeneralUtility.onNodeClickedWithoutScroll(e -> play(), playButton, imageView);
         GeneralUtility.onNodeClickedWithoutScroll(e -> pause(), pauseButton);
@@ -328,21 +338,5 @@ public final class PodcastView {
         int minutes = (int) duration.toMinutes();
         int seconds = ((int) duration.toSeconds()) % 60;
         return (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-    }
-
-    private static Text createDateText() {
-        return TextUtility.getSubText(null);
-    }
-
-    private static Label createTitleLabel() {
-        return GeneralUtility.getMainLabel(null, StyleUtility.MAIN_ORANGE);
-    }
-
-    private static Label createExcerptLabel() {
-        return GeneralUtility.getMediumLabel(null, StyleUtility.BLACK);
-    }
-
-    private static Text createElapsedTimeText() {
-        return TextUtility.getSubText(null, StyleUtility.ELEMENT_GRAY);
     }
 }

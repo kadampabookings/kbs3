@@ -156,7 +156,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             double scale = Math.max(1, Math.min(width / 600, 1.75));
             scaledTopicButton.setMaxScale(scale);
             scaledSwitchBox.setMaxScale(scale);
-            GeneralUtility.screenChangeListened(width);
+            GeneralUtility.onPageWidthChanged(width);
         }, pageContainer.widthProperty());
 
         // Setting a max width for big desktop screens

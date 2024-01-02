@@ -30,14 +30,15 @@ public final class NewsView {
 
     private final BrowsingHistory history;
     private News news;
-    private final Hyperlink titleLink = createTitleLink();
-    private final Text dateText = createDateText();
-    private final Label excerptLabel = createExcerptLabel();
+    private final Hyperlink titleLink = GeneralUtility.createHyperlink(null, StyleUtility.MAIN_ORANGE_COLOR);
+    private final Text dateText = TextUtility.createText(null, StyleUtility.ELEMENT_GRAY_COLOR);
+    private final Label excerptLabel = GeneralUtility.createLabel(null, Color.BLACK);
     private final ImageView imageView = new ImageView();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
-    private final Hyperlink readMoreLink = createReadMoreLink();
+    private final Hyperlink readMoreLink = GeneralUtility.createHyperlink("readMore", StyleUtility.MAIN_ORANGE_COLOR);
     private final Pane newsContainer = new Pane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
+        private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight, readMoreX, readMoreY, readMoreHeight;
         @Override
         protected void layoutChildren() {
@@ -70,15 +71,25 @@ public final class NewsView {
         private void computeLayout(double width) {
             if (width == -1)
                 width = getWidth();
+            /* Updating fonts if necessary (required before layout) */
+            double fontFactor = GeneralUtility.computeFontRatio(width);
+            if (fontFactor != this.fontFactor) {
+                this.fontFactor = fontFactor;
+                GeneralUtility.setLabeledFont(titleLink,    StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, StyleUtility.MAIN_TEXT_SIZE * fontFactor);
+                TextUtility.setTextFont(      dateText,     StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    StyleUtility.SUB_TEXT_SIZE * fontFactor);
+                GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    StyleUtility.MEDIUM_TEXT_SIZE * fontFactor);
+                GeneralUtility.setLabeledFont(readMoreLink, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, StyleUtility.MEDIUM_TEXT_SIZE * fontFactor);
+            }
             /* Title: */       titleY = 0;                                titleHeight = titleLink.prefHeight(rightWidth);
             if (width <= 500) { // Small screen => vertical alignment: title above image, date, excerpt, buttons & favorite
             /* Image: */       imageY = titleY + titleHeight + 10;         imageWidth = width; imageHeight = imageView.prefHeight(imageWidth);
             /* Right side: */  rightX = 0;                                 rightWidth = width - rightX;
+            /* Date: */         dateY = imageY + imageHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
             } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
             /* Image: */       imageY = 0;                                 imageWidth = width / 3; imageHeight = imageView.prefHeight(imageWidth);
             /* Right side: */  rightX = imageWidth + 20;                   rightWidth = width - rightX;
-            }
             /* Date: */         dateY = titleY + titleHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
+            }
             /* Excerpt: */   excerptY = dateY + dateHeight + 20;        excerptHeight = excerptLabel.prefHeight(rightWidth);
             /* Favorite: */ favoriteY = excerptY + excerptHeight + 20; favoriteHeight = 32;
             /* ReadMore: */ readMoreY = favoriteY;                     readMoreHeight = favoriteHeight;
@@ -131,22 +142,6 @@ public final class NewsView {
     private static void updateLabeled(Labeled labeled, String newContent) {
         if (!Objects.areEquals(newContent, labeled.getText()))
             labeled.setText(newContent);
-    }
-
-    private static Hyperlink createTitleLink() {
-        return GeneralUtility.setupLabeled(new Hyperlink(), null, StyleUtility.MAIN_ORANGE_COLOR, FontWeight.SEMI_BOLD, StyleUtility.MAIN_TEXT_SIZE);
-    }
-
-    private static Text createDateText() {
-        return TextUtility.getSubText(null);
-    }
-
-    private static Label createExcerptLabel() {
-        return GeneralUtility.getMediumLabel(null, StyleUtility.BLACK);
-    }
-
-    private static Hyperlink createReadMoreLink() {
-        return GeneralUtility.setupLabeled(new Hyperlink(), "readMore", StyleUtility.MAIN_ORANGE_COLOR, FontWeight.SEMI_BOLD, 10);
     }
 
 }

@@ -208,7 +208,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         FXProperties.runOnPropertiesChange(() -> {
             double width = pageContainer.getWidth();
-            GeneralUtility.screenChangeListened(width);
+            GeneralUtility.onPageWidthChanged(width);
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             scaledTeacherButton.setMaxScale(scale);
