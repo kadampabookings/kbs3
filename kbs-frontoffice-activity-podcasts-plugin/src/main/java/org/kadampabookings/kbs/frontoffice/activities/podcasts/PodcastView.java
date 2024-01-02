@@ -53,15 +53,15 @@ public final class PodcastView {
     private final MonoPane videoContainer = new MonoPane();
     private final ImageView imageView = new ImageView();
     private final Rectangle imageClip = new Rectangle();
-    private final Text dateText = TextUtility.getSubText(null);
-    private final Label titleLabel = GeneralUtility.getMainLabel(null, StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE);
-    private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.VICTOR_BATTLE_BLACK);
+    private final Text dateText = createDateText();
+    private final Label titleLabel = createTitleLabel();
+    private final Label excerptLabel = createExcerptLabel();
     private final Pane playButton = PodcastsButtons.createPlayButton();
     private final Pane pauseButton = PodcastsButtons.createPauseButton();
     private final Pane forwardButton = PodcastsButtons.createForwardButton();
     private final Pane backwardButton = PodcastsButtons.createBackwardButton();
     private final ProgressBar progressBar = new ProgressBar();
-    private final Text elapsedTimeText = TextUtility.getSubText(null, StyleUtility.ELEMENT_GRAY);
+    private final Text elapsedTimeText = createElapsedTimeText();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
     private final Pane podcastPane = new Pane(videoContainer, imageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
@@ -328,5 +328,21 @@ public final class PodcastView {
         int minutes = (int) duration.toMinutes();
         int seconds = ((int) duration.toSeconds()) % 60;
         return (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    }
+
+    private static Text createDateText() {
+        return TextUtility.getSubText(null);
+    }
+
+    private static Label createTitleLabel() {
+        return GeneralUtility.getMainLabel(null, StyleUtility.MAIN_ORANGE);
+    }
+
+    private static Label createExcerptLabel() {
+        return GeneralUtility.getMediumLabel(null, StyleUtility.BLACK);
+    }
+
+    private static Text createElapsedTimeText() {
+        return TextUtility.getSubText(null, StyleUtility.ELEMENT_GRAY);
     }
 }

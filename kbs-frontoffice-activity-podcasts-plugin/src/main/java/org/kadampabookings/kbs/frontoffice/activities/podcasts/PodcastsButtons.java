@@ -39,14 +39,14 @@ public final class PodcastsButtons {
 
     public static Pane createPlayButton() {
         return embedButton(new StackPane(
-                new Circle(16, Color.web(StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE)),
+                new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
                 translateX(createSVGButton(PLAY_TRIANGLE_PATH_15, null, Color.WHITE), 1) // Needs to be translated a bit to look centered with SVG
         ));
     }
 
     public static Pane createPauseButton() {
         return embedButton(new StackPane(
-                new Circle(16, Color.web(StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE)),
+                new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
                 createSVGButton(PAUSE_SIGN_PATH_15, null, Color.WHITE)));
     }
 

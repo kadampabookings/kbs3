@@ -60,11 +60,11 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     @Override
     public Node buildUi() {
 
-        Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", Color.web(StyleUtility.MAIN_ORANGE),  true, 21);
+        Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", StyleUtility.MAIN_ORANGE_COLOR,  true, 21);
         podcastsLabel.setContentDisplay(ContentDisplay.TOP);
         podcastsLabel.setTextAlignment(TextAlignment.CENTER);
 
-        Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", Color.web(StyleUtility.MAIN_ORANGE),  false, 8);
+        Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", StyleUtility.MAIN_ORANGE_COLOR,  false, 8);
         FlexPane podcastsChannelsPane = new FlexPane(
                 createPodcastsChannelButton("Spotify",       "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
                 createPodcastsChannelButton("ApplePodcasts", "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
@@ -76,11 +76,11 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         podcastsChannelsPane.setDistributeRemainingRowSpace(true);
 
         Region separatorLine = new Region();
-        separatorLine.setBackground(Background.fill(Color.web(StyleUtility.MAIN_ORANGE)));
+        separatorLine.setBackground(Background.fill(StyleUtility.MAIN_ORANGE_COLOR));
         separatorLine.setMinHeight(1);
         separatorLine.setPrefWidth(Double.MAX_VALUE);
 
-        videosSwitch.setSelectedBackgroundFill(Color.web(StyleUtility.MAIN_ORANGE));
+        videosSwitch.setSelectedBackgroundFill(StyleUtility.MAIN_ORANGE_COLOR);
         videosSwitch.setCursor(Cursor.HAND);
         HBox switchBox = new HBox(5, videosLabel, videosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);

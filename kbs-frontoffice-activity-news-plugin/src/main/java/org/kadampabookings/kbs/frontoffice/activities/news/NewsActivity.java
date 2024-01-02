@@ -58,7 +58,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     @Override
     public Node buildUi() {
         Text headerText = I18n.bindI18nProperties(new Text(), "newsHeaderText");
-        headerText.setFill(Color.web(StyleUtility.MAIN_ORANGE));
+        headerText.setFill(StyleUtility.MAIN_ORANGE_COLOR);
         headerText.setFont(Font.font(StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32));
         headerText.setStyle("-fx-font-family: " + StyleUtility.TEXT_FAMILY + "; -fx-font-weight: bold; -fx-font-size: 32");
         headerText.setWrappingWidth(250);
@@ -124,7 +124,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         HBox.setMargin(searchIconSvgPath, new Insets(0,12,0,0));
         VBox.setMargin(searchBar, new Insets(10, 20, 10, 20));
 
-        withVideosSwitch.setSelectedBackgroundFill(Color.web(StyleUtility.MAIN_ORANGE));
+        withVideosSwitch.setSelectedBackgroundFill(StyleUtility.MAIN_ORANGE_COLOR);
         withVideosSwitch.setCursor(Cursor.HAND);
         HBox switchBox = new HBox(5, withVideosLabel, withVideosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);

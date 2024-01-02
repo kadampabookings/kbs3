@@ -30,21 +30,21 @@ public final class NewsView {
 
     private final BrowsingHistory history;
     private News news;
-    private final Hyperlink titleLabel = GeneralUtility.setupLabeled(new Hyperlink(), null, Color.web(StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE), FontWeight.SEMI_BOLD, StyleUtility.MAIN_TEXT_SIZE);
-    private final Text dateText = TextUtility.getSubText(null);
-    private final Label excerptLabel = GeneralUtility.getMediumLabel(null, StyleUtility.VICTOR_BATTLE_BLACK);
+    private final Hyperlink titleLink = createTitleLink();
+    private final Text dateText = createDateText();
+    private final Label excerptLabel = createExcerptLabel();
     private final ImageView imageView = new ImageView();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
-    private final Hyperlink readMoreLink = GeneralUtility.setupLabeled(new Hyperlink(), "readMore", Color.web(StyleUtility.MAIN_OLD_BLUE_NOW_ORANGE), FontWeight.SEMI_BOLD, 10);
-    private final Pane newsContainer = new Pane(imageView, titleLabel, dateText, excerptLabel, favoritePane, readMoreLink) {
+    private final Hyperlink readMoreLink = createReadMoreLink();
+    private final Pane newsContainer = new Pane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight, readMoreX, readMoreY, readMoreHeight;
         @Override
         protected void layoutChildren() {
             computeLayout(getWidth());
             imageView.setFitWidth(imageWidth);
             layoutInArea(imageView, 0, imageY, imageWidth, imageHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
+            layoutInArea(titleLink, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
@@ -64,23 +64,21 @@ public final class NewsView {
         @Override
         protected double computePrefHeight(double width) {
             computeLayout(width);
-            return Math.max(imageY + imageView.prefHeight(imageWidth), favoriteY + favoriteHeight);
+            return Math.max(imageY + imageHeight, favoriteY + favoriteHeight);
         }
 
         private void computeLayout(double width) {
             if (width == -1)
                 width = getWidth();
+            /* Title: */       titleY = 0;                                titleHeight = titleLink.prefHeight(rightWidth);
             if (width <= 500) { // Small screen => vertical alignment: title above image, date, excerpt, buttons & favorite
-            /* Title: */       titleY = 0;                                titleHeight = titleLabel.prefHeight(rightWidth);
             /* Image: */       imageY = titleY + titleHeight + 10;         imageWidth = width; imageHeight = imageView.prefHeight(imageWidth);
             /* Right side: */  rightX = 0;                                 rightWidth = width - rightX;
-            /* Date: */         dateY = imageY + imageHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
             } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
-            /* Title: */       titleY = 0;                                titleHeight = titleLabel.prefHeight(rightWidth);
             /* Image: */       imageY = 0;                                 imageWidth = width / 3; imageHeight = imageView.prefHeight(imageWidth);
             /* Right side: */  rightX = imageWidth + 20;                   rightWidth = width - rightX;
-            /* Date: */         dateY = titleY + titleHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
             }
+            /* Date: */         dateY = titleY + titleHeight + 10;         dateHeight = dateText.prefHeight(rightWidth);
             /* Excerpt: */   excerptY = dateY + dateHeight + 20;        excerptHeight = excerptLabel.prefHeight(rightWidth);
             /* Favorite: */ favoriteY = excerptY + excerptHeight + 20; favoriteHeight = 32;
             /* ReadMore: */ readMoreY = favoriteY;                     readMoreHeight = favoriteHeight;
@@ -98,12 +96,12 @@ public final class NewsView {
             updateFavorite();
             e.consume();
         }, favoritePane);
-        GeneralUtility.onNodeClickedWithoutScroll(e -> browseArticle(), titleLabel, imageView, readMoreLink);
+        GeneralUtility.onNodeClickedWithoutScroll(e -> browseArticle(), titleLink, imageView, readMoreLink);
     }
 
     public void setNews(News news) {
         this.news = news;
-        updateLabeled(titleLabel, news.getTitle());
+        updateLabeled(titleLink, news.getTitle());
         updateText(dateText, DateTimeFormatter.ofPattern("d MMMM yyyy").format(news.getDate()));
         updateLabeled(excerptLabel, news.getExcerpt());
         imageView.setImage(ImageStore.getOrCreateImage(news.getImageUrl()));
@@ -134,4 +132,21 @@ public final class NewsView {
         if (!Objects.areEquals(newContent, labeled.getText()))
             labeled.setText(newContent);
     }
+
+    private static Hyperlink createTitleLink() {
+        return GeneralUtility.setupLabeled(new Hyperlink(), null, StyleUtility.MAIN_ORANGE_COLOR, FontWeight.SEMI_BOLD, StyleUtility.MAIN_TEXT_SIZE);
+    }
+
+    private static Text createDateText() {
+        return TextUtility.getSubText(null);
+    }
+
+    private static Label createExcerptLabel() {
+        return GeneralUtility.getMediumLabel(null, StyleUtility.BLACK);
+    }
+
+    private static Hyperlink createReadMoreLink() {
+        return GeneralUtility.setupLabeled(new Hyperlink(), "readMore", StyleUtility.MAIN_ORANGE_COLOR, FontWeight.SEMI_BOLD, 10);
+    }
+
 }
