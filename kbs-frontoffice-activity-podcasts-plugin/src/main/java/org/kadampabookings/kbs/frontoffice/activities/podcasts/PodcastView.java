@@ -111,7 +111,7 @@ public final class PodcastView {
             if (width == -1)
                 width = getWidth();
             /* Updating fonts if necessary (required before layout) */
-            double fontFactor = GeneralUtility.computeFontRatio(width);
+            double fontFactor = GeneralUtility.computeFontFactor(width);
             if (fontFactor != this.fontFactor) {
                 this.fontFactor = fontFactor;
                 GeneralUtility.setLabeledFont(  titleLabel, StyleUtility.TEXT_FAMILY,  FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);

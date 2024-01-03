@@ -30,13 +30,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.mainframe.dialogarea.fx.FXMainFrameDialogArea;
-import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
+import one.modality.base.frontoffice.utility.TextUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Topic;
 
@@ -57,10 +56,8 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
     @Override
     public Node buildUi() {
-        Text headerText = I18n.bindI18nProperties(new Text(), "newsHeaderText");
-        headerText.setFill(StyleUtility.MAIN_ORANGE_COLOR);
-        headerText.setFont(Font.font(StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32));
-        headerText.setStyle("-fx-font-family: " + StyleUtility.TEXT_FAMILY + "; -fx-font-weight: bold; -fx-font-size: 32");
+        Text headerText = TextUtility.createText("newsHeaderText", StyleUtility.MAIN_ORANGE_COLOR);
+        TextUtility.setTextFont(headerText, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32);
         headerText.setWrappingWidth(250);
 
         String headerImageUrl = SourcesConfig.getSourcesRootConfig().childConfigAt("kbs.frontoffice.activity.news").getString("headerImageUrl");
@@ -77,8 +74,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         ScalePane headerScalePane = new ScalePane(headerPane);
         headerScalePane.setBackground(Background.fill(Color.WHITE));
 
-        Text topicPrefixText = I18n.bindI18nProperties(new Text(), "topic");
-        topicPrefixText.setFill(Color.GRAY);
+        Text topicPrefixText = TextUtility.createText("topic", Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
                 "{class: 'Topic', alias: 't', columns: 'name', where: 'exists(select News where topic = t)', orderBy: 'id'}",
                 this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
@@ -156,7 +152,6 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             double scale = Math.max(1, Math.min(width / 600, 1.75));
             scaledTopicButton.setMaxScale(scale);
             scaledSwitchBox.setMaxScale(scale);
-            GeneralUtility.onPageWidthChanged(width);
         }, pageContainer.widthProperty());
 
         // Setting a max width for big desktop screens

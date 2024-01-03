@@ -59,17 +59,18 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
     @Override
     public Node buildUi() {
-
-        Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", StyleUtility.MAIN_ORANGE_COLOR,  true, 21);
+        Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", StyleUtility.MAIN_ORANGE_COLOR);
         podcastsLabel.setContentDisplay(ContentDisplay.TOP);
         podcastsLabel.setTextAlignment(TextAlignment.CENTER);
 
-        Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", StyleUtility.MAIN_ORANGE_COLOR,  false, 8);
-        FlexPane podcastsChannelsPane = new FlexPane(
+        Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", StyleUtility.MAIN_ORANGE_COLOR);
+        Label[] podcastsChannelButtons = {
                 createPodcastsChannelButton("Spotify",       "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
                 createPodcastsChannelButton("ApplePodcasts", "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
                 createPodcastsChannelButton("AmazonMusic",   "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
-                createPodcastsChannelButton("PocketCasts",   "https://pca.st/9yuq0l0p"));
+                createPodcastsChannelButton("PocketCasts",   "https://pca.st/9yuq0l0p")
+        };
+        FlexPane podcastsChannelsPane = new FlexPane(podcastsChannelButtons);
         podcastsChannelsPane.setMaxWidth(Double.MAX_VALUE);
         podcastsChannelsPane.setHorizontalSpace(10);
         podcastsChannelsPane.setVerticalSpace(10);
@@ -208,7 +209,11 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         FXProperties.runOnPropertiesChange(() -> {
             double width = pageContainer.getWidth();
-            GeneralUtility.onPageWidthChanged(width);
+            double fontFactor = GeneralUtility.computeFontFactor(width);
+            GeneralUtility.setLabeledFont(podcastsLabel,        StyleUtility.TEXT_FAMILY, FontWeight.BOLD,   fontFactor * 21);
+            GeneralUtility.setLabeledFont(alsoAvailableOnLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL, fontFactor * 8);
+            for (Label button: podcastsChannelButtons)
+                GeneralUtility.setLabeledFont(button,           StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD,fontFactor * StyleUtility.MAIN_TEXT_SIZE);
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             scaledTeacherButton.setMaxScale(scale);
@@ -233,8 +238,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         return scrollPane;
     }
 
-    private Node createPodcastsChannelButton(String i18nKey, String url) {
-        Label button = GeneralUtility.setupLabeled(new Label(), i18nKey, Color.BLACK, FontWeight.SEMI_BOLD, 12);
+    private Label createPodcastsChannelButton(String i18nKey, String url) {
+        Label button = GeneralUtility.createLabel(i18nKey, Color.BLACK);
         button.setMinSize(200, 45);
         button.setPrefSize(240, 45);
         button.setMaxSize(240, 45);

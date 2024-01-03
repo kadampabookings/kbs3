@@ -30,9 +30,9 @@ public final class NewsView {
 
     private final BrowsingHistory history;
     private News news;
-    private final Hyperlink titleLink = GeneralUtility.createHyperlink(null, StyleUtility.MAIN_ORANGE_COLOR);
-    private final Text dateText = TextUtility.createText(null, StyleUtility.ELEMENT_GRAY_COLOR);
-    private final Label excerptLabel = GeneralUtility.createLabel(null, Color.BLACK);
+    private final Hyperlink titleLink = GeneralUtility.createHyperlink(StyleUtility.MAIN_ORANGE_COLOR);
+    private final Text dateText = TextUtility.createText(StyleUtility.ELEMENT_GRAY_COLOR);
+    private final Label excerptLabel = GeneralUtility.createLabel(Color.BLACK);
     private final ImageView imageView = new ImageView();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
@@ -72,13 +72,13 @@ public final class NewsView {
             if (width == -1)
                 width = getWidth();
             /* Updating fonts if necessary (required before layout) */
-            double fontFactor = GeneralUtility.computeFontRatio(width);
+            double fontFactor = GeneralUtility.computeFontFactor(width);
             if (fontFactor != this.fontFactor) {
                 this.fontFactor = fontFactor;
-                GeneralUtility.setLabeledFont(titleLink,    StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, StyleUtility.MAIN_TEXT_SIZE * fontFactor);
-                TextUtility.setTextFont(      dateText,     StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    StyleUtility.SUB_TEXT_SIZE * fontFactor);
-                GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    StyleUtility.MEDIUM_TEXT_SIZE * fontFactor);
-                GeneralUtility.setLabeledFont(readMoreLink, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, StyleUtility.MEDIUM_TEXT_SIZE * fontFactor);
+                GeneralUtility.setLabeledFont(titleLink,    StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
+                TextUtility.setTextFont(      dateText,     StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.SUB_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(readMoreLink, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
             }
             /* Title: */       titleY = 0;                                titleHeight = titleLink.prefHeight(rightWidth);
             if (width <= 500) { // Small screen => vertical alignment: title above image, date, excerpt, buttons & favorite
