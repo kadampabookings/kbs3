@@ -6,6 +6,7 @@ import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.browser.Browser;
 import dev.webfx.platform.console.Console;
+import dev.webfx.stack.cache.client.SessionClientCache;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
@@ -282,6 +283,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setPodcast, PodcastView::getView))
                 .storeMappedObjectsInto(podcastsContainer.getChildren())
+                .setResultCacheEntry(SessionClientCache.get().getCacheEntry("podcastsCache"))
                 .start();
     }
 

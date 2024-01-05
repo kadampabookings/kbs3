@@ -31,6 +31,7 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.platform.storage;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
+    requires webfx.stack.cache.client;
     requires webfx.stack.i18n;
     requires webfx.stack.i18n.controls;
     requires webfx.stack.orm.domainmodel.activity;
