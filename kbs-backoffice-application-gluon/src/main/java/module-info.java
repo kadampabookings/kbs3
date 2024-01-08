@@ -6,6 +6,7 @@
 module kbs.backoffice.application.gluon {
 
     // Direct dependencies modules
+    requires javafx.web;
     requires kbs.backoffice.application;
     requires modality.base.client.css;
     requires modality.ecommerce.payment.custom.buscall;

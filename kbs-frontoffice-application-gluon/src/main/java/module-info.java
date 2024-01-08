@@ -7,6 +7,7 @@ module kbs.frontoffice.application.gluon {
 
     // Direct dependencies modules
     requires javafx.media;
+    requires javafx.web;
     requires kbs.frontoffice.application;
     requires modality.base.client.css;
     requires webfx.extras.visual.grid.peers.openjfx;
