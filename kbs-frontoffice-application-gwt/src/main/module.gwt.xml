@@ -97,6 +97,8 @@
     <source path="org/kadampabookings/kbs/frontoffice/activities/podcasts/routing"/>
     <source path="org/kadampabookings/kbs/frontoffice/operations/routes/podcasts"/>
     <!--==========================< kbs-frontoffice-application >===========================-->
+    <resource path="images/events"/>
+    <public includes="images/events/" path=""/>
     <resource path="images/organizations"/>
     <public includes="images/organizations/" path=""/>
     <resource path="org/kadampabookings/frontoffice/booking"/>
