@@ -79,9 +79,9 @@
     <!--=================================< elemental2-dom >=================================-->
     <inherits name="elemental2.dom.Dom"/>
     <!--================================< elemental2-media >================================-->
-    <source path="elemental2/media"/>
+    <inherits name="elemental2.media.Media"/>
     <!--===============================< elemental2-promise >===============================-->
-    <source path="elemental2/promise"/>
+    <inherits name="elemental2.promise.Promise"/>
     <!--=================================< elemental2-svg >=================================-->
     <inherits name="elemental2.svg.Svg"/>
     <!--====================================< gwt-user >====================================-->
