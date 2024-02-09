@@ -8,7 +8,7 @@ import dev.webfx.extras.switches.Switch;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.conf.SourcesConfig;
-import dev.webfx.stack.cache.client.SessionClientCache;
+import dev.webfx.stack.cache.client.LocalStorageCache;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
@@ -187,7 +187,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 .ifTrue(withVideosSwitch.selectedProperty(), DqlStatement.where("withVideos"))
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
                 .storeMappedObjectsInto(newsContainer.getChildren())
-                .setResultCacheEntry(SessionClientCache.get().getCacheEntry("newsCache"))
+                .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
                 .start();
     }
 }
