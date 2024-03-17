@@ -6,7 +6,6 @@
 module kbs.server.kdmimport.plugin {
 
     // Direct dependencies modules
-    requires java.base;
     requires modality.base.shared.entities;
     requires webfx.extras.webtext.util;
     requires webfx.platform.ast;

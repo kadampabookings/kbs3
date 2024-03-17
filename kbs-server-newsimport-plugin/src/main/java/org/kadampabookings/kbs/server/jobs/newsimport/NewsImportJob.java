@@ -14,7 +14,7 @@ import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Arrays;
-import dev.webfx.platform.util.Dates;
+import dev.webfx.platform.util.time.Times;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityId;
@@ -91,7 +91,7 @@ public class NewsImportJob implements ApplicationJob {
         // Creating the final fetch url with the additional query string (note: the number of news returned by the
         // web service is 10 by default; this could be increased using &per_page=100 - 100 is the maximal value
         // authorized by the web service)
-        String fetchUrl = NEWS_FETCH_URL + "?lang=" + lang + "&order=asc&after=" + Dates.formatIso(latestNewsDateTime);
+        String fetchUrl = NEWS_FETCH_URL + "?lang=" + lang + "&order=asc&after=" + Times.formatIso(latestNewsDateTime);
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
                 .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
@@ -144,7 +144,7 @@ public class NewsImportJob implements ApplicationJob {
                                             n.setChannel(1);
                                             n.setLang(lang);
                                             n.setChannelNewsId(id);
-                                            LocalDateTime dateTime = Dates.parseIsoLocalDateTime(newsJson.getString("date"));
+                                            LocalDateTime dateTime = Times.parseIsoLocalDateTime(newsJson.getString("date"));
                                             if (dateTime.isAfter(maxNewsDateTime))
                                                 maxNewsDateTime = dateTime;
                                             n.setDate(dateTime);

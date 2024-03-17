@@ -6,7 +6,6 @@
 module kbs.server.podcastsimport.plugin {
 
     // Direct dependencies modules
-    requires java.base;
     requires modality.base.shared.entities;
     requires webfx.extras.webtext.util;
     requires webfx.platform.ast;
@@ -14,7 +13,7 @@ module kbs.server.podcastsimport.plugin {
     requires webfx.platform.console;
     requires webfx.platform.fetch.ast.json;
     requires webfx.platform.scheduler;
-    requires webfx.platform.util;
+    requires webfx.platform.util.time;
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;

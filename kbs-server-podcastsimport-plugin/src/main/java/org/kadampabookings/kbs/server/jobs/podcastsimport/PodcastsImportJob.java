@@ -9,7 +9,7 @@ import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
-import dev.webfx.platform.util.Dates;
+import dev.webfx.platform.util.time.Times;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
@@ -74,7 +74,7 @@ public class PodcastsImportJob implements ApplicationJob {
         // Creating the final fetch url with the additional query string (note: the number of podcasts returned by the
         // web service is 10 by default; this could be increased using &per_page=100 - 100 is the maximal value
         // authorized by the web service)
-        String fetchUrl = PODCAST_FETCH_URL + "?order=asc&after=" + Dates.formatIso(latestPodcastDateTime);
+        String fetchUrl = PODCAST_FETCH_URL + "?order=asc&after=" + Times.formatIso(latestPodcastDateTime);
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
                 // Fetching the latest podcasts from the database in order to determine those that are not yet imported
@@ -101,7 +101,7 @@ public class PodcastsImportJob implements ApplicationJob {
                                 p.setTitle(WebTextUtil.unescapeHtml(title));
                                 String excerpt = AST.lookupString(podcastJson, "excerpt.rendered");
                                 p.setExcerpt(WebTextUtil.unescapeHtml(excerpt));
-                                LocalDateTime dateTime = Dates.parseIsoLocalDateTime(podcastJson.getString("date"));
+                                LocalDateTime dateTime = Times.parseIsoLocalDateTime(podcastJson.getString("date"));
                                 if (dateTime.isAfter(maxPodcastDateTime))
                                     maxPodcastDateTime = dateTime;
                                 p.setDate(dateTime);

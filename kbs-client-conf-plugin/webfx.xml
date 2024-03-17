@@ -16,8 +16,8 @@
         <plugin-module>webfx-platform-substitution-var-conf-plugin</plugin-module> <!-- Ex: BUS_SERVER_HOST -->
 
         <!-- Allow configuration variables from local storage in GWT executables -->
-        <plugin-module executable-target="gwt">webfx-platform-substitution-var-localstorage-plugin</plugin-module>
-        <plugin-module executable-target="gwt">webfx-platform-substitution-var-windowlocation-plugin</plugin-module>
+        <plugin-module executable-target="gwt,j2cl">webfx-platform-substitution-var-localstorage-plugin</plugin-module>
+        <plugin-module executable-target="gwt,j2cl">webfx-platform-substitution-var-windowlocation-plugin</plugin-module>
 
         <plugin-module>webfx-platform-ast-yaml-plugin</plugin-module>
 
