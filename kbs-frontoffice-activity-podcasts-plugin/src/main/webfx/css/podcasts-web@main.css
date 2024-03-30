@@ -1,0 +1,18 @@
+/* Customizing the progress bar for podcasts */
+
+progress {
+    border: none;
+    background-color: lightgray; /* For FireFox */
+}
+
+progress::-webkit-progress-bar { /* For Chrome & Safari */
+    background-color: lightgray;
+}
+
+progress::-webkit-progress-value { /* For Chrome & Safari */
+    background-color: #EE7130;
+}
+
+progress::-moz-progress-bar { /* For FireFox */
+    background-color: #EE7130;
+}

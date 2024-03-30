@@ -29,12 +29,6 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-base-client-css-web</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>one.modality</groupId>
             <artifactId>modality-base-client-entities</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -412,13 +406,19 @@
                                             <groupId>one.modality</groupId>
                                             <artifactId>modality-base-client-application</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
-                                            <includes>images/buddhas/ , one/modality/base/client/images/</includes>
+                                            <includes>images/buddhas/ , one/modality/base/client/images/ , dev/webfx/kit/css/fonts/montserrat/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>one.modality</groupId>
                                             <artifactId>modality-base-client-icons</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
                                             <includes>images/svg/color/ , images/svg/mono/ , images/s32/system/ , images/s16/ , images/s16/organizations/svg/ , images/s16/organizations/ , images/s16/itemFamilies/ , images/s16/currencies/ , images/s16/methods/ , images/s16/security/ , images/s16/continents/ , images/s16/continents/org/ , images/s16/languages/ , images/s16/system/ , images/s16/actions/ , images/s16/countries/svg/ , images/s16/countries/ , images/s16/moneyAccountTypes/ , images/s16/event/ , images/s16/validation/ , images/s16/multipleBookings/</includes>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>one.modality</groupId>
+                                            <artifactId>modality-crm-client-activity-login-plugin</artifactId>
+                                            <version>1.0.0-SNAPSHOT</version>
+                                            <includes>dev/webfx/kit/css/fonts/password/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>one.modality</groupId>
