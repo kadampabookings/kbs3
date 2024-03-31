@@ -1,18 +1,19 @@
-package dev.webfx.platform.boot.j2cl.entrypoint;
+package dev.webfx.platform.boot.j2cl;
 
 import dev.webfx.platform.reflect.RArray;
-import dev.webfx.platform.boot.spi.impl.j2cl.J2clApplicationBooterProvider;
+import dev.webfx.platform.boot.ApplicationBooter;
+import dev.webfx.platform.boot.spi.ApplicationBooterProvider;
 import org.treblereel.j2cl.processors.annotations.GWT3EntryPoint;
 
-import static dev.webfx.platform.javabase.emul.j2cl.ServiceRegistry.*;
+import static dev.webfx.platform.service.gwtj2cl.ServiceRegistry.*;
 
-public final class J2clEntryPoint {
+public final class J2clEntryPoint implements ApplicationBooterProvider {
 
     @GWT3EntryPoint
     public void entryPoint() {
         registerArrayConstructors();
         registerServiceProviders();
-        new J2clApplicationBooterProvider().onModuleLoad();
+        ApplicationBooter.start(this, null);
     }
 
     public static void registerArrayConstructors() {
@@ -28,14 +29,13 @@ public final class J2clEntryPoint {
         register(dev.webfx.platform.ast.spi.formatter.AstFormatterProvider.class, dev.webfx.platform.ast.json.formatter.JsonFormatterProvider::new, dev.webfx.platform.ast.yaml.formatter.YamlFormatterProvider::new);
         register(dev.webfx.platform.ast.spi.parser.AstParserProvider.class, dev.webfx.platform.ast.json.parser.JsonParserProvider::new, dev.webfx.platform.ast.yaml.parser.YamlParserProvider::new);
         register(dev.webfx.platform.blob.spi.BlobProvider.class, dev.webfx.platform.blob.spi.impl.gwtj2cl.GwtJ2clBlobProvider::new);
-        register(dev.webfx.platform.boot.spi.ApplicationBooterProvider.class, dev.webfx.platform.boot.spi.impl.j2cl.J2clApplicationBooterProvider::new);
         register(dev.webfx.platform.boot.spi.ApplicationJob.class, one.modality.base.client.entities.util.functions.ClientFunctionsRegisteringApplicationJob::new, one.modality.crm.backoffice.controls.bookingdetailspanel.BookingDetailsPanelApplicationJob::new, one.modality.crm.client.profile.ModalityClientProfileInitJob::new);
         register(dev.webfx.platform.boot.spi.ApplicationModuleBooter.class, dev.webfx.kit.launcher.WebFxKitLauncherModuleBooter::new, dev.webfx.platform.boot.spi.impl.ApplicationJobsBooter::new, dev.webfx.platform.resource.spi.impl.j2cl.J2clResourceModuleBooter::new, dev.webfx.stack.com.bus.call.BusCallModuleBooter::new, dev.webfx.stack.com.bus.spi.impl.json.client.JsonClientBusModuleBooter::new, dev.webfx.stack.com.serial.SerialCodecModuleBooter::new, dev.webfx.stack.db.querypush.client.simple.SimpleQueryPushClientJob::new, dev.webfx.stack.orm.dql.query.interceptor.DqlQueryInterceptorModuleBooter::new, dev.webfx.stack.orm.dql.querypush.interceptor.DqlQueryPushInterceptorModuleBooter::new, dev.webfx.stack.orm.dql.submit.interceptor.DqlSubmitInterceptorModuleBooter::new, dev.webfx.stack.ui.fxraiser.json.JsonFXRaiserModuleBooter::new, one.modality.base.client.operationactionsloading.ModalityClientOperationActionsLoader::new, one.modality.crm.client.services.authz.ModalityAuthorizationClientModuleBooter::new);
         register(dev.webfx.platform.console.spi.ConsoleProvider.class, dev.webfx.platform.console.spi.impl.gwtj2cl.GwtJ2clConsoleProvider::new);
         register(dev.webfx.platform.file.spi.FileProvider.class, dev.webfx.platform.file.spi.impl.gwtj2cl.GwtJ2clFileProvider::new);
         register(dev.webfx.platform.os.spi.OperatingSystemProvider.class, dev.webfx.platform.os.spi.impl.gwtj2cl.GwtJ2clOperatingSystemProvider::new);
         register(dev.webfx.platform.resource.spi.ResourceProvider.class, dev.webfx.platform.resource.spi.impl.j2cl.J2clResourceProvider::new);
-        register(dev.webfx.platform.resource.spi.impl.j2cl.J2clResourceBundle.class, dev.webfx.platform.resource.j2cl.embed.J2clEmbedResourcesBundle.ProvidedJ2clResourceBundle::new);
+        register(dev.webfx.platform.resource.spi.impl.j2cl.J2clResourceBundle.class, dev.webfx.platform.resource.j2cl.J2clEmbedResourcesBundle.ProvidedJ2clResourceBundle::new);
         register(dev.webfx.platform.scheduler.spi.SchedulerProvider.class, dev.webfx.platform.uischeduler.spi.impl.gwtj2cl.GwtJ2clUiSchedulerProvider::new);
         register(dev.webfx.platform.shutdown.spi.ShutdownProvider.class, dev.webfx.platform.shutdown.spi.impl.gwtj2cl.GwtJ2clShutdownProvider::new);
         register(dev.webfx.platform.storage.spi.LocalStorageProvider.class, dev.webfx.platform.storage.spi.impl.gwtj2cl.GwtJ2clLocalStorageProvider::new);
