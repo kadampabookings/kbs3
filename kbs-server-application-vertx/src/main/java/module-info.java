@@ -13,7 +13,6 @@ module kbs.server.application.vertx {
     requires modality.ecommerce.payment.delegated.server;
     requires modality.ecommerce.payment.direct.server;
     requires webfx.platform.ast.factory.vertx;
-    requires webfx.platform.blob.java;
     requires webfx.platform.boot.vertx;
     requires webfx.platform.console.java;
     requires webfx.platform.fetch.vertx;
