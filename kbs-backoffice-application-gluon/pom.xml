@@ -399,7 +399,6 @@
                         <!-- Android -->
                         <appLabel>KBS</appLabel>
                     </releaseConfiguration>
-
                 </configuration>
             </plugin>
         </plugins>
