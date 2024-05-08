@@ -245,6 +245,8 @@
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
+    <!--=========================< modality-event-client-event-fx >=========================-->
+    <source path="one/modality/event/client/event/fx"/>
     <!--===============< modality-event-frontoffice-activity-booking-plugin >===============-->
     <source path="one/modality/event/frontoffice/activities/booking"/>
     <source path="one/modality/event/frontoffice/activities/booking/browser"/>
@@ -680,7 +682,6 @@
     <source path="dev/webfx/stack/orm/entity/result"/>
     <source path="dev/webfx/stack/orm/entity/result/impl"/>
     <!--========================< webfx-stack-orm-entity-controls >=========================-->
-    <source path="dev/webfx/stack/orm/entity/controls/entity/masterslave"/>
     <source path="dev/webfx/stack/orm/entity/controls/entity/selector"/>
     <source path="dev/webfx/stack/orm/entity/controls/entity/sheet"/>
     <!--===========================< webfx-stack-orm-expression >===========================-->
