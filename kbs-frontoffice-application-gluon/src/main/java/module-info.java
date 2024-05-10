@@ -14,9 +14,12 @@ module kbs.frontoffice.application.gluon {
     requires webfx.kit.javafxgraphics.openjfx;
     requires webfx.platform.ast.factory.generic;
     requires webfx.platform.audio.gluon;
+    requires webfx.platform.blob.java;
     requires webfx.platform.boot.java;
     requires webfx.platform.browser.gluon;
     requires webfx.platform.console.java;
+    requires webfx.platform.fetch.java;
+    requires webfx.platform.file.java;
     requires webfx.platform.os.gluon;
     requires webfx.platform.resource.gluon;
     requires webfx.platform.scheduler.java;
