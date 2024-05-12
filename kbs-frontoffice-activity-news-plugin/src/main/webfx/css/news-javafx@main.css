@@ -1,3 +1,13 @@
+/* Customizing the switch color to orange (when selected) */
+* {
+    -kadampa-org-orange-color: #EE7130;
+    -webfx-switch-selected-background-color: -kadampa-org-orange-color;
+}
+
+.news-activity .webfx-switch {
+    -fx-cursor: hand;
+}
+
 /* Removing hyperlink default padding (ex: News title) */
 .hyperlink {
     -fx-padding: 0;

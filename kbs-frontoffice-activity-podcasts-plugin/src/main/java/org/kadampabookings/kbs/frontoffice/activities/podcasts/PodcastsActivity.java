@@ -82,8 +82,6 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         separatorLine.setMinHeight(1);
         separatorLine.setPrefWidth(Double.MAX_VALUE);
 
-        videosSwitch.setSelectedBackgroundFill(StyleUtility.MAIN_ORANGE_COLOR);
-        videosSwitch.setCursor(Cursor.HAND);
         HBox switchBox = new HBox(5, videosLabel, videosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);
         switchBox.setMaxWidth(Region.USE_PREF_SIZE);
@@ -236,6 +234,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 podcastsLimitProperty.set(currentLimit + 5);
         });
 
+        scrollPane.getStyleClass().add("podcasts-activity");
         return scrollPane;
     }
 

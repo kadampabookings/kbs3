@@ -21,7 +21,6 @@ import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -121,8 +120,6 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         HBox.setMargin(searchIconSvgPath, new Insets(0,12,0,0));
         VBox.setMargin(searchBar, new Insets(10, 20, 10, 20));
 
-        withVideosSwitch.setSelectedBackgroundFill(StyleUtility.MAIN_ORANGE_COLOR);
-        withVideosSwitch.setCursor(Cursor.HAND);
         HBox switchBox = new HBox(5, withVideosLabel, withVideosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);
         switchBox.setMaxWidth(Region.USE_PREF_SIZE);
@@ -168,6 +165,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 newsLimitProperty.set(currentLimit + 5);
         });
 
+        scrollPane.getStyleClass().add("news-activity");
         return scrollPane;
     }
 

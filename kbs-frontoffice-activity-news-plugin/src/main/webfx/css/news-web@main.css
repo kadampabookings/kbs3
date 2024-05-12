@@ -1,10 +1,20 @@
+/* Customizing the switch color to orange (when selected) */
+.news-activity {
+    --kadampa-org-orange-color: #EE7130;
+    --webfx-switch-selected-background-color: var(--kadampa-org-orange-color);
+}
+
+.news-activity .webfx-switch {
+    cursor: pointer;
+}
+
 /* Adding round border on searchbar */
 .searchbar > fx-border {
     border: 1px solid lightgray;
     border-radius: 50px;
 }
 
-/* Removing textfield border in search bar */
+/* Removing text field border in search bar */
 .searchbar fx-textfield > fx-border {
     border: none;
 }
