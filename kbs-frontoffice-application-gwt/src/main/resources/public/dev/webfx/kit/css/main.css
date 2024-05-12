@@ -1,4 +1,9 @@
 
+/*===== javafx-graphics-web@main.css from webfx-kit-javafxgraphics-peers-gwt-j2cl =====*/
+
+.disabled fx-text {
+    color: gray;
+}
 /*===== javafx-controls-web@main.css from webfx-kit-javafxcontrols-peers-gwt-j2cl =====*/
 
 /***** Global variables *****/
@@ -53,6 +58,38 @@ input[type="text"], input[type="password"] {
     background-color: transparent;
 }
 
+/*===== web@main.css from webfx-extras-switches =====*/
+
+:root {
+    --webfx-switch-unselected-background-color: lightgray;
+    --webfx-switch-selected-background-color: #23EA00;
+    --webfx-switch-knob-background-color: white;
+}
+
+fx-switch.webfx-switch > fx-background {
+    background-color: var(--webfx-switch-unselected-background-color);
+    border-radius: 10px;
+    transition-duration: 200ms;
+}
+
+fx-switch.webfx-switch.selected > fx-background {
+    background-color: var(--webfx-switch-selected-background-color);
+    transition-duration: 200ms;
+}
+
+fx-switch.webfx-switch fx-circle.knob {
+    background-color: var(--webfx-switch-knob-background-color);
+}
+/*===== material-web@main.css from webfx-extras-materialdesign =====*/
+
+
+fx-textfield.material > fx-border {
+    border: none;
+}
+
+fx-textfield.material > fx-background {
+    background: none;
+}
 /*===== visual-grid-web@main.css from webfx-extras-visual-grid-peers-gwt-j2cl =====*/
 
 :root {
@@ -145,10 +182,60 @@ tr.selected, .grid-row.selected {
     background: var(--grid-selection-color)
 }
 
-/*===== javafx-graphics-web@main.css from webfx-kit-javafxgraphics-peers-gwt-j2cl =====*/
+/*===== modality-login-web@main.css from modality-crm-client-activity-login-plugin =====*/
 
-.disabled fx-text {
-    color: gray;
+.login * {
+    font-size: 18px; /* doesn't work yet (because of hardcoded style in app code) */
+}
+
+.login fx-button { /* doesn't work yet (because of hardcoded style in app code) */
+    background: #0096D6FF;
+    border: none;
+    border-radius: 10px;
+}
+
+.login fx-button .text {
+    color: white; /* doesn't work yet (because of hardcoded style in app code) */
+    /*padding: 15px; JavaFX padding already applied in app code for now */
+}
+
+/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
+   So we apply that font only once the user started typing the password. This is done using :not([value=""]) CSS
+   selector. Normally "value" refers to the initial value of the input only. However HtmlTextInputControlPeer keeps
+   updating "value" to "" or "not-empty" whether the user has typed something, so this CSS rule finally works: */
+input[type="password"]:not([value=""]) {
+    font-family: "Password", serif;
+    letter-spacing: 0.15em;
+}
+
+@font-face {
+    font-family: "Password";
+    src: url("./fonts/password/password.woff") format("woff");
+    font-weight: 100 900;
+}
+
+/*===== modality-web@main.css from modality-base-client-application =====*/
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("./fonts/montserrat/Montserrat-VF.woff2") format("woff2");
+    font-weight: 100 900;
+}
+
+/* Applying Montserrat as default font for Modality */
+body {
+    font-family: Montserrat, serif;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/*===== frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
+
+/* We dont want border for the buttons in the front-office button bar */
+
+.button-bar fx-button > fx-border {
+    border: none;
 }
 /*===== web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
@@ -217,65 +304,42 @@ tr.selected, .grid-row.selected {
     background: #41BA4D;
 }
 
-/*===== frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
+/*===== news-web@main.css from kbs-frontoffice-activity-news-plugin =====*/
 
-/* We dont want border for the buttons in the front-office button bar */
+/* Customizing the switch color to orange (when selected) */
+.news-activity {
+    --kadampa-org-orange-color: #EE7130;
+    --webfx-switch-selected-background-color: var(--kadampa-org-orange-color);
+}
 
-.button-bar fx-button > fx-border {
+.news-activity .webfx-switch {
+    cursor: pointer;
+}
+
+/* Adding round border on searchbar */
+.searchbar > fx-border {
+    border: 1px solid lightgray;
+    border-radius: 50px;
+}
+
+/* Removing text field border in search bar */
+.searchbar fx-textfield > fx-border {
     border: none;
-}
-/*===== modality-web@main.css from modality-base-client-application =====*/
-
-@font-face {
-    font-family: "Montserrat";
-    src: url("./fonts/montserrat/Montserrat-VF.woff2") format("woff2");
-    font-weight: 100 900;
-}
-
-/* Applying Montserrat as default font for Modality */
-body {
-    font-family: Montserrat, serif;
-    font-size: 13px;
-    -webkit-font-smoothing: antialiased;
-}
-
-
-/*===== modality-login-web@main.css from modality-crm-client-activity-login-plugin =====*/
-
-.login * {
-    font-size: 18px; /* doesn't work yet (because of hardcoded style in app code) */
-}
-
-.login fx-button { /* doesn't work yet (because of hardcoded style in app code) */
-    background: #0096D6FF;
-    border: none;
-    border-radius: 10px;
-}
-
-.login fx-button .text {
-    color: white; /* doesn't work yet (because of hardcoded style in app code) */
-    /*padding: 15px; JavaFX padding already applied in app code for now */
-}
-
-/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
-   So we apply that font only once the user started typing the password. This is done using :not([value=""]) CSS
-   selector. Normally "value" refers to the initial value of the input only. However HtmlTextInputControlPeer keeps
-   updating "value" to "" or "not-empty" whether the user has typed something, so this CSS rule finally works: */
-input[type="password"]:not([value=""]) {
-    font-family: "Password", serif;
-    letter-spacing: 0.15em;
-}
-
-@font-face {
-    font-family: "Password";
-    src: url("./fonts/password/password.woff") format("woff");
-    font-weight: 100 900;
 }
 
 /*===== podcasts-web@main.css from kbs-frontoffice-activity-podcasts-plugin =====*/
 
-/* Customizing the progress bar for podcasts */
+/* Customizing the switch color to orange (when selected) */
+.podcasts-activity {
+    --kadampa-org-orange-color: #EE7130;
+    --webfx-switch-selected-background-color: var(--kadampa-org-orange-color);
+}
 
+.podcasts-activity .webfx-switch {
+    cursor: pointer;
+}
+
+/* Customizing the progress bar for podcasts */
 progress {
     border: none;
     background-color: lightgray; /* For FireFox */
@@ -286,33 +350,9 @@ progress::-webkit-progress-bar { /* For Chrome & Safari */
 }
 
 progress::-webkit-progress-value { /* For Chrome & Safari */
-    background-color: #EE7130;
+    background-color: var(--kadampa-org-orange-color);
 }
 
 progress::-moz-progress-bar { /* For FireFox */
-    background-color: #EE7130;
-}
-
-/*===== news-web@main.css from kbs-frontoffice-activity-news-plugin =====*/
-
-/* Adding round border on searchbar */
-.searchbar > fx-border {
-    border: 1px solid lightgray;
-    border-radius: 50px;
-}
-
-/* Removing textfield border in search bar */
-.searchbar fx-textfield > fx-border {
-    border: none;
-}
-
-/*===== material-web@main.css from webfx-extras-materialdesign =====*/
-
-
-fx-textfield.material > fx-border {
-    border: none;
-}
-
-fx-textfield.material > fx-background {
-    background: none;
+    background-color: var(--kadampa-org-orange-color);
 }
