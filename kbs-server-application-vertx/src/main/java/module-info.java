@@ -9,6 +9,7 @@ module kbs.server.application.vertx {
     requires javafx.base;
     requires kbs.server.application;
     requires modality.crm.server.authz.required.plugin;
+    requires modality.ecommerce.document.service.server;
     requires modality.ecommerce.payment.custom.server;
     requires modality.ecommerce.payment.delegated.server;
     requires modality.ecommerce.payment.direct.server;
