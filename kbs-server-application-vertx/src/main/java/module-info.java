@@ -10,8 +10,8 @@ module kbs.server.application.vertx {
     requires kbs.server.application;
     requires modality.crm.server.authz.required.plugin;
     requires modality.ecommerce.document.service.server;
-    requires modality.ecommerce.payment.custom.server;
     requires modality.ecommerce.payment.direct.server;
+    requires modality.ecommerce.payment.embedded.server;
     requires modality.ecommerce.payment.redirect.server;
     requires webfx.platform.ast.factory.vertx;
     requires webfx.platform.boot.vertx;
