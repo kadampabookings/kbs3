@@ -13,6 +13,9 @@
 
         <plugin-module>kbs-client-conf-plugin</plugin-module>
         <plugin-module executable-target="gluon">kbs-client-conf-gluon-plugin</plugin-module>
+<!--
+        <plugin-module>modality-base-client-activity-console-plugin</plugin-module>
+-->
 
         <plugin-module>modality-base-frontoffice-max-plugin</plugin-module>
 
