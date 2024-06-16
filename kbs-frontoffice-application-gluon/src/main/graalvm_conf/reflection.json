@@ -1,14 +1,19 @@
 [
 
 {
-  "name" : "one.modality.event.frontoffice.activities.booking.map.DynamicMapView",
+  "name" : "dev.webfx.extras.webview.pane.WebViewPane",
   "methods" : [
     { "name" : "consoleLog", "parameterTypes" : ["java.lang.String"] },
     { "name" : "consoleWarn", "parameterTypes" : ["java.lang.String"] },
-    { "name" : "consoleError", "parameterTypes" : ["java.lang.String"] },
-    { "name" : "onGoogleMapLoaded", "parameterTypes" : [] },
-    { "name" : "onMarkerClicked", "parameterTypes" : ["one.modality.event.frontoffice.activities.booking.map.MapMarker"] }
+    { "name" : "consoleError", "parameterTypes" : ["java.lang.String"] }
   ]
+}
+,
+{
+  "name" : "one.modality.event.frontoffice.activities.booking.map.DynamicMapView",
+  "methods" : [
+    { "name" : "onGoogleMapLoaded", "parameterTypes" : [] },
+    { "name" : "onMarkerClicked", "parameterTypes" : ["one.modality.event.frontoffice.activities.booking.map.MapMarker"] }   ]
 }
 ,
    {

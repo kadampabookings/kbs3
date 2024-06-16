@@ -15,7 +15,6 @@
         <provider interface="dev.webfx.stack.routing.uirouter.UiRoute">org.kadampabookings.kbs.frontoffice.activities.news.NewsUiRoute</provider>
         <provider interface="dev.webfx.stack.routing.uirouter.UiRoute">org.kadampabookings.kbs.frontoffice.activities.news.ArticleUiRoute</provider>
         <provider interface="dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter">org.kadampabookings.kbs.frontoffice.activities.news.RouteToNewsRequestEmitter</provider>
-
     </providers>
 
 </project>

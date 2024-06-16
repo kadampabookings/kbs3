@@ -14,7 +14,6 @@
     <providers>
         <provider interface="dev.webfx.stack.routing.uirouter.UiRoute">org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsUiRoute</provider>
         <provider interface="dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter">org.kadampabookings.kbs.frontoffice.activities.podcasts.RouteToPodcastsRequestEmitter</provider>
-
     </providers>
 
 </project>

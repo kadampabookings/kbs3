@@ -463,6 +463,12 @@
                                             <includes>dev/webfx/stack/authn/login/ui/spi/impl/gateway/google/</includes>
                                         </artifactItem>
                                         <artifactItem>
+                                            <groupId>dev.webfx</groupId>
+                                            <artifactId>webfx-extras-webview-pane</artifactId>
+                                            <version>0.1.0-SNAPSHOT</version>
+                                            <includes>dev/webfx/extras/webview/pane/</includes>
+                                        </artifactItem>
+                                        <artifactItem>
                                             <groupId>one.modality</groupId>
                                             <artifactId>modality-event-frontoffice-activity-booking-plugin</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
