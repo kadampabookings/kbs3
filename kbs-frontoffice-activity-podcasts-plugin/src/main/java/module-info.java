@@ -19,7 +19,7 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.extras.player;
     requires webfx.extras.player.audio.media;
     requires webfx.extras.player.video;
-    requires webfx.extras.player.video.wistia;
+    requires webfx.extras.player.video.web.wistia;
     requires webfx.extras.switches;
     requires webfx.extras.util.control;
     requires webfx.kit.util;

@@ -292,8 +292,10 @@
     <!--===========================< webfx-extras-player-video >============================-->
     <source path="dev/webfx/extras/player/video"/>
     <source path="dev/webfx/extras/player/video/impl"/>
-    <!--========================< webfx-extras-player-video-wistia >========================-->
-    <source path="dev/webfx/extras/player/video/wistia"/>
+    <!--=========================< webfx-extras-player-video-web >==========================-->
+    <source path="dev/webfx/extras/player/video/web"/>
+    <!--======================< webfx-extras-player-video-web-wistia >======================-->
+    <source path="dev/webfx/extras/player/video/web/wistia"/>
     <!--=============================< webfx-extras-switches >==============================-->
     <source path="dev/webfx/extras/switches"/>
     <!--===============================< webfx-extras-theme >===============================-->

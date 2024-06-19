@@ -7,7 +7,7 @@ import dev.webfx.extras.player.Status;
 import dev.webfx.extras.player.audio.media.AudioMediaPlayer;
 import dev.webfx.extras.player.video.IntegrationMode;
 import dev.webfx.extras.player.video.VideoPlayer;
-import dev.webfx.extras.player.video.wistia.WistiaVideoPlayer;
+import dev.webfx.extras.player.video.web.wistia.WistiaVideoPlayer;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.kit.util.properties.Unregisterable;
 import dev.webfx.platform.util.Objects;
