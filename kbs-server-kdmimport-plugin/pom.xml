@@ -13,7 +13,7 @@
 
     <artifactId>kbs-server-kdmimport-plugin</artifactId>
 
-    <description/>
+    <description></description>
 
     <dependencies>
 
