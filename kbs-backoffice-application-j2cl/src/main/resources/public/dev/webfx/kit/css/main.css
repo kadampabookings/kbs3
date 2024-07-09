@@ -307,6 +307,7 @@ body {
 .primary-button {
     color: white;
 }
+
 .primary-button > fx-background {
     background: var(--blue-color);
 }
@@ -326,6 +327,7 @@ body {
 .danger-button > fx-background {
     background: var(--red-color);
 }
+
 .danger-button:hover > fx-background {
     background: var(--red-color-hover);
 }
@@ -333,9 +335,11 @@ body {
 .success-button {
     color: white;
 }
+
 .success-button > fx-background {
     background: var(--green-color);
 }
+
 .success-button:hover > fx-background   {
     background: var(--green-color-hover);
 }
@@ -343,9 +347,11 @@ body {
 .secondary-button {
     color: white;
 }
+
 .secondary-button > fx-background {
     background: var(--grey-color);
 }
+
 .secondary-button:hover > fx-background {
     background: var(--grey-color-hover);
 }
@@ -386,10 +392,6 @@ body {
 
 .small-text {
     font-size: 9px;
-}
-
-.table-row-cell:selected .font-blue {
-
 }
 
 .table-row-cell:selected > fx-background {
@@ -445,6 +447,12 @@ input[type="password"]:not([value=""]) {
     font-family: "Password";
     src: url("./fonts/password/password.woff") format("woff");
     font-weight: 100 900;
+}
+
+/*===== web@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
+
+fx-titledpane .title {
+    font-size: 14px;
 }
 
 /*===== modality-backoffice-bookings-web@main.css from modality-ecommerce-backoffice-activity-bookings-plugin =====*/
