@@ -164,8 +164,9 @@ fx-textfield.material > fx-background {
     --webfx-time-pickers-selected-date-background-color: var(--webfx-time-pickers-blue2-color);
 }
 
-.webfx-datepicker.border {
+.webfx-datepicker.border > fx-border {
     border-color: var(--webfx-time-pickers-border-color);
+    border-style: solid;
     border-radius: 10px;
 }
 
