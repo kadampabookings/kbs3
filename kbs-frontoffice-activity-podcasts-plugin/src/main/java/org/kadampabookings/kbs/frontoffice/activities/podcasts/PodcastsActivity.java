@@ -45,6 +45,7 @@ import one.modality.base.shared.entities.impl.TeacherImpl;
 
 public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
+    private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
     private static final int INITIAL_LIMIT = 5;
     private static final Teacher FAVORITE_TAB_VIRTUAL_TEACHER = new TeacherImpl(EntityId.create(Teacher.class), null);
 
@@ -182,7 +183,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         topicProperty.bindBidirectional(topicButtonSelector.selectedItemProperty());
 
         // Setting a max width for big desktop screens
-        pageContainer.setMaxWidth(1200); // Similar value as our website
+        pageContainer.setMaxWidth(MAX_PAGE_WIDTH); // Similar value as our website
         pageContainer.setAlignment(Pos.CENTER);
         BorderPane.setMargin(pageContainer, new Insets(0, 20, 0, 20)); // Global page padding
         VBox.setMargin(podcastsLabel, new Insets(20, 0, 20, 0));
