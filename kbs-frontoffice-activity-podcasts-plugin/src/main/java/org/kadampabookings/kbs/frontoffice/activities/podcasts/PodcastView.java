@@ -335,6 +335,8 @@ public final class PodcastView {
     }
 
     private static String formatDuration(Duration duration) {
+        if (duration.isIndefinite() || duration.isUnknown())
+            return "xx:xx";
         int minutes = (int) duration.toMinutes();
         int seconds = ((int) duration.toSeconds()) % 60;
         return (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;

@@ -1,6 +1,6 @@
 /* Customizing the switch color to orange (when selected) */
 .podcasts-activity {
-    --kadampa-org-orange-color: #EE7130;
+    --kadampa-org-orange-color: #F5761A;
     --webfx-switch-selected-background-color: var(--kadampa-org-orange-color);
 }
 
