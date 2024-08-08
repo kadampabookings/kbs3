@@ -21,10 +21,12 @@ import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import one.modality.base.shared.entities.News;
+import one.modality.base.shared.entities.Podcast;
 import one.modality.base.shared.entities.Topic;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -137,6 +139,7 @@ public class NewsImportJob implements ApplicationJob {
                                         // Creating the new News entities to insert in the database
                                         ReadOnlyAstObject[] mediasJsonArray = webMediasJsonBatch.getArray();
                                         List<String> directLinkUrlsForVideoCheck = new ArrayList<>();
+                                        List<News> newsList = new ArrayList<>();
                                         for (int i = 0; i < mediasJsonArray.length; i++) {
                                             ReadOnlyAstObject newsJson = newWebsiteNews.get(i);
                                             int id = newsJson.getInteger("id");
@@ -168,6 +171,7 @@ public class NewsImportJob implements ApplicationJob {
                                                 }
                                             }
                                             directLinkUrlsForVideoCheck.add(cleanUrl(newsJson.getString("link")));
+                                            newsList.add(n);
                                         }
 
                                         LocalDateTime finalMaxNewsDateTime = maxNewsDateTime;
@@ -180,9 +184,10 @@ public class NewsImportJob implements ApplicationJob {
                                                     latestNewsDateTime = finalMaxNewsDateTime;
                                                     // Updating the newly imported new by setting 1) withVideos field & 2) reading translations
                                                     for (int i = 0; i < newNewsCount; i++) {
-                                                        Object newsPrimaryKey = insertBatch.getArray()[i].getGeneratedKeys()[0];
+                                                        int newsIndex = i;
+                                                        Object newsPrimaryKey = insertBatch.getArray()[newsIndex].getGeneratedKeys()[0];
                                                         // 1) Setting withVideos field
-                                                        String linkUrl = directLinkUrlsForVideoCheck.get(i);
+                                                        String linkUrl = directLinkUrlsForVideoCheck.get(newsIndex);
                                                         if (linkUrl != null) {
                                                             Fetch.fetch(linkUrl).compose(Response::text).onSuccess(text -> {
                                                                 boolean withVideos = text != null && (text.contains("wistia") || text.contains("src=\"https://www.youtube.com/"));
@@ -194,6 +199,47 @@ public class NewsImportJob implements ApplicationJob {
                                                                     updateStore2.submitChanges()
                                                                             .onFailure(Console::log)
                                                                             .onSuccess(x -> Console.log("News " + newsPrimaryKey + " withVideos updated"));
+                                                                    // In addition, importing video podcasts of teachings
+                                                                    // TODO: move this to a separate job
+                                                                    int index = 0;
+                                                                    while (true) {
+                                                                        index = text.indexOf("wistia_async_", index);
+                                                                        if (index == -1)
+                                                                            break;
+                                                                        index += 13;
+                                                                        String wistiaId = text.substring(index, text.indexOf(' ', index));
+                                                                        JsonFetch.fetchJsonObject("https://fast.wistia.com/embed/medias/" + wistiaId + ".json")
+                                                                                .onFailure(Console::log)
+                                                                                .onSuccess(wistiaJson -> {
+                                                                                    // Reading wistia info
+                                                                                    ReadOnlyAstObject media = wistiaJson.getObject("media");
+                                                                                    ReadOnlyAstObject originalAsset = media.getArray("assets").getObject(0);
+                                                                                    Double width = originalAsset.getDouble("width");
+                                                                                    Double height = originalAsset.getDouble("height");
+                                                                                    if (width != 1920 && height != 1080) // Importing only teachings, normally in HD
+                                                                                        return;
+                                                                                    String binUrl = originalAsset.getString("url");
+                                                                                    Long createdAt = media.getLong("createdAt");
+                                                                                    String name = media.getString("name");
+                                                                                    Double duration = media.getDouble("duration");
+                                                                                    // Creating video podcast
+                                                                                    UpdateStore updateStore3 = UpdateStore.create(dataSourceModel);
+                                                                                    Podcast p = updateStore3.insertEntity(Podcast.class);
+                                                                                    News n = newsList.get(newsIndex);
+                                                                                    p.setChannel(1);
+                                                                                    p.setChannelPodcastId(n.getChannelNewsId());
+                                                                                    p.setTitle(name);
+                                                                                    String excerpt = n.getTitle() + ". " + n.getExcerpt();
+                                                                                    p.setExcerpt(excerpt);
+                                                                                    p.setDate(LocalDateTime.ofEpochSecond(createdAt, 0, ZoneOffset.UTC));
+                                                                                    p.setDurationMillis((long) (duration * 1000));
+                                                                                    p.setImageUrl(cleanUrl(binUrl.replace(".bin", ".jpg")));
+                                                                                    p.setWistiaVideoId(wistiaId);
+                                                                                    updateStore3.submitChanges()
+                                                                                            .onFailure(Console::log)
+                                                                                            .onSuccess(e -> Console.log("Video podcast imported"));
+                                                                                });
+                                                                    }
                                                                 }
                                                             });
                                                         }
