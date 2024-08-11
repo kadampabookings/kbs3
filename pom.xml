@@ -58,6 +58,7 @@
         <module>kbs-frontoffice-application-gwt</module>
         <module>kbs-frontoffice-application-j2cl</module>
         <module>kbs-frontoffice-application-openjfx</module>
+        <module>kbs-frontoffice-mediaview</module>
         <module>kbs-server-application</module>
         <module>kbs-server-application-vertx</module>
         <module>kbs-server-kdmimport-plugin</module>
