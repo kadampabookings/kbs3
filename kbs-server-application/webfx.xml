@@ -17,6 +17,7 @@
 
         <plugin-module>kbs-server-podcastsimport-plugin</plugin-module>
         <plugin-module>kbs-server-newsimport-plugin</plugin-module>
+        <plugin-module>kbs-server-videosimport-plugin</plugin-module>
 
 <!-- These jobs are run occasionally on dev machines, so commented by default.
         <plugin-module>modality-base-server-geoimport-plugin</plugin-module>
