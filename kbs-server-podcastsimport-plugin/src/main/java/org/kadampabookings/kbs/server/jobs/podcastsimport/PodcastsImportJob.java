@@ -60,7 +60,7 @@ public class PodcastsImportJob implements ApplicationJob {
         // imported so far in the database.
         if (latestPodcastDateTime == null) {
             EntityStore.create(dataSourceModel).<Podcast>executeQuery("select date from Podcast order by date desc limit 1")
-                    .onFailure(error -> Console.log("Error while reading latest podcast", error))
+                    .onFailure(error -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while reading latest podcast", error))
                     .onSuccess(podcasts -> {
                         if (podcasts.isEmpty()) // Means that there is no podcast in the database
                             latestPodcastDateTime = LocalDate.of(2000, 1, 1).atStartOfDay(); // The web service raise an error with dates before 2000
@@ -76,12 +76,12 @@ public class PodcastsImportJob implements ApplicationJob {
         // authorized by the web service)
         String fetchUrl = PODCAST_FETCH_URL + "?order=asc&after=" + Times.formatIso(latestPodcastDateTime);
         JsonFetch.fetchJsonArray(fetchUrl)
-                .onFailure(error -> Console.log("Error while fetching " + fetchUrl, error))
+                .onFailure(error -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while fetching " + fetchUrl, error))
                 // Fetching the latest podcasts from the database in order to determine those that are not yet imported
                 .onSuccess(webPodcastsJsonArray -> EntityStore.create(dataSourceModel).<Podcast>executeQuery(
                                 "select channelPodcastId from Podcast where date >= ? order by date limit ?", latestPodcastDateTime, webPodcastsJsonArray.size()
                         )
-                        .onFailure(e -> Console.log("Error while reading podcasts from database", e))
+                        .onFailure(e -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while reading podcasts from database", e))
                         .onSuccess(dbPodcasts -> {
 
                             UpdateStore updateStore = UpdateStore.createAbove(dbPodcasts.getStore());
@@ -116,7 +116,7 @@ public class PodcastsImportJob implements ApplicationJob {
                                     Duration duration = Duration.between(LocalTime.MIN, LocalTime.parse(durationString));
                                     p.setDurationMillis(duration.toMillis());
                                 } catch (Exception e) {
-                                    Console.log("WARNING: No or wrong duration for podcast " + id);
+                                    Console.log("[PODCASTS_IMPORT] ⚠️ WARNING: No or wrong duration for podcast " + id);
                                 }
                                 ReadOnlyAstArray series = podcastJson.getArray("series");
                                 for (Object s : series) {
@@ -133,14 +133,14 @@ public class PodcastsImportJob implements ApplicationJob {
                             LocalDateTime finalMaxPodcastDateTime = maxPodcastDateTime;
 
                             if (!updateStore.hasChanges()) {
-                                Console.log("No new podcasts to import");
+                                Console.log("[PODCASTS_IMPORT] ✅  No new podcasts to import");
                                 latestPodcastDateTime = null; // Safer to reset, especially in cases where several servers a running (ex: staging + local machine)
                             } else
                                 updateStore.submitChanges()
-                                        .onFailure(e -> Console.log("Error while inserting podcasts in database", e))
+                                        .onFailure(e -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while inserting podcasts in database", e))
                                         .onSuccess(insertBatch -> {
-                                            int newPodcastsCount = insertBatch.getArray().length;
-                                            Console.log(newPodcastsCount + " new podcasts imported in database");
+                                            int newPodcastsCount = insertBatch.getArray()[0].getRowCount();
+                                            Console.log("[PODCASTS_IMPORT] " + newPodcastsCount + " new podcasts imported in database");
                                             latestPodcastDateTime = finalMaxPodcastDateTime;
                                             importPodcasts();
                                         });
