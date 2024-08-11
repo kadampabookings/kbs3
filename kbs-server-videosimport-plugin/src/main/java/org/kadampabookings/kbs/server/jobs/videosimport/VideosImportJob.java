@@ -40,7 +40,8 @@ public class VideosImportJob implements ApplicationJob {
 
     @Override
     public void onStart() {
-        importNewsVideos();
+        // Waiting 2 mins before starting first import so that the news import job eventually imported some news
+        Scheduler.scheduleDelay(2 * 60 * 1000, this::importNewsVideos);
         importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importNewsVideos);
     }
 
@@ -68,7 +69,7 @@ public class VideosImportJob implements ApplicationJob {
     public void importNewsVideosFromLatestNews() {
         // Reading the next 10 news from the database that needs to be checked for videos import
         EntityStore entityStore = EntityStore.create(dataSourceModel);
-        entityStore.<News>executeQuery("select channelNewsId,title,excerpt,lang from News where withVideos and id>=? and channelNewsId>97000 order by id limit 10", latestImportedNews == null ? 0 : latestImportedNews.getPrimaryKey())
+        entityStore.<News>executeQuery("select channelNewsId,title,excerpt,lang from News order by id limit 10", latestImportedNews == null ? 0 : latestImportedNews.getPrimaryKey())
                 .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
                 .onSuccess(dbNews -> {
                     News latestNews = dbNews.get(dbNews.size() - 1);
