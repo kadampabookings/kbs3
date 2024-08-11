@@ -159,6 +159,7 @@ public class VideosImportJob implements ApplicationJob {
                                                                                 .onSuccess(insertBatch -> {
                                                                                     int newVideosCount = insertBatch.getArray()[0].getRowCount();
                                                                                     Console.log("[VIDEOS_IMPORT] " + newVideosCount + " new videos imported in database");
+                                                                                    continueImport(latestNews);
                                                                                 });
                                                                     }
                                                                 });
