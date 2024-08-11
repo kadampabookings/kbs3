@@ -9,7 +9,12 @@ public class WebToJavaCallbacks {
 
     public static void bindCallbackMethods(Object javaInstance) {
         JsPropertyMap<Object> pm = Js.asPropertyMap(javaInstance);
-        if (javaInstance instanceof dev.webfx.extras.webview.pane.WebViewPane) {
+        if (javaInstance instanceof dev.webfx.extras.player.video.web.wistia.WistiaVideoPlayer) {
+            dev.webfx.extras.player.video.web.wistia.WistiaVideoPlayer castedInstance = (dev.webfx.extras.player.video.web.wistia.WistiaVideoPlayer) javaInstance;
+            pm.set("onPlay", (JsVoidFn0Arg) castedInstance::onPlay);
+            pm.set("onPause", (JsVoidFn0Arg) castedInstance::onPause);
+            pm.set("onEnd", (JsVoidFn0Arg) castedInstance::onEnd);
+        } else if (javaInstance instanceof dev.webfx.extras.webview.pane.WebViewPane) {
             dev.webfx.extras.webview.pane.WebViewPane castedInstance = (dev.webfx.extras.webview.pane.WebViewPane) javaInstance;
             pm.set("consoleLog", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleLog);
             pm.set("consoleWarn", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleWarn);

@@ -105,6 +105,8 @@
     <public path="" includes="images/organizations/"/>
     <resource path="org/kadampabookings/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/frontoffice/booking/"/>
+    <!--===========================< kbs-frontoffice-mediaview >============================-->
+    <source path="org/kadampabookings/kbs/frontoffice/mediaview"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->
@@ -297,6 +299,8 @@
     <source path="one/modality/event/frontoffice/operations/routes/booking"/>
     <resource path="one/modality/event/frontoffice/activities/booking/map"/>
     <public path="" includes="one/modality/event/frontoffice/activities/booking/map/"/>
+    <!--=============================< webfx-extras-carousel >==============================-->
+    <source path="dev/webfx/extras/carousel"/>
     <!--===============================< webfx-extras-cell >================================-->
     <source path="dev/webfx/extras/cell/collator"/>
     <source path="dev/webfx/extras/cell/renderer"/>
