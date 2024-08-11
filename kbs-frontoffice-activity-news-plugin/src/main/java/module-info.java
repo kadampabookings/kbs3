@@ -10,12 +10,14 @@ module kbs.frontoffice.activity.news.plugin {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.web;
+    requires kbs.frontoffice.mediaview;
     requires modality.base.client.activity;
     requires modality.base.client.mainframe.dialogarea.fx;
     requires modality.base.client.util;
     requires modality.base.frontoffice.mainframe.backgroundnode.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
+    requires webfx.extras.carousel;
     requires webfx.extras.imagestore;
     requires webfx.extras.panes;
     requires webfx.extras.switches;

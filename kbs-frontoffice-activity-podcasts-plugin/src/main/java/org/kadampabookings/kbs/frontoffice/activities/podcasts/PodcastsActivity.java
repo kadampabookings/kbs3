@@ -1,5 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.activities.podcasts;
 
+import dev.webfx.extras.carousel.Carousel;
 import dev.webfx.extras.panes.*;
 import dev.webfx.extras.switches.Switch;
 import dev.webfx.extras.util.control.ControlUtil;
@@ -41,7 +42,9 @@ import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
 import one.modality.base.shared.entities.Teacher;
 import one.modality.base.shared.entities.Topic;
+import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.TeacherImpl;
+import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
 public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
@@ -51,6 +54,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox podcastsContainer = new VBox(20);
+    private final VBox videosContainer = new VBox(20);
+    private final Carousel carousel = new Carousel(podcastsContainer, videosContainer);
     public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(INITIAL_LIMIT);
     private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "videos");
     private final Switch videosSwitch = new Switch();
@@ -93,14 +98,17 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         Text teacherPrefixText = I18n.bindI18nProperties(new Text(), "teacher");
         teacherPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Teacher> teacherButtonSelector = new EntityButtonSelector<Teacher>(
-                "{class: 'Teacher', alias: 't', columns: 'name', where: '(select count(1) from Podcast where teacher = t) > 0', orderBy: 'id'}",
+                "{class: 'Teacher', alias: 't', columns: 'name', orderBy: 'id'}",
                 this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
             @Override
             protected Node getOrCreateButtonContentFromSelectedItem() {
                 return new HBox(10, teacherPrefixText, super.getOrCreateButtonContentFromSelectedItem());
             }
-        }.appendNullEntity(true); // Also adding null entity that will represent all teachers
+        }
+            .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Podcast where teacher = t) > 0"))
+            .ifTrue( videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Video where teacher = t) > 0"))
+            .appendNullEntity(true); // Also adding null entity that will represent all teachers
         // Creating a virtual teacher named "All" that will be used to select all teachers
         EntityStore store = teacherButtonSelector.getStore();
         Teacher allTeacher = store.createEntity(Teacher.class);
@@ -189,7 +197,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         VBox.setMargin(podcastsLabel, new Insets(20, 0, 20, 0));
         VBox.setMargin(podcastsChannelsPane, new Insets(20, 0, 20, 0));
         VBox.setMargin(separatorLine, new Insets(10, 0, 40, 0));
-        VBox.setMargin(podcastsContainer, new Insets(40, 0, 10, 0));
+        VBox.setMargin(carousel.getContainer(), new Insets(40, 0, 10, 0));
 
         FlexPane filterBar = new FlexPane(scaledTeacherButton, scaledTopicButton, scaledSwitchBox);
         filterBar.setHorizontalSpace(10);
@@ -198,13 +206,15 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         filterBar.setDistributeRemainingRowSpace(true);
         VBox.setMargin(filterBar, new Insets(20));
 
+        carousel.setShowingDots(false);
+
         pageContainer.getChildren().setAll(
                 podcastsLabel,
                 alsoAvailableOnLabel,
                 podcastsChannelsPane,
                 separatorLine,
                 filterBar,
-                podcastsContainer
+                carousel.getContainer()
         );
 
         FXProperties.runOnPropertiesChange(() -> {
@@ -270,20 +280,35 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     @Override
     protected void startLogic() {
         // Resetting podcasts limit to initial value whenever the user plays with filters
-        FXProperties.runOnPropertiesChange(() ->
-                        podcastsLimitProperty.set(INITIAL_LIMIT)
-                , teacherProperty, topicProperty, videosSwitch.selectedProperty());
+        FXProperties.runOnPropertiesChange(() -> {
+            podcastsLimitProperty.set(INITIAL_LIMIT);
+            carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : podcastsContainer);
+        }, teacherProperty, topicProperty, videosSwitch.selectedProperty());
 
         ReactiveObjectsMapper.<Podcast, Node>createPushReactiveChain(this)
                 .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
+                //.always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
                 .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
                 .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
                 .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
-                .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
-                .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
-                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setPodcast, PodcastView::getView))
+                .always(DqlStatement.where("audioUrl != null"))
+                //.ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
+                //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
+                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setMediaInfo, PodcastView::getView))
                 .storeMappedObjectsInto(podcastsContainer.getChildren())
                 .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts"))
+                .start();
+
+        ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
+                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
+                .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
+                .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
+                .always(DqlStatement.where("teacher!=null"))
+                .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
+                .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
+                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
+                .storeMappedObjectsInto(videosContainer.getChildren())
+                .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
                 .start();
     }
 

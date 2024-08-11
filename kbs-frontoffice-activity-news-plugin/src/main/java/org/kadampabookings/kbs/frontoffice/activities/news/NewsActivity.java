@@ -1,5 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.activities.news;
 
+import dev.webfx.extras.carousel.Carousel;
 import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.extras.panes.FlexPane;
 import dev.webfx.extras.panes.ScaleMode;
@@ -38,6 +39,8 @@ import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.frontoffice.utility.TextUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Topic;
+import one.modality.base.shared.entities.Video;
+import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
 public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
@@ -47,10 +50,12 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox newsContainer = new VBox(40);
+    private final VBox videosContainer = new VBox(20);
+    private final Carousel carousel = new Carousel(newsContainer, videosContainer);
     public final IntegerProperty newsLimitProperty = new SimpleIntegerProperty(INITIAL_LIMIT);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
-    private final Label withVideosLabel = I18nControls.bindI18nProperties(new Label(), "withVideos");
-    private final Switch withVideosSwitch = new Switch();
+    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "Videos");
+    private final Switch videosSwitch = new Switch();
     private final TextField searchTextField = new TextField();
     private final SVGPath searchIconSvgPath = new SVGPath();
     private final HBox searchBar = new HBox(searchTextField, searchIconSvgPath);
@@ -121,7 +126,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         HBox.setMargin(searchIconSvgPath, new Insets(0,12,0,0));
         VBox.setMargin(searchBar, new Insets(10, 20, 10, 20));
 
-        HBox switchBox = new HBox(5, withVideosLabel, withVideosSwitch);
+        HBox switchBox = new HBox(5, videosLabel, videosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);
         switchBox.setMaxWidth(Region.USE_PREF_SIZE);
         switchBox.setAlignment(Pos.CENTER);
@@ -135,11 +140,13 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         VBox.setMargin(filterBar, new Insets(20));
 
         pageContainer.setAlignment(Pos.CENTER);
-        VBox.setMargin(newsContainer, new Insets(30, 20, 10, 20));
+        VBox.setMargin(carousel.getContainer(), new Insets(30, 20, 10, 20));
+        carousel.setShowingDots(false);
+
         pageContainer.getChildren().setAll(
                 headerScalePane,
                 filterBar,
-                newsContainer
+                carousel.getContainer()
         );
 
         FXProperties.runOnPropertiesChange(() -> {
@@ -173,9 +180,10 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     @Override
     protected void startLogic() {
         // Resetting news limit to initial value whenever the user plays with filters
-        FXProperties.runOnPropertiesChange(() ->
-                        newsLimitProperty.set(INITIAL_LIMIT)
-                , searchTextField.textProperty(), topicProperty, withVideosSwitch.selectedProperty());
+        FXProperties.runOnPropertiesChange(() -> {
+            newsLimitProperty.set(INITIAL_LIMIT);
+            carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : newsContainer);
+        }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty());
 
         ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
                 .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
@@ -183,10 +191,22 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
                 .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> { String searchLike = "%" + searchText.toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
                 .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
-                .ifTrue(withVideosSwitch.selectedProperty(), DqlStatement.where("withVideos"))
+                //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("withVideos"))
                 .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
                 .storeMappedObjectsInto(newsContainer.getChildren())
                 .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
+                .start();
+
+        ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
+                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
+                .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
+                .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
+                .always(DqlStatement.where("teacher==null"))
+                //.ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
+                .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
+                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
+                .storeMappedObjectsInto(videosContainer.getChildren())
+                .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
                 .start();
     }
 }
