@@ -69,7 +69,7 @@ public class VideosImportJob implements ApplicationJob {
     public void importNewsVideosFromLatestNews() {
         // Reading the next 10 news from the database that needs to be checked for videos import
         EntityStore entityStore = EntityStore.create(dataSourceModel);
-        entityStore.<News>executeQuery("select channelNewsId,title,excerpt,lang from News order by id limit 10", latestImportedNews == null ? 0 : latestImportedNews.getPrimaryKey())
+        entityStore.<News>executeQuery("select channelNewsId,title,excerpt,lang from News where id>=? order by id limit 10", latestImportedNews == null ? 0 : latestImportedNews.getPrimaryKey())
                 .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
                 .onSuccess(dbNews -> {
                     News latestNews = dbNews.get(dbNews.size() - 1);
