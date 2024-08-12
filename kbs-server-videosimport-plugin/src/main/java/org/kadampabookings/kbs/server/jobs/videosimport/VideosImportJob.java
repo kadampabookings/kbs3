@@ -41,8 +41,10 @@ public class VideosImportJob implements ApplicationJob {
     @Override
     public void onStart() {
         // Waiting 2 mins before starting first import so that the news import job eventually imported some news
-        Scheduler.scheduleDelay(2 * 60 * 1000, this::importNewsVideos);
-        importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importNewsVideos);
+        Scheduler.scheduleDelay(2 * 60 * 1000, () -> {
+            importNewsVideos();
+            importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importNewsVideos);
+        });
     }
 
     @Override
@@ -148,6 +150,10 @@ public class VideosImportJob implements ApplicationJob {
                                                                                         v.setWistiaVideoId(wistiaId);
                                                                                         v.setWidth(originalAsset.getInteger("width"));
                                                                                         v.setHeight(originalAsset.getInteger("height"));
+                                                                                        int index = dbNews.indexOf(n);
+                                                                                        if (index != -1) {
+                                                                                            v.setMediaId(mediaIds.get(index));
+                                                                                        }
                                                                                     }));
                                                                 })
                                                                 .onSuccess(ignored3 -> {
