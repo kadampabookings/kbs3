@@ -32,6 +32,7 @@ import java.util.*;
 public class VideosImportJob implements ApplicationJob {
 
     private static final String NEWS_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/posts";
+    private static final String WISTIA_FETCH_URL = "https://fast.wistia.com/embed/medias";
     private static final long IMPORT_PERIODICITY_MILLIS = 3600 * 1000; // every 1h
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private Scheduled importTimer;
@@ -71,106 +72,104 @@ public class VideosImportJob implements ApplicationJob {
         // Reading the next 10 news from the database that needs to be checked for videos import
         EntityStore entityStore = EntityStore.create(dataSourceModel);
         entityStore.<News>executeQuery("select channelNewsId,title,excerpt,lang from News where id>=? order by id limit 10", latestImportedNews == null ? 0 : latestImportedNews.getPrimaryKey())
-                .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
-                .onSuccess(dbNews -> {
-                    News latestNews = dbNews.get(dbNews.size() - 1);
-                    // Fetching the news json info from WordPress
-                    new Batch<>(dbNews.toArray(new News[0])).executeParallel(ReadOnlyAstObject[]::new,
-                                    news -> JsonFetch.fetchJsonObject(NEWS_FETCH_URL + "/" + news.getChannelNewsId()))
-                            .onFailure(Console::log)
-                            .onSuccess(newsJsonBatch -> { // Note: same indexes as dbNews
-                                // Extracting the mediaIds and links of these news
-                                List<String> mediaIds = new ArrayList<>(); // same indexes as dbNews
-                                List<String> mediaLinks = new ArrayList<>(); // same index as dbNews
-                                for (int i = 0; i < newsJsonBatch.length(); i++) {
-                                    ReadOnlyAstObject websiteNewsJson = newsJsonBatch.get(i);
-                                    mediaIds.add(websiteNewsJson.getString("featured_media"));
-                                    mediaLinks.add(cleanUrl(websiteNewsJson.getString("link")));
-                                }
+            .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
+            .onSuccess(dbNews -> {
+                News latestNews = dbNews.get(dbNews.size() - 1);
+                // Fetching the news json info from WordPress
+                new Batch<>(dbNews.toArray(new News[0])).executeParallel(ReadOnlyAstObject[]::new,
+                            news -> JsonFetch.fetchJsonObject(NEWS_FETCH_URL + "/" + news.getChannelNewsId()))
+                    .onFailure(Console::log)
+                    .onSuccess(newsJsonBatch -> { // Note: same indexes as dbNews
+                        // Extracting the mediaIds and links of these news
+                        List<String> mediaIds = new ArrayList<>(); // same indexes as dbNews
+                        List<String> mediaLinks = new ArrayList<>(); // same index as dbNews
+                        for (int i = 0; i < newsJsonBatch.length(); i++) {
+                            ReadOnlyAstObject websiteNewsJson = newsJsonBatch.get(i);
+                            mediaIds.add(websiteNewsJson.getString("featured_media"));
+                            mediaLinks.add(cleanUrl(websiteNewsJson.getString("link")));
+                        }
 
-                                if (mediaIds.isEmpty()) {
-                                    Console.log("[VIDEOS_IMPORT] No more medias to check");
+                        if (mediaIds.isEmpty()) {
+                            Console.log("[VIDEOS_IMPORT] No more medias to check");
+                            return;
+                        }
+
+                        // Fetching the mediaLink (the page that contains the media) from WordPress
+                        Map<String, News> wistiaIdsQueue = new HashMap<>();
+                        new Batch<>(mediaLinks.toArray(new String[0])).executeParallel(String[]::new,
+                                mediaLink -> mediaLink == null ? Future.succeededFuture("") :
+                                Fetch.fetch(mediaLink).compose(Response::text)
+                                    .onSuccess(text -> {
+                                        List<String> wistiaIds = findWistiaIds(text);
+                                        synchronized (wistiaIdsQueue) {
+                                            wistiaIds.forEach(wistiaId -> {
+                                                int mediaIndex = mediaLinks.indexOf(mediaLink);
+                                                wistiaIdsQueue.put(wistiaId, dbNews.get(mediaIndex));
+                                            });
+                                        }
+                                    }))
+                            .onFailure(e -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while fetching media links", e))
+                            .onSuccess(ignored -> {
+                                if (wistiaIdsQueue.isEmpty()) {
+                                    continueImport(latestNews);
                                     return;
                                 }
-
-                                // Fetching the mediaLink (the page that contains the media) from WordPress
-                                Map<String, News> wistiaIdsQueue = new HashMap<>();
-                                new Batch<>(mediaLinks.toArray(new String[0])).executeParallel(String[]::new,
-                                                mediaLink -> mediaLink == null ? Future.succeededFuture("") :
-                                                Fetch.fetch(mediaLink).compose(Response::text)
-                                                        .onSuccess(text -> {
-                                                            List<String> wistiaIds = findWistiaIds(text);
-                                                            synchronized (wistiaIdsQueue) {
-                                                                wistiaIds.forEach(wistiaId -> {
-                                                                    int mediaIndex = mediaLinks.indexOf(mediaLink);
-                                                                    wistiaIdsQueue.put(wistiaId, dbNews.get(mediaIndex));
-                                                                });
-                                                            }
-                                                        }))
-                                        .onFailure(e -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while fetching media links", e))
-                                        .onSuccess(ignored -> {
-                                            if (wistiaIdsQueue.isEmpty()) {
-                                                continueImport(latestNews);
-                                                return;
-                                            }
-                                            UpdateStore updateStore = UpdateStore.createAbove(entityStore);
-                                            entityStore.<Video>executeQuery(
-                                                            "select wistiaVideoId from Video where wistiaVideoId in (" + Collections.toString(Collections.map(wistiaIdsQueue.keySet(), wistiaId -> "'" + wistiaId + "'"), false, false) + ")")
-                                                    .onFailure(e -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading videos from database", e))
-                                                    .compose(existingVideos -> {
-                                                        List<String> existingWistiaIds = Collections.map(existingVideos, Video::getWistiaVideoId);
-                                                        List<String> newWistiaIds = Collections.filter(wistiaIdsQueue.keySet(), wistiaId -> !existingWistiaIds.contains(wistiaId));
-                                                        return new Batch<>(newWistiaIds.toArray(new String[0]))
-                                                                .executeParallel(ReadOnlyAstObject[]::new, wistiaId -> JsonFetch.fetchJsonObject("https://fast.wistia.com/embed/medias/" + wistiaId + ".json")
-                                                                        .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while fetching wistia media", error))
-                                                                        .onSuccess(wistiaJson -> {
-                                                                            // Reading wistia info
-                                                                            ReadOnlyAstObject media = wistiaJson.getObject("media");
-                                                                            ReadOnlyAstArray assets = media.getArray("assets");
-                                                                            ReadOnlyAstObject originalAsset = findAssetOfType(assets, "original");
-                                                                            if (originalAsset == null)
-                                                                                return;
-                                                                            ReadOnlyAstObject stillImageAsset = findAssetOfType(assets, "still_image");
-                                                                            if (stillImageAsset == null)
-                                                                                stillImageAsset = originalAsset;
-                                                                            News n = wistiaIdsQueue.get(wistiaId);
-                                                                            // Creating video podcast
-                                                                            Video v = updateStore.insertEntity(Video.class);
-                                                                            v.setTitle(media.getString("name"));
-                                                                            v.setNews(n);
-                                                                            String excerpt = n.getTitle() + ". " + n.getExcerpt();
-                                                                            v.setLang(n.getLang());
-                                                                            v.setExcerpt(excerpt);
-                                                                            v.setDate(LocalDateTime.ofEpochSecond(media.getLong("createdAt"), 0, ZoneOffset.UTC));
-                                                                            v.setDurationMillis((long) (media.getDouble("duration") * 1000));
-                                                                            v.setImageUrl(cleanUrl(stillImageAsset.getString("url").replace(".bin", ".jpg")));
-                                                                            v.setWistiaVideoId(wistiaId);
-                                                                            v.setWidth(originalAsset.getInteger("width"));
-                                                                            v.setHeight(originalAsset.getInteger("height"));
-                                                                            int index = dbNews.indexOf(n);
-                                                                            if (index != -1) {
-                                                                                v.setMediaId(mediaIds.get(index));
-                                                                            }
-                                                                        }));
-                                                    })
-                                                    .onSuccess(ignored2 -> {
-                                                        if (!updateStore.hasChanges()) {
-                                                            continueImport(latestNews);
-                                                        } else {
-                                                            updateStore.submitChanges()
-                                                                    .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while inserting video in database", error))
-                                                                    .onSuccess(insertBatch -> {
-                                                                        int newVideosCount = insertBatch.getArray()[0].getRowCount();
-                                                                        Console.log("[VIDEOS_IMPORT] " + newVideosCount + " new videos imported in database");
-                                                                        continueImport(latestNews);
-                                                                    });
-                                                        }
-                                                    });
-                                        });
-
+                                UpdateStore updateStore = UpdateStore.createAbove(entityStore);
+                                entityStore.<Video>executeQuery(
+                                            "select wistiaVideoId from Video where wistiaVideoId in (" + Collections.toString(Collections.map(wistiaIdsQueue.keySet(), wistiaId -> "'" + wistiaId + "'"), false, false) + ")")
+                                    .onFailure(e -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading videos from database", e))
+                                    .compose(existingVideos -> {
+                                        List<String> existingWistiaIds = Collections.map(existingVideos, Video::getWistiaVideoId);
+                                        List<String> newWistiaIds = Collections.filter(wistiaIdsQueue.keySet(), wistiaId -> !existingWistiaIds.contains(wistiaId));
+                                        return new Batch<>(newWistiaIds.toArray(new String[0])).executeParallel(ReadOnlyAstObject[]::new,
+                                                wistiaId -> JsonFetch.fetchJsonObject(WISTIA_FETCH_URL + "/" + wistiaId + ".json")
+                                            .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while fetching wistia media", error))
+                                            .onSuccess(wistiaJson -> {
+                                                // Reading wistia info
+                                                ReadOnlyAstObject media = wistiaJson.getObject("media");
+                                                ReadOnlyAstArray assets = media.getArray("assets");
+                                                ReadOnlyAstObject originalAsset = findAssetOfType(assets, "original");
+                                                if (originalAsset == null)
+                                                    return;
+                                                ReadOnlyAstObject stillImageAsset = findAssetOfType(assets, "still_image");
+                                                if (stillImageAsset == null)
+                                                    stillImageAsset = originalAsset;
+                                                News n = wistiaIdsQueue.get(wistiaId);
+                                                // Creating video podcast
+                                                Video v = updateStore.insertEntity(Video.class);
+                                                v.setTitle(media.getString("name"));
+                                                v.setNews(n);
+                                                String excerpt = n.getTitle() + ". " + n.getExcerpt();
+                                                v.setLang(n.getLang());
+                                                v.setExcerpt(excerpt);
+                                                v.setDate(LocalDateTime.ofEpochSecond(media.getLong("createdAt"), 0, ZoneOffset.UTC));
+                                                v.setDurationMillis((long) (media.getDouble("duration") * 1000));
+                                                v.setImageUrl(cleanUrl(stillImageAsset.getString("url").replace(".bin", ".jpg")));
+                                                v.setWistiaVideoId(wistiaId);
+                                                v.setWidth(originalAsset.getInteger("width"));
+                                                v.setHeight(originalAsset.getInteger("height"));
+                                                int index = dbNews.indexOf(n);
+                                                if (index != -1) {
+                                                    v.setMediaId(mediaIds.get(index));
+                                                }
+                                            }));
+                                    })
+                                    .onSuccess(ignored2 -> {
+                                        if (!updateStore.hasChanges()) {
+                                            continueImport(latestNews);
+                                        } else {
+                                            updateStore.submitChanges()
+                                                .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while inserting video in database", error))
+                                                .onSuccess(insertBatch -> {
+                                                    int newVideosCount = insertBatch.getArray()[0].getRowCount();
+                                                    Console.log("[VIDEOS_IMPORT] " + newVideosCount + " new videos imported in database");
+                                                    continueImport(latestNews);
+                                                });
+                                        }
+                                    });
                             });
-
-                });
+                    });
+            });
     }
 
     private void continueImport(News latestNews) {
