@@ -5,6 +5,7 @@ import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.extras.panes.FlexPane;
 import dev.webfx.extras.panes.ScaleMode;
 import dev.webfx.extras.panes.ScalePane;
+import dev.webfx.extras.panes.TransitionPane;
 import dev.webfx.extras.switches.Switch;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
@@ -173,7 +174,10 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 newsLimitProperty.set(currentLimit + 5);
         });
 
-        scrollPane.getStyleClass().add("news-activity");
+        scrollPane.getStyleClass().add("news-activity"); // for CSS styling
+        // Asking to not keep this activity in the scene graph after transition to stop the video players in the browser
+        TransitionPane.setKeepsLeavingNode(scrollPane, false);
+
         return scrollPane;
     }
 

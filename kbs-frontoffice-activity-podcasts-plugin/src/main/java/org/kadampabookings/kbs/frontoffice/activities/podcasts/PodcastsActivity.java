@@ -245,7 +245,9 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 podcastsLimitProperty.set(currentLimit + 5);
         });
 
-        scrollPane.getStyleClass().add("podcasts-activity");
+        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
+        // Asking to not keep this activity in the scene graph after transition to stop the video players in the browser
+        TransitionPane.setKeepsLeavingNode(scrollPane, false);
         return scrollPane;
     }
 
