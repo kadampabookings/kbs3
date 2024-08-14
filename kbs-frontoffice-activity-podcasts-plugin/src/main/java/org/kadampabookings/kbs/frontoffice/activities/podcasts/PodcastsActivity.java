@@ -236,7 +236,10 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
         // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
-        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(new BorderPane(pageContainer));
+        BorderPane borderPane = new BorderPane(pageContainer);
+        // Also a background is necessary for devices not supporting inverse clipping used in circle animation
+        borderPane.setBackground(Background.fill(Color.WHITE));
+        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
         // Automatically increasing the podcast list when the user scroll down up to bottom
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
@@ -246,7 +249,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         });
 
         scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
-        // Asking to not keep this activity in the scene graph after transition to stop the video players in the browser
+        // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
+        // in the browser (in case TransitionPane keepsLeavingNode is enabled)
         TransitionPane.setKeepsLeavingNode(scrollPane, false);
         return scrollPane;
     }

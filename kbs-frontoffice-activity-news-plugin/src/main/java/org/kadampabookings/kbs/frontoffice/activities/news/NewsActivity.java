@@ -166,7 +166,10 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
         // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
         // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
-        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(new BorderPane(pageContainer));
+        BorderPane borderPane = new BorderPane(pageContainer);
+        // Also a background is necessary for devices not supporting inverse clipping used in circle animation
+        borderPane.setBackground(Background.fill(Color.WHITE));
+        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = newsLimitProperty.get();
@@ -175,9 +178,9 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         });
 
         scrollPane.getStyleClass().add("news-activity"); // for CSS styling
-        // Asking to not keep this activity in the scene graph after transition to stop the video players in the browser
+        // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
+        // in the browser (in case TransitionPane keepsLeavingNode is enabled)
         TransitionPane.setKeepsLeavingNode(scrollPane, false);
-
         return scrollPane;
     }
 
