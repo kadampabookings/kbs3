@@ -25,6 +25,8 @@ public final class MediaButtons {
     private static final String PLAY_TRIANGLE_PATH_15 = "M13.7444 5.51497C14.1236 5.70652 14.4408 5.99248 14.662 6.3422C14.8831 6.69192 15 7.09222 15 7.50021C15 7.9082 14.8831 8.3085 14.662 8.65822C14.4408 9.00794 14.1236 9.2939 13.7444 9.48545L3.62933 14.7107C2.00059 15.5522 0 14.4572 0 12.7262V2.27497C0 0.542479 2.00059 -0.551768 3.62933 0.28898L13.7444 5.51497Z";
     private static final String PAUSE_SIGN_PATH_15 = "M9.5 23H13.5V9H9.5V23ZM17.5 9V23H21.5V9H17.5Z";
 
+    private static final String FULLSCREEN_PATH_16 = "M 2.2857143,10.285714 H 0 V 16 H 5.7142857 V 13.714286 H 2.2857143 Z M 0,5.7142857 H 2.2857143 V 2.2857143 H 5.7142857 V 0 H 0 Z M 13.714286,13.714286 H 10.285714 V 16 H 16 V 10.285714 H 13.714286 Z M 10.285714,0 v 2.2857143 h 3.428572 V 5.7142857 H 16 V 0 Z";
+
     public static Pane createBackwardButton() {
         return embedButton(new StackPane(
                 createSVGButton(BACKWARD_BUTTON_PATH_32, Color.BLACK, null),
@@ -49,6 +51,12 @@ public final class MediaButtons {
         return embedButton(new StackPane(
                 new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
                 createSVGButton(PAUSE_SIGN_PATH_15, null, Color.WHITE)));
+    }
+
+    public static Pane createFullscreenButton() {
+        return embedButton(new StackPane(
+                new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
+                createSVGButton(FULLSCREEN_PATH_16, null, Color.WHITE)));
     }
 
     private static SVGPath createSVGButton(String content, Paint stroke, Paint fill) {

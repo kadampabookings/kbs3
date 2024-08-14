@@ -6,6 +6,7 @@ module kbs.frontoffice.mediaview {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
+    requires modality.base.client.mainframe.dialogarea.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires webfx.extras.imagestore;
@@ -14,6 +15,7 @@ module kbs.frontoffice.mediaview {
     requires webfx.extras.player.audio.media;
     requires webfx.extras.player.video;
     requires webfx.extras.player.video.web.wistia;
+    requires webfx.extras.util.animation;
     requires webfx.kit.util;
     requires webfx.platform.util;
 

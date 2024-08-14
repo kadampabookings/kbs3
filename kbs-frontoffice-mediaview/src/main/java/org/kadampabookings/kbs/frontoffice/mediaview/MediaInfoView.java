@@ -165,15 +165,6 @@ public abstract class MediaInfoView {
         updateFavorite();
     }
 
-    /*static {
-        FXProperties.runOnPropertiesChange(MediaInfoView::pauseVideoPlayer, FXMainFrameTransiting.transitingProperty());
-    }
-
-    public static void pauseVideoPlayer() {
-        if (PLAYING_PLAYER instanceof VideoPlayer)
-            PLAYING_PLAYER.pause();
-    }*/
-
     public void setMediaInfo(HasMediaInfo mediaInfo) {
         if (mediaInfo == this.mediaInfo)
             return;
@@ -245,14 +236,15 @@ public abstract class MediaInfoView {
         player.play();
     }
 
-    void pause() {
-        if (player != null) {
-            player.pause();
-            // Normally the previous call should update the player status and the listener set in bindMediaPlayer()
-            // should detect it and update the play/pause button, but just in case this doesn't happen for some reason,
-            // we ensure the button is displayed as paused.
-            updatePlayPauseButtons(false);
-        }
+    private void pause() {
+        Players.pausePlayer(player); // will callback onPause()
+    }
+
+    void onPause() {
+        // Normally the previous call should update the player status and the listener set in bindMediaPlayer()
+        // should detect it and update the play/pause button, but just in case this doesn't happen for some reason,
+        // we ensure the button is displayed as paused.
+        updatePlayPauseButtons(false);
     }
 
     private void seekRelative(double relativeSeconds) {
