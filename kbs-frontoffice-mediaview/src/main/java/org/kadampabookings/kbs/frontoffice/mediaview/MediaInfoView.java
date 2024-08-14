@@ -50,8 +50,8 @@ public abstract class MediaInfoView {
     // be retrieved from the already existing media players (if the user already played that podcast) so its visual
     // state can be re-established in that case. Otherwise - if the podcast hasn't been played so far in this session -
     // the media player will be null until the user presses the play button.
-    private Player player;
-    private boolean isAudio, isVideo;
+    protected Player player;
+    protected boolean isAudio, isVideo;
     private Unregisterable mediaPlayerBinding; // will allow to unbind a recycled view from its previous associated media player.
     protected HasMediaInfo mediaInfo;
     private Duration mediaDuration;
@@ -72,7 +72,7 @@ public abstract class MediaInfoView {
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
     protected final Pane mediaPane = new Pane(videoContainer, imageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
         private double fontFactor;
-        private double imageY, imageRatio, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
+        private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
 
         @Override
         protected void layoutChildren() {
@@ -124,11 +124,12 @@ public abstract class MediaInfoView {
                 GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY,  FontWeight.NORMAL,    fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
                 TextUtility.setTextFont(   elapsedTimeText, StyleUtility.CLOCK_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.SUB_TEXT_SIZE);
             }
+            double imageRatio;
             if (isAudio) {
                 imageRatio = image == null || image.getWidth() == 0 ? 1 : image.getWidth() / image.getHeight();
             } else {
                 imageRatio = 16d / 9;
-                if (mediaInfo instanceof Video && player != null && player.isPlaying()) {
+                if (mediaInfo instanceof Video && videoContainer.isVisible()) {
                     Video video = (Video) mediaInfo;
                     Integer videoWidth = video.getWidth();
                     Integer videoHeight = video.getHeight();
