@@ -16,6 +16,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -55,6 +56,7 @@ public abstract class MediaInfoView {
     private Duration mediaDuration;
     private final MonoPane videoContainer = new MonoPane();
     private final ImageView imageView = new ImageView();
+    private Image image;
     private final Rectangle imageClip = new Rectangle();
     private final Text dateText = TextUtility.createText(StyleUtility.ELEMENT_GRAY_COLOR);
     private final Label titleLabel = GeneralUtility.createLabel(StyleUtility.MAIN_ORANGE_COLOR);
@@ -74,8 +76,10 @@ public abstract class MediaInfoView {
         @Override
         protected void layoutChildren() {
             computeLayout(getWidth());
-            //imageView.setFitWidth(imageWidth);
-            imageView.setFitHeight(imageHeight);
+            if (isAudio)
+                imageView.setFitWidth(imageWidth);
+            else
+                imageView.setFitHeight(imageHeight);
             layoutInArea(imageView, 0, imageY, imageWidth, imageHeight, 0, HPos.CENTER, VPos.CENTER);
             layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
@@ -122,11 +126,11 @@ public abstract class MediaInfoView {
                 TextUtility.setTextFont(   elapsedTimeText, StyleUtility.CLOCK_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.SUB_TEXT_SIZE);
             }
             if (width <= 400) { // Small screen => vertical alignment: image above title, date, excerpt, buttons & favorite
-            /*Image:*/       imageY = 0;                                                 imageWidth = width; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth;
+            /*Image:*/       imageY = 0;                                                 imageWidth = width;                           imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth * (image == null || image.getWidth() == 0 ? 1 : image.getHeight() / image.getWidth());
             /*Right side:*/  rightX = 0; /* Actually no right side */                    rightWidth = width - rightX;
             /*Tile:*/        titleY = imageY + imageHeight + 10;                        titleHeight = titleLabel.prefHeight(rightWidth);
             } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
-            /*Image:*/       imageY = 0;                                                 imageWidth = isVideo ? width / 2 : width / 4; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth;
+            /*Image:*/       imageY = 0;                                                 imageWidth = isVideo ? width / 2 : width / 4; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth * (image == null || image.getWidth() == 0 ? 1 : image.getHeight() / image.getWidth());
             /*Right side:*/  rightX = imageWidth + 20;                                   rightWidth = width - rightX;
             /*Tile:*/        titleY = 0;       titleHeight = titleLabel.prefHeight(rightWidth);
             }
@@ -176,7 +180,8 @@ public abstract class MediaInfoView {
         updateText(dateText, DateTimeFormatter.ofPattern("d MMMM yyyy").format(mediaInfo.getDate()));
         updateLabel(titleLabel, mediaInfo.getTitle());
         updateLabel(excerptLabel, mediaInfo.getExcerpt());
-        imageView.setImage(ImageStore.getOrCreateImage(mediaInfo.getImageUrl()));
+        image = ImageStore.getOrCreateImage(mediaInfo.getImageUrl());
+        imageView.setImage(image);
         mediaDuration = Duration.millis(mediaInfo.getDurationMillis());
         backwardButton.setVisible(isAudio);
         forwardButton.setVisible(isAudio);
