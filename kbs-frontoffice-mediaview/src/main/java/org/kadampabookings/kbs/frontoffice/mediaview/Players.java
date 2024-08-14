@@ -1,10 +1,12 @@
 package org.kadampabookings.kbs.frontoffice.mediaview;
 
 import dev.webfx.extras.player.Player;
+import dev.webfx.extras.player.Status;
 import dev.webfx.extras.player.video.VideoPlayer;
 import dev.webfx.extras.util.animation.Animations;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.kit.util.properties.Unregisterable;
+import dev.webfx.platform.uischeduler.UiScheduler;
 import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -47,6 +49,16 @@ public class Players {
             // If another player was playing, we pause it (keeping only one player playing at one time)
             pausePlayer(oldPlayer);
             hideFullscreenButton();
+            // If the old player is a video player in fullscreen, we exit that fullscreen
+            if (oldPlayer instanceof VideoPlayer) {
+                VideoPlayer videoPlayer = (VideoPlayer) oldPlayer;
+                if (videoPlayer.isFullscreen()) {
+                    if (newPlayer != null) // we exit immediately if it's replaced by another player
+                        videoPlayer.cancelFullscreen();
+                    else if (videoPlayer.getStatus() == Status.STOPPED) // otherwise if we reached the end of the video,
+                        UiScheduler.scheduleDelay(2000, videoPlayer::cancelFullscreen); // we exit after 2s
+                }
+            }
             if (newPlayer instanceof VideoPlayer) {
                 VideoPlayer videoPlayer = (VideoPlayer) newPlayer;
                 PLAYING_VIDEO_SCENE_CHECKER = FXProperties.runOnPropertiesChange(() -> {
@@ -69,7 +81,7 @@ public class Players {
                 double width = overlayArea.getWidth();
                 FULLSCREEN_BUTTON.resizeRelocate(width - 70, 10, 50, 50);
             }, overlayArea.widthProperty(), overlayArea.heightProperty());
-            FULLSCREEN_BUTTON.setTranslateY(-100);
+            FULLSCREEN_BUTTON.setTranslateY(-70);
         }
         if (FULLSCREEN_BUTTON_TIMELINE != null)
             FULLSCREEN_BUTTON_TIMELINE.stop();
@@ -81,7 +93,7 @@ public class Players {
         if (overlayChildren.contains(FULLSCREEN_BUTTON)) {
             if (FULLSCREEN_BUTTON_TIMELINE != null)
                 FULLSCREEN_BUTTON_TIMELINE.stop();
-            FULLSCREEN_BUTTON_TIMELINE = Animations.animateProperty(FULLSCREEN_BUTTON.translateYProperty(), -100);
+            FULLSCREEN_BUTTON_TIMELINE = Animations.animateProperty(FULLSCREEN_BUTTON.translateYProperty(), -70);
             FULLSCREEN_BUTTON_TIMELINE.setOnFinished(e -> overlayChildren.remove(FULLSCREEN_BUTTON));
         }
         if (FULLSCREEN_LAYOUT != null)
@@ -98,9 +110,17 @@ public class Players {
         return PLAYING_PLAYER_PROPERTY.get();
     }
 
-    public static void setPlayingPlayer(Player player, String track) {
-        PLAYED_PLAYERS.put(track, player);
+    public static void setPlayingPlayer(Player player) {
         PLAYING_PLAYER_PROPERTY.set(player);
+    }
+
+    public static void setPlayingPlayer(Player player, String track) {
+        setPlayingPlayer(player);
+        PLAYING_PLAYER_PROPERTY.set(player);
+    }
+
+    public static void setNoPlayingPlayer() {
+        playingPlayerProperty().set(null);
     }
 
     public static Player getPlayedPlayerFromTrack(String track) {
@@ -115,7 +135,7 @@ public class Players {
         if (player != null) {
             player.pause();
             if (player == getPlayingPlayer())
-                playingPlayerProperty().set(null);
+                setNoPlayingPlayer();
             if (player instanceof VideoPlayer) {
                 Node videoView = ((VideoPlayer) player).getVideoView();
                 MediaInfoView mediaInfoView = getAssociatedMediaInfoView(videoView);

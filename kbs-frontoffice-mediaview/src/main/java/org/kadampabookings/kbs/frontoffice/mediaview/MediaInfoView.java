@@ -275,7 +275,7 @@ public abstract class MediaInfoView {
             Node videoView = getVideoView();
             if (videoView != null) {
                 Players.associateVideoViewWithMediaInfoView(videoView, this);
-                if (((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS) {
+                /*if (((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS) {
                     Player p = player;
                     FXProperties.runOnPropertiesChange(() -> {
                         if (videoView.getScene() == null) {
@@ -283,7 +283,7 @@ public abstract class MediaInfoView {
                         } else
                             videoContainer.requestLayout();
                     }, videoView.sceneProperty());
-                }
+                }*/
             }
             mediaPlayerBinding = FXProperties.runNowAndOnPropertiesChange(() -> {
                 boolean playing = player != null && player.isPlaying();
@@ -321,7 +321,10 @@ public abstract class MediaInfoView {
         imageView.setVisible(!showVideo);
         videoContainer.setVisible(showVideo);
         mediaPane.requestLayout();
-
+        if (isPlaying)
+            Players.setPlayingPlayer(player);
+        else if (Players.getPlayingPlayer() == player)
+            Players.setNoPlayingPlayer();
     }
 
     private void updateElapsedTimeAndProgressBar(Duration elapsed) {

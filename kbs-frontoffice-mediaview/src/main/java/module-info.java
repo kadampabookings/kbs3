@@ -17,6 +17,7 @@ module kbs.frontoffice.mediaview {
     requires webfx.extras.player.video.web.wistia;
     requires webfx.extras.util.animation;
     requires webfx.kit.util;
+    requires webfx.platform.uischeduler;
     requires webfx.platform.util;
 
     // Exported packages
