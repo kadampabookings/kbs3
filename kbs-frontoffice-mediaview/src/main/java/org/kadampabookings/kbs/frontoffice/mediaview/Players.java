@@ -69,7 +69,7 @@ public class Players {
                 double width = overlayArea.getWidth();
                 FULLSCREEN_BUTTON.resizeRelocate(width - 70, 10, 50, 50);
             }, overlayArea.widthProperty(), overlayArea.heightProperty());
-            FULLSCREEN_BUTTON.setTranslateY(-100);
+            FULLSCREEN_BUTTON.setTranslateY(-70);
         }
         if (FULLSCREEN_BUTTON_TIMELINE != null)
             FULLSCREEN_BUTTON_TIMELINE.stop();
@@ -81,7 +81,7 @@ public class Players {
         if (overlayChildren.contains(FULLSCREEN_BUTTON)) {
             if (FULLSCREEN_BUTTON_TIMELINE != null)
                 FULLSCREEN_BUTTON_TIMELINE.stop();
-            FULLSCREEN_BUTTON_TIMELINE = Animations.animateProperty(FULLSCREEN_BUTTON.translateYProperty(), -100);
+            FULLSCREEN_BUTTON_TIMELINE = Animations.animateProperty(FULLSCREEN_BUTTON.translateYProperty(), -70);
             FULLSCREEN_BUTTON_TIMELINE.setOnFinished(e -> overlayChildren.remove(FULLSCREEN_BUTTON));
         }
         if (FULLSCREEN_LAYOUT != null)
@@ -103,6 +103,10 @@ public class Players {
         PLAYING_PLAYER_PROPERTY.set(player);
     }
 
+    public static void setNoPlayingPlayer() {
+        playingPlayerProperty().set(null);
+    }
+
     public static Player getPlayedPlayerFromTrack(String track) {
         return PLAYED_PLAYERS.get(track);
     }
@@ -115,7 +119,7 @@ public class Players {
         if (player != null) {
             player.pause();
             if (player == getPlayingPlayer())
-                playingPlayerProperty().set(null);
+                setNoPlayingPlayer();
             if (player instanceof VideoPlayer) {
                 Node videoView = ((VideoPlayer) player).getVideoView();
                 MediaInfoView mediaInfoView = getAssociatedMediaInfoView(videoView);
