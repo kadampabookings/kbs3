@@ -155,6 +155,15 @@ public abstract class MediaInfoView {
         updateFavorite();
     }
 
+    /*static {
+        FXProperties.runOnPropertiesChange(MediaInfoView::pauseVideoPlayer, FXMainFrameTransiting.transitingProperty());
+    }
+
+    public static void pauseVideoPlayer() {
+        if (PLAYING_PLAYER instanceof VideoPlayer)
+            PLAYING_PLAYER.pause();
+    }*/
+
     public void setMediaInfo(HasMediaInfo mediaInfo) {
         if (mediaInfo == this.mediaInfo)
             return;
@@ -231,12 +240,24 @@ public abstract class MediaInfoView {
     }
 
     private void pause() {
-        pausePlayer(player);
+        if (player != null) {
+            player.pause();
+            // Normally the previous call should update the player status and the listener set in bindMediaPlayer()
+            // should detect it and update the play/pause button, but just in case this doesn't happen for some reason,
+            // we ensure the button is displayed as paused.
+            updatePlayPauseButtons(false);
+        }
     }
 
     private static void pausePlayer(Player player) {
         if (player != null) {
             player.pause();
+            if (player instanceof VideoPlayer) {
+                Node videoView = ((VideoPlayer) player).getVideoView();
+                MediaInfoView mediaInfoView = (MediaInfoView) videoView.getProperties().get("kbs-mediaInfoView");
+                if (mediaInfoView != null)
+                    mediaInfoView.pause();
+            }
         }
     }
 
@@ -267,6 +288,7 @@ public abstract class MediaInfoView {
         if (isVideo) {
             Node videoView = getVideoView();
             if (videoView != null) {
+                videoView.getProperties().put("kbs-mediaInfoView", this);
                 if (((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS) {
                     Player p = player;
                     FXProperties.runOnPropertiesChange(() -> {
