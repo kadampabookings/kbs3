@@ -205,7 +205,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 .start();
 
         ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
-                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
+                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
                 .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
                 .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
                 .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> { String searchLike = "%" + searchText.toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })

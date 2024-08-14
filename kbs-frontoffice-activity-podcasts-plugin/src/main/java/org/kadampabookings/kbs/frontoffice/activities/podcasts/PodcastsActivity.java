@@ -306,7 +306,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 .start();
 
         ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
-                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
+                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
                 .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
                 .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
                 .always(DqlStatement.where("teacher!=null"))

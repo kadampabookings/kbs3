@@ -28,6 +28,7 @@ import javafx.util.Duration;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.frontoffice.utility.TextUtility;
+import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.markers.HasAudioUrl;
 import one.modality.base.shared.entities.markers.HasMediaInfo;
 import one.modality.base.shared.entities.markers.HasWistiaVideoId;
@@ -71,15 +72,13 @@ public abstract class MediaInfoView {
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
     protected final Pane mediaPane = new Pane(videoContainer, imageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
         private double fontFactor;
-        private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
+        private double imageY, imageRatio, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
 
         @Override
         protected void layoutChildren() {
             computeLayout(getWidth());
-            if (isAudio)
-                imageView.setFitWidth(imageWidth);
-            else
-                imageView.setFitHeight(imageHeight);
+            imageView.setFitWidth(isAudio ? imageWidth : 0);
+            imageView.setFitHeight(imageHeight);
             layoutInArea(imageView, 0, imageY, imageWidth, imageHeight, 0, HPos.CENTER, VPos.CENTER);
             layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
             layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
@@ -125,12 +124,24 @@ public abstract class MediaInfoView {
                 GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY,  FontWeight.NORMAL,    fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
                 TextUtility.setTextFont(   elapsedTimeText, StyleUtility.CLOCK_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.SUB_TEXT_SIZE);
             }
+            if (isAudio) {
+                imageRatio = image == null || image.getWidth() == 0 ? 1 : image.getWidth() / image.getHeight();
+            } else {
+                imageRatio = 16d / 9;
+                if (mediaInfo instanceof Video && player != null && player.isPlaying()) {
+                    Video video = (Video) mediaInfo;
+                    Integer videoWidth = video.getWidth();
+                    Integer videoHeight = video.getHeight();
+                    if (videoWidth != null && videoHeight != null)
+                        imageRatio = videoWidth * 1d / videoHeight;
+                }
+            }
             if (width <= 400) { // Small screen => vertical alignment: image above title, date, excerpt, buttons & favorite
-            /*Image:*/       imageY = 0;                                                 imageWidth = width;                           imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth * (image == null || image.getWidth() == 0 ? 1 : image.getHeight() / image.getWidth());
+            /*Image:*/       imageY = 0;                                                 imageWidth = width; imageHeight = imageWidth / imageRatio;
             /*Right side:*/  rightX = 0; /* Actually no right side */                    rightWidth = width - rightX;
             /*Tile:*/        titleY = imageY + imageHeight + 10;                        titleHeight = titleLabel.prefHeight(rightWidth);
             } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
-            /*Image:*/       imageY = 0;                                                 imageWidth = isVideo ? width / 2 : width / 4; imageHeight = isVideo ? imageWidth / 16 * 9 : imageWidth * (image == null || image.getWidth() == 0 ? 1 : image.getHeight() / image.getWidth());
+            /*Image:*/       imageY = 0;                                                 imageWidth = isVideo ? width / 2 : width / 4; imageHeight = imageWidth / imageRatio;
             /*Right side:*/  rightX = imageWidth + 20;                                   rightWidth = width - rightX;
             /*Tile:*/        titleY = 0;       titleHeight = titleLabel.prefHeight(rightWidth);
             }
@@ -339,6 +350,7 @@ public abstract class MediaInfoView {
         boolean showVideo = isVideo && (isPlaying || player instanceof VideoPlayer && player.getStatus() == Status.PAUSED && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS);
         imageView.setVisible(!showVideo);
         videoContainer.setVisible(showVideo);
+        mediaPane.requestLayout();
     }
 
     private void updateElapsedTimeAndProgressBar(Duration elapsed) {
