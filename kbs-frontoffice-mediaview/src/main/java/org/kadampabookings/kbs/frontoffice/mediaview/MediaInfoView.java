@@ -34,17 +34,11 @@ import one.modality.base.shared.entities.markers.HasMediaInfo;
 import one.modality.base.shared.entities.markers.HasWistiaVideoId;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class MediaInfoView {
 
     private final static String FAVORITE_PATH = "M 24.066331,0 C 21.212473,0 18.540974,1.2921301 16.762259,3.4570778 14.983544,1.2920563 12.312119,0 9.4581876,0 4.2429514,0 0,4.2428782 0,9.4581873 0,13.54199 2.4351327,18.265558 7.237612,23.497667 c 3.695875,4.026405 7.716386,7.143963 8.860567,8.003592 L 16.762038,32 17.425897,31.501333 c 1.144181,-0.859629 5.164839,-3.977113 8.860788,-8.003518 4.802627,-5.23211 7.237834,-9.955751 7.237834,-14.0396277 C 33.524519,4.2428782 29.281567,0 24.066331,0 Z";
 
-    private static Player PLAYING_PLAYER; // will hold the player currently playing (only one player can be playing at one time)
-    // Keeping all media players in memory (even if paused) to hold their states (ex: current time). There shouldn't be
-    // that many because we create the media players only when the user actually presses the podcast play button.
-    private static final Map<String /* track */, Player> PLAYED_PLAYERS = new HashMap<>();
     // The media player associated with this particular podcast. Note that this podcast view can be recycled, which
     // means its associated podcast can change (through setPodcast()). When recycled, the media player can eventually
     // be retrieved from the already existing media players (if the user already played that podcast) so its visual
@@ -203,7 +197,7 @@ public abstract class MediaInfoView {
         // If this podcast view was previously associated with a player, we unbind it.
         unbindMediaPlayer(); // will unregister the possible existing binding, and reset the visual state
         // We check if the podcast has already been played
-        player = PLAYED_PLAYERS.get(getTrack());
+        player = Players.getPlayedPlayerFromTrack(getTrack());
         // If yes, we associate this podcast view with that player
         if (player != null) {
             bindMediaPlayer(); // Will restore the visual state from the player (play/pause button & progress bar)
@@ -241,40 +235,23 @@ public abstract class MediaInfoView {
     protected abstract void toggleAsFavorite();
 
     private void play() {
-        // If another player was playing, we pause it (keeping only one player playing at one time)
-        if (PLAYING_PLAYER != null && PLAYING_PLAYER != player)
-            pausePlayer(PLAYING_PLAYER);
-            // Creating the media player if not already done
+        // Creating the media player if not already done
         if (player == null)
             createPlayer();
-        // Memorizing the new playing player
-        PLAYING_PLAYER = player;
-        // Memorizing this new media player for possible further reuse on subsequent view recycling
-        PLAYED_PLAYERS.put(getTrack(), player);
+        // Declaring this new playing player (will pause possible previous one)
+        Players.setPlayingPlayer(player, getTrack());
         updatePlayPauseButtons(true);
         // Finally starting playing the podcast
         player.play();
     }
 
-    private void pause() {
+    void pause() {
         if (player != null) {
             player.pause();
             // Normally the previous call should update the player status and the listener set in bindMediaPlayer()
             // should detect it and update the play/pause button, but just in case this doesn't happen for some reason,
             // we ensure the button is displayed as paused.
             updatePlayPauseButtons(false);
-        }
-    }
-
-    private static void pausePlayer(Player player) {
-        if (player != null) {
-            player.pause();
-            if (player instanceof VideoPlayer) {
-                Node videoView = ((VideoPlayer) player).getVideoView();
-                MediaInfoView mediaInfoView = (MediaInfoView) videoView.getProperties().get("kbs-mediaInfoView");
-                if (mediaInfoView != null)
-                    mediaInfoView.pause();
-            }
         }
     }
 
@@ -305,7 +282,7 @@ public abstract class MediaInfoView {
         if (isVideo) {
             Node videoView = getVideoView();
             if (videoView != null) {
-                videoView.getProperties().put("kbs-mediaInfoView", this);
+                Players.associateVideoViewWithMediaInfoView(videoView, this);
                 if (((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS) {
                     Player p = player;
                     FXProperties.runOnPropertiesChange(() -> {
@@ -352,6 +329,7 @@ public abstract class MediaInfoView {
         imageView.setVisible(!showVideo);
         videoContainer.setVisible(showVideo);
         mediaPane.requestLayout();
+
     }
 
     private void updateElapsedTimeAndProgressBar(Duration elapsed) {
