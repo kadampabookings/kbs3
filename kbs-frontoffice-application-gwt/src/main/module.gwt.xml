@@ -311,6 +311,7 @@
     <source path="dev/webfx/extras/label"/>
     <!--===============================< webfx-extras-panes >===============================-->
     <source path="dev/webfx/extras/panes"/>
+    <source path="dev/webfx/extras/panes/transitions"/>
     <!--==============================< webfx-extras-player >===============================-->
     <source path="dev/webfx/extras/player"/>
     <source path="dev/webfx/extras/player/impl"/>
