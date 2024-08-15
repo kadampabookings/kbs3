@@ -295,13 +295,13 @@ public abstract class MediaInfoView {
                 boolean playing = player != null && player.isPlaying();
                 updatePlayPauseButtons(playing);
             }, player.statusProperty());
-        } else {
+        } else { // audio
             mediaPlayerBinding = FXProperties.runNowAndOnPropertiesChange(() -> {
                 if (player == null)
                     return;
-                Status status = player.getStatus();
-                boolean isPlaying = status == Status.PLAYING;
+                boolean isPlaying = player.isPlaying();
                 updatePlayPauseButtons(isPlaying);
+                Status status = player.getStatus();
                 if (status == null || status == Status.UNKNOWN)
                     progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
                 else
