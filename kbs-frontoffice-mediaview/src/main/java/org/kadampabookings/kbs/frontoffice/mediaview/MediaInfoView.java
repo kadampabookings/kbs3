@@ -8,9 +8,12 @@ import dev.webfx.extras.player.audio.media.AudioMediaPlayer;
 import dev.webfx.extras.player.video.IntegrationMode;
 import dev.webfx.extras.player.video.VideoPlayer;
 import dev.webfx.extras.player.video.web.wistia.WistiaVideoPlayer;
+import dev.webfx.extras.util.animation.Animations;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.kit.util.properties.Unregisterable;
 import dev.webfx.platform.util.Objects;
+import javafx.animation.Interpolator;
+import javafx.animation.Timeline;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
@@ -64,6 +67,8 @@ public abstract class MediaInfoView {
     private final Text elapsedTimeText = TextUtility.createText(StyleUtility.ELEMENT_GRAY_COLOR);
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
+    private Timeline imageFadeTimeline;
+    private boolean timelineShowImage;
     protected final Pane mediaPane = new Pane(videoContainer, imageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
@@ -123,7 +128,7 @@ public abstract class MediaInfoView {
                 imageRatio = image == null || image.getWidth() == 0 ? 1 : image.getWidth() / image.getHeight();
             } else {
                 imageRatio = 16d / 9;
-                if (mediaInfo instanceof Video && videoContainer.isVisible()) {
+                if (mediaInfo instanceof Video && (imageFadeTimeline != null || imageView.getOpacity() < 1)) {
                     Video video = (Video) mediaInfo;
                     Integer videoWidth = video.getWidth();
                     Integer videoHeight = video.getHeight();
@@ -319,17 +324,40 @@ public abstract class MediaInfoView {
         pauseButton.setVisible(isPlaying);
         playButton.setVisible(!isPlaying);
         Status status = player == null ? null : player.getStatus();
-        boolean showVideo = isVideo && (isPlaying || status == Status.PAUSED && player instanceof VideoPlayer && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS);
-        imageView.setVisible(!showVideo);
-        videoContainer.setVisible(showVideo);
-        mediaPane.requestLayout();
+        // Sometimes this method is called with an anticipated value for isPlaying (ex: play() method). We check if
+        // the player is really playing
+        boolean reallyPlaying = status == Status.PLAYING;
+        // Note: when paused, only the seamless player is able to resume, others are just stopped
+        boolean showVideo = isVideo && (reallyPlaying || status == Status.PAUSED && player instanceof VideoPlayer && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS);
+        videoContainer.setVisible(isVideo);
+        imageView.setMouseTransparent(showVideo);
+        showImage(!showVideo);
         // Updating Players when relevant:
         if (isPlaying) { // if this player is playing, then we report this to Players
-            if (status == Status.PLAYING) // we double-check the status because the play() method actually anticipates
+            if (reallyPlaying) // we double-check the status because the play() method actually anticipates
                 Players.setPlayingPlayer(player); // the playing status while Players concept is to for actual playing status
         } else if (Players.getPlayingPlayer() == player) { // if it's not playing while it was declared as the playing player
             Players.setNoPlayingPlayer(); // we report Players that it's not anymore
         }
+    }
+
+    private void showImage(boolean showImage) {
+        double requestedImageOpacity = showImage ? 1 : 0;
+        if (imageFadeTimeline != null) { // animation already running
+            if (timelineShowImage == showImage) // same as new request => we just keep going
+                return;
+            imageFadeTimeline.stop(); // different as new request => we stop the previous one
+        } else { // no animation running => we need an animation only if the opacity is not the requested one
+            if (imageView.getOpacity() == requestedImageOpacity)
+                return;
+        }
+        timelineShowImage = showImage;
+        imageFadeTimeline = Animations.animateProperty(imageView.opacityProperty(), requestedImageOpacity, Duration.seconds(1), Interpolator.EASE_BOTH, true);
+        imageFadeTimeline.setOnFinished(e -> {
+            imageFadeTimeline = null;
+            mediaPane.requestLayout();
+        });
+        mediaPane.requestLayout();
     }
 
     private void updateElapsedTimeAndProgressBar(Duration elapsed) {
