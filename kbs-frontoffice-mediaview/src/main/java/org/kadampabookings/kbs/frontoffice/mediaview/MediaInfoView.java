@@ -328,8 +328,9 @@ public abstract class MediaInfoView {
         // the player is really playing
         boolean reallyPlaying = status == Status.PLAYING;
         // Note: when paused, only the seamless player is able to resume, others are just stopped
-        boolean showVideo = isVideo && (reallyPlaying || status == Status.PAUSED && player instanceof VideoPlayer && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS);
-        videoContainer.setVisible(isVideo);
+        boolean showVideo = isVideo && isPlaying && (reallyPlaying || status == Status.PAUSED && player instanceof VideoPlayer && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS);
+        // Note: using setVisible(false) doesn't prevent wistia player to appear sometimes, while setOpacity(0) does
+        videoContainer.setOpacity(showVideo ? 1 : 0);
         imageView.setMouseTransparent(showVideo);
         showImage(!showVideo);
         // Updating Players when relevant:
