@@ -28,7 +28,7 @@ public class Players {
     // will hold the player currently playing (only one player can be playing at one time)
     // Keeping all media players in memory (even if paused) to hold their states (ex: current time). There shouldn't be
     // that many because we create the media players only when the user actually presses the podcast play button.
-    private static final Map<String /* track */, Player> PLAYED_PLAYERS = new HashMap<>();
+    private static final Map<String /* track */, Player> TRACK_PLAYER_MAP = new HashMap<>();
 
     private static final Pane FULLSCREEN_BUTTON = MediaButtons.createFullscreenButton();
     private static Timeline FULLSCREEN_BUTTON_TIMELINE;
@@ -114,17 +114,16 @@ public class Players {
         PLAYING_PLAYER_PROPERTY.set(player);
     }
 
-    public static void setPlayingPlayer(Player player, String track) {
-        setPlayingPlayer(player);
-        PLAYING_PLAYER_PROPERTY.set(player);
-    }
-
     public static void setNoPlayingPlayer() {
         playingPlayerProperty().set(null);
     }
 
-    public static Player getPlayedPlayerFromTrack(String track) {
-        return PLAYED_PLAYERS.get(track);
+    public static void associatePlayerWithTrack(Player player, String track) {
+        TRACK_PLAYER_MAP.put(track, player);
+    }
+
+    public static Player getPlayerAssociatedWithTrack(String track) {
+        return TRACK_PLAYER_MAP.get(track);
     }
 
     public static void pausePlayingPlayer() {

@@ -187,14 +187,14 @@ public abstract class MediaInfoView {
         // If no, the player associated with this podcast should be null
         // If this podcast view was previously associated with a player, we unbind it.
         unbindMediaPlayer(); // will unregister the possible existing binding, and reset the visual state
-        // We check if the podcast has already been played
-        player = Players.getPlayedPlayerFromTrack(getTrack());
-        // If yes, we associate this podcast view with that player
-        if (player != null) {
-            bindMediaPlayer(); // Will restore the visual state from the player (play/pause button & progress bar)
-        } else if (isVideo)
+        // We check if this track has already been played
+        player = Players.getPlayerAssociatedWithTrack(getTrack());
+        if (player != null) {  // If yes, we reuse the same player straightaway
+            bindMediaPlayer(); // => will restore the visual state from the player (play/pause button & progress bar)
+        } /* Commented, as not sure why video players creation couldn't be postponed like audio players TODO: completely remove if no side effects
+        else if (isVideo) { // otherwise we create a new one for video only
             createPlayer();
-        videoContainer.setContent(getVideoView());
+        }*/
     }
 
     private String getTrack() {
@@ -229,11 +229,9 @@ public abstract class MediaInfoView {
         // Creating the media player if not already done
         if (player == null)
             createPlayer();
-        // Declaring this new playing player (will pause possible previous one)
-        Players.setPlayingPlayer(player, getTrack());
-        updatePlayPauseButtons(true);
-        // Finally starting playing the podcast
+        // Starting playing
         player.play();
+        updatePlayPauseButtons(true);
     }
 
     private void pause() {
@@ -265,12 +263,15 @@ public abstract class MediaInfoView {
         String track = getTrack();
         player.getPlaylist().setAll(track);
         player.setOnEndOfPlaying(player::stop); // Forcing stop status (sometimes this doesn't happen automatically for any reason)
+        // Registering the playing track
+        Players.associatePlayerWithTrack(player, getTrack());
         // Binding this media player with this podcast view
         bindMediaPlayer();
     }
 
     private void bindMediaPlayer() {
         unbindMediaPlayer(); // in case this view was previously bound with another player
+        videoContainer.setContent(getVideoView());
         if (isVideo) {
             Node videoView = getVideoView();
             if (videoView != null) {
@@ -317,14 +318,18 @@ public abstract class MediaInfoView {
     private void updatePlayPauseButtons(boolean isPlaying) {
         pauseButton.setVisible(isPlaying);
         playButton.setVisible(!isPlaying);
-        boolean showVideo = isVideo && (isPlaying || player instanceof VideoPlayer && player.getStatus() == Status.PAUSED && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS);
+        Status status = player == null ? null : player.getStatus();
+        boolean showVideo = isVideo && (isPlaying || status == Status.PAUSED && player instanceof VideoPlayer && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS);
         imageView.setVisible(!showVideo);
         videoContainer.setVisible(showVideo);
         mediaPane.requestLayout();
-        if (isPlaying)
-            Players.setPlayingPlayer(player);
-        else if (Players.getPlayingPlayer() == player)
-            Players.setNoPlayingPlayer();
+        // Updating Players when relevant:
+        if (isPlaying) { // if this player is playing, then we report this to Players
+            if (status == Status.PLAYING) // we double-check the status because the play() method actually anticipates
+                Players.setPlayingPlayer(player); // the playing status while Players concept is to for actual playing status
+        } else if (Players.getPlayingPlayer() == player) { // if it's not playing while it was declared as the playing player
+            Players.setNoPlayingPlayer(); // we report Players that it's not anymore
+        }
     }
 
     private void updateElapsedTimeAndProgressBar(Duration elapsed) {
