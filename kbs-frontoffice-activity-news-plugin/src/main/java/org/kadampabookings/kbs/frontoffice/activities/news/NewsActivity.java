@@ -35,7 +35,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
-import one.modality.base.client.mainframe.dialogarea.fx.FXMainFrameDialogArea;
+import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.frontoffice.utility.TextUtility;
 import one.modality.base.shared.entities.News;

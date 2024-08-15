@@ -174,8 +174,8 @@
     <public path="" includes="images/svg/color/"/>
     <resource path="images/svg/mono"/>
     <public path="" includes="images/svg/mono/"/>
-    <!--==================< modality-base-client-mainframe-dialogarea-fx >==================-->
-    <source path="one/modality/base/client/mainframe/dialogarea/fx"/>
+    <!--=======================< modality-base-client-mainframe-fx >========================-->
+    <source path="one/modality/base/client/mainframe/fx"/>
     <!--==============< modality-base-client-operationactionsloading-plugin >===============-->
     <source path="one/modality/base/client/operationactionsloading"/>
     <!--=====================< modality-base-client-presentationmodel >=====================-->
@@ -208,8 +208,8 @@
     <source path="one/modality/base/frontoffice/application"/>
     <!--==================< modality-base-frontoffice-mainframe-activity >==================-->
     <source path="one/modality/base/frontoffice/activities/mainframe"/>
-    <!--=============< modality-base-frontoffice-mainframe-backgroundnode-fx >==============-->
-    <source path="one/modality/base/frontoffice/mainframe/backgroundnode/fx"/>
+    <!--=====================< modality-base-frontoffice-mainframe-fx >=====================-->
+    <source path="one/modality/base/frontoffice/mainframe/fx"/>
     <!--=======================< modality-base-frontoffice-utility >========================-->
     <source path="one/modality/base/frontoffice/entities"/>
     <source path="one/modality/base/frontoffice/fx"/>

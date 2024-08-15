@@ -34,7 +34,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
-import one.modality.base.client.mainframe.dialogarea.fx.FXMainFrameDialogArea;
+import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
 import one.modality.base.frontoffice.utility.GeneralUtility;

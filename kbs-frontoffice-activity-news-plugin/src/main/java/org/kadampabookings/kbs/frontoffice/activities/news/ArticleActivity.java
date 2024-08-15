@@ -5,7 +5,7 @@ import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivi
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.scene.Node;
 import javafx.scene.web.WebView;
-import one.modality.base.frontoffice.mainframe.backgroundnode.fx.FXBackgroundNode;
+import one.modality.base.frontoffice.mainframe.fx.FXBackgroundNode;
 import one.modality.base.shared.entities.News;
 
 import java.util.Objects;

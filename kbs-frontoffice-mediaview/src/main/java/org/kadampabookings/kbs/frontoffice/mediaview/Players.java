@@ -14,7 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import one.modality.base.client.mainframe.dialogarea.fx.FXMainFrameOverlayArea;
+import one.modality.base.client.mainframe.fx.FXMainFrameOverlayArea;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -6,7 +6,7 @@ module kbs.frontoffice.mediaview {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires modality.base.client.mainframe.dialogarea.fx;
+    requires modality.base.client.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires webfx.extras.imagestore;
