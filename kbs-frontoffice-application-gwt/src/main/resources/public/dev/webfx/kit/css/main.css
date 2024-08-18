@@ -666,6 +666,29 @@ tr.selected, .grid-row.selected {
     border: none;
 }
 
+/*===== modality-client-web@main.css from modality-base-client-application =====*/
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("./fonts/montserrat/Montserrat-VF.woff2") format("woff2");
+    font-weight: 100 900;
+}
+
+/* Applying Montserrat as default font for Modality */
+body, textarea /* because textarea has explicit default monospace font */ {
+    font-family: Montserrat, serif;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
+
+/* We dont want border for the buttons in the front-office button bar */
+
+.button-bar fx-button > fx-border {
+    border: none;
+}
 /*===== modality-client-login-web@main.css from modality-crm-client-activity-login-plugin =====*/
 
 .login * {
@@ -698,29 +721,6 @@ input[type="password"]:not([value=""]) {
     font-weight: 100 900;
 }
 
-/*===== modality-client-web@main.css from modality-base-client-application =====*/
-
-@font-face {
-    font-family: "Montserrat";
-    src: url("./fonts/montserrat/Montserrat-VF.woff2") format("woff2");
-    font-weight: 100 900;
-}
-
-/* Applying Montserrat as default font for Modality */
-body, textarea /* because textarea has explicit default monospace font */ {
-    font-family: Montserrat, serif;
-    font-size: 13px;
-    -webkit-font-smoothing: antialiased;
-}
-
-
-/*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
-
-/* We dont want border for the buttons in the front-office button bar */
-
-.button-bar fx-button > fx-border {
-    border: none;
-}
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 * {

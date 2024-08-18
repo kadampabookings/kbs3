@@ -29,6 +29,7 @@ module kbs.backoffice.application.gluon {
     requires webfx.platform.shutdown.gluon;
     requires webfx.platform.storage.java;
     requires webfx.platform.storagelocation.gluon;
+    requires webfx.platform.useragent.gluon;
     requires webfx.platform.visibility.gluon;
     requires webfx.platform.windowhistory.java;
     requires webfx.platform.windowlocation.java;

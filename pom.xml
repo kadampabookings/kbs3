@@ -59,6 +59,9 @@
         <module>kbs-frontoffice-application-j2cl</module>
         <module>kbs-frontoffice-application-openjfx</module>
         <module>kbs-frontoffice-mediaview</module>
+        <module>kbs-magiclink-client-application</module>
+        <module>kbs-magiclink-client-application-gwt</module>
+        <module>kbs-magiclink-client-application-openjfx</module>
         <module>kbs-server-application</module>
         <module>kbs-server-application-vertx</module>
         <module>kbs-server-kdmimport-plugin</module>

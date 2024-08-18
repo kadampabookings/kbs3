@@ -13,16 +13,6 @@
 
         <plugin-module>kbs-client-conf-plugin</plugin-module>
         <plugin-module executable-target="gluon">kbs-client-conf-gluon-plugin</plugin-module>
-<!--
-        <plugin-module>modality-base-client-activity-console-plugin</plugin-module>
--->
-
-        <plugin-module>modality-base-frontoffice-max-plugin</plugin-module>
-
-        <!-- Kadampa home page -->
-<!--
-        <plugin-module>kbs-frontoffice-activity-home-plugin</plugin-module>
--->
 
         <!-- Kadampa News -->
         <plugin-module>kbs-frontoffice-activity-news-plugin</plugin-module>
@@ -30,8 +20,21 @@
         <!-- Kadampa Podcast -->
         <plugin-module>kbs-frontoffice-activity-podcasts-plugin</plugin-module>
 
-        <!-- Event activities -->
+        <!-- Base activities -->
+        <plugin-module>modality-base-frontoffice-max-plugin</plugin-module>
+        <!-- <plugin-module>modality-base-client-activity-console-plugin</plugin-module> -->
+
+        <!-- CRM activities -->
+        <plugin-module>modality-crm-frontoffice-max-plugin</plugin-module>
+
+        <!-- Hotel activities -->
+        <!-- None - this layer has only back-office activities so far -->
+
+        <!-- Event activities (booking page) -->
         <plugin-module>modality-event-frontoffice-max-plugin</plugin-module>
+
+        <!-- Catering activities -->
+        <!-- None - this layer has only back-office activities so far -->
 
     </dependencies>
 

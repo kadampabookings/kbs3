@@ -17,6 +17,7 @@
         <plugin-module>modality-base-backoffice-max-plugin</plugin-module>
 
         <!-- CRM activities -->
+        <plugin-module>modality-crm-backoffice-max-plugin</plugin-module>
 
         <!-- Ecommerce activities -->
         <plugin-module>modality-ecommerce-backoffice-max-plugin</plugin-module>
