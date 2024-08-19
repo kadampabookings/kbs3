@@ -14,6 +14,7 @@ import dev.webfx.platform.fetch.json.JsonFetch;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Arrays;
+import dev.webfx.platform.util.collection.Collections;
 import dev.webfx.platform.util.time.Times;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
@@ -34,12 +35,14 @@ import java.util.Objects;
  */
 public class NewsImportJob implements ApplicationJob {
 
-    private static final String[] languages = {"en", "fr"};
+    private static final long IMPORT_PERIODICITY_MILLIS = 3600 * 1000; // every 1h
+    private static final int RECHECK_LATEST_DB_NEWS_UPDATES_COUNT = 5;
+    private static final String[] LANGUAGES = {"en", "fr"};
     private static final String NEWS_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/posts";
     private static final String MEDIA_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/media";
-    private static final long IMPORT_PERIODICITY_MILLIS = 3600 * 1000; // every 1h
-    private Scheduled importTimer;
+
     private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
+    private Scheduled importTimer;
     private List<Topic> newsTopics;
     private LocalDateTime latestNewsDateTime;
 
@@ -58,7 +61,7 @@ public class NewsImportJob implements ApplicationJob {
     private void importNews() {
         if (newsTopics != null) {
             latestNewsDateTime = null;
-            importLangNews("en");
+            importLangNews(LANGUAGES[0]);
         } else {
             EntityStore.create(dataSourceModel).<Topic>executeQuery("select id,channelTopicId from Topic where channelTopicId!=null")
                 .onFailure(error -> Console.log("[NEWS_IMPORT] Error while reading news topics", error))
@@ -73,13 +76,13 @@ public class NewsImportJob implements ApplicationJob {
         // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
         if (latestNewsDateTime == null) {
-            EntityStore.create(dataSourceModel).<News>executeQuery("select date from News where lang=? order by date desc limit 1", lang)
+            EntityStore.create(dataSourceModel).<News>executeQuery("select date from News where lang=? order by date desc limit ?", lang, Math.max(RECHECK_LATEST_DB_NEWS_UPDATES_COUNT, 1))
                 .onFailure(error -> Console.log("[NEWS_IMPORT] ⛔️️ Error while reading latest news", error))
                 .onSuccess(news -> {
-                    if (news.isEmpty()) { // Means that there is no news in the database
+                    News lastestNews = Collections.last(news);
+                    if (lastestNews == null) { // Means that there is no news in the database
                         latestNewsDateTime = LocalDate.of(2000, 1, 1).atStartOfDay(); // The web service raise an error with dates before 2000
                     } else {
-                        News lastestNews = news.get(0);
                         latestNewsDateTime = lastestNews.getDate();
                     }
                     // Now that fetchAfterParameter is set, we can call importNews() again.
@@ -106,18 +109,19 @@ public class NewsImportJob implements ApplicationJob {
                         ReadOnlyAstObject websiteNewsJson = webNewsJsonArray.getObject(i);
                         Integer id = websiteNewsJson.getInteger("id");
                         // We filter only the news not yet imported in the database
-                        if (dbNews.stream().noneMatch(news -> Objects.equals(id, news.getChannelNewsId()))) {
+                        if (RECHECK_LATEST_DB_NEWS_UPDATES_COUNT > 0 || dbNews.stream().noneMatch(news -> Objects.equals(id, news.getChannelNewsId()))) {
                             newWebsiteNews.add(websiteNewsJson);
-                            mediaIds.add(websiteNewsJson.getString("featured_media"));
+                            String mediaId = websiteNewsJson.getString("featured_media");
+                            mediaIds.add(mediaId);
                         }
                     }
 
                     if (newWebsiteNews.isEmpty()) {
                         Console.log("[NEWS_IMPORT] ✅  No more news to import for lang=" + lang);
-                        int langIndex = Arrays.indexOf(languages, lang);
+                        int langIndex = Arrays.indexOf(LANGUAGES, lang);
                         latestNewsDateTime = null;
-                        if (langIndex >= 0 && langIndex < languages.length - 1)
-                            importLangNews(languages[langIndex + 1]);
+                        if (langIndex >= 0 && langIndex < LANGUAGES.length - 1)
+                            importLangNews(LANGUAGES[langIndex + 1]);
                         return;
                     }
 
@@ -133,14 +137,16 @@ public class NewsImportJob implements ApplicationJob {
                             UpdateStore updateStore = UpdateStore.createAbove(dbNews.getStore());
                             LocalDateTime maxNewsDateTime = latestNewsDateTime;
 
-                            // Creating the new News entities to insert in the database
+                            // Creating or updating the new News entities to insert in the database
                             ReadOnlyAstObject[] mediasJsonArray = webMediasJsonBatch.getArray();
                             List<String> mediaLinks = new ArrayList<>();
                             List<News> newsList = new ArrayList<>();
                             for (int i = 0; i < mediasJsonArray.length; i++) {
                                 ReadOnlyAstObject newsJson = newWebsiteNews.get(i);
                                 int id = newsJson.getInteger("id");
-                                News n = updateStore.insertEntity(News.class);
+                                // We filter only the news not yet imported in the database
+                                News dbn = dbNews.stream().filter(news -> Objects.equals(id, news.getChannelNewsId())).findFirst().orElse(null);
+                                News n = dbn != null ? updateStore.updateEntity(dbn) : updateStore.insertEntity(News.class);
                                 n.setChannel(1);
                                 n.setLang(lang);
                                 n.setChannelNewsId(id);
@@ -148,9 +154,10 @@ public class NewsImportJob implements ApplicationJob {
                                 if (dateTime.isAfter(maxNewsDateTime))
                                     maxNewsDateTime = dateTime;
                                 n.setDate(dateTime);
-                                n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.medium_large.source_url")));
-                                if (n.getImageUrl() == null)
-                                    n.setImageUrl(cleanUrl(AST.lookupString(mediasJsonArray[i], "media_details.sizes.full.source_url")));
+                                String imageUrl = AST.lookupString(mediasJsonArray[i], "media_details.sizes.medium_large.source_url");
+                                if (imageUrl == null)
+                                    imageUrl = AST.lookupString(mediasJsonArray[i], "media_details.sizes.full.source_url");
+                                n.setImageUrl(cleanUrl(imageUrl));
                                 n.setTitle(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "title.rendered")));
                                 n.setExcerpt(WebTextUtil.unescapeHtml(AST.lookupString(newsJson, "excerpt.rendered")));
                                 String linkUrl = cleanUrl(AST.lookupString(newsJson, "guid.rendered"));

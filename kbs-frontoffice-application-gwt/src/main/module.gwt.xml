@@ -234,8 +234,6 @@
     <source path="one/modality/crm/backoffice/organization/fx/impl"/>
     <!--===================< modality-crm-client-activity-login-plugin >====================-->
     <source path="one/modality/crm/client/activities/login"/>
-    <resource path="dev/webfx/kit/css/fonts/password"/>
-    <public path="" includes="dev/webfx/kit/css/fonts/password/"/>
     <!--================< modality-crm-client-activity-unauthorized-plugin >================-->
     <source path="one/modality/crm/client/activities/unauthorized"/>
     <!--==========================< modality-crm-client-authn-fx >==========================-->
@@ -600,6 +598,8 @@
     <source path="dev/webfx/stack/authn/login/ui/spi/impl/gateway/password"/>
     <!--=======================< webfx-stack-authn-login-ui-portal >========================-->
     <source path="dev/webfx/stack/authn/login/ui/spi/impl/portal"/>
+    <resource path="dev/webfx/kit/css/fonts/password"/>
+    <public path="" includes="dev/webfx/kit/css/fonts/password/"/>
     <!--========================< webfx-stack-authn-logout-client >=========================-->
     <source path="dev/webfx/stack/authn/logout/client/operation"/>
     <!--============================< webfx-stack-authn-remote >============================-->

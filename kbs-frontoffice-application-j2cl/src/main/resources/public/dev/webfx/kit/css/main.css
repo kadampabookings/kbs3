@@ -6,6 +6,11 @@
     --safe-area-inset-right:  env(safe-area-inset-right);
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
     --safe-area-inset-left:   env(safe-area-inset-left);
+    --fx-border-color: #c0c0c0;
+    --fx-border-radius: 5px;
+    --fx-border-style: solid;
+    --fx-border-width: 1px;
+    --fx-border-color-focus: #0096D6;
     --fx-svg-path-fill: black;
 }
 
@@ -26,6 +31,13 @@ body {
     opacity: 50%;
 }
 
+.fx-border > fx-border {
+    border-color: var(--fx-border-color);
+    border-style: var(--fx-border-style);
+    border-width: var(--fx-border-width);
+    border-radius: var(--fx-border-radius);
+}
+
 /* Applying the default JavaFX behaviour for SVGPath */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
     fill: var(--fx-svg-path-fill);  /* then the fill is black */
@@ -39,10 +51,6 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
 
 /***** Global variables *****/
 :root {
-    --fx-border-color: #c0c0c0;
-    --fx-border-radius: 5px;
-    --fx-border-style: solid;
-    --fx-border-width: 1px;
     --fx-border-color-focus: #0096D6;
     --fx-textfield-background: white;
 }
@@ -107,6 +115,11 @@ iframe {
     --safe-area-inset-right:  env(safe-area-inset-right);
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
     --safe-area-inset-left:   env(safe-area-inset-left);
+    --fx-border-color: #c0c0c0;
+    --fx-border-radius: 5px;
+    --fx-border-style: solid;
+    --fx-border-width: 1px;
+    --fx-border-color-focus: #0096D6;
     --fx-svg-path-fill: black;
 }
 
@@ -125,6 +138,13 @@ body {
 /* Making disabled nodes semi-transparent */
 .disabled {
     opacity: 50%;
+}
+
+.fx-border > fx-border {
+    border-color: var(--fx-border-color);
+    border-style: var(--fx-border-style);
+    border-width: var(--fx-border-width);
+    border-radius: var(--fx-border-radius);
 }
 
 /* Applying the default JavaFX behaviour for SVGPath */
@@ -683,6 +703,67 @@ tr.selected, .grid-row.selected {
 .cke_notifications_area {
     display: none;
 }
+/*===== webfx-stack-authn-login-ui-portal-web@main.css from webfx-stack-authn-login-ui-portal =====*/
+
+.login * {
+    font-size: 18px;
+}
+
+.login fx-button {
+    cursor: pointer;
+}
+
+.login fx-button > fx-background {
+    background: #0096D6FF;
+    border-radius: 15px;
+}
+
+.login fx-button > fx-border {
+    --fx-border-color: transparent;
+}
+
+.login fx-button .text {
+    color: white;
+}
+
+.login fx-button fx-svgpath {
+    --fx-svg-path-fill: white;
+}
+
+/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
+   So we apply that font only once the user started typing the password. This is done using :not([value=""]) CSS
+   selector. Normally "value" refers to the initial value of the input only. However HtmlTextInputControlPeer keeps
+   updating "value" to "" or "not-empty" whether the user has typed something, so this CSS rule finally works: */
+input[type="password"]:not([value=""]) {
+    font-family: "Password", serif;
+    letter-spacing: 0.15em;
+}
+
+@font-face {
+    font-family: "Password";
+    src: url("./fonts/password/password.woff") format("woff");
+    font-weight: 100 900;
+}
+
+.login .or {
+    color: #888;
+}
+
+.login .line {
+    background-color: lightgray;
+}
+
+.login .background > fx-background {
+    background-color: white;
+    border-radius: 20px;
+}
+
+.login .fx-border > fx-border {
+    --fx-border-color: lightgray;
+    --fx-border-radius: 20px;
+    box-shadow: lightgray 0 0 10px;
+}
+
 /*===== modality-client-web@main.css from modality-base-client-css =====*/
 
 :root {
@@ -725,38 +806,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .button-bar fx-button > fx-border {
     border: none;
 }
-/*===== modality-client-login-web@main.css from modality-crm-client-activity-login-plugin =====*/
-
-.login * {
-    font-size: 18px; /* doesn't work yet (because of hardcoded style in app code) */
-}
-
-.login fx-button { /* doesn't work yet (because of hardcoded style in app code) */
-    background: #0096D6FF;
-    border: none;
-    border-radius: 10px;
-}
-
-.login fx-button .text {
-    color: white; /* doesn't work yet (because of hardcoded style in app code) */
-    /*padding: 15px; JavaFX padding already applied in app code for now */
-}
-
-/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
-   So we apply that font only once the user started typing the password. This is done using :not([value=""]) CSS
-   selector. Normally "value" refers to the initial value of the input only. However HtmlTextInputControlPeer keeps
-   updating "value" to "" or "not-empty" whether the user has typed something, so this CSS rule finally works: */
-input[type="password"]:not([value=""]) {
-    font-family: "Password", serif;
-    letter-spacing: 0.15em;
-}
-
-@font-face {
-    font-family: "Password";
-    src: url("./fonts/password/password.woff") format("woff");
-    font-weight: 100 900;
-}
-
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 * {
