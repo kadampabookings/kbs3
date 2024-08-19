@@ -73,6 +73,7 @@ public class Players {
     }
 
     private static void showFullscreenButton() {
+        // Translating the fullscreen button down and then animate it
         ObservableList<Node> overlayChildren = FXMainFrameOverlayArea.getOverlayChildren();
         if (!overlayChildren.contains(FULLSCREEN_BUTTON)) {
             overlayChildren.add(FULLSCREEN_BUTTON);
@@ -85,7 +86,21 @@ public class Players {
         }
         if (FULLSCREEN_BUTTON_TIMELINE != null)
             FULLSCREEN_BUTTON_TIMELINE.stop();
-        FULLSCREEN_BUTTON_TIMELINE = Animations.animateProperty(FULLSCREEN_BUTTON.translateYProperty(), 0);
+        if (FULLSCREEN_BUTTON.getTranslateY() < 0) {
+            FULLSCREEN_BUTTON_TIMELINE = Animations.animateProperty(FULLSCREEN_BUTTON.translateYProperty(), 0);
+            FULLSCREEN_BUTTON_TIMELINE.setOnFinished(e -> MediaButtons.animateFullscreenButton(FULLSCREEN_BUTTON));
+        } else {
+            MediaButtons.animateFullscreenButton(FULLSCREEN_BUTTON);
+        }
+        // Continue to animate it every 30s as long as the video is played
+        Player playingPlayer = getPlayingPlayer();
+        UiScheduler.schedulePeriodic(30000, scheduled -> {
+            if (playingPlayer != getPlayingPlayer()) {
+                scheduled.cancel();
+            } else {
+                MediaButtons.animateFullscreenButton(FULLSCREEN_BUTTON);
+            }
+        });
     }
 
     private static void hideFullscreenButton() {

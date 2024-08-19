@@ -1,6 +1,10 @@
 package org.kadampabookings.kbs.frontoffice.mediaview;
 
 import dev.webfx.extras.panes.ScalePane;
+import dev.webfx.extras.util.animation.Animations;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -11,6 +15,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+import javafx.util.Duration;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.frontoffice.utility.TextUtility;
 
@@ -29,34 +34,62 @@ public final class MediaButtons {
 
     public static Pane createBackwardButton() {
         return embedButton(new StackPane(
-                createSVGButton(BACKWARD_BUTTON_PATH_32, Color.BLACK, null),
-                TextUtility.createText("10", Color.GRAY, 8)));
+            createSVGButton(BACKWARD_BUTTON_PATH_32, Color.BLACK, null),
+            TextUtility.createText("10", Color.GRAY, 8)));
     }
 
     public static Pane createForwardButton() {
         return embedButton(new StackPane(
-                createSVGButton(FORWARD_BUTTON_PATH_32, Color.BLACK, null),
-                translateX(TextUtility.createText("30", Color.GRAY, 8), 2) // Needs to be translated a bit to look centered with SVG
+            createSVGButton(FORWARD_BUTTON_PATH_32, Color.BLACK, null),
+            translateX(TextUtility.createText("30", Color.GRAY, 8), 2) // Needs to be translated a bit to look centered with SVG
         ));
     }
 
     public static Pane createPlayButton() {
         return embedButton(new StackPane(
-                new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
-                translateX(createSVGButton(PLAY_TRIANGLE_PATH_15, null, Color.WHITE), 1) // Needs to be translated a bit to look centered with SVG
+            new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
+            translateX(createSVGButton(PLAY_TRIANGLE_PATH_15, null, Color.WHITE), 1) // Needs to be translated a bit to look centered with SVG
         ));
     }
 
     public static Pane createPauseButton() {
         return embedButton(new StackPane(
-                new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
-                createSVGButton(PAUSE_SIGN_PATH_15, null, Color.WHITE)));
+            new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
+            createSVGButton(PAUSE_SIGN_PATH_15, null, Color.WHITE)));
     }
 
     public static Pane createFullscreenButton() {
         return embedButton(new StackPane(
-                new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
-                createSVGButton(FULLSCREEN_PATH_16, null, Color.WHITE)));
+            new Circle(16, StyleUtility.MAIN_ORANGE_COLOR),
+            createSVGButton(FULLSCREEN_PATH_16, null, Color.WHITE)));
+    }
+
+    public static void animateFullscreenButton(Pane fullscreenButton) {
+        StackPane stackPane = (StackPane) ((ScalePane) fullscreenButton).getContent();
+        Circle fadingCircle = new Circle(16, 16, 16, StyleUtility.MAIN_ORANGE_COLOR);
+        fadingCircle.setManaged(false);
+        stackPane.getChildren().add(0, fadingCircle);
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().addAll(
+            new KeyFrame(Duration.millis(300),
+                new KeyValue(fullscreenButton.scaleXProperty(), 1.2),
+                new KeyValue(fullscreenButton.scaleYProperty(), 1.2)
+            ),
+            new KeyFrame(Duration.millis(500),
+                new KeyValue(fullscreenButton.scaleXProperty(), 0.8, Animations.EASE_BOTH_INTERPOLATOR),
+                new KeyValue(fullscreenButton.scaleYProperty(), 0.8, Animations.EASE_BOTH_INTERPOLATOR),
+                new KeyValue(fadingCircle.radiusProperty(), 32, Animations.EASE_BOTH_INTERPOLATOR),
+                new KeyValue(fadingCircle.opacityProperty(), 0, Animations.EASE_BOTH_INTERPOLATOR)
+            ),
+            new KeyFrame(Duration.millis(900),
+                new KeyValue(fullscreenButton.scaleXProperty(), 1, Animations.EASE_BOTH_INTERPOLATOR),
+                new KeyValue(fullscreenButton.scaleYProperty(), 1, Animations.EASE_BOTH_INTERPOLATOR)
+            )
+        );
+        timeline.play();
+        timeline.setOnFinished(e -> {
+            stackPane.getChildren().remove(fadingCircle);
+        });
     }
 
     private static SVGPath createSVGButton(String content, Paint stroke, Paint fill) {
