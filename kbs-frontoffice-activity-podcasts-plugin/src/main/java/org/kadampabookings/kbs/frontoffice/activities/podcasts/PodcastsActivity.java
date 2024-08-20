@@ -234,6 +234,9 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             VBox.setMargin(podcastsContainer, new Insets(40 * scale, 0, 10, 0));
         }, pageContainer.widthProperty());
 
+        pageContainer.setOnSwipeLeft( e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
+        pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = podcasts request (as podcasts are on the left)
+
         // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
         // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
         BorderPane borderPane = new BorderPane(pageContainer);

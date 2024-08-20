@@ -161,6 +161,9 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             scaledSwitchBox.setMaxScale(scale);
         }, pageContainer.widthProperty());
 
+        pageContainer.setOnSwipeLeft( e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
+        pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = news request (as news are on the left)
+
         // Setting a max width for big desktop screens
         pageContainer.setMaxWidth(MAX_PAGE_WIDTH);
 
