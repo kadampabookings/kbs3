@@ -80,72 +80,10 @@
     <inherits name="com.google.gwt.user.User"/>
     <!--=================================< java-nio-emul >==================================-->
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
-    <!--===========================< modality-base-client-i18n >============================-->
-    <source path="one/modality/base/client/operations/i18n"/>
-    <source path="one/modality/base/client/services/i18n"/>
-    <!--===========================< modality-base-client-icons >===========================-->
-    <source path="one/modality/base/client/icons"/>
-    <resource path="images/s16"/>
-    <public path="" includes="images/s16/"/>
-    <resource path="images/s16/actions"/>
-    <public path="" includes="images/s16/actions/"/>
-    <resource path="images/s16/continents"/>
-    <public path="" includes="images/s16/continents/"/>
-    <resource path="images/s16/continents/org"/>
-    <public path="" includes="images/s16/continents/org/"/>
-    <resource path="images/s16/countries"/>
-    <public path="" includes="images/s16/countries/"/>
-    <resource path="images/s16/countries/svg"/>
-    <public path="" includes="images/s16/countries/svg/"/>
-    <resource path="images/s16/currencies"/>
-    <public path="" includes="images/s16/currencies/"/>
-    <resource path="images/s16/event"/>
-    <public path="" includes="images/s16/event/"/>
-    <resource path="images/s16/itemFamilies"/>
-    <public path="" includes="images/s16/itemFamilies/"/>
-    <resource path="images/s16/languages"/>
-    <public path="" includes="images/s16/languages/"/>
-    <resource path="images/s16/methods"/>
-    <public path="" includes="images/s16/methods/"/>
-    <resource path="images/s16/moneyAccountTypes"/>
-    <public path="" includes="images/s16/moneyAccountTypes/"/>
-    <resource path="images/s16/multipleBookings"/>
-    <public path="" includes="images/s16/multipleBookings/"/>
-    <resource path="images/s16/organizations"/>
-    <public path="" includes="images/s16/organizations/"/>
-    <resource path="images/s16/organizations/svg"/>
-    <public path="" includes="images/s16/organizations/svg/"/>
-    <resource path="images/s16/security"/>
-    <public path="" includes="images/s16/security/"/>
-    <resource path="images/s16/system"/>
-    <public path="" includes="images/s16/system/"/>
-    <resource path="images/s16/validation"/>
-    <public path="" includes="images/s16/validation/"/>
-    <resource path="images/s32/system"/>
-    <public path="" includes="images/s32/system/"/>
-    <resource path="images/svg/color"/>
-    <public path="" includes="images/svg/color/"/>
-    <resource path="images/svg/mono"/>
-    <public path="" includes="images/svg/mono/"/>
-    <!--========================< modality-base-shared-domainmodel >========================-->
-    <source path="one/modality/base/shared/domainmodel/formatters"/>
-    <source path="one/modality/base/shared/domainmodel/functions"/>
-    <source path="one/modality/base/shared/services/datasourcemodel"/>
-    <source path="one/modality/base/shared/services/domainmodel"/>
-    <resource path="one/modality/base/shared/domainmodel"/>
-    <public path="" includes="one/modality/base/shared/domainmodel/"/>
     <!--===================< modality-crm-client-magiclink-application >====================-->
     <source path="one/modality/crm/magiclink/application"/>
     <!--============================< webfx-extras-imagestore >=============================-->
     <source path="dev/webfx/extras/imagestore"/>
-    <!--===============================< webfx-extras-label >===============================-->
-    <source path="dev/webfx/extras/label"/>
-    <!--============================< webfx-extras-time-format >============================-->
-    <source path="dev/webfx/extras/time/format"/>
-    <source path="dev/webfx/extras/time/format/spi"/>
-    <source path="dev/webfx/extras/time/format/spi/impl"/>
-    <!--===============================< webfx-extras-type >================================-->
-    <source path="dev/webfx/extras/type"/>
     <!--======================< webfx-kit-javafxcontrols-peers-base >=======================-->
     <source path="dev/webfx/kit/mapper/peers/javafxcontrols/base"/>
     <!--====================< webfx-kit-javafxcontrols-peers-gwt-j2cl >=====================-->
@@ -294,8 +232,6 @@
     <source path="dev/webfx/stack/authn/buscall"/>
     <!--============================< webfx-stack-authn-remote >============================-->
     <source path="dev/webfx/stack/authn/spi/impl/remote"/>
-    <!--===============================< webfx-stack-cache >================================-->
-    <source path="dev/webfx/stack/cache"/>
     <!--==============================< webfx-stack-com-bus >===============================-->
     <source path="dev/webfx/stack/com/bus"/>
     <source path="dev/webfx/stack/com/bus/spi"/>
@@ -322,35 +258,6 @@
     <source path="dev/webfx/stack/com/websocket/spi"/>
     <!--=======================< webfx-stack-com-websocket-gwt-j2cl >=======================-->
     <source path="dev/webfx/stack/com/websocket/spi/impl/gwtj2cl"/>
-    <!--============================< webfx-stack-db-datascope >============================-->
-    <source path="dev/webfx/stack/db/datascope"/>
-    <source path="dev/webfx/stack/db/datascope/aggregate"/>
-    <source path="dev/webfx/stack/db/datascope/schema"/>
-    <!--===========================< webfx-stack-db-datasource >============================-->
-    <source path="dev/webfx/stack/db/datasource"/>
-    <source path="dev/webfx/stack/db/datasource/jdbc"/>
-    <source path="dev/webfx/stack/db/datasource/spi"/>
-    <source path="dev/webfx/stack/db/datasource/spi/simple"/>
-    <!--==============================< webfx-stack-db-query >==============================-->
-    <source path="dev/webfx/stack/db/query"/>
-    <source path="dev/webfx/stack/db/query/spi"/>
-    <source path="dev/webfx/stack/db/query/spi/impl"/>
-    <!--==========================< webfx-stack-db-query-buscall >==========================-->
-    <source path="dev/webfx/stack/db/query/buscall"/>
-    <source path="dev/webfx/stack/db/query/buscall/serial"/>
-    <source path="dev/webfx/stack/db/query/buscall/serial/compression"/>
-    <source path="dev/webfx/stack/db/query/buscall/serial/compression/repeat"/>
-    <!--==========================< webfx-stack-db-query-remote >===========================-->
-    <source path="dev/webfx/stack/db/query/spi/impl/remote"/>
-    <!--=============================< webfx-stack-db-submit >==============================-->
-    <source path="dev/webfx/stack/db/submit"/>
-    <source path="dev/webfx/stack/db/submit/spi"/>
-    <source path="dev/webfx/stack/db/submit/spi/impl"/>
-    <!--=========================< webfx-stack-db-submit-buscall >==========================-->
-    <source path="dev/webfx/stack/db/submit/buscall"/>
-    <source path="dev/webfx/stack/db/submit/buscall/serial"/>
-    <!--==========================< webfx-stack-db-submit-remote >==========================-->
-    <source path="dev/webfx/stack/db/submit/spi/impl/remote"/>
     <!--================================< webfx-stack-i18n >================================-->
     <source path="dev/webfx/stack/i18n"/>
     <source path="dev/webfx/stack/i18n/operations"/>
@@ -358,48 +265,6 @@
     <source path="dev/webfx/stack/i18n/spi/impl"/>
     <!--==============================< webfx-stack-i18n-ast >==============================-->
     <source path="dev/webfx/stack/i18n/spi/impl/ast"/>
-    <!--==========================< webfx-stack-i18n-time-plugin >==========================-->
-    <source path="dev/webfx/stack/i18n/time"/>
-    <!--====================< webfx-stack-orm-datasourcemodel-service >=====================-->
-    <source path="dev/webfx/stack/orm/datasourcemodel/service"/>
-    <source path="dev/webfx/stack/orm/datasourcemodel/service/spi"/>
-    <!--==========================< webfx-stack-orm-domainmodel >===========================-->
-    <source path="dev/webfx/stack/orm/domainmodel"/>
-    <source path="dev/webfx/stack/orm/domainmodel/builder"/>
-    <source path="dev/webfx/stack/orm/domainmodel/formatter"/>
-    <source path="dev/webfx/stack/orm/domainmodel/lciimpl"/>
-    <!--======================< webfx-stack-orm-domainmodel-service >=======================-->
-    <source path="dev/webfx/stack/orm/domainmodel/service"/>
-    <source path="dev/webfx/stack/orm/domainmodel/service/spi"/>
-    <!--==============================< webfx-stack-orm-dql >===============================-->
-    <source path="dev/webfx/stack/orm/dql"/>
-    <source path="dev/webfx/stack/orm/dql/sqlcompiler"/>
-    <source path="dev/webfx/stack/orm/dql/sqlcompiler/lci"/>
-    <source path="dev/webfx/stack/orm/dql/sqlcompiler/lci/mock"/>
-    <source path="dev/webfx/stack/orm/dql/sqlcompiler/mapping"/>
-    <source path="dev/webfx/stack/orm/dql/sqlcompiler/sql"/>
-    <source path="dev/webfx/stack/orm/dql/sqlcompiler/sql/dbms"/>
-    <source path="dev/webfx/stack/orm/dql/sqlcompiler/terms"/>
-    <!--=============================< webfx-stack-orm-entity >=============================-->
-    <source path="dev/webfx/stack/orm/entity"/>
-    <source path="dev/webfx/stack/orm/entity/impl"/>
-    <source path="dev/webfx/stack/orm/entity/lciimpl"/>
-    <source path="dev/webfx/stack/orm/entity/query_result_to_entities"/>
-    <source path="dev/webfx/stack/orm/entity/result"/>
-    <source path="dev/webfx/stack/orm/entity/result/impl"/>
-    <!--===========================< webfx-stack-orm-expression >===========================-->
-    <source path="dev/webfx/stack/orm/expression"/>
-    <source path="dev/webfx/stack/orm/expression/builder"/>
-    <source path="dev/webfx/stack/orm/expression/builder/terms"/>
-    <source path="dev/webfx/stack/orm/expression/lci"/>
-    <source path="dev/webfx/stack/orm/expression/parser"/>
-    <source path="dev/webfx/stack/orm/expression/parser/javacup"/>
-    <source path="dev/webfx/stack/orm/expression/parser/jflex"/>
-    <source path="dev/webfx/stack/orm/expression/parser/lci"/>
-    <source path="dev/webfx/stack/orm/expression/parser/lci/mock"/>
-    <source path="dev/webfx/stack/orm/expression/terms"/>
-    <source path="dev/webfx/stack/orm/expression/terms/function"/>
-    <source path="dev/webfx/stack/orm/expression/terms/function/java"/>
     <!--==============================< webfx-stack-session >===============================-->
     <source path="dev/webfx/stack/session"/>
     <source path="dev/webfx/stack/session/spi"/>
