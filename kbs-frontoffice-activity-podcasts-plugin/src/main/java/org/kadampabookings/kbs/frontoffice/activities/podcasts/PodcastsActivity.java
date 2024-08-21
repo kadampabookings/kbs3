@@ -33,6 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Screen;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
@@ -244,11 +245,13 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         borderPane.setBackground(Background.fill(Color.WHITE));
         ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
-        // Automatically increasing the podcast list when the user scroll down up to bottom
+        // Lazy loading when the user scrolls down
+        double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
+        pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = podcastsLimitProperty.get();
-            if (vValue.doubleValue() >= scrollPane.getVmax() * 0.999 && podcastsContainer.getChildren().size() == currentLimit)
-                podcastsLimitProperty.set(currentLimit + 5);
+            if (vValue.doubleValue() >= scrollPane.getVmax() * (1 - lazyLoadingBottomSpace / pageContainer.getHeight()) && podcastsContainer.getChildren().size() == currentLimit)
+                podcastsLimitProperty.set(currentLimit + INITIAL_LIMIT);
         });
 
         scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling

@@ -34,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.frontoffice.utility.StyleUtility;
@@ -174,10 +175,13 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         borderPane.setBackground(Background.fill(Color.WHITE));
         ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
+        // Lazy loading when the user scrolls down
+        double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
+        pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = newsLimitProperty.get();
-            if (vValue.doubleValue() >= scrollPane.getVmax() * 0.999 && newsContainer.getChildren().size() == currentLimit)
-                newsLimitProperty.set(currentLimit + 5);
+            if (vValue.doubleValue() >= scrollPane.getVmax() * (1 - lazyLoadingBottomSpace / pageContainer.getHeight()) && newsContainer.getChildren().size() == currentLimit)
+                newsLimitProperty.set(currentLimit + INITIAL_LIMIT);
         });
 
         scrollPane.getStyleClass().add("news-activity"); // for CSS styling
