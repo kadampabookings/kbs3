@@ -10,6 +10,9 @@
         <used-by-source-modules/>
         <plugin-module>modality-crm-client-magiclink-application</plugin-module>
         <plugin-module>webfx-platform-substitution-var-localstorage-plugin</plugin-module>
+
+        <!-- Forcing the choice of simple AST I18n (modality-base-client-18n is more heavy as its Entity-based
+         evaluation feature is not required here, and it adds dependencies on WebFX Stack orm & db) -->
         <plugin-module>webfx-stack-i18n-ast</plugin-module>
     </dependencies>
 

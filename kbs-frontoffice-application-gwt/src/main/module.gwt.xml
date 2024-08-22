@@ -447,12 +447,6 @@
     <source path="dev/webfx/platform/ast/json/parser"/>
     <source path="dev/webfx/platform/ast/json/parser/javacup"/>
     <source path="dev/webfx/platform/ast/json/parser/jflex"/>
-    <!--=========================< webfx-platform-ast-yaml-plugin >=========================-->
-    <source path="dev/webfx/platform/ast/yaml"/>
-    <source path="dev/webfx/platform/ast/yaml/formatter"/>
-    <source path="dev/webfx/platform/ast/yaml/parser"/>
-    <source path="dev/webfx/platform/ast/yaml/parser/javacup"/>
-    <source path="dev/webfx/platform/ast/yaml/parser/jflex"/>
     <!--==============================< webfx-platform-async >==============================-->
     <source path="dev/webfx/platform/async"/>
     <source path="dev/webfx/platform/async/impl"/>
