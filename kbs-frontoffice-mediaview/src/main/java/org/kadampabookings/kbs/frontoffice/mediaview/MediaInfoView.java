@@ -74,6 +74,14 @@ public abstract class MediaInfoView {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
 
+        {
+            // Not necessary but may speed up min & max computations in parent container
+            setMinWidth(0);
+            setMaxWidth(Double.MAX_VALUE);
+            setMinHeight(0);
+            setMaxHeight(Double.MAX_VALUE);
+        }
+
         @Override
         public Orientation getContentBias() {
             return Orientation.HORIZONTAL; // To indicate that the height of this pane depends on its width
