@@ -84,10 +84,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         podcastsChannelsPane.setVerticalSpace(10);
         podcastsChannelsPane.setDistributeRemainingRowSpace(true);
 
-        Region separatorLine = new Region();
-        separatorLine.setBackground(Background.fill(StyleUtility.MAIN_ORANGE_COLOR));
-        separatorLine.setMinHeight(1);
-        separatorLine.setPrefWidth(Double.MAX_VALUE);
+        Region lineSeparator = GeneralUtility.createOrangeLineSeparator();
 
         HBox switchBox = new HBox(5, videosLabel, videosSwitch);
         switchBox.setMinWidth(Region.USE_PREF_SIZE);
@@ -197,7 +194,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         BorderPane.setMargin(pageContainer, new Insets(0, 20, 0, 20)); // Global page padding
         VBox.setMargin(podcastsLabel, new Insets(20, 0, 20, 0));
         VBox.setMargin(podcastsChannelsPane, new Insets(20, 0, 20, 0));
-        VBox.setMargin(separatorLine, new Insets(10, 0, 40, 0));
+        VBox.setMargin(lineSeparator, new Insets(10, 0, 40, 0));
         VBox.setMargin(carousel.getContainer(), new Insets(40, 0, 10, 0));
 
         FlexPane filterBar = new FlexPane(scaledTeacherButton, scaledTopicButton, scaledSwitchBox);
@@ -213,7 +210,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
                 podcastsLabel,
                 alsoAvailableOnLabel,
                 podcastsChannelsPane,
-                separatorLine,
+                lineSeparator,
                 filterBar,
                 carousel.getContainer()
         );
@@ -231,7 +228,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             scaledTopicButton.setMaxScale(scale);
             scaledSwitchBox.setMaxScale(scale);
             // Also the space above and below
-            VBox.setMargin(separatorLine, new Insets(10, 0, 40 * scale, 0));
+            VBox.setMargin(lineSeparator, new Insets(10, 0, 40 * scale, 0));
             VBox.setMargin(podcastsContainer, new Insets(40 * scale, 0, 10, 0));
         }, pageContainer.widthProperty());
 
