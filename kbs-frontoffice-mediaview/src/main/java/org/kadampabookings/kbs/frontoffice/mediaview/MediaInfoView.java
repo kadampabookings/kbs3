@@ -15,6 +15,7 @@ import dev.webfx.platform.util.Objects;
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -72,6 +73,11 @@ public abstract class MediaInfoView {
     protected final Pane mediaPane = new Pane(videoContainer, imageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
+
+        @Override
+        public Orientation getContentBias() {
+            return Orientation.HORIZONTAL; // To indicate that the height of this pane depends on its width
+        }
 
         @Override
         protected void layoutChildren() {
