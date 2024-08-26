@@ -215,6 +215,9 @@
     <source path="one/modality/base/frontoffice/fx"/>
     <source path="one/modality/base/frontoffice/states"/>
     <source path="one/modality/base/frontoffice/utility"/>
+    <!--==========================< modality-base-shared-context >==========================-->
+    <source path="one/modality/base/shared/context"/>
+    <source path="one/modality/base/shared/context/serial"/>
     <!--========================< modality-base-shared-domainmodel >========================-->
     <source path="one/modality/base/shared/domainmodel/formatters"/>
     <source path="one/modality/base/shared/domainmodel/functions"/>
