@@ -247,7 +247,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = podcastsLimitProperty.get();
-            if (vValue.doubleValue() >= scrollPane.getVmax() * (1 - lazyLoadingBottomSpace / pageContainer.getHeight()) && podcastsContainer.getChildren().size() == currentLimit)
+            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && podcastsContainer.getChildren().size() == currentLimit)
                 podcastsLimitProperty.set(currentLimit + INITIAL_LIMIT);
         });
 

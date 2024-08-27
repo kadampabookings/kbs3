@@ -180,7 +180,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = newsLimitProperty.get();
-            if (vValue.doubleValue() >= scrollPane.getVmax() * (1 - lazyLoadingBottomSpace / pageContainer.getHeight()) && newsContainer.getChildren().size() == currentLimit)
+            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && newsContainer.getChildren().size() == currentLimit)
                 newsLimitProperty.set(currentLimit + INITIAL_LIMIT);
         });
 
