@@ -21,6 +21,9 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
     @Source("dev/webfx/stack/i18n/fr.properties")
     TextResource r4();
 
+    @Source("one/modality/base/shared/domainmodel/DomainModelSnapshot.json")
+    TextResource r5();
+
 
 
     final class ProvidedGwtResourceBundle extends GwtResourceBundleBase {
@@ -29,6 +32,7 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
             registerResource("dev/webfx/platform/meta/exe/exe.properties", R.r2());
             registerResource("dev/webfx/stack/i18n/en.properties", R.r3());
             registerResource("dev/webfx/stack/i18n/fr.properties", R.r4());
+            registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", R.r5());
 
         }
     }
