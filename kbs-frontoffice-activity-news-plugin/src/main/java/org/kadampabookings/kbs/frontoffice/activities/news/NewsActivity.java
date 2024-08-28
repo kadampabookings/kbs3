@@ -84,8 +84,8 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
         Text topicPrefixText = TextUtility.createText("topic", Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
-                "{class: 'Topic', alias: 't', columns: 'name', where: 'exists(select News where topic = t)', orderBy: 'id'}",
-                this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
+            "{class: 'Topic', alias: 't', columns: 'name', where: 'exists(select News where topic = t)', orderBy: 'id'}",
+            this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
             @Override
             protected Node getOrCreateButtonContentFromSelectedItem() {
@@ -125,7 +125,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         searchIconSvgPath.setFill(Color.GRAY);
         HBox.setHgrow(searchTextField, Priority.ALWAYS);
         HBox.setMargin(searchTextField, new Insets(0, 0, 0, 10));
-        HBox.setMargin(searchIconSvgPath, new Insets(0,12,0,0));
+        HBox.setMargin(searchIconSvgPath, new Insets(0, 12, 0, 0));
         VBox.setMargin(searchBar, new Insets(10, 20, 10, 20));
 
         HBox switchBox = new HBox(5, videosLabel, videosSwitch);
@@ -146,9 +146,9 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         carousel.setShowingDots(false);
 
         pageContainer.getChildren().setAll(
-                headerScalePane,
-                filterBar,
-                carousel.getContainer()
+            headerScalePane,
+            filterBar,
+            carousel.getContainer()
         );
 
         FXProperties.runOnPropertiesChange(() -> {
@@ -162,7 +162,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             scaledSwitchBox.setMaxScale(scale);
         }, pageContainer.widthProperty());
 
-        pageContainer.setOnSwipeLeft( e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
+        pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = news request (as news are on the left)
 
         // Setting a max width for big desktop screens
@@ -180,7 +180,8 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = newsLimitProperty.get();
-            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && newsContainer.getChildren().size() == currentLimit)
+            VBox selectedContainer = videosSwitch.isSelected() ? videosContainer : newsContainer;
+            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && selectedContainer.getChildren().size() == currentLimit)
                 newsLimitProperty.set(currentLimit + INITIAL_LIMIT);
         });
 
@@ -200,27 +201,38 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty());
 
         ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
-                .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
-                .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-                .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> { String searchLike = "%" + searchText.toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
-                .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
-                //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("withVideos"))
-                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
-                .storeMappedObjectsInto(newsContainer.getChildren())
-                .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
-                .start();
+            .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
+            .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
+            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
+            .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> {
+                String searchLike = "%" + searchText.toLowerCase() + "%";
+                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+            })
+            .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
+            //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("withVideos"))
+            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
+            .storeMappedObjectsInto(newsContainer.getChildren())
+            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
+            .start();
 
         ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
-                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
-                .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-                .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> { String searchLike = "%" + searchText.toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
-                .always(DqlStatement.where("teacher==null"))
-                .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
-                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
-                .storeMappedObjectsInto(videosContainer.getChildren())
-                .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
-                .start();
+            .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
+            .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
+            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
+            .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> {
+                String searchLike = "%" + searchText.toLowerCase() + "%";
+                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+            })
+            .always(DqlStatement.where("teacher==null"))
+            .ifNotNull(topicProperty, topic -> {
+                String searchLike = "%" + topic.getName().toLowerCase() + "%";
+                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+            })
+            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
+            .storeMappedObjectsInto(videosContainer.getChildren())
+            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
+            .start();
     }
 }

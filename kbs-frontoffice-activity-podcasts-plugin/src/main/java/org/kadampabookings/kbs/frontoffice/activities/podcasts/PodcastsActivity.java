@@ -73,10 +73,10 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", StyleUtility.MAIN_ORANGE_COLOR);
         Label[] podcastsChannelButtons = {
-                createPodcastsChannelButton("Spotify",       "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
-                createPodcastsChannelButton("ApplePodcasts", "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
-                createPodcastsChannelButton("AmazonMusic",   "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
-                createPodcastsChannelButton("PocketCasts",   "https://pca.st/9yuq0l0p")
+            createPodcastsChannelButton("Spotify", "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
+            createPodcastsChannelButton("ApplePodcasts", "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
+            createPodcastsChannelButton("AmazonMusic", "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
+            createPodcastsChannelButton("PocketCasts", "https://pca.st/9yuq0l0p")
         };
         FlexPane podcastsChannelsPane = new FlexPane(podcastsChannelButtons);
         podcastsChannelsPane.setMaxWidth(Double.MAX_VALUE);
@@ -96,8 +96,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         Text teacherPrefixText = I18n.bindI18nProperties(new Text(), "teacher");
         teacherPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Teacher> teacherButtonSelector = new EntityButtonSelector<Teacher>(
-                "{class: 'Teacher', alias: 't', columns: 'name', orderBy: 'id'}",
-                this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
+            "{class: 'Teacher', alias: 't', columns: 'name', orderBy: 'id'}",
+            this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
             @Override
             protected Node getOrCreateButtonContentFromSelectedItem() {
@@ -105,7 +105,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             }
         }
             .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Podcast where teacher = t) > 0"))
-            .ifTrue( videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Video where teacher = t) > 0"))
+            .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Video where teacher = t) > 0"))
             .appendNullEntity(true); // Also adding null entity that will represent all teachers
         // Creating a virtual teacher named "All" that will be used to select all teachers
         EntityStore store = teacherButtonSelector.getStore();
@@ -132,8 +132,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         TabsBar<Boolean> topicTabsBar = new TabsBar<>(this, virtuousTopicProperty::set);
         topicTabsBar.setTabs(
-                createTopicTab(topicTabsBar, "nonVirtuousTopic", false),
-                createTopicTab(topicTabsBar, "virtuousTopic", true)
+            createTopicTab(topicTabsBar, "nonVirtuousTopic", false),
+            createTopicTab(topicTabsBar, "virtuousTopic", true)
         );
         ColumnsPane topicTabsPane = new ColumnsPane();
         topicTabsPane.getChildren().setAll(topicTabsBar.getTabs());
@@ -148,8 +148,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         Text topicPrefixText = I18n.bindI18nProperties(new Text(), "topic");
         topicPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
-                "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",
-                this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
+            "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",
+            this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
             private final BorderPane bp = new BorderPane();
 
@@ -207,21 +207,21 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         carousel.setShowingDots(false);
 
         pageContainer.getChildren().setAll(
-                podcastsLabel,
-                alsoAvailableOnLabel,
-                podcastsChannelsPane,
-                lineSeparator,
-                filterBar,
-                carousel.getContainer()
+            podcastsLabel,
+            alsoAvailableOnLabel,
+            podcastsChannelsPane,
+            lineSeparator,
+            filterBar,
+            carousel.getContainer()
         );
 
         FXProperties.runOnPropertiesChange(() -> {
             double width = pageContainer.getWidth();
             double fontFactor = GeneralUtility.computeFontFactor(width);
-            GeneralUtility.setLabeledFont(podcastsLabel,        StyleUtility.TEXT_FAMILY, FontWeight.BOLD,   fontFactor * 21);
+            GeneralUtility.setLabeledFont(podcastsLabel, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, fontFactor * 21);
             GeneralUtility.setLabeledFont(alsoAvailableOnLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL, fontFactor * 8);
-            for (Label button: podcastsChannelButtons)
-                GeneralUtility.setLabeledFont(button,           StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD,fontFactor * StyleUtility.MAIN_TEXT_SIZE);
+            for (Label button : podcastsChannelButtons)
+                GeneralUtility.setLabeledFont(button, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             scaledTeacherButton.setMaxScale(scale);
@@ -232,7 +232,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             VBox.setMargin(podcastsContainer, new Insets(40 * scale, 0, 10, 0));
         }, pageContainer.widthProperty());
 
-        pageContainer.setOnSwipeLeft( e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
+        pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = podcasts request (as podcasts are on the left)
 
         // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
@@ -247,7 +247,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
             int currentLimit = podcastsLimitProperty.get();
-            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && podcastsContainer.getChildren().size() == currentLimit)
+            VBox selectedContainer = videosSwitch.isSelected() ? videosContainer : podcastsContainer;
+            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && selectedContainer.getChildren().size() == currentLimit)
                 podcastsLimitProperty.set(currentLimit + INITIAL_LIMIT);
         });
 
@@ -295,30 +296,38 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         }, teacherProperty, topicProperty, videosSwitch.selectedProperty());
 
         ReactiveObjectsMapper.<Podcast, Node>createPushReactiveChain(this)
-                .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
-                //.always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-                .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
-                .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
-                .always(DqlStatement.where("audioUrl != null"))
-                //.ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
-                //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
-                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setMediaInfo, PodcastView::getView))
-                .storeMappedObjectsInto(podcastsContainer.getChildren())
-                .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts"))
-                .start();
+            .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
+            .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
+            //.always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
+            .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
+            .ifNotNull(topicProperty, topic -> {
+                String searchLike = "%" + topic.getName().toLowerCase() + "%";
+                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+            })
+            .always(DqlStatement.where("audioUrl != null"))
+            //.ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
+            //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
+            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setMediaInfo, PodcastView::getView))
+            .storeMappedObjectsInto(podcastsContainer.getChildren())
+            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts"))
+            .start();
 
         ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
-                .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
-                .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-                .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
-                .always(DqlStatement.where("teacher!=null"))
-                .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
-                .ifNotNull(topicProperty, topic -> { String searchLike = "%" + topic.getName().toLowerCase() + "%"; return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike); })
-                .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
-                .storeMappedObjectsInto(videosContainer.getChildren())
-                .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
-                .start();
+            .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
+            .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
+            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
+            .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .always(DqlStatement.where("teacher!=null"))
+            .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
+            .ifNotNull(topicProperty, topic -> {
+                String searchLike = "%" + topic.getName().toLowerCase() + "%";
+                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+            })
+            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
+            .storeMappedObjectsInto(videosContainer.getChildren())
+            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
+            .start();
     }
 
 }
