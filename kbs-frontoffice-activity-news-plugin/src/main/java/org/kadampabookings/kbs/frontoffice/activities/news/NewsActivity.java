@@ -10,6 +10,7 @@ import dev.webfx.extras.switches.Switch;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.conf.SourcesConfig;
+import dev.webfx.platform.util.collection.Collections;
 import dev.webfx.stack.cache.client.LocalStorageCache;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
@@ -17,10 +18,15 @@ import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivi
 import dev.webfx.stack.orm.dql.DqlStatement;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
-import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntityToObjectMapper;
-import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
+import dev.webfx.stack.orm.reactive.entities.dql_to_entities.ReactiveEntitiesMapper;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
-import javafx.beans.property.*;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -44,6 +50,10 @@ import one.modality.base.shared.entities.Topic;
 import one.modality.base.shared.entities.Video;
 import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
@@ -52,9 +62,12 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox newsContainer = new VBox(40);
+    private final ObservableList<News> newsFeed = FXCollections.observableArrayList();
+    private final ObjectProperty<LocalDateTime> loadNewsBeforeDateProperty = new SimpleObjectProperty<>();
     private final VBox videosContainer = new VBox(20);
+    private final ObservableList<Video> videosFeed = FXCollections.observableArrayList();
+    private final ObjectProperty<LocalDateTime> loadVideosBeforeDateProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(newsContainer, videosContainer);
-    public final IntegerProperty newsLimitProperty = new SimpleIntegerProperty(INITIAL_LIMIT);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
     private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "Videos");
     private final Switch videosSwitch = new Switch();
@@ -175,15 +188,48 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         borderPane.setBackground(Background.fill(Color.WHITE));
         ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
+        newsFeed.addListener((InvalidationListener) observable -> {
+            List<Node> newNewsNodes = newsFeed.stream()
+                .map(news -> {
+                    NewsView newsView = new NewsView(getHistory());
+                    newsView.setNews(news);
+                    return newsView.getView();
+                }).collect(Collectors.toList());
+            if (loadNewsBeforeDateProperty.get() == null)
+                newsContainer.getChildren().setAll(newNewsNodes);
+            else
+                newsContainer.getChildren().addAll(newNewsNodes);
+        });
+
+        videosFeed.addListener((InvalidationListener) observable -> {
+            List<Node> newVideosNodes = videosFeed.stream()
+                .map(video -> {
+                    VideoView videoView = new VideoView();
+                    videoView.setMediaInfo(video);
+                    return videoView.getView();
+                }).collect(Collectors.toList());
+            if (loadVideosBeforeDateProperty.get() == null)
+                videosContainer.getChildren().setAll(newVideosNodes);
+            else
+                videosContainer.getChildren().addAll(newVideosNodes);
+        });
+
         // Lazy loading when the user scrolls down
         double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
-        scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
-            int currentLimit = newsLimitProperty.get();
-            VBox selectedContainer = videosSwitch.isSelected() ? videosContainer : newsContainer;
-            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && selectedContainer.getChildren().size() == currentLimit)
-                newsLimitProperty.set(currentLimit + INITIAL_LIMIT);
-        });
+        FXProperties.runOnPropertiesChange(() -> {
+            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
+                if (videosSwitch.isSelected()) {
+                    Video bottomVideo = Collections.last(videosFeed);
+                    if (bottomVideo != null)
+                        FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, bottomVideo.getDate());
+                } else {
+                    News bottomNews = Collections.last(newsFeed);
+                    if (bottomNews != null)
+                        FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, bottomNews.getDate());
+                }
+            }
+        }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
 
         scrollPane.getStyleClass().add("news-activity"); // for CSS styling
         // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
@@ -196,31 +242,31 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     protected void startLogic() {
         // Resetting news limit to initial value whenever the user plays with filters
         FXProperties.runOnPropertiesChange(() -> {
-            newsLimitProperty.set(INITIAL_LIMIT);
+            loadNewsBeforeDateProperty.set(null);
+            loadVideosBeforeDateProperty.set(null);
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : newsContainer);
         }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty());
 
-        ReactiveObjectsMapper.<News, Node>createPushReactiveChain(this)
+        ReactiveEntitiesMapper.<News>createReactiveChain(this)
             .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .always(DqlStatement.limit("?", INITIAL_LIMIT))
             .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> {
                 String searchLike = "%" + searchText.toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
             .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
-            //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("withVideos"))
-            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new NewsView(getHistory()), NewsView::setNews, NewsView::getView))
-            .storeMappedObjectsInto(newsContainer.getChildren())
+            .ifNotNull(loadNewsBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
+            .storeEntitiesInto(newsFeed)
             .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
             .start();
 
-        ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
+        ReactiveEntitiesMapper.<Video>createReactiveChain(this)
             .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(newsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .always(DqlStatement.limit("?", INITIAL_LIMIT))
             .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> {
                 String searchLike = "%" + searchText.toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
@@ -230,8 +276,8 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
-            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
-            .storeMappedObjectsInto(videosContainer.getChildren())
+            .ifNotNull(loadVideosBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
+            .storeEntitiesInto(videosFeed)
             .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
             .start();
     }

@@ -7,6 +7,7 @@ import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.browser.Browser;
 import dev.webfx.platform.console.Console;
+import dev.webfx.platform.util.collection.Collections;
 import dev.webfx.stack.cache.client.LocalStorageCache;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
@@ -15,10 +16,12 @@ import dev.webfx.stack.orm.dql.DqlStatement;
 import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
-import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntityToObjectMapper;
-import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
+import dev.webfx.stack.orm.reactive.entities.dql_to_entities.ReactiveEntitiesMapper;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -47,6 +50,10 @@ import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.TeacherImpl;
 import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
@@ -55,9 +62,12 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox podcastsContainer = new VBox(20);
+    private final ObservableList<Podcast> podcastsFeed = FXCollections.observableArrayList();
+    private final ObjectProperty<LocalDateTime> loadPodcastsBeforeDateProperty = new SimpleObjectProperty<>();
     private final VBox videosContainer = new VBox(20);
+    private final ObservableList<Video> videosFeed = FXCollections.observableArrayList();
+    private final ObjectProperty<LocalDateTime> loadVideosBeforeDateProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(podcastsContainer, videosContainer);
-    public final IntegerProperty podcastsLimitProperty = new SimpleIntegerProperty(INITIAL_LIMIT);
     private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "videos");
     private final Switch videosSwitch = new Switch();
 
@@ -242,15 +252,48 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         borderPane.setBackground(Background.fill(Color.WHITE));
         ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
+        podcastsFeed.addListener((InvalidationListener) observable -> {
+            List<Node> newPodcastNodes = podcastsFeed.stream()
+                .map(podcast -> {
+                    PodcastView podcastView = new PodcastView();
+                    podcastView.setMediaInfo(podcast);
+                    return podcastView.getView();
+                }).collect(Collectors.toList());
+            if (loadPodcastsBeforeDateProperty.get() == null)
+                podcastsContainer.getChildren().setAll(newPodcastNodes);
+            else
+                podcastsContainer.getChildren().addAll(newPodcastNodes);
+        });
+
+        videosFeed.addListener((InvalidationListener) observable -> {
+            List<Node> newVideosNodes = videosFeed.stream()
+                .map(video -> {
+                    VideoView videoView = new VideoView();
+                    videoView.setMediaInfo(video);
+                    return videoView.getView();
+                }).collect(Collectors.toList());
+            if (loadVideosBeforeDateProperty.get() == null)
+                videosContainer.getChildren().setAll(newVideosNodes);
+            else
+                videosContainer.getChildren().addAll(newVideosNodes);
+        });
+
         // Lazy loading when the user scrolls down
         double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
-        scrollPane.vvalueProperty().addListener((observable, oldValue, vValue) -> {
-            int currentLimit = podcastsLimitProperty.get();
-            VBox selectedContainer = videosSwitch.isSelected() ? videosContainer : podcastsContainer;
-            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace && selectedContainer.getChildren().size() == currentLimit)
-                podcastsLimitProperty.set(currentLimit + INITIAL_LIMIT);
-        });
+        FXProperties.runOnPropertiesChange(() -> {
+            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
+                if (videosSwitch.isSelected()) {
+                    Video bottomVideo = Collections.last(videosFeed);
+                    if (bottomVideo != null)
+                        FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, bottomVideo.getDate());
+                } else {
+                    Podcast bottomPodcast = Collections.last(podcastsFeed);
+                    if (bottomPodcast != null)
+                        FXProperties.setIfNotEquals(loadPodcastsBeforeDateProperty, bottomPodcast.getDate());
+                }
+            }
+        }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
 
         scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
         // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
@@ -291,41 +334,40 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     protected void startLogic() {
         // Resetting podcasts limit to initial value whenever the user plays with filters
         FXProperties.runOnPropertiesChange(() -> {
-            podcastsLimitProperty.set(INITIAL_LIMIT);
+            loadPodcastsBeforeDateProperty.set(null);
+            loadVideosBeforeDateProperty.set(null);
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : podcastsContainer);
         }, teacherProperty, topicProperty, videosSwitch.selectedProperty());
 
-        ReactiveObjectsMapper.<Podcast, Node>createPushReactiveChain(this)
+        ReactiveEntitiesMapper.<Podcast>createPushReactiveChain(this)
             .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
             //.always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .always(DqlStatement.limit("?", INITIAL_LIMIT))
             .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
             .always(DqlStatement.where("audioUrl != null"))
-            //.ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("audioUrl != null"))
-            //.ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("wistiaVideoId != null"))
-            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(PodcastView::new, PodcastView::setMediaInfo, PodcastView::getView))
-            .storeMappedObjectsInto(podcastsContainer.getChildren())
+            .ifNotNull(loadPodcastsBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
+            .storeEntitiesInto(podcastsFeed)
             .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts"))
             .start();
 
-        ReactiveObjectsMapper.<Video, Node>createPushReactiveChain(this)
+        ReactiveEntitiesMapper.<Video>createPushReactiveChain(this)
             .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(podcastsLimitProperty, limit -> DqlStatement.limit("?", limit))
+            .always(DqlStatement.limit("?", INITIAL_LIMIT))
             .always(DqlStatement.where("teacher!=null"))
             .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
-            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
-            .storeMappedObjectsInto(videosContainer.getChildren())
+            .ifNotNull(loadVideosBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
+            .storeEntitiesInto(videosFeed)
             .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
             .start();
     }
