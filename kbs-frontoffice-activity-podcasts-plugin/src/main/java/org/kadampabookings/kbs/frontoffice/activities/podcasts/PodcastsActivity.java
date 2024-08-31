@@ -286,10 +286,10 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         FXProperties.runOnPropertiesChange(() -> {
             if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
                 if (videosSwitch.isSelected()) {
-                    if (lastLoadedVideo != null)
+                    if (lastLoadedVideo != null && videosFeed.isEmpty())
                         FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, lastLoadedVideo.getDate());
                 } else {
-                    if (lastLoadedPodcast != null)
+                    if (lastLoadedPodcast != null && podcastsFeed.isEmpty())
                         FXProperties.setIfNotEquals(loadPodcastsBeforeDateProperty, lastLoadedPodcast.getDate());
                 }
             }

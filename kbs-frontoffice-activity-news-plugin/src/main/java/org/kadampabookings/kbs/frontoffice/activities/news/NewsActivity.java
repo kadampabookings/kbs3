@@ -222,10 +222,10 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         FXProperties.runOnPropertiesChange(() -> {
             if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
                 if (videosSwitch.isSelected()) {
-                    if (lastLoadedVideo != null)
+                    if (lastLoadedVideo != null && videosFeed.isEmpty())
                         FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, lastLoadedVideo.getDate());
                 } else {
-                    if (lastLoadedNews != null)
+                    if (lastLoadedNews != null && newsFeed.isEmpty())
                         FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, lastLoadedNews.getDate());
                 }
             }
