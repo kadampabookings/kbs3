@@ -51,8 +51,6 @@ import one.modality.base.shared.entities.Video;
 import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
@@ -63,9 +61,11 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox newsContainer = new VBox(40);
     private final ObservableList<News> newsFeed = FXCollections.observableArrayList();
+    private News lastLoadedNews;
     private final ObjectProperty<LocalDateTime> loadNewsBeforeDateProperty = new SimpleObjectProperty<>();
     private final VBox videosContainer = new VBox(20);
     private final ObservableList<Video> videosFeed = FXCollections.observableArrayList();
+    private Video lastLoadedVideo;
     private final ObjectProperty<LocalDateTime> loadVideosBeforeDateProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(newsContainer, videosContainer);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
@@ -189,29 +189,31 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
         newsFeed.addListener((InvalidationListener) observable -> {
-            List<Node> newNewsNodes = newsFeed.stream()
-                .map(news -> {
+            lastLoadedNews = Collections.last(newsFeed);
+            if (lastLoadedNews != null) {
+                if (loadNewsBeforeDateProperty.get() == null)
+                    newsContainer.getChildren().clear();
+                newsContainer.getChildren().addAll(Collections.map(newsFeed, news -> {
                     NewsView newsView = new NewsView(getHistory());
                     newsView.setNews(news);
                     return newsView.getView();
-                }).collect(Collectors.toList());
-            if (loadNewsBeforeDateProperty.get() == null)
-                newsContainer.getChildren().setAll(newNewsNodes);
-            else
-                newsContainer.getChildren().addAll(newNewsNodes);
+                }));
+                newsFeed.clear();
+            }
         });
 
         videosFeed.addListener((InvalidationListener) observable -> {
-            List<Node> newVideosNodes = videosFeed.stream()
-                .map(video -> {
+            lastLoadedVideo = Collections.last(videosFeed);
+            if (lastLoadedVideo != null) {
+                if (loadVideosBeforeDateProperty.get() == null)
+                    videosContainer.getChildren().clear();
+                videosContainer.getChildren().addAll(Collections.map(videosFeed, video -> {
                     VideoView videoView = new VideoView();
                     videoView.setMediaInfo(video);
                     return videoView.getView();
-                }).collect(Collectors.toList());
-            if (loadVideosBeforeDateProperty.get() == null)
-                videosContainer.getChildren().setAll(newVideosNodes);
-            else
-                videosContainer.getChildren().addAll(newVideosNodes);
+                }));
+                videosFeed.clear();
+            }
         });
 
         // Lazy loading when the user scrolls down
@@ -220,13 +222,11 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         FXProperties.runOnPropertiesChange(() -> {
             if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
                 if (videosSwitch.isSelected()) {
-                    Video bottomVideo = Collections.last(videosFeed);
-                    if (bottomVideo != null)
-                        FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, bottomVideo.getDate());
+                    if (lastLoadedVideo != null)
+                        FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, lastLoadedVideo.getDate());
                 } else {
-                    News bottomNews = Collections.last(newsFeed);
-                    if (bottomNews != null)
-                        FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, bottomNews.getDate());
+                    if (lastLoadedNews != null)
+                        FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, lastLoadedNews.getDate());
                 }
             }
         }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
@@ -242,7 +242,9 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     protected void startLogic() {
         // Resetting news limit to initial value whenever the user plays with filters
         FXProperties.runOnPropertiesChange(() -> {
+            lastLoadedVideo = null;
             loadNewsBeforeDateProperty.set(null);
+            lastLoadedVideo = null;
             loadVideosBeforeDateProperty.set(null);
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : newsContainer);
         }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty());

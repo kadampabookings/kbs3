@@ -51,8 +51,6 @@ import one.modality.base.shared.entities.impl.TeacherImpl;
 import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
@@ -63,9 +61,11 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox podcastsContainer = new VBox(20);
     private final ObservableList<Podcast> podcastsFeed = FXCollections.observableArrayList();
+    private Podcast lastLoadedPodcast;
     private final ObjectProperty<LocalDateTime> loadPodcastsBeforeDateProperty = new SimpleObjectProperty<>();
     private final VBox videosContainer = new VBox(20);
     private final ObservableList<Video> videosFeed = FXCollections.observableArrayList();
+    private Video lastLoadedVideo;
     private final ObjectProperty<LocalDateTime> loadVideosBeforeDateProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(podcastsContainer, videosContainer);
     private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "videos");
@@ -253,29 +253,31 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
 
         podcastsFeed.addListener((InvalidationListener) observable -> {
-            List<Node> newPodcastNodes = podcastsFeed.stream()
-                .map(podcast -> {
-                    PodcastView podcastView = new PodcastView();
-                    podcastView.setMediaInfo(podcast);
-                    return podcastView.getView();
-                }).collect(Collectors.toList());
-            if (loadPodcastsBeforeDateProperty.get() == null)
-                podcastsContainer.getChildren().setAll(newPodcastNodes);
-            else
-                podcastsContainer.getChildren().addAll(newPodcastNodes);
+            lastLoadedPodcast = Collections.last(podcastsFeed);
+            if (lastLoadedPodcast != null) {
+                if (loadPodcastsBeforeDateProperty.get() == null)
+                    podcastsContainer.getChildren().clear();
+                podcastsContainer.getChildren().addAll(Collections.map(podcastsFeed, news -> {
+                    PodcastView newsView = new PodcastView();
+                    newsView.setMediaInfo(news);
+                    return newsView.getView();
+                }));
+                podcastsFeed.clear();
+            }
         });
 
         videosFeed.addListener((InvalidationListener) observable -> {
-            List<Node> newVideosNodes = videosFeed.stream()
-                .map(video -> {
+            lastLoadedVideo = Collections.last(videosFeed);
+            if (lastLoadedVideo != null) {
+                if (loadVideosBeforeDateProperty.get() == null)
+                    videosContainer.getChildren().clear();
+                videosContainer.getChildren().addAll(Collections.map(videosFeed, video -> {
                     VideoView videoView = new VideoView();
                     videoView.setMediaInfo(video);
                     return videoView.getView();
-                }).collect(Collectors.toList());
-            if (loadVideosBeforeDateProperty.get() == null)
-                videosContainer.getChildren().setAll(newVideosNodes);
-            else
-                videosContainer.getChildren().addAll(newVideosNodes);
+                }));
+                videosFeed.clear();
+            }
         });
 
         // Lazy loading when the user scrolls down
@@ -284,13 +286,11 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         FXProperties.runOnPropertiesChange(() -> {
             if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
                 if (videosSwitch.isSelected()) {
-                    Video bottomVideo = Collections.last(videosFeed);
-                    if (bottomVideo != null)
-                        FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, bottomVideo.getDate());
+                    if (lastLoadedVideo != null)
+                        FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, lastLoadedVideo.getDate());
                 } else {
-                    Podcast bottomPodcast = Collections.last(podcastsFeed);
-                    if (bottomPodcast != null)
-                        FXProperties.setIfNotEquals(loadPodcastsBeforeDateProperty, bottomPodcast.getDate());
+                    if (lastLoadedPodcast != null)
+                        FXProperties.setIfNotEquals(loadPodcastsBeforeDateProperty, lastLoadedPodcast.getDate());
                 }
             }
         }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
@@ -334,7 +334,9 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     protected void startLogic() {
         // Resetting podcasts limit to initial value whenever the user plays with filters
         FXProperties.runOnPropertiesChange(() -> {
+            lastLoadedVideo = null;
             loadPodcastsBeforeDateProperty.set(null);
+            lastLoadedVideo = null;
             loadVideosBeforeDateProperty.set(null);
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : podcastsContainer);
         }, teacherProperty, topicProperty, videosSwitch.selectedProperty());
