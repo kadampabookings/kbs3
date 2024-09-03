@@ -8,7 +8,6 @@ import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.browser.Browser;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.util.collection.Collections;
-import dev.webfx.stack.cache.client.LocalStorageCache;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
@@ -341,6 +340,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : podcastsContainer);
         }, teacherProperty, topicProperty, videosSwitch.selectedProperty());
 
+        // Podcasts loader
         ReactiveEntitiesMapper.<Podcast>createPushReactiveChain(this)
             .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
@@ -354,11 +354,12 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             .always(DqlStatement.where("audioUrl != null"))
             .ifNotNull(loadPodcastsBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
             .storeEntitiesInto(podcastsFeed)
-            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts"))
+            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts"))
             .start();
 
+        // Videos loader
         ReactiveEntitiesMapper.<Video>createPushReactiveChain(this)
-            .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
+            .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, youtubeVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .always(DqlStatement.limit("?", INITIAL_LIMIT))
@@ -370,7 +371,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             })
             .ifNotNull(loadVideosBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
             .storeEntitiesInto(videosFeed)
-            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
+            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
             .start();
     }
 

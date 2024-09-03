@@ -11,7 +11,6 @@ import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.conf.SourcesConfig;
 import dev.webfx.platform.util.collection.Collections;
-import dev.webfx.stack.cache.client.LocalStorageCache;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
@@ -249,6 +248,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : newsContainer);
         }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty());
 
+        // News loader
         ReactiveEntitiesMapper.<News>createReactiveChain(this)
             .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
@@ -261,9 +261,10 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
             .ifNotNull(loadNewsBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
             .storeEntitiesInto(newsFeed)
-            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
+            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
             .start();
 
+        // Videos loader
         ReactiveEntitiesMapper.<Video>createReactiveChain(this)
             .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
@@ -280,7 +281,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             })
             .ifNotNull(loadVideosBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
             .storeEntitiesInto(videosFeed)
-            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
+            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
             .start();
     }
 }
