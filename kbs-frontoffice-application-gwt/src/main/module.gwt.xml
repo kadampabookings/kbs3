@@ -326,6 +326,8 @@
     <source path="dev/webfx/extras/player/video/web"/>
     <!--======================< webfx-extras-player-video-web-wistia >======================-->
     <source path="dev/webfx/extras/player/video/web/wistia"/>
+    <!--=====================< webfx-extras-player-video-web-youtube >======================-->
+    <source path="dev/webfx/extras/player/video/web/youtube"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->
