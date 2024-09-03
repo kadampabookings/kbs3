@@ -206,7 +206,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         VBox.setMargin(lineSeparator, new Insets(10, 0, 40, 0));
         VBox.setMargin(carousel.getContainer(), new Insets(40, 0, 10, 0));
 
-        FlexPane filterBar = new FlexPane(scaledTeacherButton, scaledTopicButton, scaledSwitchBox);
+        FlexPane filterBar = new FlexPane(scaledTeacherButton, /*scaledTopicButton,*/ scaledSwitchBox);
         filterBar.setHorizontalSpace(10);
         filterBar.setVerticalSpace(10);
         filterBar.setAlignment(Pos.CENTER);

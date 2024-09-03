@@ -146,7 +146,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         switchBox.setAlignment(Pos.CENTER);
         ScalePane scaledSwitchBox = new ScalePane(ScaleMode.FIT_HEIGHT, switchBox);
         scaledSwitchBox.setCanShrink(false);
-        FlexPane filterBar = new FlexPane(searchBar, scaledTopicButton, scaledSwitchBox);
+        FlexPane filterBar = new FlexPane(searchBar, /*scaledTopicButton,*/ scaledSwitchBox);
         filterBar.setHorizontalSpace(10);
         filterBar.setVerticalSpace(10);
         filterBar.setAlignment(Pos.CENTER);
@@ -172,9 +172,12 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             double scale = Math.max(1, Math.min(width / 600, 1.75));
             scaledTopicButton.setMaxScale(scale);
             scaledSwitchBox.setMaxScale(scale);
+            // This was added since scaledTopicButton was removed from filterBar (otherwise height too small)
+            searchBar.setMinHeight(scale * 40 / 1.8);
+            scaledSwitchBox.setMinHeight(scale * 40 / 1.8);
         }, pageContainer.widthProperty());
 
-        pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
+        pageContainer.setOnSwipeLeft( e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = news request (as news are on the left)
 
         // Setting a max width for big desktop screens
