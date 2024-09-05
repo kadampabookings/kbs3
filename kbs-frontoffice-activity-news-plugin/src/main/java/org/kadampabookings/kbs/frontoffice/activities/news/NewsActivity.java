@@ -65,7 +65,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     private final VBox videosContainer = new VBox(20);
     private final ObservableList<Video> videosFeed = FXCollections.observableArrayList();
     private Video lastLoadedVideo;
-    private final ObjectProperty<LocalDateTime> loadVideosBeforeDateProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Video> latestLoadedVideoProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(newsContainer, videosContainer);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
     private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "Videos");
@@ -207,7 +207,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         videosFeed.addListener((InvalidationListener) observable -> {
             lastLoadedVideo = Collections.last(videosFeed);
             if (lastLoadedVideo != null) {
-                if (loadVideosBeforeDateProperty.get() == null)
+                if (latestLoadedVideoProperty.get() == null)
                     videosContainer.getChildren().clear();
                 videosContainer.getChildren().addAll(Collections.map(videosFeed, video -> {
                     VideoView videoView = new VideoView();
@@ -225,7 +225,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
                 if (videosSwitch.isSelected()) {
                     if (lastLoadedVideo != null && videosFeed.isEmpty())
-                        FXProperties.setIfNotEquals(loadVideosBeforeDateProperty, lastLoadedVideo.getDate());
+                        FXProperties.setIfNotEquals(latestLoadedVideoProperty, lastLoadedVideo);
                 } else {
                     if (lastLoadedNews != null && newsFeed.isEmpty())
                         FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, lastLoadedNews.getDate());
@@ -247,7 +247,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             lastLoadedVideo = null;
             loadNewsBeforeDateProperty.set(null);
             lastLoadedVideo = null;
-            loadVideosBeforeDateProperty.set(null);
+            latestLoadedVideoProperty.set(null);
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : newsContainer);
         }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty());
 
@@ -277,12 +277,12 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 String searchLike = "%" + searchText.toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
-            .always(DqlStatement.where("teacher==null"))
+            .always(DqlStatement.where("playlist == null"))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
-            .ifNotNull(loadVideosBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
+            .ifNotNull(latestLoadedVideoProperty, video -> DqlStatement.where("date < ?", video.getDate()))
             .storeEntitiesInto(videosFeed)
             //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
             .start();

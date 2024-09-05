@@ -29,6 +29,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
@@ -43,7 +44,8 @@ import java.time.format.DateTimeFormatter;
 
 public abstract class MediaInfoView {
 
-    private final static String FAVORITE_PATH = "M 24.066331,0 C 21.212473,0 18.540974,1.2921301 16.762259,3.4570778 14.983544,1.2920563 12.312119,0 9.4581876,0 4.2429514,0 0,4.2428782 0,9.4581873 0,13.54199 2.4351327,18.265558 7.237612,23.497667 c 3.695875,4.026405 7.716386,7.143963 8.860567,8.003592 L 16.762038,32 17.425897,31.501333 c 1.144181,-0.859629 5.164839,-3.977113 8.860788,-8.003518 4.802627,-5.23211 7.237834,-9.955751 7.237834,-14.0396277 C 33.524519,4.2428782 29.281567,0 24.066331,0 Z";
+    private static final double WIDE_VIDEO_MAX_WIDTH = 880;
+    private static final String FAVORITE_PATH = "M 24.066331,0 C 21.212473,0 18.540974,1.2921301 16.762259,3.4570778 14.983544,1.2920563 12.312119,0 9.4581876,0 4.2429514,0 0,4.2428782 0,9.4581873 0,13.54199 2.4351327,18.265558 7.237612,23.497667 c 3.695875,4.026405 7.716386,7.143963 8.860567,8.003592 L 16.762038,32 17.425897,31.501333 c 1.144181,-0.859629 5.164839,-3.977113 8.860788,-8.003518 4.802627,-5.23211 7.237834,-9.955751 7.237834,-14.0396277 C 33.524519,4.2428782 29.281567,0 24.066331,0 Z";
 
     // The media player associated with this particular podcast. Note that this podcast view can be recycled, which
     // means its associated podcast can change (through setPodcast()). When recycled, the media player can eventually
@@ -51,7 +53,7 @@ public abstract class MediaInfoView {
     // state can be re-established in that case. Otherwise - if the podcast hasn't been played so far in this session -
     // the media player will be null until the user presses the play button.
     protected Player player;
-    protected boolean isAudio, isVideo, isWistiaVideo, isYoutubeVideo;
+    protected boolean isAudio, isVideo, isWistiaVideo, isYoutubeVideo, isWideVideo;
     private Unregisterable mediaPlayerBinding; // will allow to unbind a recycled view from its previous associated media player.
     protected HasMediaInfo mediaInfo;
     private Duration mediaDuration;
@@ -74,8 +76,9 @@ public abstract class MediaInfoView {
     private boolean timelineShowImage;
     protected final Pane mediaPane = new Pane(videoContainer, imageView, dateText, titleLabel, excerptLabel, backwardButton, pauseButton, playButton, forwardButton, progressBar, elapsedTimeText, favoritePane) {
         private double fontFactor;
-        private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
-
+        private double leftX, imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, buttonY, buttonSize, favoriteY, favoriteHeight;
+        private HPos titleHPos, favoriteHPos;
+        private double wideVideoVSpace;
         {
             // Not necessary but may speed up min & max computations in parent container
             setMinWidth(0);
@@ -94,13 +97,13 @@ public abstract class MediaInfoView {
             computeLayout(getWidth());
             imageView.setFitWidth(isAudio ? imageWidth : 0);
             imageView.setFitHeight(imageHeight);
-            layoutInArea(imageView, 0, imageY, imageWidth, imageHeight, 0, HPos.CENTER, VPos.CENTER);
+            layoutInArea(imageView, leftX, imageY, imageWidth, imageHeight, 0, HPos.CENTER, VPos.CENTER);
             layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
+            layoutInArea(titleLabel, rightX, titleY, rightWidth, titleHeight, 0, titleHPos, VPos.TOP);
             layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
+            layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, favoriteHPos, VPos.TOP);
             if (isVideo) {
-                layoutInArea(videoContainer, 0, imageY, imageWidth, imageHeight, 0, HPos.CENTER, VPos.CENTER);
+                layoutInArea(videoContainer, leftX, imageY, imageWidth, imageHeight, 0, HPos.CENTER, VPos.CENTER);
                 layoutInArea(playButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
                 layoutInArea(pauseButton, rightX, buttonY, buttonSize, buttonSize, 0, HPos.LEFT, VPos.TOP);
                 layoutInArea(elapsedTimeText, rightX + buttonSize + 20, buttonY, rightWidth, buttonSize, 0, HPos.LEFT, VPos.CENTER);
@@ -124,7 +127,7 @@ public abstract class MediaInfoView {
         @Override
         protected double computePrefHeight(double width) {
             computeLayout(width);
-            return Math.max(imageY + imageHeight, favoriteY + favoriteHeight);
+            return Math.max(imageY + imageHeight, favoriteY + favoriteHeight) + (isWideVideo ? wideVideoVSpace / 2 : 0);
         }
 
         private void computeLayout(double width) {
@@ -152,19 +155,35 @@ public abstract class MediaInfoView {
                         imageRatio = videoWidth * 1d / videoHeight;
                 }
             }
-            if (width <= 400) { // Small screen => vertical alignment: image above title, date, excerpt, buttons & favorite
-            /*Image:*/       imageY = 0;                                                 imageWidth = width; imageHeight = imageWidth / imageRatio;
-            /*Right side:*/  rightX = 0; /* Actually no right side */                    rightWidth = width - rightX;
-            /*Tile:*/        titleY = imageY + imageHeight + 10;                        titleHeight = titleLabel.prefHeight(rightWidth);
-            } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
-            /*Image:*/       imageY = 0;                                                 imageWidth = isVideo ? width / 2 : width / 4; imageHeight = imageWidth / imageRatio;
-            /*Right side:*/  rightX = imageWidth + 20;                                   rightWidth = width - rightX;
-            /*Tile:*/        titleY = 0;       titleHeight = titleLabel.prefHeight(rightWidth);
+            if (isWideVideo) {
+                // TODO Make this code looks like the other cases (comments, etc...)
+                imageWidth = Math.min(width, WIDE_VIDEO_MAX_WIDTH); imageHeight = imageWidth / imageRatio;
+                double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+                wideVideoVSpace = Math.max(screenHeight * 0.7 - imageHeight, screenHeight / 4);
+                leftX = width / 2 - imageWidth / 2;
+                rightX = leftX; rightWidth = imageWidth;
+                titleY = wideVideoVSpace / 2;  titleHeight = titleLabel.prefHeight(rightWidth);
+                imageY =  titleY + titleHeight + 20;
+                buttonY = imageY + imageHeight + 10; buttonSize = 32;
+                favoriteY = buttonY; favoriteHeight = 32;
+                dateY = buttonY; dateHeight = dateText.prefHeight(rightWidth);
+                titleHPos = HPos.CENTER; favoriteHPos = HPos.RIGHT;
+            } else {
+                titleHPos = HPos.LEFT; favoriteHPos = HPos.LEFT;
+                if (width <= 400) { // Small screen => vertical alignment: image above title, date, excerpt, buttons & favorite
+                /*Image:*/       imageY = 0;                                                 imageWidth = width; imageHeight = imageWidth / imageRatio;
+                /*Right side:*/  rightX = 0; /* Actually no right side */                    rightWidth = width - rightX;
+                /*Tile:*/        titleY = imageY + imageHeight + 10;                        titleHeight = titleLabel.prefHeight(rightWidth);
+                } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
+                /*Image:*/       imageY = 0;                                                 imageWidth = isVideo ? width / 2 : width / 4; imageHeight = imageWidth / imageRatio;
+                /*Right side:*/  rightX = imageWidth + 20;                                   rightWidth = width - rightX;
+                /*Tile:*/        titleY = 0;       titleHeight = titleLabel.prefHeight(rightWidth);
+                }
+                /*Date:*/         dateY = titleY + titleHeight + 10;                         dateHeight = dateText.prefHeight(rightWidth);
+                /*Excerpt:*/   excerptY = dateY + dateHeight + 10;                        excerptHeight = excerptLabel.prefHeight(rightWidth);
+                /*Buttons:*/    buttonY = excerptY + excerptHeight + (isAudio ? 30 : 20);    buttonSize = 32;
+                /*Favorite:*/ favoriteY = buttonY + buttonSize + (isAudio ? 30 : 20);    favoriteHeight = 32;
             }
-            /*Date:*/         dateY = titleY + titleHeight + 10;                         dateHeight = dateText.prefHeight(rightWidth);
-            /*Excerpt:*/   excerptY = dateY + dateHeight + 10;                        excerptHeight = excerptLabel.prefHeight(rightWidth);
-            /*Buttons:*/    buttonY = excerptY + excerptHeight + (isAudio ? 30 : 20);    buttonSize = 32;
-            /*Favorite:*/ favoriteY = buttonY + buttonSize + (isAudio ? 30 : 20);    favoriteHeight = 32;
         }
     };
 
@@ -194,6 +213,8 @@ public abstract class MediaInfoView {
         isWistiaVideo = !isAudio && (mediaInfo instanceof HasWistiaVideoId && ((HasWistiaVideoId) mediaInfo).getWistiaVideoId() != null);
         isYoutubeVideo = !isAudio && (mediaInfo instanceof HasYoutubeVideoId && ((HasYoutubeVideoId) mediaInfo).getYoutubeVideoId() != null);
         isVideo = isWistiaVideo || isYoutubeVideo;
+        isWideVideo = isVideo && mediaInfo.getExcerpt() == null;
+        titleLabel.setTextFill(isWideVideo ? StyleUtility.ELEMENT_GRAY_COLOR : StyleUtility.MAIN_ORANGE_COLOR);
         // Updating all fields and UI from the podcast
         imageView.setPreserveRatio(true);
         imageView.setClip(isAudio ? imageClip : null);
@@ -206,6 +227,9 @@ public abstract class MediaInfoView {
         backwardButton.setVisible(isAudio);
         forwardButton.setVisible(isAudio);
         progressBar.setVisible(isAudio);
+        //playButton.setVisible(!isWideVideo);
+        //pauseButton.setVisible(!isWideVideo);
+        elapsedTimeText.setVisible(!isWideVideo);
         updateFavorite();
         // If no, the player associated with this podcast should be null
         // If this podcast view was previously associated with a player, we unbind it.
@@ -349,12 +373,13 @@ public abstract class MediaInfoView {
     }
 
     private void updatePlayPauseButtons(boolean isPlaying) {
-        pauseButton.setVisible(isPlaying);
-        playButton.setVisible(!isPlaying);
+        pauseButton.setVisible(isPlaying && !isWideVideo);
+        playButton.setVisible(!isPlaying && !isWideVideo);
         Status status = player == null ? null : player.getStatus();
-        // Sometimes this method is called with an anticipated value for isPlaying (ex: play() method). We check if
+        // Sometimes this method is called with an anticipated value for isPlaying (ex: play() method). So we check if
         // the player is really playing
         boolean reallyPlaying = status == Status.PLAYING;
+        //Console.log("isPlaying = " + isPlaying + ", reallyPlaying = " + reallyPlaying + " for " + player + ", title = " + mediaInfo.getTitle());
         // Note: when paused, only the seamless player is able to resume, others are just stopped
         boolean showVideo = isVideo && (image == null || isPlaying && (reallyPlaying || status == Status.PAUSED && player instanceof VideoPlayer && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS));
         // Note: using setVisible(false) doesn't prevent wistia player to appear sometimes, while setOpacity(0) does

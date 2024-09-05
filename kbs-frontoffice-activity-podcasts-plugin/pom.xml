@@ -61,6 +61,12 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-base-frontoffice-mainframe-fx</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-base-frontoffice-utility</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -86,6 +92,12 @@
         <dependency>
             <groupId>dev.webfx</groupId>
             <artifactId>webfx-extras-switches</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-extras-util-animation</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
@@ -148,12 +160,6 @@
         <dependency>
             <groupId>dev.webfx</groupId>
             <artifactId>webfx-platform-windowhistory</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-stack-cache-client</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 

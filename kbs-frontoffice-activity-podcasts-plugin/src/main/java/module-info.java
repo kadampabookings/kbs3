@@ -13,11 +13,13 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires modality.base.client.activity;
     requires modality.base.client.mainframe.fx;
     requires modality.base.client.tile;
+    requires modality.base.frontoffice.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires webfx.extras.carousel;
     requires webfx.extras.panes;
     requires webfx.extras.switches;
+    requires webfx.extras.util.animation;
     requires webfx.extras.util.control;
     requires webfx.kit.util;
     requires webfx.platform.ast;
@@ -27,7 +29,6 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.platform.storage;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
-    requires webfx.stack.cache.client;
     requires webfx.stack.i18n;
     requires webfx.stack.i18n.controls;
     requires webfx.stack.orm.domainmodel.activity;
