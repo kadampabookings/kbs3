@@ -53,6 +53,7 @@ public abstract class MediaInfoView {
     // state can be re-established in that case. Otherwise - if the podcast hasn't been played so far in this session -
     // the media player will be null until the user presses the play button.
     protected Player player;
+    protected VideoPlayer videoPlayer;
     protected boolean isAudio, isVideo, isWistiaVideo, isYoutubeVideo, isWideVideo;
     private Unregisterable mediaPlayerBinding; // will allow to unbind a recycled view from its previous associated media player.
     protected HasMediaInfo mediaInfo;
@@ -227,9 +228,8 @@ public abstract class MediaInfoView {
         backwardButton.setVisible(isAudio);
         forwardButton.setVisible(isAudio);
         progressBar.setVisible(isAudio);
-        //playButton.setVisible(!isWideVideo);
-        //pauseButton.setVisible(!isWideVideo);
         elapsedTimeText.setVisible(!isWideVideo);
+        // playButton & pauseButton visibility are set by
         updateFavorite();
         // If no, the player associated with this podcast should be null
         // If this podcast view was previously associated with a player, we unbind it.
@@ -240,14 +240,11 @@ public abstract class MediaInfoView {
         if (isVideo && image == null) {
             if (player == null)
                 createPlayer();
-            ((VideoPlayer) player).displayVideo();
+            videoPlayer.displayVideo();
         }
         if (player != null) {  // If yes, we reuse the same player straightaway
             bindMediaPlayer(); // => will restore the visual state from the player (play/pause button & progress bar)
-        } /* Commented, as not sure why video players creation couldn't be postponed like audio players TODO: completely remove if no side effects
-        else if (isVideo) { // otherwise we create a new one for video only
-            createPlayer();
-        }*/
+        }
     }
 
     private String getTrack() {
@@ -317,6 +314,7 @@ public abstract class MediaInfoView {
 
     private void createPlayer() {
         player = isAudio ? new AudioMediaPlayer() : isWistiaVideo ? new WistiaVideoPlayer() : new YoutubeVideoPlayer();
+        videoPlayer = player instanceof VideoPlayer ? (VideoPlayer) player : null;
         String track = getTrack();
         player.getPlaylist().setAll(track);
         player.setOnEndOfPlaying(player::stop); // Forcing stop status (sometimes this doesn't happen automatically for any reason)
@@ -333,20 +331,14 @@ public abstract class MediaInfoView {
             Node videoView = getVideoView();
             if (videoView != null) {
                 Players.associateVideoViewWithMediaInfoView(videoView, this);
-                /*if (((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS) {
-                    Player p = player;
-                    FXProperties.runOnPropertiesChange(() -> {
-                        if (videoView.getScene() == null) {
-                            p.pause();
-                        } else
-                            videoContainer.requestLayout();
-                    }, videoView.sceneProperty());
-                }*/
             }
             mediaPlayerBinding = FXProperties.runNowAndOnPropertiesChange(() -> {
-                boolean playing = player != null && player.isPlaying();
+                boolean playing = videoPlayer != null && videoPlayer.isPlaying();
+                // Resetting the video to the beginning,
+                if (videoPlayer != null && videoPlayer.getStatus() == Status.STOPPED)
+                    videoPlayer.resetToInitialState();
                 updatePlayPauseButtons(playing);
-            }, player.statusProperty());
+            }, videoPlayer.statusProperty());
         } else { // audio
             mediaPlayerBinding = FXProperties.runNowAndOnPropertiesChange(() -> {
                 if (player == null)
@@ -381,7 +373,7 @@ public abstract class MediaInfoView {
         boolean reallyPlaying = status == Status.PLAYING;
         //Console.log("isPlaying = " + isPlaying + ", reallyPlaying = " + reallyPlaying + " for " + player + ", title = " + mediaInfo.getTitle());
         // Note: when paused, only the seamless player is able to resume, others are just stopped
-        boolean showVideo = isVideo && (image == null || isPlaying && (reallyPlaying || status == Status.PAUSED && player instanceof VideoPlayer && ((VideoPlayer) player).getIntegrationMode() == IntegrationMode.SEAMLESS));
+        boolean showVideo = isVideo && (image == null || isPlaying && (reallyPlaying || status == Status.PAUSED && videoPlayer.getIntegrationMode() == IntegrationMode.SEAMLESS));
         // Note: using setVisible(false) doesn't prevent wistia player to appear sometimes, while setOpacity(0) does
         videoContainer.setOpacity(showVideo ? 1 : 0);
         imageView.setMouseTransparent(showVideo);
