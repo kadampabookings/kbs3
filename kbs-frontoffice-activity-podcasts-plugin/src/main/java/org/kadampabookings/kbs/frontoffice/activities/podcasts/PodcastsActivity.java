@@ -18,6 +18,7 @@ import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
 import dev.webfx.stack.orm.reactive.entities.dql_to_entities.ReactiveEntitiesMapper;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
+import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -73,7 +74,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
     private final BooleanProperty virtuousTopicProperty = new SimpleBooleanProperty();
-    private javafx.animation.Timeline backgroundTimeline;
+    private Timeline backgroundTimeline;
+    private double lastTopOffset;
     private boolean opaqueBlack;
 
     @Override
@@ -293,7 +295,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         FXProperties.runOnPropertiesChange(() -> {
             double topOffset = ControlUtil.computeScrollPaneVTopOffset(scrollPane);
-            boolean newBlackOpaque = videosSwitch.isSelected() && topOffset > filterBar.getLayoutY() + filterBar.getHeight();
+            boolean scrollDown = topOffset > lastTopOffset; lastTopOffset = topOffset;
+            boolean newBlackOpaque = videosSwitch.isSelected() && topOffset > filterBar.getLayoutY() + (scrollDown ? filterBar.getHeight() : 0);
             if (newBlackOpaque != opaqueBlack) {
                 opaqueBlack = newBlackOpaque;
                 if (backgroundTimeline != null)
