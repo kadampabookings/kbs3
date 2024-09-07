@@ -236,9 +236,10 @@ public abstract class MediaInfoView {
         unbindMediaPlayer(); // will unregister the possible existing binding, and reset the visual state
         // We check if this track has already been played
         player = Players.getPlayerAssociatedWithTrack(getTrack());
+        videoPlayer = player instanceof VideoPlayer ? (VideoPlayer) player : null;
         // For videos with no image on top of them, we display the video straightaway (but don't play it yet)
         if (isVideo && image == null) {
-            if (player == null)
+            if (videoPlayer == null)
                 createPlayer();
             videoPlayer.displayVideo();
         }
