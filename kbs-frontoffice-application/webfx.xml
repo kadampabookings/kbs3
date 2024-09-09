@@ -17,8 +17,11 @@
         <!-- Kadampa News -->
         <plugin-module>kbs-frontoffice-activity-news-plugin</plugin-module>
 
-        <!-- Kadampa Podcast -->
+        <!-- Kadampa Podcasts -->
         <plugin-module>kbs-frontoffice-activity-podcasts-plugin</plugin-module>
+
+        <!-- Kadampa Books -->
+        <plugin-module>kbs-frontoffice-activity-books-plugin</plugin-module>
 
         <!-- Base activities -->
         <plugin-module>modality-base-frontoffice-max-plugin</plugin-module>

@@ -34,6 +34,11 @@ public class Players {
     private static Timeline FULLSCREEN_BUTTON_TIMELINE;
     private static Unregisterable FULLSCREEN_LAYOUT;
     private static Unregisterable PLAYING_VIDEO_SCENE_CHECKER;
+    private static boolean FULLSCREEN_BUTTON_ENABLED = true;
+
+    public static void setFullscreenButtonEnabled(boolean fullscreenButtonEnabled) {
+        FULLSCREEN_BUTTON_ENABLED = fullscreenButtonEnabled;
+    }
 
     static {
         FULLSCREEN_BUTTON.setOnMouseClicked(e -> {
@@ -65,7 +70,7 @@ public class Players {
                     if (videoPlayer.getVideoView().getScene() == null)
                         hideFullscreenButton();
                 }, videoPlayer.getVideoView().sceneProperty());
-                if (videoPlayer.supportsFullscreen()) {
+                if (videoPlayer.supportsFullscreen() && FULLSCREEN_BUTTON_ENABLED) {
                     showFullscreenButton();
                 }
             }

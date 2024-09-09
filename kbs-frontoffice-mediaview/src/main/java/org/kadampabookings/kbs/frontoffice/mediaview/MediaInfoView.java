@@ -58,6 +58,8 @@ public abstract class MediaInfoView {
     private Unregisterable mediaPlayerBinding; // will allow to unbind a recycled view from its previous associated media player.
     protected HasMediaInfo mediaInfo;
     private Duration mediaDuration;
+    private double wideVideoMaxWidth = WIDE_VIDEO_MAX_WIDTH;
+    private boolean decorated = true;
     private final MonoPane videoContainer = new MonoPane();
     private final ImageView imageView = new ImageView();
     private Image image;
@@ -128,7 +130,7 @@ public abstract class MediaInfoView {
         @Override
         protected double computePrefHeight(double width) {
             computeLayout(width);
-            return Math.max(imageY + imageHeight, favoriteY + favoriteHeight) + (isWideVideo ? wideVideoVSpace / 2 : 0);
+            return Math.max(imageY + imageHeight, favoriteY + favoriteHeight) + (isWideVideo && decorated ? wideVideoVSpace : 0);
         }
 
         private void computeLayout(double width) {
@@ -158,14 +160,14 @@ public abstract class MediaInfoView {
             }
             if (isWideVideo) {
                 // TODO Make this code looks like the other cases (comments, etc...)
-                imageWidth = Math.min(width, WIDE_VIDEO_MAX_WIDTH); imageHeight = imageWidth / imageRatio;
+                imageWidth = Math.min(width, wideVideoMaxWidth); imageHeight = imageWidth / imageRatio;
                 double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
                 wideVideoVSpace = Math.max(screenHeight * 0.7 - imageHeight, screenHeight / 4);
                 leftX = width / 2 - imageWidth / 2;
                 rightX = leftX; rightWidth = imageWidth;
-                titleY = wideVideoVSpace / 2;  titleHeight = titleLabel.prefHeight(rightWidth);
-                imageY =  titleY + titleHeight + 20;
-                buttonY = imageY + imageHeight + 10; buttonSize = 32;
+                titleY = 0;  titleHeight = titleLabel.prefHeight(rightWidth);
+                imageY = decorated ? titleY + titleHeight + 20 : 0;
+                buttonY = decorated ? imageY + imageHeight + 10 : 0; buttonSize = 32;
                 favoriteY = buttonY; favoriteHeight = 32;
                 dateY = buttonY; dateHeight = dateText.prefHeight(rightWidth);
                 titleHPos = HPos.CENTER; favoriteHPos = HPos.RIGHT;
@@ -219,17 +221,18 @@ public abstract class MediaInfoView {
         // Updating all fields and UI from the podcast
         imageView.setPreserveRatio(true);
         imageView.setClip(isAudio ? imageClip : null);
-        updateText(dateText, DateTimeFormatter.ofPattern("d MMMM yyyy").format(mediaInfo.getDate()));
+        updateText(dateText, mediaInfo.getDate() == null ? null : DateTimeFormatter.ofPattern("d MMMM yyyy").format(mediaInfo.getDate()));
         updateLabel(titleLabel, mediaInfo.getTitle());
         updateLabel(excerptLabel, mediaInfo.getExcerpt());
         image = ImageStore.getOrCreateImage(mediaInfo.getImageUrl());
         imageView.setImage(image);
         mediaDuration = mediaInfo.getDurationMillis() == null ? null : Duration.millis(mediaInfo.getDurationMillis());
-        backwardButton.setVisible(isAudio);
-        forwardButton.setVisible(isAudio);
-        progressBar.setVisible(isAudio);
-        elapsedTimeText.setVisible(!isWideVideo);
-        // playButton & pauseButton visibility are set by
+        backwardButton.setVisible(decorated && isAudio);
+        forwardButton.setVisible(decorated && isAudio);
+        progressBar.setVisible(decorated && isAudio);
+        elapsedTimeText.setVisible(decorated && !isWideVideo);
+        favoritePane.setVisible(decorated);
+        // playButton & pauseButton visibility are set by updatePlayPauseButtons()
         updateFavorite();
         // If no, the player associated with this podcast should be null
         // If this podcast view was previously associated with a player, we unbind it.
@@ -246,6 +249,14 @@ public abstract class MediaInfoView {
         if (player != null) {  // If yes, we reuse the same player straightaway
             bindMediaPlayer(); // => will restore the visual state from the player (play/pause button & progress bar)
         }
+    }
+
+    public void setDecorated(boolean decorated) {
+        this.decorated = decorated;
+    }
+
+    public void setWideVideoMaxWidth(double wideVideoMaxWidth) {
+        this.wideVideoMaxWidth = wideVideoMaxWidth;
     }
 
     private String getTrack() {
@@ -366,8 +377,8 @@ public abstract class MediaInfoView {
     }
 
     private void updatePlayPauseButtons(boolean isPlaying) {
-        pauseButton.setVisible(isPlaying && !isWideVideo);
-        playButton.setVisible(!isPlaying && !isWideVideo);
+        pauseButton.setVisible(decorated && isPlaying && !isWideVideo);
+        playButton.setVisible(decorated && !isPlaying && !isWideVideo);
         Status status = player == null ? null : player.getStatus();
         // Sometimes this method is called with an anticipated value for isPlaying (ex: play() method). So we check if
         // the player is really playing

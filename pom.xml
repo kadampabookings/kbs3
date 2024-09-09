@@ -51,6 +51,7 @@
         <module>kbs-backoffice-application-openjfx</module>
         <module>kbs-client-conf-gluon-plugin</module>
         <module>kbs-client-conf-plugin</module>
+        <module>kbs-frontoffice-activity-books-plugin</module>
         <module>kbs-frontoffice-activity-news-plugin</module>
         <module>kbs-frontoffice-activity-podcasts-plugin</module>
         <module>kbs-frontoffice-application</module>

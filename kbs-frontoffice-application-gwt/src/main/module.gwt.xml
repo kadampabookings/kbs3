@@ -90,6 +90,12 @@
     <inherits name="com.google.gwt.user.User"/>
     <!--=================================< java-nio-emul >==================================-->
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
+    <!--=====================< kbs-frontoffice-activity-books-plugin >======================-->
+    <source path="org/kadampabookings/kbs/frontoffice/activities/books"/>
+    <source path="org/kadampabookings/kbs/frontoffice/activities/books/routing"/>
+    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/books"/>
+    <resource path="org/kadampabookings/kbs/frontoffice/activities/books"/>
+    <public path="" includes="org/kadampabookings/kbs/frontoffice/activities/books/"/>
     <!--======================< kbs-frontoffice-activity-news-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/news"/>
     <source path="org/kadampabookings/kbs/frontoffice/activities/news/routing"/>

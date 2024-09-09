@@ -277,7 +277,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
                 String searchLike = "%" + searchText.toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
-            .always(DqlStatement.where("playlist == null"))
+            .always(DqlStatement.where("playlist == null && teacher == null"))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);

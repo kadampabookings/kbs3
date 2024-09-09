@@ -52,6 +52,8 @@ import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.TeacherImpl;
 import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
+import java.time.LocalDate;
+
 public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
@@ -381,17 +383,18 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         // Videos loader
         ReactiveEntitiesMapper.<Video>createReactiveChain(this)
-            .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, youtubeVideoId, durationMillis, width, height, ord', orderBy: 'playlist.ord'}")
+            // Note: note loading the excerpt causes the video to be displayed in wide width mode
+            .always("{class: 'Video', fields: 'date, title, imageUrl, wistiaVideoId, youtubeVideoId, durationMillis, width, height, ord', orderBy: 'ord nulls last, date desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .always(DqlStatement.limit("?", INITIAL_LIMIT))
-            .always(DqlStatement.where("playlist=1"))
+            .always(DqlStatement.where("playlist=1 or teacher != null"))
             .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
                 return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
             })
-            .ifNotNull(lastLoadedVideoProperty, video -> DqlStatement.where("ord > ?", video.getOrd()))
+            .ifNotNull(lastLoadedVideoProperty, video -> DqlStatement.where("ord!=null and ord > ? or ord=null and date < ?", video.getOrd(), video.getOrd() == null ? video.getDate() : LocalDate.now()))
             .storeEntitiesInto(videosFeed)
             //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
             .start();

@@ -25,6 +25,7 @@ public class ArticleActivity extends ViewDomainActivityBase implements Operation
         webView.getProperties().put("webfx-loadingMode", "replace");
         // We keep the WebView synchronized with the article to display (held by FXArticle)
         FXProperties.runNowAndOnPropertiesChange(() -> {
+            FXBackgroundNode.setBackgroundNode(webView);
             News article = FXDisplayedArticle.getDisplayedArticle();
             String url = article == null ? null : article.getLinkUrl();
             if (!Objects.equals(url, this.url)) {
@@ -32,7 +33,6 @@ public class ArticleActivity extends ViewDomainActivityBase implements Operation
             }
         }, FXDisplayedArticle.displayedArticleProperty());
         // We set the front-office background node to that WebView.
-        FXBackgroundNode.setBackgroundNode(webView);
     }
 
     @Override
