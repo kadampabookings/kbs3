@@ -363,7 +363,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         }, teacherProperty, topicProperty, videosSwitch.selectedProperty());
 
         // Podcasts loader
-        ReactiveEntitiesMapper.<Podcast>createPushReactiveChain(this)
+        ReactiveEntitiesMapper.<Podcast>createReactiveChain(this)
             .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
             //.always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
@@ -380,7 +380,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             .start();
 
         // Videos loader
-        ReactiveEntitiesMapper.<Video>createPushReactiveChain(this)
+        ReactiveEntitiesMapper.<Video>createReactiveChain(this)
             .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, youtubeVideoId, durationMillis, width, height, ord', orderBy: 'playlist.ord'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
