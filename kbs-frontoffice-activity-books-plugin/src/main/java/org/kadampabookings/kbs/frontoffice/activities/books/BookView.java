@@ -72,17 +72,20 @@ public final class BookView {
                 GeneralUtility.setLabeledFont(orderLink,    StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
                 GeneralUtility.setLabeledFont(extractsLink, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
             }
+            double vGap;
             if (width <= 500) { // Small screen => vertical alignment: title above image, date, excerpt, buttons & favorite
-            /* Title: */       titleY = 0;                                 titleHeight = titleLink.prefHeight(rightWidth);
-            /* Image: */       imageY = titleY + titleHeight + 10;         imageWidth = width; imageHeight = imageView.prefHeight(imageWidth);
+            /* Image: */       imageY = 0;                                 imageWidth = width; imageHeight = imageView.prefHeight(imageWidth);
             /* Right side: */  rightX = 0;                                 rightWidth = width - rightX;
+            /* Title: */       titleY = imageY + imageHeight;             titleHeight = titleLink.prefHeight(rightWidth);
+                vGap = 10;
             } else { // Normal or large screen => image on left, title, date, excerpt, buttons & favorite on right
             /* Image: */       imageY = 0;                                 imageWidth = width / 3; imageHeight = imageView.prefHeight(imageWidth);
-                /* Title: */   titleY = imageWidth * 0.1;                  titleHeight = titleLink.prefHeight(rightWidth);
+                /* Title: */   titleY = imageWidth * 0.1;                 titleHeight = titleLink.prefHeight(rightWidth);
             /* Right side: */  rightX = imageWidth + 20;                   rightWidth = width - rightX;
+                vGap = 20;
             }
-            /* Excerpt: */   excerptY = /*dateY + dateHeight*/titleY + titleHeight  + 20; excerptHeight = excerptLabel.prefHeight(rightWidth);
-            /* Links: */       linksY = excerptY + excerptHeight + 20;      linksHeight = 32;
+            /* Excerpt: */   excerptY = titleY + titleHeight + vGap;    excerptHeight = excerptLabel.prefHeight(rightWidth);
+            /* Links: */       linksY = excerptY + excerptHeight + vGap;  linksHeight = 32;
             /* Free */          freeX = rightX;
             /* Order: */       orderX = freeX + (hasFreeUrl ? freeLink.prefWidth(-1) + 50 : 0);
             /* Extracts: */ extractsX = orderX + orderLink.prefWidth(-1) + 50;
