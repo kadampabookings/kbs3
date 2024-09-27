@@ -15,4 +15,6 @@
         <provider interface="dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter">org.kadampabookings.kbs.frontoffice.activities.books.RouteToBooksRequestEmitter</provider>
     </providers>
 
+    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.activities.books.BooksI18nKeys"/>
+
 </project>

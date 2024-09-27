@@ -82,16 +82,16 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
     @Override
     public Node buildUi() {
-        Label podcastsLabel = GeneralUtility.createLabel("podcastsLabel", StyleUtility.MAIN_ORANGE_COLOR);
+        Label podcastsLabel = GeneralUtility.createLabel(PodcastsI18nKeys.podcastsLabel, StyleUtility.MAIN_ORANGE_COLOR);
         podcastsLabel.setContentDisplay(ContentDisplay.TOP);
         podcastsLabel.setTextAlignment(TextAlignment.CENTER);
 
-        Label alsoAvailableOnLabel = GeneralUtility.createLabel("alsoAvailableOn", StyleUtility.MAIN_ORANGE_COLOR);
+        Label alsoAvailableOnLabel = GeneralUtility.createLabel(PodcastsI18nKeys.alsoAvailableOn, StyleUtility.MAIN_ORANGE_COLOR);
         Label[] podcastsChannelButtons = {
-            createPodcastsChannelButton("Spotify", "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
-            createPodcastsChannelButton("ApplePodcasts", "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
-            createPodcastsChannelButton("AmazonMusic", "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
-            createPodcastsChannelButton("PocketCasts", "https://pca.st/9yuq0l0p")
+            createPodcastsChannelButton(PodcastsI18nKeys.Spotify, "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
+            createPodcastsChannelButton(PodcastsI18nKeys.ApplePodcasts, "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
+            createPodcastsChannelButton(PodcastsI18nKeys.AmazonMusic, "https://music.amazon.co.uk/podcasts/d64fa9da-7c91-4ee8-84e7-f05de30fdb2c/living-clarity"),
+            createPodcastsChannelButton(PodcastsI18nKeys.PocketCasts, "https://pca.st/9yuq0l0p")
         };
         FlexPane podcastsChannelsPane = new FlexPane(podcastsChannelButtons);
         podcastsChannelsPane.setMaxWidth(Double.MAX_VALUE);
@@ -108,7 +108,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         ScalePane scaledSwitchBox = new ScalePane(ScaleMode.FIT_HEIGHT, switchBox);
         scaledSwitchBox.setCanShrink(false);
 
-        Text teacherPrefixText = I18n.bindI18nProperties(new Text(), "teacher");
+        Text teacherPrefixText = I18n.bindI18nProperties(new Text(), PodcastsI18nKeys.teacher);
         teacherPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Teacher> teacherButtonSelector = new EntityButtonSelector<Teacher>(
             "{class: 'Teacher', alias: 't', columns: 'name', orderBy: 'id'}",
@@ -147,8 +147,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
 
         TabsBar<Boolean> topicTabsBar = new TabsBar<>(this, virtuousTopicProperty::set);
         topicTabsBar.setTabs(
-            createTopicTab(topicTabsBar, "nonVirtuousTopic", false),
-            createTopicTab(topicTabsBar, "virtuousTopic", true)
+            createTopicTab(topicTabsBar, PodcastsI18nKeys.nonVirtuousTopic, false),
+            createTopicTab(topicTabsBar, PodcastsI18nKeys.virtuousTopic, true)
         );
         ColumnsPane topicTabsPane = new ColumnsPane();
         topicTabsPane.getChildren().setAll(topicTabsBar.getTabs());
@@ -160,7 +160,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         allTopicPane.setMinHeight(40);
         allTopicPane.setOnMouseClicked(e -> topicProperty.set(null));
         allTopicPane.setCursor(Cursor.HAND);
-        Text topicPrefixText = I18n.bindI18nProperties(new Text(), "topic");
+        Text topicPrefixText = I18n.bindI18nProperties(new Text(),  PodcastsI18nKeys.topic);
         topicPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
             "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",

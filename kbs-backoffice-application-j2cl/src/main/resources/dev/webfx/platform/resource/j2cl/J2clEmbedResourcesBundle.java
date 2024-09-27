@@ -17,7 +17,7 @@ public interface J2clEmbedResourcesBundle extends ClientBundle {
     @Source("/dev/webfx/platform/meta/exe/exe.properties")
     TextResource r2();
 
-    @Source("/dev/webfx/stack/i18n/en.properties")
+    @Source("/dev/webfx/stack/i18n/en.json")
     TextResource r3();
 
     @Source("/dev/webfx/stack/i18n/fr.properties")
@@ -30,7 +30,7 @@ public interface J2clEmbedResourcesBundle extends ClientBundle {
         public ProvidedJ2clResourceBundle() {
             registerResource("dev/webfx/platform/conf/src-root.properties", () -> R.r1().getText());
             registerResource("dev/webfx/platform/meta/exe/exe.properties", () -> R.r2().getText());
-            registerResource("dev/webfx/stack/i18n/en.properties", () -> R.r3().getText());
+            registerResource("dev/webfx/stack/i18n/en.json", () -> R.r3().getText());
             registerResource("dev/webfx/stack/i18n/fr.properties", () -> R.r4().getText());
             registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", () -> R.r5().getText());
         }

@@ -17,4 +17,6 @@
         <provider interface="dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter">org.kadampabookings.kbs.frontoffice.activities.news.RouteToNewsRequestEmitter</provider>
     </providers>
 
+    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.activities.news.NewsI18nKeys"/>
+
 </project>

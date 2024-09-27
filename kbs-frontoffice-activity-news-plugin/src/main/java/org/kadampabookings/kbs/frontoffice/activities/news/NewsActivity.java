@@ -68,7 +68,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     private final ObjectProperty<Video> latestLoadedVideoProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(newsContainer, videosContainer);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
-    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "Videos");
+    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), NewsI18nKeys.Videos);
     private final Switch videosSwitch = new Switch();
     private final TextField searchTextField = new TextField();
     private final SVGPath searchIconSvgPath = new SVGPath();
@@ -76,7 +76,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
 
     @Override
     public Node buildUi() {
-        Text headerText = TextUtility.createText("newsHeaderText", StyleUtility.MAIN_ORANGE_COLOR);
+        Text headerText = TextUtility.createText( NewsI18nKeys.newsHeaderText, StyleUtility.MAIN_ORANGE_COLOR);
         TextUtility.setTextFont(headerText, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32);
         headerText.setWrappingWidth(250);
 

@@ -9,6 +9,8 @@
 
     <dependencies>
         <used-by-source-modules/>
+        <plugin-module>modality-event-backoffice-activity-program-plugin</plugin-module>
+
     </dependencies>
 
 
