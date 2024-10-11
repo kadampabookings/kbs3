@@ -50,7 +50,7 @@ import one.modality.base.shared.entities.Teacher;
 import one.modality.base.shared.entities.Topic;
 import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.TeacherImpl;
-import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
+import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDate;
 

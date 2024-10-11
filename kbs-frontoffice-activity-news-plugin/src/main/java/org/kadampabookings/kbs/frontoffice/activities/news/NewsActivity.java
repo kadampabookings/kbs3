@@ -47,7 +47,7 @@ import one.modality.base.frontoffice.utility.TextUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Topic;
 import one.modality.base.shared.entities.Video;
-import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
+import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDateTime;
 

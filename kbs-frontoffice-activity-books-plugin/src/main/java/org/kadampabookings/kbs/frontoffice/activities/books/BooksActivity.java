@@ -29,8 +29,8 @@ import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
 import one.modality.base.shared.entities.Book;
 import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.VideoImpl;
-import org.kadampabookings.kbs.frontoffice.mediaview.Players;
-import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
+import one.modality.event.client.mediaview.Players;
+import one.modality.event.client.mediaview.VideoView;
 
 public final class BooksActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 

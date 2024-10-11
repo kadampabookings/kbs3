@@ -1,7 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.activities.podcasts;
 
 import one.modality.base.shared.entities.Podcast;
-import org.kadampabookings.kbs.frontoffice.mediaview.MediaInfoView;
+import one.modality.event.client.mediaview.MediaInfoView;
 
 public final class PodcastView extends MediaInfoView {
 
