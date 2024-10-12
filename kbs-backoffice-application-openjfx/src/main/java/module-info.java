@@ -6,6 +6,7 @@
 module kbs.backoffice.application.openjfx {
 
     // Direct dependencies modules
+    requires javafx.media;
     requires javafx.web;
     requires kbs.backoffice.application;
     requires modality.ecommerce.document.service.buscall;
