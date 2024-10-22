@@ -45,11 +45,9 @@ module kbs.frontoffice.activity.news.plugin {
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.news;
-    exports org.kadampabookings.kbs.frontoffice.activities.news.routing;
-    exports org.kadampabookings.kbs.frontoffice.operations.routes.news;
 
     // Provided services
-    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.news.NewsUiRoute, org.kadampabookings.kbs.frontoffice.activities.news.ArticleUiRoute;
-    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.news.RouteToNewsRequestEmitter;
+    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.news.NewsRouting.NewsUiRoute, org.kadampabookings.kbs.frontoffice.activities.news.ArticleRouting.ArticleUiRoute;
+    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.news.NewsRouting.RouteToNewsRequestEmitter;
 
 }

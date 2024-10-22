@@ -43,11 +43,9 @@ module kbs.frontoffice.activity.podcasts.plugin {
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.podcasts;
-    exports org.kadampabookings.kbs.frontoffice.activities.podcasts.routing;
-    exports org.kadampabookings.kbs.frontoffice.operations.routes.podcasts;
 
     // Provided services
-    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsUiRoute;
-    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.podcasts.RouteToPodcastsRequestEmitter;
+    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting.PodcastsUiRoute;
+    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting.RouteToPodcastsRequestEmitter;
 
 }

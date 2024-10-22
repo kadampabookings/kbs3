@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * @author Bruno Salmon
  */
-public class ArticleActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
+final class ArticleActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
     // The article will be displayed in a WebView that will be set as the front-office background node in order to
     // preserve its state in the web version (otherwise the iFrame will be reloaded each time the user navigates back).

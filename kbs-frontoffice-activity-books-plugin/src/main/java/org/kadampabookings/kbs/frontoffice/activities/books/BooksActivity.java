@@ -32,7 +32,7 @@ import one.modality.base.shared.entities.impl.VideoImpl;
 import org.kadampabookings.kbs.frontoffice.mediaview.Players;
 import org.kadampabookings.kbs.frontoffice.mediaview.VideoView;
 
-public final class BooksActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
+final class BooksActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
 

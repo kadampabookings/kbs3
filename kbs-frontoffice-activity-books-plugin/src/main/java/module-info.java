@@ -32,14 +32,12 @@ module kbs.frontoffice.activity.books.plugin {
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.books;
-    exports org.kadampabookings.kbs.frontoffice.activities.books.routing;
-    exports org.kadampabookings.kbs.frontoffice.operations.routes.books;
 
     // Resources packages
     opens org.kadampabookings.kbs.frontoffice.activities.books;
 
     // Provided services
-    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.books.BooksUiRoute;
-    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.books.RouteToBooksRequestEmitter;
+    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.books.BooksRouting.BooksUiRoute;
+    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.books.BooksRouting.RouteToBooksRequestEmitter;
 
 }

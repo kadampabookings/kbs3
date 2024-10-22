@@ -1,2 +1,2 @@
-org.kadampabookings.kbs.frontoffice.activities.news.NewsUiRoute
-org.kadampabookings.kbs.frontoffice.activities.news.ArticleUiRoute
+org.kadampabookings.kbs.frontoffice.activities.news.NewsRouting$NewsUiRoute
+org.kadampabookings.kbs.frontoffice.activities.news.ArticleRouting$ArticleUiRoute

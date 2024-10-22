@@ -20,7 +20,6 @@ import one.modality.base.frontoffice.utility.GeneralUtility;
 import one.modality.base.frontoffice.utility.StyleUtility;
 import one.modality.base.frontoffice.utility.TextUtility;
 import one.modality.base.shared.entities.News;
-import org.kadampabookings.kbs.frontoffice.operations.routes.news.RouteToArticleRequest;
 
 import java.time.format.DateTimeFormatter;
 
@@ -125,7 +124,7 @@ public final class NewsView {
 
     private void browseArticle() {
         FXDisplayedArticle.setDisplayedArticle(news);
-        new RouteToArticleRequest(news, history).execute();
+        new ArticleRouting.RouteToArticleRequest(news, history).execute();
     }
 
     private void updateFavorite() {
