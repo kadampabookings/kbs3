@@ -70,7 +70,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
     private Video lastLoadedVideo;
     private final ObjectProperty<Video> lastLoadedVideoProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(podcastsContainer, videosContainer);
-    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "videos");
+    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), PodcastsI18nKeys.videos);
     private final Switch videosSwitch = new Switch();
 
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
@@ -120,7 +120,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
             }
         }
             .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Podcast where teacher = t) > 0"))
-            .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Video where teacher = t) > 0"))
+            .ifTrue( videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Video   where teacher = t) > 0"))
             .appendNullEntity(true); // Also adding null entity that will represent all teachers
         // Creating a virtual teacher named "All" that will be used to select all teachers
         EntityStore store = teacherButtonSelector.getStore();
@@ -154,7 +154,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         topicTabsPane.getChildren().setAll(topicTabsBar.getTabs());
         topicTabsPane.setOnMouseClicked(Event::consume);
 
-        Text allTopicText = new Text("All");
+        Text allTopicText = new Text("All"); // ???
         MonoPane allTopicPane = new MonoPane(allTopicText);
         allTopicPane.setMaxWidth(Double.MAX_VALUE);
         allTopicPane.setMinHeight(40);
