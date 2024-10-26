@@ -245,6 +245,8 @@
     <source path="one/modality/crm/shared/services/authn/fx"/>
     <!--===================< modality-crm-client-authz-required-plugin >====================-->
     <source path="one/modality/crm/client/services/authz"/>
+    <!--============================< modality-crm-client-i18n >============================-->
+    <source path="one/modality/crm/client/i18n"/>
     <!--======================< modality-crm-client-personaldetails >=======================-->
     <source path="one/modality/crm/client/controls/personaldetails"/>
     <!--=======================< modality-crm-client-profile-plugin >=======================-->
@@ -252,6 +254,8 @@
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
+    <!--=========================< modality-ecommerce-client-i18n >=========================-->
+    <source path="one/modality/ecommerce/client/i18n"/>
     <!--======================< modality-ecommerce-document-service >=======================-->
     <source path="one/modality/ecommerce/document/service"/>
     <source path="one/modality/ecommerce/document/service/events"/>
@@ -307,6 +311,8 @@
     <public path="" includes="one/modality/event/frontoffice/activities/booking/map/"/>
     <!--===============< modality-event-frontoffice-activity-videos-plugin >================-->
     <source path="one/modality/event/frontoffice/activities/videos"/>
+    <!--=======================< modality-event-frontoffice-medias >========================-->
+    <source path="one/modality/event/frontoffice/medias"/>
     <!--=============================< webfx-extras-carousel >==============================-->
     <source path="dev/webfx/extras/carousel"/>
     <!--===============================< webfx-extras-cell >================================-->
