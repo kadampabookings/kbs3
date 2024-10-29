@@ -6,11 +6,11 @@ module kbs.frontoffice.activity.books.plugin {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires kbs.frontoffice.mediaview;
     requires modality.base.client.activity;
     requires modality.base.frontoffice.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
+    requires modality.event.client.mediaview;
     requires webfx.extras.carousel;
     requires webfx.extras.imagestore;
     requires webfx.kit.util;

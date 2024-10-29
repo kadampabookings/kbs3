@@ -105,8 +105,6 @@
     <public path="" includes="images/organizations/"/>
     <resource path="org/kadampabookings/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/frontoffice/booking/"/>
-    <!--===========================< kbs-frontoffice-mediaview >============================-->
-    <source path="org/kadampabookings/kbs/frontoffice/mediaview"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->
