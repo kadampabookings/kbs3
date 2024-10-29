@@ -43,8 +43,9 @@ import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
-import one.modality.base.frontoffice.utility.GeneralUtility;
-import one.modality.base.frontoffice.utility.StyleUtility;
+import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
+import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
 import one.modality.base.shared.entities.Teacher;
 import one.modality.base.shared.entities.Topic;
@@ -56,7 +57,6 @@ import java.time.LocalDate;
 
 final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
-    private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
     private static final int INITIAL_LIMIT = 5;
     private static final Teacher FAVORITE_TAB_VIRTUAL_TEACHER = new TeacherImpl(EntityId.create(Teacher.class), null);
 
@@ -204,9 +204,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         topicProperty.bindBidirectional(topicButtonSelector.selectedItemProperty());
 
         // Setting a max width for big desktop screens
-        pageContainer.setMaxWidth(MAX_PAGE_WIDTH); // Similar value as our website
         pageContainer.setAlignment(Pos.CENTER);
-        BorderPane.setMargin(pageContainer, new Insets(0, 20, 0, 20)); // Global page padding
         VBox.setMargin(podcastsLabel, new Insets(20, 0, 20, 0));
         VBox.setMargin(podcastsChannelsPane, new Insets(20, 0, 20, 0));
         VBox.setMargin(lineSeparator, new Insets(10, 0, 40, 0));
@@ -250,12 +248,8 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = podcasts request (as podcasts are on the left)
 
-        // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
-        // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
-        BorderPane borderPane = new BorderPane(pageContainer);
-        // Also a background is necessary for devices not supporting inverse clipping used in circle animation
-        borderPane.setBackground(Background.fill(Color.WHITE));
-        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
+        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true);
+        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
 
         podcastsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedPodcast = Collections.last(podcastsFeed);
@@ -288,7 +282,8 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>() {
             @Override
             protected void invalidated() {
-                borderPane.setBackground(Background.fill(get()));
+                Region content = (Region) scrollPane.getContent();
+                content.setBackground(Background.fill(get()));
             }
         };
 
@@ -318,10 +313,6 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
             }
         }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
 
-        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
-        // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
-        // in the browser (in case TransitionPane keepsLeavingNode is enabled)
-        TransitionPane.setKeepsLeavingNode(scrollPane, false);
         return scrollPane;
     }
 

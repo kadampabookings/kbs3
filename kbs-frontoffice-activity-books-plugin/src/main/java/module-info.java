@@ -13,8 +13,6 @@ module kbs.frontoffice.activity.books.plugin {
     requires modality.base.shared.entities;
     requires webfx.extras.carousel;
     requires webfx.extras.imagestore;
-    requires webfx.extras.panes;
-    requires webfx.extras.util.control;
     requires webfx.kit.util;
     requires webfx.platform.resource;
     requires webfx.platform.util;

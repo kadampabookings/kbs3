@@ -154,6 +154,12 @@
     <source path="dev/webfx/extras/type"/>
     <!--==========================< webfx-extras-util-animation >===========================-->
     <source path="dev/webfx/extras/util/animation"/>
+    <!--==========================< webfx-extras-util-background >==========================-->
+    <source path="dev/webfx/extras/util/background"/>
+    <!--============================< webfx-extras-util-layout >============================-->
+    <source path="dev/webfx/extras/util/layout"/>
+    <!--============================< webfx-extras-util-paint >=============================-->
+    <source path="dev/webfx/extras/util/paint"/>
     <!--======================< webfx-kit-javafxcontrols-peers-base >=======================-->
     <source path="dev/webfx/kit/mapper/peers/javafxcontrols/base"/>
     <!--====================< webfx-kit-javafxcontrols-peers-gwt-j2cl >=====================-->
