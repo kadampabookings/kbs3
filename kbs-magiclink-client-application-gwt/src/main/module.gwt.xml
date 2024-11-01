@@ -156,6 +156,8 @@
     <source path="dev/webfx/extras/util/animation"/>
     <!--==========================< webfx-extras-util-background >==========================-->
     <source path="dev/webfx/extras/util/background"/>
+    <!--===========================< webfx-extras-util-control >============================-->
+    <source path="dev/webfx/extras/util/control"/>
     <!--============================< webfx-extras-util-layout >============================-->
     <source path="dev/webfx/extras/util/layout"/>
     <!--============================< webfx-extras-util-paint >=============================-->

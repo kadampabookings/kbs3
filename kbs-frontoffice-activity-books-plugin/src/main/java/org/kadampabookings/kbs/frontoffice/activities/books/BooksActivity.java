@@ -12,7 +12,6 @@ import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntit
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -36,13 +35,10 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
     private final VBox booksContainer = new VBox(20);
     private final VBox videosContainer = new VBox(20);
     private final Carousel carousel = new Carousel(pageContainer, videosContainer);
-    private final BooleanProperty showVideosProperty = new SimpleBooleanProperty(false) {
-        @Override
-        protected void invalidated() {
-            carousel.displaySlide(get() ? videosContainer : pageContainer);
-            FXCollapseFooter.setCollapseFooter(get());
-        }
-    };
+    private final BooleanProperty showVideosProperty = FXProperties.newBooleanProperty(showVideos -> {
+        carousel.displaySlide(showVideos ? videosContainer : pageContainer);
+        FXCollapseFooter.setCollapseFooter(showVideos);
+    });
 
     @Override
     public Node buildUi() {

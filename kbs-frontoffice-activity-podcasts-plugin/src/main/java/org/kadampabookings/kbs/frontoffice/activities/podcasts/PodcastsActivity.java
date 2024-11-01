@@ -160,7 +160,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         allTopicPane.setMinHeight(40);
         allTopicPane.setOnMouseClicked(e -> topicProperty.set(null));
         allTopicPane.setCursor(Cursor.HAND);
-        Text topicPrefixText = I18n.bindI18nProperties(new Text(),  PodcastsI18nKeys.topic);
+        Text topicPrefixText = I18n.bindI18nProperties(new Text(), PodcastsI18nKeys.topic);
         topicPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
             "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",
@@ -279,26 +279,24 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
             }
         });
 
-        ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>() {
-            @Override
-            protected void invalidated() {
-                Region content = (Region) scrollPane.getContent();
-                content.setBackground(Background.fill(get()));
-            }
-        };
+        ObjectProperty<Color> backgroundColorProperty = FXProperties.newObjectProperty(bgColor -> {
+            Region content = (Region) scrollPane.getContent();
+            content.setBackground(Background.fill(bgColor));
+        });
 
         // Lazy loading when the user scrolls down
         double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         FXProperties.runOnPropertiesChange(() -> {
             double topOffset = ControlUtil.computeScrollPaneVTopOffset(scrollPane);
-            boolean scrollDown = topOffset > lastTopOffset; lastTopOffset = topOffset;
+            boolean scrollDown = topOffset > lastTopOffset;
+            lastTopOffset = topOffset;
             boolean newBlackOpaque = videosSwitch.isSelected() && topOffset > filterBar.getLayoutY() + (scrollDown ? filterBar.getHeight() : 0);
             if (newBlackOpaque != opaqueBlack) {
                 opaqueBlack = newBlackOpaque;
                 if (backgroundTimeline != null)
                     backgroundTimeline.stop();
-                backgroundTimeline = Animations.animateProperty(backgroundColorProperty, newBlackOpaque ? Color.BLACK : new Color(0, 0, 0,0));
+                backgroundTimeline = Animations.animateProperty(backgroundColorProperty, newBlackOpaque ? Color.BLACK : new Color(0, 0, 0, 0));
                 FXCollapseFooter.setCollapseFooter(opaqueBlack);
             }
             double bottomOffset = topOffset + scrollPane.getViewportBounds().getHeight();
