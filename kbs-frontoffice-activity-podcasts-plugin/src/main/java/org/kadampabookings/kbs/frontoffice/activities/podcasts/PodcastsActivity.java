@@ -70,7 +70,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
     private Video lastLoadedVideo;
     private final ObjectProperty<Video> lastLoadedVideoProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(podcastsContainer, videosContainer);
-    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), PodcastsI18nKeys.videos);
+    private final Label videosLabel = I18nControls.newLabel(PodcastsI18nKeys.videos);
     private final Switch videosSwitch = new Switch();
 
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
@@ -108,7 +108,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         ScalePane scaledSwitchBox = new ScalePane(ScaleMode.FIT_HEIGHT, switchBox);
         scaledSwitchBox.setCanShrink(false);
 
-        Text teacherPrefixText = I18n.bindI18nProperties(new Text(), PodcastsI18nKeys.teacher);
+        Text teacherPrefixText = I18n.newText(PodcastsI18nKeys.teacher);
         teacherPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Teacher> teacherButtonSelector = new EntityButtonSelector<Teacher>(
             "{class: 'Teacher', alias: 't', columns: 'name', orderBy: 'id'}",
@@ -160,7 +160,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         allTopicPane.setMinHeight(40);
         allTopicPane.setOnMouseClicked(e -> topicProperty.set(null));
         allTopicPane.setCursor(Cursor.HAND);
-        Text topicPrefixText = I18n.bindI18nProperties(new Text(), PodcastsI18nKeys.topic);
+        Text topicPrefixText = I18n.newText(PodcastsI18nKeys.topic);
         topicPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
             "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",

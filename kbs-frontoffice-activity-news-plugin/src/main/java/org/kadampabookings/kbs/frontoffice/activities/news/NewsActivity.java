@@ -67,7 +67,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
     private final ObjectProperty<Video> latestLoadedVideoProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(newsContainer, videosContainer);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
-    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), NewsI18nKeys.Videos);
+    private final Label videosLabel = I18nControls.newLabel(NewsI18nKeys.Videos);
     private final Switch videosSwitch = new Switch();
     private final TextField searchTextField = new TextField();
     private final SVGPath searchIconSvgPath = new SVGPath();
