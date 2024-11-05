@@ -1,7 +1,7 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
 /**
- * The customized home page of the KBS Front-Office that displays the Kadampa news &amp; podcasts.
+ * The customized home page of the KBS Front-Office that displays the Kadampa news.
  */
 module kbs.frontoffice.activity.news.plugin {
 

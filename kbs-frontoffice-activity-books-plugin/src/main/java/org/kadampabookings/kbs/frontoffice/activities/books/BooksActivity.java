@@ -1,6 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.activities.books;
 
 import dev.webfx.extras.carousel.Carousel;
+import dev.webfx.extras.player.FullscreenButton;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.resource.Resource;
 import dev.webfx.stack.cache.client.LocalStorageCache;
@@ -26,7 +27,6 @@ import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Book;
 import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.VideoImpl;
-import one.modality.event.client.mediaview.Players;
 import one.modality.event.client.mediaview.VideoView;
 
 final class BooksActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
@@ -81,14 +81,14 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
     @Override
     public void onResume() {
         BrowserUtil.setUiRouter(getUiRouter());
-        Players.setFullscreenButtonEnabled(false);
+        FullscreenButton.setFullscreenButtonEnabled(false);
         super.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Players.setFullscreenButtonEnabled(true);
+        FullscreenButton.setFullscreenButtonEnabled(true);
     }
 
     private void showVideos() {

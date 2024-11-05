@@ -13,7 +13,7 @@
 
     <artifactId>kbs-frontoffice-activity-news-plugin</artifactId>
 
-    <description>The customized home page of the KBS Front-Office that displays the Kadampa news &amp; podcasts.</description>
+    <description>The customized home page of the KBS Front-Office that displays the Kadampa news.</description>
 
     <dependencies>
 
