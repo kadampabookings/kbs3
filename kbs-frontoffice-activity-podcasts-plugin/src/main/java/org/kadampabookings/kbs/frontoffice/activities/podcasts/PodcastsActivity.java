@@ -228,8 +228,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
             carousel.getContainer()
         );
 
-        FXProperties.runOnPropertiesChange(() -> {
-            double width = pageContainer.getWidth();
+        FXProperties.runOnDoublePropertyChange(width -> {
             double fontFactor = GeneralUtility.computeFontFactor(width);
             GeneralUtility.setLabeledFont(podcastsLabel, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, fontFactor * 21);
             GeneralUtility.setLabeledFont(alsoAvailableOnLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL, fontFactor * 8);
@@ -287,7 +286,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         // Lazy loading when the user scrolls down
         double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
-        FXProperties.runOnPropertiesChange(() -> {
+        FXProperties.runOnPropertyChange(() -> {
             double topOffset = ControlUtil.computeScrollPaneVTopOffset(scrollPane);
             boolean scrollDown = topOffset > lastTopOffset;
             lastTopOffset = topOffset;
@@ -309,7 +308,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
                         FXProperties.setIfNotEquals(lastLoadedPodcastProperty, lastLoadedPodcast);
                 }
             }
-        }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
+        }, scrollPane.vvalueProperty());
 
         return scrollPane;
     }

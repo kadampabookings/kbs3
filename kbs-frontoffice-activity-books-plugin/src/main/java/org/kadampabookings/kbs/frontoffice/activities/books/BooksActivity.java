@@ -65,8 +65,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             booksContainer
         );
 
-        FXProperties.runOnPropertiesChange(() -> {
-            double width = pageContainer.getWidth();
+        FXProperties.runOnDoublePropertyChange(width -> {
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             // Also the space above and below

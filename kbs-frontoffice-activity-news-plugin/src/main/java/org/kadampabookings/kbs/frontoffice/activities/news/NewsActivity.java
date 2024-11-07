@@ -162,8 +162,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             carousel.getContainer()
         );
 
-        FXProperties.runOnPropertiesChange(() -> {
-            double width = pageContainer.getWidth();
+        FXProperties.runOnDoublePropertyChange(width -> {
             double maxHeight = width < 600 ? width : 600;
             headerScalePane.setMaxHeight(maxHeight);
             headerText.setTranslateX(Math.max(20, (width - 600) * 0.5));
@@ -213,7 +212,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
         // Lazy loading when the user scrolls down
         double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
-        FXProperties.runOnPropertiesChange(() -> {
+        FXProperties.runOnPropertyChange(() -> {
             if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
                 if (videosSwitch.isSelected()) {
                     if (lastLoadedVideo != null && videosFeed.isEmpty())
@@ -223,7 +222,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
                         FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, lastLoadedNews.getDate());
                 }
             }
-        }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
+        }, scrollPane.vvalueProperty());
 
         return scrollPane;
     }
