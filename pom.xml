@@ -59,7 +59,6 @@
         <module>kbs-frontoffice-application-gwt</module>
         <module>kbs-frontoffice-application-j2cl</module>
         <module>kbs-frontoffice-application-openjfx</module>
-        <module>kbs-frontoffice-mediaview</module>
         <module>kbs-magiclink-client-application</module>
         <module>kbs-magiclink-client-application-gwt</module>
         <module>kbs-magiclink-client-application-openjfx</module>

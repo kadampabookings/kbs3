@@ -9,13 +9,13 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires kbs.frontoffice.mediaview;
     requires modality.base.client.activity;
     requires modality.base.client.mainframe.fx;
     requires modality.base.client.tile;
     requires modality.base.frontoffice.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
+    requires modality.event.client.mediaview;
     requires webfx.extras.carousel;
     requires webfx.extras.panes;
     requires webfx.extras.switches;
@@ -43,11 +43,9 @@ module kbs.frontoffice.activity.podcasts.plugin {
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.podcasts;
-    exports org.kadampabookings.kbs.frontoffice.activities.podcasts.routing;
-    exports org.kadampabookings.kbs.frontoffice.operations.routes.podcasts;
 
     // Provided services
-    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsUiRoute;
-    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.podcasts.RouteToPodcastsRequestEmitter;
+    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting.PodcastsUiRoute;
+    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting.RouteToPodcastsRequestEmitter;
 
 }

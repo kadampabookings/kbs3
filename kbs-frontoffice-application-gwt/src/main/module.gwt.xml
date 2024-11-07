@@ -92,18 +92,12 @@
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
     <!--=====================< kbs-frontoffice-activity-books-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/books"/>
-    <source path="org/kadampabookings/kbs/frontoffice/activities/books/routing"/>
-    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/books"/>
     <resource path="org/kadampabookings/kbs/frontoffice/activities/books"/>
     <public path="" includes="org/kadampabookings/kbs/frontoffice/activities/books/"/>
     <!--======================< kbs-frontoffice-activity-news-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/news"/>
-    <source path="org/kadampabookings/kbs/frontoffice/activities/news/routing"/>
-    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/news"/>
     <!--====================< kbs-frontoffice-activity-podcasts-plugin >====================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/podcasts"/>
-    <source path="org/kadampabookings/kbs/frontoffice/activities/podcasts/routing"/>
-    <source path="org/kadampabookings/kbs/frontoffice/operations/routes/podcasts"/>
     <!--==========================< kbs-frontoffice-application >===========================-->
     <resource path="images/events"/>
     <public path="" includes="images/events/"/>
@@ -111,8 +105,6 @@
     <public path="" includes="images/organizations/"/>
     <resource path="org/kadampabookings/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/frontoffice/booking/"/>
-    <!--===========================< kbs-frontoffice-mediaview >============================-->
-    <source path="org/kadampabookings/kbs/frontoffice/mediaview"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->
@@ -192,6 +184,7 @@
     <!--===========================< modality-base-client-tile >============================-->
     <source path="one/modality/base/client/tile"/>
     <!--===========================< modality-base-client-util >============================-->
+    <source path="one/modality/base/client/util/dialog"/>
     <source path="one/modality/base/client/util/functions"/>
     <source path="one/modality/base/client/util/log"/>
     <source path="one/modality/base/client/util/masterslave"/>
@@ -210,8 +203,6 @@
     <public path="" includes="one/modality/base/frontoffice/activities/account/images/"/>
     <!--================< modality-base-frontoffice-activity-alerts-plugin >================-->
     <source path="one/modality/base/frontoffice/activities/alerts"/>
-    <source path="one/modality/base/frontoffice/activities/alerts/routing"/>
-    <source path="one/modality/base/frontoffice/operations/routes/alerts"/>
     <!--=====================< modality-base-frontoffice-application >======================-->
     <source path="one/modality/base/frontoffice/application"/>
     <!--==================< modality-base-frontoffice-mainframe-activity >==================-->
@@ -219,11 +210,12 @@
     <!--=====================< modality-base-frontoffice-mainframe-fx >=====================-->
     <source path="one/modality/base/frontoffice/mainframe/fx"/>
     <!--=======================< modality-base-frontoffice-utility >========================-->
-    <source path="one/modality/base/frontoffice/browser"/>
-    <source path="one/modality/base/frontoffice/entities"/>
-    <source path="one/modality/base/frontoffice/fx"/>
-    <source path="one/modality/base/frontoffice/states"/>
-    <source path="one/modality/base/frontoffice/utility"/>
+    <source path="one/modality/base/frontoffice/utility/activity"/>
+    <source path="one/modality/base/frontoffice/utility/browser"/>
+    <source path="one/modality/base/frontoffice/utility/tyler"/>
+    <source path="one/modality/base/frontoffice/utility/tyler/entities"/>
+    <source path="one/modality/base/frontoffice/utility/tyler/fx"/>
+    <source path="one/modality/base/frontoffice/utility/tyler/states"/>
     <!--==========================< modality-base-shared-context >==========================-->
     <source path="one/modality/base/shared/context"/>
     <source path="one/modality/base/shared/context/serial"/>
@@ -252,6 +244,8 @@
     <source path="one/modality/crm/shared/services/authn/fx"/>
     <!--===================< modality-crm-client-authz-required-plugin >====================-->
     <source path="one/modality/crm/client/services/authz"/>
+    <!--============================< modality-crm-client-i18n >============================-->
+    <source path="one/modality/crm/client/i18n"/>
     <!--======================< modality-crm-client-personaldetails >=======================-->
     <source path="one/modality/crm/client/controls/personaldetails"/>
     <!--=======================< modality-crm-client-profile-plugin >=======================-->
@@ -259,6 +253,8 @@
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
+    <!--=========================< modality-ecommerce-client-i18n >=========================-->
+    <source path="one/modality/ecommerce/client/i18n"/>
     <!--======================< modality-ecommerce-document-service >=======================-->
     <source path="one/modality/ecommerce/document/service"/>
     <source path="one/modality/ecommerce/document/service/events"/>
@@ -295,12 +291,12 @@
     <source path="one/modality/ecommerce/payment/spi/impl/remote"/>
     <!--=========================< modality-event-client-event-fx >=========================-->
     <source path="one/modality/event/client/event/fx"/>
+    <!--========================< modality-event-client-mediaview >=========================-->
+    <source path="one/modality/event/client/mediaview"/>
     <!--=====================< modality-event-client-recurringevents >======================-->
     <source path="one/modality/event/client/recurringevents"/>
     <!--===========< modality-event-frontoffice-activity-audiorecordings-plugin >===========-->
     <source path="one/modality/event/frontoffice/activities/audiorecordings"/>
-    <source path="one/modality/event/frontoffice/activities/audiorecordings/routing"/>
-    <source path="one/modality/event/frontoffice/operations/routes/audiorecordings"/>
     <!--===============< modality-event-frontoffice-activity-booking-plugin >===============-->
     <source path="one/modality/event/frontoffice/activities/booking"/>
     <source path="one/modality/event/frontoffice/activities/booking/fx"/>
@@ -309,15 +305,13 @@
     <source path="one/modality/event/frontoffice/activities/booking/process/account"/>
     <source path="one/modality/event/frontoffice/activities/booking/process/event"/>
     <source path="one/modality/event/frontoffice/activities/booking/process/event/slides"/>
-    <source path="one/modality/event/frontoffice/activities/booking/routing"/>
     <source path="one/modality/event/frontoffice/activities/booking/views"/>
-    <source path="one/modality/event/frontoffice/operations/routes/booking"/>
     <resource path="one/modality/event/frontoffice/activities/booking/map"/>
     <public path="" includes="one/modality/event/frontoffice/activities/booking/map/"/>
     <!--===============< modality-event-frontoffice-activity-videos-plugin >================-->
     <source path="one/modality/event/frontoffice/activities/videos"/>
-    <source path="one/modality/event/frontoffice/activities/videos/routing"/>
-    <source path="one/modality/event/frontoffice/operations/routes/videos"/>
+    <!--=======================< modality-event-frontoffice-medias >========================-->
+    <source path="one/modality/event/frontoffice/medias"/>
     <!--=============================< webfx-extras-carousel >==============================-->
     <source path="dev/webfx/extras/carousel"/>
     <!--===============================< webfx-extras-cell >================================-->
@@ -334,13 +328,18 @@
     <!--==============================< webfx-extras-player >===============================-->
     <source path="dev/webfx/extras/player"/>
     <source path="dev/webfx/extras/player/impl"/>
-    <!--========================< webfx-extras-player-audio-media >=========================-->
-    <source path="dev/webfx/extras/player/audio/media"/>
+    <source path="dev/webfx/extras/player/multi"/>
+    <!--=====================< webfx-extras-player-audio-javafxmedia >======================-->
+    <source path="dev/webfx/extras/player/audio/javafxmedia"/>
+    <!--=========================< webfx-extras-player-multi-all >==========================-->
+    <source path="dev/webfx/extras/player/multi/all"/>
     <!--===========================< webfx-extras-player-video >============================-->
     <source path="dev/webfx/extras/player/video"/>
     <source path="dev/webfx/extras/player/video/impl"/>
     <!--=========================< webfx-extras-player-video-web >==========================-->
     <source path="dev/webfx/extras/player/video/web"/>
+    <!--======================< webfx-extras-player-video-web-castr >=======================-->
+    <source path="dev/webfx/extras/player/video/web/castr"/>
     <!--======================< webfx-extras-player-video-web-wistia >======================-->
     <source path="dev/webfx/extras/player/video/web/wistia"/>
     <!--=====================< webfx-extras-player-video-web-youtube >======================-->

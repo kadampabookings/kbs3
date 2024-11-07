@@ -43,8 +43,9 @@ import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
-import one.modality.base.frontoffice.utility.GeneralUtility;
-import one.modality.base.frontoffice.utility.StyleUtility;
+import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
+import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
 import one.modality.base.shared.entities.Teacher;
 import one.modality.base.shared.entities.Topic;
@@ -54,9 +55,8 @@ import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDate;
 
-public final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
+final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
-    private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
     private static final int INITIAL_LIMIT = 5;
     private static final Teacher FAVORITE_TAB_VIRTUAL_TEACHER = new TeacherImpl(EntityId.create(Teacher.class), null);
 
@@ -70,7 +70,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
     private Video lastLoadedVideo;
     private final ObjectProperty<Video> lastLoadedVideoProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(podcastsContainer, videosContainer);
-    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), "videos");
+    private final Label videosLabel = I18nControls.newLabel(PodcastsI18nKeys.videos);
     private final Switch videosSwitch = new Switch();
 
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
@@ -108,7 +108,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         ScalePane scaledSwitchBox = new ScalePane(ScaleMode.FIT_HEIGHT, switchBox);
         scaledSwitchBox.setCanShrink(false);
 
-        Text teacherPrefixText = I18n.bindI18nProperties(new Text(), PodcastsI18nKeys.teacher);
+        Text teacherPrefixText = I18n.newText(PodcastsI18nKeys.teacher);
         teacherPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Teacher> teacherButtonSelector = new EntityButtonSelector<Teacher>(
             "{class: 'Teacher', alias: 't', columns: 'name', orderBy: 'id'}",
@@ -120,7 +120,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             }
         }
             .ifFalse(videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Podcast where teacher = t) > 0"))
-            .ifTrue(videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Video where teacher = t) > 0"))
+            .ifTrue( videosSwitch.selectedProperty(), DqlStatement.where("(select count(1) from Video   where teacher = t) > 0"))
             .appendNullEntity(true); // Also adding null entity that will represent all teachers
         // Creating a virtual teacher named "All" that will be used to select all teachers
         EntityStore store = teacherButtonSelector.getStore();
@@ -154,13 +154,13 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         topicTabsPane.getChildren().setAll(topicTabsBar.getTabs());
         topicTabsPane.setOnMouseClicked(Event::consume);
 
-        Text allTopicText = new Text("All");
+        Text allTopicText = new Text("All"); // ???
         MonoPane allTopicPane = new MonoPane(allTopicText);
         allTopicPane.setMaxWidth(Double.MAX_VALUE);
         allTopicPane.setMinHeight(40);
         allTopicPane.setOnMouseClicked(e -> topicProperty.set(null));
         allTopicPane.setCursor(Cursor.HAND);
-        Text topicPrefixText = I18n.bindI18nProperties(new Text(),  PodcastsI18nKeys.topic);
+        Text topicPrefixText = I18n.newText(PodcastsI18nKeys.topic);
         topicPrefixText.setFill(Color.GRAY);
         EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
             "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",
@@ -204,9 +204,7 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         topicProperty.bindBidirectional(topicButtonSelector.selectedItemProperty());
 
         // Setting a max width for big desktop screens
-        pageContainer.setMaxWidth(MAX_PAGE_WIDTH); // Similar value as our website
         pageContainer.setAlignment(Pos.CENTER);
-        BorderPane.setMargin(pageContainer, new Insets(0, 20, 0, 20)); // Global page padding
         VBox.setMargin(podcastsLabel, new Insets(20, 0, 20, 0));
         VBox.setMargin(podcastsChannelsPane, new Insets(20, 0, 20, 0));
         VBox.setMargin(lineSeparator, new Insets(10, 0, 40, 0));
@@ -250,12 +248,8 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
         pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = podcasts request (as podcasts are on the left)
 
-        // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
-        // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
-        BorderPane borderPane = new BorderPane(pageContainer);
-        // Also a background is necessary for devices not supporting inverse clipping used in circle animation
-        borderPane.setBackground(Background.fill(Color.WHITE));
-        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
+        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true);
+        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
 
         podcastsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedPodcast = Collections.last(podcastsFeed);
@@ -285,25 +279,24 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             }
         });
 
-        ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>() {
-            @Override
-            protected void invalidated() {
-                borderPane.setBackground(Background.fill(get()));
-            }
-        };
+        ObjectProperty<Color> backgroundColorProperty = FXProperties.newObjectProperty(bgColor -> {
+            Region content = (Region) scrollPane.getContent();
+            content.setBackground(Background.fill(bgColor));
+        });
 
         // Lazy loading when the user scrolls down
         double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
         pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
         FXProperties.runOnPropertiesChange(() -> {
             double topOffset = ControlUtil.computeScrollPaneVTopOffset(scrollPane);
-            boolean scrollDown = topOffset > lastTopOffset; lastTopOffset = topOffset;
+            boolean scrollDown = topOffset > lastTopOffset;
+            lastTopOffset = topOffset;
             boolean newBlackOpaque = videosSwitch.isSelected() && topOffset > filterBar.getLayoutY() + (scrollDown ? filterBar.getHeight() : 0);
             if (newBlackOpaque != opaqueBlack) {
                 opaqueBlack = newBlackOpaque;
                 if (backgroundTimeline != null)
                     backgroundTimeline.stop();
-                backgroundTimeline = Animations.animateProperty(backgroundColorProperty, newBlackOpaque ? Color.BLACK : new Color(0, 0, 0,0));
+                backgroundTimeline = Animations.animateProperty(backgroundColorProperty, newBlackOpaque ? Color.BLACK : new Color(0, 0, 0, 0));
                 FXCollapseFooter.setCollapseFooter(opaqueBlack);
             }
             double bottomOffset = topOffset + scrollPane.getViewportBounds().getHeight();
@@ -318,10 +311,6 @@ public final class PodcastsActivity extends ViewDomainActivityBase implements Op
             }
         }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
 
-        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
-        // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
-        // in the browser (in case TransitionPane keepsLeavingNode is enabled)
-        TransitionPane.setKeepsLeavingNode(scrollPane, false);
         return scrollPane;
     }
 

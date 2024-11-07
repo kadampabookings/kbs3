@@ -6,15 +6,14 @@ module kbs.frontoffice.activity.books.plugin {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires kbs.frontoffice.mediaview;
     requires modality.base.client.activity;
     requires modality.base.frontoffice.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
+    requires modality.event.client.mediaview;
     requires webfx.extras.carousel;
     requires webfx.extras.imagestore;
-    requires webfx.extras.panes;
-    requires webfx.extras.util.control;
+    requires webfx.extras.player;
     requires webfx.kit.util;
     requires webfx.platform.resource;
     requires webfx.platform.util;
@@ -32,14 +31,12 @@ module kbs.frontoffice.activity.books.plugin {
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.books;
-    exports org.kadampabookings.kbs.frontoffice.activities.books.routing;
-    exports org.kadampabookings.kbs.frontoffice.operations.routes.books;
 
     // Resources packages
     opens org.kadampabookings.kbs.frontoffice.activities.books;
 
     // Provided services
-    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.books.BooksUiRoute;
-    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.books.RouteToBooksRequestEmitter;
+    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.books.BooksRouting.BooksUiRoute;
+    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.books.BooksRouting.RouteToBooksRequestEmitter;
 
 }

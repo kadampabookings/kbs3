@@ -1,8 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.activities.books;
 
 import dev.webfx.extras.carousel.Carousel;
-import dev.webfx.extras.panes.TransitionPane;
-import dev.webfx.extras.util.control.ControlUtil;
+import dev.webfx.extras.player.FullscreenButton;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.resource.Resource;
 import dev.webfx.stack.cache.client.LocalStorageCache;
@@ -14,39 +13,32 @@ import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntit
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
-import one.modality.base.frontoffice.browser.BrowserUtil;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
+import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Book;
 import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.VideoImpl;
-import one.modality.event.client.mediaview.Players;
 import one.modality.event.client.mediaview.VideoView;
 
-public final class BooksActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
-
-    private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
+final class BooksActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private final VBox pageContainer = new VBox(); // The main container inside the vertical scrollbar
     private final VBox booksContainer = new VBox(20);
     private final VBox videosContainer = new VBox(20);
     private final Carousel carousel = new Carousel(pageContainer, videosContainer);
-    private final BooleanProperty showVideosProperty = new SimpleBooleanProperty(false) {
-        @Override
-        protected void invalidated() {
-            carousel.displaySlide(get() ? videosContainer : pageContainer);
-            FXCollapseFooter.setCollapseFooter(get());
-        }
-    };
+    private final BooleanProperty showVideosProperty = FXProperties.newBooleanProperty(showVideos -> {
+        carousel.displaySlide(showVideos ? videosContainer : pageContainer);
+        FXCollapseFooter.setCollapseFooter(showVideos);
+    });
 
     @Override
     public Node buildUi() {
@@ -58,13 +50,12 @@ public final class BooksActivity extends ViewDomainActivityBase implements Opera
         collectedWorksVideo.setImageUrl(Resource.toUrl("CollectedWorks.png", getClass()));
         VideoView collectedWorksVideoView = new VideoView();
         collectedWorksVideoView.setDecorated(false);
-        collectedWorksVideoView.setWideVideoMaxWidth(MAX_PAGE_WIDTH);
+        collectedWorksVideoView.setWideVideoMaxWidth(FrontOfficeActivityUtil.MAX_PAGE_WIDTH);
         collectedWorksVideoView.setMediaInfo(collectedWorksVideo);
 
         // Setting a max width for big desktop screens
-        pageContainer.setMaxWidth(MAX_PAGE_WIDTH); // Similar value as our website
         pageContainer.setAlignment(Pos.CENTER);
-        pageContainer.setPadding(new Insets(20, 20, 50, 20)); // Global page padding
+        pageContainer.setPadding(new Insets(20, 0, 50, 0)); // in addition to page left & right margins
         VBox.setMargin(carousel.getContainer(), new Insets(40, 0, 10, 0));
 
         carousel.setShowingDots(false);
@@ -82,31 +73,22 @@ public final class BooksActivity extends ViewDomainActivityBase implements Opera
             VBox.setMargin(booksContainer, new Insets(40 * scale, 0, 10, 0));
         }, pageContainer.widthProperty());
 
-        // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
-        // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
-        BorderPane borderPane = new BorderPane(carousel.getContainer());
-        // Also a background is necessary for devices not supporting inverse clipping used in circle animation
-        borderPane.setBackground(Background.fill(Color.WHITE));
-        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
-
+        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(carousel.getContainer(), true);
         scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
-        // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
-        // in the browser (in case TransitionPane keepsLeavingNode is enabled)
-        TransitionPane.setKeepsLeavingNode(scrollPane, false);
         return scrollPane;
     }
 
     @Override
     public void onResume() {
         BrowserUtil.setUiRouter(getUiRouter());
-        Players.setFullscreenButtonEnabled(false);
+        FullscreenButton.setFullscreenButtonEnabled(false);
         super.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Players.setFullscreenButtonEnabled(true);
+        FullscreenButton.setFullscreenButtonEnabled(true);
     }
 
     private void showVideos() {

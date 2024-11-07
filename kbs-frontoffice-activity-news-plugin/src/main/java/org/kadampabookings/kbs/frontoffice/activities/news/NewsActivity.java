@@ -5,7 +5,6 @@ import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.extras.panes.FlexPane;
 import dev.webfx.extras.panes.ScaleMode;
 import dev.webfx.extras.panes.ScalePane;
-import dev.webfx.extras.panes.TransitionPane;
 import dev.webfx.extras.switches.Switch;
 import dev.webfx.extras.util.control.ControlUtil;
 import dev.webfx.kit.util.properties.FXProperties;
@@ -42,8 +41,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
-import one.modality.base.frontoffice.utility.StyleUtility;
-import one.modality.base.frontoffice.utility.TextUtility;
+import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.tyler.StyleUtility;
+import one.modality.base.frontoffice.utility.tyler.TextUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Topic;
 import one.modality.base.shared.entities.Video;
@@ -51,9 +51,8 @@ import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDateTime;
 
-public final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
+final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
-    private static final double MAX_PAGE_WIDTH = 1200; // Similar value to website
     private static final int INITIAL_LIMIT = 5;
     private static final String SEARCH_ICON_SVG_PATH = "m 15.559797,15.559797 c -0.586939,0.586937 -1.538283,0.586937 -2.125253,0 l -2.65194,-2.651972 C 9.692322,13.607263 8.4035396,14.023982 7.0120069,14.023982 3.1396594,14.023982 0,10.884761 0,7.0119756 0,3.1391906 3.1396594,0 7.0120069,0 c 3.8728471,0 7.0120071,3.139128 7.0120071,7.0119756 0,1.391064 -0.417251,2.6803464 -1.116189,3.7711284 l 2.651972,2.651972 c 0.586937,0.586938 0.586937,1.537782 0,2.124721 z M 7.0120069,2.0034082 c -2.7659715,0 -5.0085674,2.242096 -5.0085674,5.0085362 0,2.7664401 2.2426272,5.0085676 5.0085674,5.0085676 2.766409,0 5.0085361,-2.2421275 5.0085361,-5.0085676 0,-2.7664402 -2.2421271,-5.0085362 -5.0085361,-5.0085362 z";
 
@@ -68,7 +67,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
     private final ObjectProperty<Video> latestLoadedVideoProperty = new SimpleObjectProperty<>();
     private final Carousel carousel = new Carousel(newsContainer, videosContainer);
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
-    private final Label videosLabel = I18nControls.bindI18nProperties(new Label(), NewsI18nKeys.Videos);
+    private final Label videosLabel = I18nControls.newLabel(NewsI18nKeys.Videos);
     private final Switch videosSwitch = new Switch();
     private final TextField searchTextField = new TextField();
     private final SVGPath searchIconSvgPath = new SVGPath();
@@ -154,7 +153,7 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         VBox.setMargin(filterBar, new Insets(20));
 
         pageContainer.setAlignment(Pos.CENTER);
-        VBox.setMargin(carousel.getContainer(), new Insets(30, 20, 10, 20));
+        VBox.setMargin(carousel.getContainer(), FrontOfficeActivityUtil.createLeftRightPageInsets(30, 10));
         carousel.setShowingDots(false);
 
         pageContainer.getChildren().setAll(
@@ -180,15 +179,8 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
         pageContainer.setOnSwipeLeft( e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = news request (as news are on the left)
 
-        // Setting a max width for big desktop screens
-        pageContainer.setMaxWidth(MAX_PAGE_WIDTH);
-
-        // Embedding the page in a ScrollPane. The page itself is embedded in a BorderPane in order to keep the page
-        // centered when it reaches its max width (without the BorderPane, the ScrollPane would position it on left).
-        BorderPane borderPane = new BorderPane(pageContainer);
-        // Also a background is necessary for devices not supporting inverse clipping used in circle animation
-        borderPane.setBackground(Background.fill(Color.WHITE));
-        ScrollPane scrollPane = ControlUtil.createVerticalScrollPane(borderPane);
+        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true, false);
+        scrollPane.getStyleClass().add("news-activity"); // for CSS styling
 
         newsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedNews = Collections.last(newsFeed);
@@ -233,10 +225,6 @@ public final class NewsActivity extends ViewDomainActivityBase implements Operat
             }
         }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
 
-        scrollPane.getStyleClass().add("news-activity"); // for CSS styling
-        // Ensuring to not keep this activity in the scene graph after transition in order to stop the video players
-        // in the browser (in case TransitionPane keepsLeavingNode is enabled)
-        TransitionPane.setKeepsLeavingNode(scrollPane, false);
         return scrollPane;
     }
 

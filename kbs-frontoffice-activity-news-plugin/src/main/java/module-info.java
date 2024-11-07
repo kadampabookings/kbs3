@@ -1,7 +1,7 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
 /**
- * The customized home page of the KBS Front-Office that displays the Kadampa news &amp; podcasts.
+ * The customized home page of the KBS Front-Office that displays the Kadampa news.
  */
 module kbs.frontoffice.activity.news.plugin {
 
@@ -10,13 +10,13 @@ module kbs.frontoffice.activity.news.plugin {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.web;
-    requires kbs.frontoffice.mediaview;
     requires modality.base.client.activity;
     requires modality.base.client.mainframe.fx;
     requires modality.base.client.util;
     requires modality.base.frontoffice.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
+    requires modality.event.client.mediaview;
     requires webfx.extras.carousel;
     requires webfx.extras.imagestore;
     requires webfx.extras.panes;
@@ -45,11 +45,9 @@ module kbs.frontoffice.activity.news.plugin {
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.news;
-    exports org.kadampabookings.kbs.frontoffice.activities.news.routing;
-    exports org.kadampabookings.kbs.frontoffice.operations.routes.news;
 
     // Provided services
-    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.news.NewsUiRoute, org.kadampabookings.kbs.frontoffice.activities.news.ArticleUiRoute;
-    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.news.RouteToNewsRequestEmitter;
+    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.news.NewsRouting.NewsUiRoute, org.kadampabookings.kbs.frontoffice.activities.news.ArticleRouting.ArticleUiRoute;
+    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.news.NewsRouting.RouteToNewsRequestEmitter;
 
 }
