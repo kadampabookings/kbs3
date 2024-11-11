@@ -30,7 +30,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -75,7 +74,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
 
     @Override
     public Node buildUi() {
-        Text headerText = TextUtility.createText( NewsI18nKeys.newsHeaderText, StyleUtility.MAIN_ORANGE_COLOR);
+        Text headerText = TextUtility.createText(NewsI18nKeys.newsHeaderText, StyleUtility.MAIN_BRAND_COLOR);
         TextUtility.setTextFont(headerText, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32);
         headerText.setWrappingWidth(250);
 
@@ -162,8 +161,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             carousel.getContainer()
         );
 
-        FXProperties.runOnPropertiesChange(() -> {
-            double width = pageContainer.getWidth();
+        FXProperties.runOnDoublePropertyChange(width -> {
             double maxHeight = width < 600 ? width : 600;
             headerScalePane.setMaxHeight(maxHeight);
             headerText.setTranslateX(Math.max(20, (width - 600) * 0.5));
@@ -176,11 +174,10 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             scaledSwitchBox.setMinHeight(scale * 40 / 1.8);
         }, pageContainer.widthProperty());
 
-        pageContainer.setOnSwipeLeft( e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
+        pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = news request (as news are on the left)
 
-        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true, false);
-        scrollPane.getStyleClass().add("news-activity"); // for CSS styling
+        pageContainer.getStyleClass().add("news-activity"); // for CSS styling
 
         newsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedNews = Collections.last(newsFeed);
@@ -211,21 +208,24 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
         });
 
         // Lazy loading when the user scrolls down
-        double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
-        pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
-        FXProperties.runOnPropertiesChange(() -> {
-            if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
-                if (videosSwitch.isSelected()) {
-                    if (lastLoadedVideo != null && videosFeed.isEmpty())
-                        FXProperties.setIfNotEquals(latestLoadedVideoProperty, lastLoadedVideo);
-                } else {
-                    if (lastLoadedNews != null && newsFeed.isEmpty())
-                        FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, lastLoadedNews.getDate());
+        ControlUtil.onScrollPaneAncestorSet(pageContainer, scrollPane -> {
+            double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
+            pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
+            FXProperties.runOnPropertyChange(() -> {
+                if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
+                    if (videosSwitch.isSelected()) {
+                        if (lastLoadedVideo != null && videosFeed.isEmpty())
+                            FXProperties.setIfNotEquals(latestLoadedVideoProperty, lastLoadedVideo);
+                    } else {
+                        if (lastLoadedNews != null && newsFeed.isEmpty())
+                            FXProperties.setIfNotEquals(loadNewsBeforeDateProperty, lastLoadedNews.getDate());
+                    }
                 }
-            }
-        }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
+            }, scrollPane.vvalueProperty());
+        });
 
-        return scrollPane;
+        return pageContainer;
+        //return FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true, false);
     }
 
     @Override

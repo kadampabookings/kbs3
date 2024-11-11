@@ -16,7 +16,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -65,17 +64,16 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             booksContainer
         );
 
-        FXProperties.runOnPropertiesChange(() -> {
-            double width = pageContainer.getWidth();
+        FXProperties.runOnDoublePropertyChange(width -> {
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             // Also the space above and below
             VBox.setMargin(booksContainer, new Insets(40 * scale, 0, 10, 0));
         }, pageContainer.widthProperty());
 
-        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(carousel.getContainer(), true);
-        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
-        return scrollPane;
+        pageContainer.getStyleClass().add("podcasts-activity"); // for CSS styling
+        return pageContainer;
+        //return FrontOfficeActivityUtil.createActivityPageScrollPane(carousel.getContainer(), true);
     }
 
     @Override

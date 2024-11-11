@@ -17,7 +17,6 @@ import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
 import dev.webfx.stack.orm.reactive.entities.dql_to_entities.ReactiveEntitiesMapper;
-import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
@@ -43,7 +42,6 @@ import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
-import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
 import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
@@ -55,7 +53,7 @@ import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDate;
 
-final class PodcastsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
+final class PodcastsActivity extends ViewDomainActivityBase implements ModalityButtonFactoryMixin {
 
     private static final int INITIAL_LIMIT = 5;
     private static final Teacher FAVORITE_TAB_VIRTUAL_TEACHER = new TeacherImpl(EntityId.create(Teacher.class), null);
@@ -76,17 +74,21 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
     private final ObjectProperty<Teacher> teacherProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Topic> topicProperty = new SimpleObjectProperty<>();
     private final BooleanProperty virtuousTopicProperty = new SimpleBooleanProperty();
+    private final ObjectProperty<Color> backgroundColorProperty = FXProperties.newObjectProperty(bgColor ->
+        setScrollPaneBackground(Background.fill(bgColor))
+    );
     private Timeline backgroundTimeline;
     private double lastTopOffset;
     private boolean opaqueBlack;
+    private ScrollPane scrollPane;
 
     @Override
     public Node buildUi() {
-        Label podcastsLabel = GeneralUtility.createLabel(PodcastsI18nKeys.podcastsLabel, StyleUtility.MAIN_ORANGE_COLOR);
+        Label podcastsLabel = GeneralUtility.createLabel(PodcastsI18nKeys.podcastsLabel, StyleUtility.MAIN_BRAND_COLOR);
         podcastsLabel.setContentDisplay(ContentDisplay.TOP);
         podcastsLabel.setTextAlignment(TextAlignment.CENTER);
 
-        Label alsoAvailableOnLabel = GeneralUtility.createLabel(PodcastsI18nKeys.alsoAvailableOn, StyleUtility.MAIN_ORANGE_COLOR);
+        Label alsoAvailableOnLabel = GeneralUtility.createLabel(PodcastsI18nKeys.alsoAvailableOn, StyleUtility.MAIN_BRAND_COLOR);
         Label[] podcastsChannelButtons = {
             createPodcastsChannelButton(PodcastsI18nKeys.Spotify, "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
             createPodcastsChannelButton(PodcastsI18nKeys.ApplePodcasts, "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),
@@ -228,8 +230,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
             carousel.getContainer()
         );
 
-        FXProperties.runOnPropertiesChange(() -> {
-            double width = pageContainer.getWidth();
+        FXProperties.runOnDoublePropertyChange(width -> {
             double fontFactor = GeneralUtility.computeFontFactor(width);
             GeneralUtility.setLabeledFont(podcastsLabel, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, fontFactor * 21);
             GeneralUtility.setLabeledFont(alsoAvailableOnLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL, fontFactor * 8);
@@ -248,8 +249,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
         pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = podcasts request (as podcasts are on the left)
 
-        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true);
-        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
+        pageContainer.getStyleClass().add("podcasts-activity"); // for CSS styling
 
         podcastsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedPodcast = Collections.last(podcastsFeed);
@@ -279,39 +279,58 @@ final class PodcastsActivity extends ViewDomainActivityBase implements Operation
             }
         });
 
-        ObjectProperty<Color> backgroundColorProperty = FXProperties.newObjectProperty(bgColor -> {
-            Region content = (Region) scrollPane.getContent();
-            content.setBackground(Background.fill(bgColor));
+        // Lazy loading when the user scrolls down
+        ControlUtil.onScrollPaneAncestorSet(pageContainer, scrollPane -> {
+            this.scrollPane = scrollPane;
+
+            // Lazy loading when the user scrolls down
+            double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
+            pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
+            FXProperties.runOnPropertyChange(() -> {
+                double topOffset = ControlUtil.computeScrollPaneVTopOffset(scrollPane);
+                boolean scrollDown = topOffset > lastTopOffset;
+                lastTopOffset = topOffset;
+                boolean newBlackOpaque = videosSwitch.isSelected() && topOffset > filterBar.getLayoutY() + (scrollDown ? filterBar.getHeight() : 0);
+                if (newBlackOpaque != opaqueBlack) {
+                    opaqueBlack = newBlackOpaque;
+                    if (backgroundTimeline != null)
+                        backgroundTimeline.stop();
+                    backgroundTimeline = Animations.animateProperty(backgroundColorProperty, newBlackOpaque ? Color.BLACK : Color.TRANSPARENT);
+                    FXCollapseFooter.setCollapseFooter(opaqueBlack);
+                }
+                double bottomOffset = topOffset + scrollPane.getViewportBounds().getHeight();
+                if (bottomOffset > pageContainer.getHeight() - lazyLoadingBottomSpace) {
+                    if (videosSwitch.isSelected()) {
+                        if (lastLoadedVideo != null && videosFeed.isEmpty())
+                            FXProperties.setIfNotEquals(lastLoadedVideoProperty, lastLoadedVideo);
+                    } else {
+                        if (lastLoadedPodcast != null && podcastsFeed.isEmpty())
+                            FXProperties.setIfNotEquals(lastLoadedPodcastProperty, lastLoadedPodcast);
+                    }
+                }
+            }, scrollPane.vvalueProperty());
         });
 
-        // Lazy loading when the user scrolls down
-        double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
-        pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
-        FXProperties.runOnPropertiesChange(() -> {
-            double topOffset = ControlUtil.computeScrollPaneVTopOffset(scrollPane);
-            boolean scrollDown = topOffset > lastTopOffset;
-            lastTopOffset = topOffset;
-            boolean newBlackOpaque = videosSwitch.isSelected() && topOffset > filterBar.getLayoutY() + (scrollDown ? filterBar.getHeight() : 0);
-            if (newBlackOpaque != opaqueBlack) {
-                opaqueBlack = newBlackOpaque;
-                if (backgroundTimeline != null)
-                    backgroundTimeline.stop();
-                backgroundTimeline = Animations.animateProperty(backgroundColorProperty, newBlackOpaque ? Color.BLACK : new Color(0, 0, 0, 0));
-                FXCollapseFooter.setCollapseFooter(opaqueBlack);
-            }
-            double bottomOffset = topOffset + scrollPane.getViewportBounds().getHeight();
-            if (bottomOffset > pageContainer.getHeight() - lazyLoadingBottomSpace) {
-                if (videosSwitch.isSelected()) {
-                    if (lastLoadedVideo != null && videosFeed.isEmpty())
-                        FXProperties.setIfNotEquals(lastLoadedVideoProperty, lastLoadedVideo);
-                } else {
-                    if (lastLoadedPodcast != null && podcastsFeed.isEmpty())
-                        FXProperties.setIfNotEquals(lastLoadedPodcastProperty, lastLoadedPodcast);
-                }
-            }
-        }, scrollPane.vvalueProperty()/*, pageContainer.heightProperty()*/);
+        return pageContainer;
+    }
 
-        return scrollPane;
+    private void setScrollPaneBackground(Background background) {
+        Node content = scrollPane == null ? null : scrollPane.getContent();
+        if (content instanceof Region) {
+            ((Region) content).setBackground(background);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        setScrollPaneBackground(null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setScrollPaneBackground(Background.fill(backgroundColorProperty.get()));
     }
 
     private Label createPodcastsChannelButton(String i18nKey, String url) {
