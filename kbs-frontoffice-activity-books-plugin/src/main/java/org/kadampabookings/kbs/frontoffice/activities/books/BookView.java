@@ -21,12 +21,12 @@ public final class BookView {
 
     private Book book;
     private boolean hasFreeUrl;
-    private final Hyperlink titleLink = GeneralUtility.createHyperlink(StyleUtility.MAIN_ORANGE_COLOR);
+    private final Hyperlink titleLink = GeneralUtility.createHyperlink(StyleUtility.MAIN_BRAND_COLOR);
     private final Label excerptLabel = GeneralUtility.createLabel(Color.BLACK);
     private final ImageView imageView = new ImageView();
-    private final Hyperlink freeLink = GeneralUtility.createHyperlink(BooksI18nKeys.FreeDownload, StyleUtility.MAIN_ORANGE_COLOR);
-    private final Hyperlink orderLink = GeneralUtility.createHyperlink(BooksI18nKeys.Order, StyleUtility.MAIN_ORANGE_COLOR);
-    private final Hyperlink extractsLink = GeneralUtility.createHyperlink(BooksI18nKeys.AudioExtracts, StyleUtility.MAIN_ORANGE_COLOR);
+    private final Hyperlink freeLink = GeneralUtility.createHyperlink(BooksI18nKeys.FreeDownload, StyleUtility.MAIN_BRAND_COLOR);
+    private final Hyperlink orderLink = GeneralUtility.createHyperlink(BooksI18nKeys.Order, StyleUtility.MAIN_BRAND_COLOR);
+    private final Hyperlink extractsLink = GeneralUtility.createHyperlink(BooksI18nKeys.AudioExtracts, StyleUtility.MAIN_BRAND_COLOR);
     private final Pane bookContainer = new Pane(imageView, titleLink, excerptLabel, freeLink, orderLink, extractsLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, titleY, titleHeight, excerptY, excerptHeight,

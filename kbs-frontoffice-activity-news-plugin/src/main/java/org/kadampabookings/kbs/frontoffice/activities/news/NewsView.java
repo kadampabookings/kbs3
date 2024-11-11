@@ -29,13 +29,13 @@ public final class NewsView {
 
     private final BrowsingHistory history;
     private News news;
-    private final Hyperlink titleLink = GeneralUtility.createHyperlink(StyleUtility.MAIN_ORANGE_COLOR);
+    private final Hyperlink titleLink = GeneralUtility.createHyperlink(StyleUtility.MAIN_BRAND_COLOR);
     private final Text dateText = TextUtility.createText(StyleUtility.ELEMENT_GRAY_COLOR);
     private final Label excerptLabel = GeneralUtility.createLabel(Color.BLACK);
     private final ImageView imageView = new ImageView();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
-    private final Hyperlink readMoreLink = GeneralUtility.createHyperlink(NewsI18nKeys.readMore, StyleUtility.MAIN_ORANGE_COLOR);
+    private final Hyperlink readMoreLink = GeneralUtility.createHyperlink(NewsI18nKeys.readMore, StyleUtility.MAIN_BRAND_COLOR);
     private final Pane newsContainer = new Pane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight, readMoreX, readMoreY, readMoreHeight;

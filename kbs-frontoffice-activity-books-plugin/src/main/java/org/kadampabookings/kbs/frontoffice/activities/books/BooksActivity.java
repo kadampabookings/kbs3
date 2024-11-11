@@ -16,7 +16,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -72,9 +71,9 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             VBox.setMargin(booksContainer, new Insets(40 * scale, 0, 10, 0));
         }, pageContainer.widthProperty());
 
-        ScrollPane scrollPane = FrontOfficeActivityUtil.createActivityPageScrollPane(carousel.getContainer(), true);
-        scrollPane.getStyleClass().add("podcasts-activity"); // for CSS styling
-        return scrollPane;
+        pageContainer.getStyleClass().add("podcasts-activity"); // for CSS styling
+        return pageContainer;
+        //return FrontOfficeActivityUtil.createActivityPageScrollPane(carousel.getContainer(), true);
     }
 
     @Override

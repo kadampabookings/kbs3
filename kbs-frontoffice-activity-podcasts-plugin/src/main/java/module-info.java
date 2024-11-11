@@ -39,7 +39,6 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.stack.routing.router.client;
     requires webfx.stack.routing.uirouter;
     requires webfx.stack.ui.operation;
-    requires webfx.stack.ui.operation.action;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.podcasts;
