@@ -195,10 +195,16 @@
     <source path="one/modality/base/client/application"/>
     <resource path="dev/webfx/kit/css/fonts/montserrat"/>
     <public path="" includes="dev/webfx/kit/css/fonts/montserrat/"/>
+    <resource path="dev/webfx/kit/css/fonts/poppins"/>
+    <public path="" includes="dev/webfx/kit/css/fonts/poppins/"/>
+    <resource path="dev/webfx/kit/css/fonts/roboto"/>
+    <public path="" includes="dev/webfx/kit/css/fonts/roboto/"/>
     <resource path="images/buddhas"/>
     <public path="" includes="images/buddhas/"/>
     <resource path="one/modality/base/client/images"/>
     <public path="" includes="one/modality/base/client/images/"/>
+    <!--=========================< modality-base-client-bootstrap >=========================-->
+    <source path="one/modality/base/client/bootstrap"/>
     <!--===========================< modality-base-client-conf >============================-->
     <source path="one/modality/base/client/conf"/>
     <!--=========================< modality-base-client-entities >==========================-->
@@ -310,6 +316,8 @@
     <source path="one/modality/crm/backoffice/organization/fx/impl"/>
     <!--===================< modality-crm-client-activity-login-plugin >====================-->
     <source path="one/modality/crm/client/activities/login"/>
+    <!--=================< modality-crm-client-activity-magiclink-plugin >==================-->
+    <source path="one/modality/crm/activities/magiclink"/>
     <!--================< modality-crm-client-activity-unauthorized-plugin >================-->
     <source path="one/modality/crm/client/activities/unauthorized"/>
     <!--==========================< modality-crm-client-authn-fx >==========================-->
@@ -318,6 +326,8 @@
     <source path="one/modality/crm/client/services/authz"/>
     <!--============================< modality-crm-client-i18n >============================-->
     <source path="one/modality/crm/client/i18n"/>
+    <!--===================< modality-crm-client-magiclink-application >====================-->
+    <source path="one/modality/crm/magiclink/application"/>
     <!--======================< modality-crm-client-personaldetails >=======================-->
     <source path="one/modality/crm/client/controls/personaldetails"/>
     <!--=======================< modality-crm-client-profile-plugin >=======================-->

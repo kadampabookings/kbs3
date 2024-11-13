@@ -9,5 +9,6 @@ module kbs.frontoffice.application {
     opens images.events;
     opens images.organizations;
     opens org.kadampabookings.frontoffice.booking;
+    opens org.kadampabookings.frontoffice.login;
 
 }

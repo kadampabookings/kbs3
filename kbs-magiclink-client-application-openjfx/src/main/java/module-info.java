@@ -4,7 +4,7 @@ module kbs.magiclink.client.application.openjfx {
 
     // Direct dependencies modules
     requires kbs.magiclink.client.application;
-    requires modality.base.shared.domainmodel;
+    requires webfx.extras.webtext.peers.openjfx;
     requires webfx.kit.javafxgraphics.openjfx;
     requires webfx.kit.platform.visibility.openjfx;
     requires webfx.platform.ast.factory.generic;
@@ -19,16 +19,12 @@ module kbs.magiclink.client.application.openjfx {
     requires webfx.platform.useragent.java.client;
     requires webfx.platform.windowlocation.java;
     requires webfx.stack.authn.buscall;
+    requires webfx.stack.authn.login.ui.portal;
     requires webfx.stack.authn.remote;
     requires webfx.stack.com.bus.call;
     requires webfx.stack.com.bus.json.client;
     requires webfx.stack.com.bus.json.client.websocket.java;
     requires webfx.stack.com.websocket.java;
-    requires webfx.stack.db.query.buscall;
-    requires webfx.stack.db.querysubmit.java.jdbc;
-    requires webfx.stack.db.submit.buscall;
-    requires webfx.stack.orm.dql.query.interceptor;
-    requires webfx.stack.orm.dql.submit.interceptor;
     requires webfx.stack.session.client;
     requires webfx.stack.ui.fxraiser.json;
 
