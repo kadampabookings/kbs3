@@ -140,6 +140,11 @@ body {
     opacity: 50%;
 }
 
+.disabled:hover {
+ cursor: not-allowed;
+ }
+
+
 .fx-border > fx-border {
     border-color: var(--fx-border-color);
     border-style: var(--fx-border-style);
@@ -252,7 +257,7 @@ fx-switch.webfx-switch fx-circle.knob {
     border-radius: 4px;
 }
 
-.btn:hover {
+.btn:hover:not(.disabled) {
     color: var(--bootstrap-grey7);
     --fx-svg-path-fill: var(--bootstrap-grey7);
 }
@@ -270,7 +275,7 @@ fx-switch.webfx-switch fx-circle.knob {
     border-color: var(--bootstrap-grey3);
 }
 
-.btn-default:hover {
+.btn-default:hover:not(.disabled) {
     color: var(--bootstrap-grey7);
     --fx-svg-path-fill: var(--bootstrap-grey7);
 }
@@ -296,16 +301,16 @@ fx-switch.webfx-switch fx-circle.knob {
     border-color: var(--bootstrap-blue6);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(.disabled) {
     color: var(--bootstrap-white);
     --fx-svg-path-fill: var(--bootstrap-white);
 }
 
-.btn-primary:hover > fx-background {
+.btn-primary:hover:not(.disabled) > fx-background {
     background-color: var(--bootstrap-blue8);
 }
 
-.btn-primary:hover > fx-border {
+.btn-primary:hover:not(.disabled) > fx-border {
     border-color: var(--bootstrap-blue9);
 }
 
@@ -322,16 +327,16 @@ fx-switch.webfx-switch fx-circle.knob {
     border-color: var(--bootstrap-grey5);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(.disabled){
     color: var(--bootstrap-white);
     --fx-svg-path-fill: var(--bootstrap-white);
 }
 
-.btn-secondary:hover > fx-background {
+.btn-secondary:hover:not(.disabled)> fx-background {
     background-color: var(--bootstrap-grey5);
 }
 
-.btn-secondary:hover > fx-border {
+.btn-secondary:hover:not(.disabled)> fx-border {
     border-color: var(--bootstrap-grey6);
 }
 
@@ -348,16 +353,16 @@ fx-switch.webfx-switch fx-circle.knob {
     border-color: var(--bootstrap-green2);
 }
 
-.btn-success:hover {
+.btn-success:hover:not(.disabled){
     color: var(--bootstrap-white);
     --fx-svg-path-fill: var(--bootstrap-white);
 }
 
-.btn-success:hover > fx-background {
+.btn-success:hover:not(.disabled)> fx-background {
     background-color: var(--bootstrap-green3);
 }
 
-.btn-success:hover > fx-border {
+.btn-success:hover:not(.disabled)> fx-border {
     border-color: var(--bootstrap-green4);
 }
 
@@ -375,16 +380,16 @@ fx-switch.webfx-switch fx-circle.knob {
     border-color: var(--bootstrap-blue2);
 }
 
-.btn-info:hover {
+.btn-info:hover:not(.disabled){
     color: var(--bootstrap-white);
     --fx-svg-path-fill: var(--bootstrap-white);
 }
 
-.btn-info:hover > fx-background {
+.btn-info:hover:not(.disabled)> fx-background {
     background-color: var(--bootstrap-blue3);
 }
 
-.btn-info:hover > fx-border {
+.btn-info:hover:not(.disabled)> fx-border {
     border-color: var(--bootstrap-blue4);
 }
 
@@ -401,16 +406,16 @@ fx-switch.webfx-switch fx-circle.knob {
     border-color: var(--bootstrap-orange2);
 }
 
-.btn-warning:hover {
+.btn-warning:hover:not(.disabled){
     color: var(--bootstrap-white);
     --fx-svg-path-fill: var(--bootstrap-white);
 }
 
-.btn-warning:hover > fx-background {
+.btn-warning:hover:not(.disabled)> fx-background {
     background-color: var(--bootstrap-orange3);
 }
 
-.btn-warning:hover > fx-border {
+.btn-warning:hover:not(.disabled)> fx-border {
     border-color: var(--bootstrap-orange4);
 }
 
@@ -427,16 +432,16 @@ fx-switch.webfx-switch fx-circle.knob {
     border-color: var(--bootstrap-red2);
 }
 
-.btn-danger:hover {
+.btn-danger:hover:not(.disabled){
     color: var(--bootstrap-white);
     --fx-svg-path-fill: var(--bootstrap-white);
 }
 
-.btn-danger:hover > fx-background {
+.btn-danger:hover:not(.disabled)> fx-background {
     background-color: var(--bootstrap-red3);
 }
 
-.btn-danger:hover > fx-border {
+.btn-danger:hover:not(.disabled)> fx-border {
     border-color: var(--bootstrap-red4);
 }
 
@@ -722,6 +727,31 @@ input[type="password"]:not([value=""]) {
     font-weight: 100 900;
 }
 
+.login {
+    background-image: var(--login-bg-image); /* Specify the path to your image */
+    background-repeat: no-repeat;               /* Prevents the image from repeating */
+    background-size: cover;                     /* Scales the image to cover the area */
+    background-position: center;                /* Centers the image */
+    --fx-border-radius: 21px;
+}
+
+.login input {
+     font-size: 20px;
+       }
+
+.login-child {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 21px;
+   /* border: 1px solid lightgray;*/
+   /* box-shadow: 0px 0px 10px lightgray;*/
+    width: 586px; /* Sets the fixed width */
+    height: 506px; /* Sets the fixed height */
+}
+
+.login .h2 {
+    font-family: 'Poppins', sans-serif; /* Sets the font to Poppins, with a fallback to sans-serif */
+}
+
 .login .or {
     color: #888;
 }
@@ -729,6 +759,14 @@ input[type="password"]:not([value=""]) {
 .login .line {
     background-color: lightgray;
 }
+
+.transparent-input > fx-background{
+    background-color: transparent;
+    }
+.transparent-input > fx-border{
+    border-style: none;
+    }
+
 
 /*===== modality-client-web@main.css from modality-base-client-css =====*/
 
@@ -839,77 +877,9 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --bootstrap-red6: #a94442 ;
 }
 
-/*===== modality-crm-client-magiclink-application-web@main.css from modality-crm-client-magiclink-application =====*/
-
-
-
-/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
-   So we apply that font only once the user started typing the password. This is done using :not([value=""]) CSS
-   selector. Normally "value" refers to the initial value of the input only. However HtmlTextInputControlPeer keeps
-   updating "value" to "" or "not-empty" whether the user has typed something, so this CSS rule finally works: */
-input[type="password"]:not([value=""]) {
-    font-family: "Password", serif;
-    letter-spacing: 0.15em;
-}
-
-@font-face {
-    font-family: "Password";
-    src: url("./fonts/password/password.woff") format("woff");
-    font-weight: 100 900;
-}
-
-.login .or {
-    color: #888;
-}
-
-.login .line {
-    background-color: lightgray;
-}
-
-/*===== modality-crm-client-magiclink-application-web@main.css from modality-crm-client-activity-magiclink-plugin =====*/
-
-
-
-/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
-   So we apply that font only once the user started typing the password. This is done using :not([value=""]) CSS
-   selector. Normally "value" refers to the initial value of the input only. However HtmlTextInputControlPeer keeps
-   updating "value" to "" or "not-empty" whether the user has typed something, so this CSS rule finally works: */
-input[type="password"]:not([value=""]) {
-    font-family: "Password", serif;
-    letter-spacing: 0.15em;
-}
-
-@font-face {
-    font-family: "Password";
-    src: url("./fonts/password/password.woff") format("woff");
-    font-weight: 100 900;
-}
-
-.login > fx-background {
-    /* Background color with transparency */
-    background-color: rgba(255, 255, 255, 0.8); /* White with 20% transparency */
-    /* Rounded corners */
-    border-radius: 21px;
-    /* Light gray border */
-    border: 1px solid lightgray;
-    /* Drop shadow effect */
-    box-shadow: 0px 0px 10px lightgray;
-}
-
-.login .or {
-    color: #888;
-}
-
-.login .line {
-    background-color: lightgray;
-}
-
-.transparent-input > fx-background{
-    background-color: transparent;
-    }
-.transparent-input > fx-border{
-    border-style: none;
-    }
+.disabled:hover {
+    cursor: not-allowed;
+ }
 
 
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
@@ -1050,3 +1020,10 @@ progress::-webkit-progress-value { /* For Chrome & Safari */
 progress::-moz-progress-bar { /* For FireFox */
     background-color: var(--kadampa-org-orange-color);
 }
+
+/*===== kbs-front_office-web@main.css from kbs-frontoffice-application =====*/
+
+:root {
+    --login-bg-image: url("./loginportal/images/login-background-image.png");
+}
+
