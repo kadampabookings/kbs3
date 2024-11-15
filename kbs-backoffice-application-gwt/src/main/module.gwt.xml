@@ -446,6 +446,8 @@
     <!--===============================< webfx-extras-layer >===============================-->
     <source path="dev/webfx/extras/layer"/>
     <source path="dev/webfx/extras/layer/interact"/>
+    <!--==========================< webfx-extras-media-metadata >===========================-->
+    <source path="dev/webfx/extras/media/metadata"/>
     <!--===============================< webfx-extras-panes >===============================-->
     <source path="dev/webfx/extras/panes"/>
     <source path="dev/webfx/extras/panes/transitions"/>
@@ -971,6 +973,9 @@
     <!--=============================< webfx-stack-ui-action >==============================-->
     <source path="dev/webfx/stack/ui/action"/>
     <source path="dev/webfx/stack/ui/action/impl"/>
+    <!--==========================< webfx-stack-ui-action-tuner >===========================-->
+    <source path="dev/webfx/stack/ui/action/tuner"/>
+    <source path="dev/webfx/stack/ui/action/tuner/logout"/>
     <!--============================< webfx-stack-ui-controls >=============================-->
     <source path="dev/webfx/stack/ui/controls"/>
     <source path="dev/webfx/stack/ui/controls/alert"/>

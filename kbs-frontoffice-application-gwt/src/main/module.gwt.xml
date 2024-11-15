@@ -94,6 +94,8 @@
     <source path="org/kadampabookings/kbs/frontoffice/activities/books"/>
     <resource path="org/kadampabookings/kbs/frontoffice/activities/books"/>
     <public path="" includes="org/kadampabookings/kbs/frontoffice/activities/books/"/>
+    <!--======================< kbs-frontoffice-activity-home-plugin >======================-->
+    <source path="org/kadampabookings/kbs/frontoffice/activities/home"/>
     <!--======================< kbs-frontoffice-activity-news-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/news"/>
     <!--====================< kbs-frontoffice-activity-podcasts-plugin >====================-->
@@ -318,6 +320,8 @@
     <source path="one/modality/event/frontoffice/activities/booking/views"/>
     <resource path="one/modality/event/frontoffice/activities/booking/map"/>
     <public path="" includes="one/modality/event/frontoffice/activities/booking/map/"/>
+    <!--===============< modality-event-frontoffice-activity-library-plugin >===============-->
+    <source path="one/modality/event/frontoffice/activities/library"/>
     <!--===============< modality-event-frontoffice-activity-videos-plugin >================-->
     <source path="one/modality/event/frontoffice/activities/videos"/>
     <!--=======================< modality-event-frontoffice-medias >========================-->
@@ -332,6 +336,8 @@
     <source path="dev/webfx/extras/imagestore"/>
     <!--===============================< webfx-extras-label >===============================-->
     <source path="dev/webfx/extras/label"/>
+    <!--==========================< webfx-extras-media-metadata >===========================-->
+    <source path="dev/webfx/extras/media/metadata"/>
     <!--===============================< webfx-extras-panes >===============================-->
     <source path="dev/webfx/extras/panes"/>
     <source path="dev/webfx/extras/panes/transitions"/>
@@ -858,6 +864,9 @@
     <!--=============================< webfx-stack-ui-action >==============================-->
     <source path="dev/webfx/stack/ui/action"/>
     <source path="dev/webfx/stack/ui/action/impl"/>
+    <!--==========================< webfx-stack-ui-action-tuner >===========================-->
+    <source path="dev/webfx/stack/ui/action/tuner"/>
+    <source path="dev/webfx/stack/ui/action/tuner/logout"/>
     <!--============================< webfx-stack-ui-controls >=============================-->
     <source path="dev/webfx/stack/ui/controls"/>
     <source path="dev/webfx/stack/ui/controls/alert"/>

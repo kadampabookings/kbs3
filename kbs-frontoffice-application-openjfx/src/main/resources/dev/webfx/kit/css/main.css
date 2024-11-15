@@ -559,6 +559,21 @@ HtmlText, HtmlTextEditor {
     -fx-max-height: 506px;
 }
 
+/*===== modality-client-javafx@main.css from modality-base-client-application =====*/
+
+Text, Label, Button, TextField {
+    -fx-font-family: 'Montserrat';
+}
+
+.scroll-pane {
+   -fx-background-color: transparent;
+   -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
 /*===== modality-client-javafx@main.css from modality-base-client-css =====*/
 
 * {
@@ -573,21 +588,6 @@ HtmlText, HtmlTextEditor {
     -fx-alignment: center;
  /*  -fx-font-family: "Google Sans", Roboto, Arial;*/
     -fx-font-weight: bolder;
-}
-
-/*===== modality-client-javafx@main.css from modality-base-client-application =====*/
-
-Text, Label, Button, TextField {
-    -fx-font-family: 'Montserrat';
-}
-
-.scroll-pane {
-   -fx-background-color: transparent;
-   -fx-padding: 0;
-}
-
-.scroll-pane > .viewport {
-   -fx-background-color: transparent;
 }
 
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/

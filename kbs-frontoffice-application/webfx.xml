@@ -14,6 +14,9 @@
         <plugin-module>kbs-client-conf-plugin</plugin-module>
         <plugin-module executable-target="gluon">kbs-client-conf-gluon-plugin</plugin-module>
 
+        <!-- Kadampa Home -->
+        <plugin-module>kbs-frontoffice-activity-home-plugin</plugin-module>
+
         <!-- Kadampa News -->
         <plugin-module>kbs-frontoffice-activity-news-plugin</plugin-module>
 

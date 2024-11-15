@@ -140,11 +140,6 @@ body {
     opacity: 50%;
 }
 
-.disabled:hover {
- cursor: not-allowed;
- }
-
-
 .fx-border > fx-border {
     border-color: var(--fx-border-color);
     border-style: var(--fx-border-style);
