@@ -11,6 +11,7 @@ module kbs.frontoffice.activity.home.plugin {
     requires modality.base.client.application;
     requires webfx.kit.util;
     requires webfx.platform.windowhistory;
+    requires webfx.stack.i18n;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.routing.router.client;
     requires webfx.stack.routing.uirouter;
