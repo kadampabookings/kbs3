@@ -9,6 +9,7 @@ module kbs.frontoffice.activity.home.plugin {
     requires kbs.frontoffice.activity.news.plugin;
     requires kbs.frontoffice.activity.podcasts.plugin;
     requires modality.base.client.application;
+    requires modality.base.frontoffice.utility;
     requires webfx.kit.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;

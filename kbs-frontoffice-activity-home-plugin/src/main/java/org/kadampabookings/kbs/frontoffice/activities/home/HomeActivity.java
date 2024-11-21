@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.VBox;
 import one.modality.base.client.application.RoutingActions;
+import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
 import org.kadampabookings.kbs.frontoffice.activities.books.BooksRouting;
 import org.kadampabookings.kbs.frontoffice.activities.news.NewsRouting;
 import org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting;
@@ -25,7 +26,7 @@ final class HomeActivity extends ViewDomainActivityBase implements OperationActi
         Hyperlink booksLink    = routingHyperlink(BooksRouting.RouteToBooksRequest::new);
         VBox container = new VBox(30, newsLink, podcastsLink, booksLink);
         container.setAlignment(Pos.CENTER);
-        return container;
+        return FrontOfficeActivityUtil.restrictToMaxPageWidth(container, true);
     }
 
     private Hyperlink routingHyperlink(Function<BrowsingHistory, ?> routeRequestFactory) {

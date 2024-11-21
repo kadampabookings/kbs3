@@ -224,7 +224,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             }, scrollPane.vvalueProperty());
         });
 
-        return pageContainer;
+        return FrontOfficeActivityUtil.restrictToMaxPageWidth(pageContainer, false);
         //return FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true, false);
     }
 
