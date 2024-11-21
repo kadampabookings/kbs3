@@ -53,6 +53,7 @@
         <module>kbs-client-conf-plugin</module>
         <module>kbs-frontoffice-activity-books-plugin</module>
         <module>kbs-frontoffice-activity-home-plugin</module>
+        <module>kbs-frontoffice-activity-login-plugin</module>
         <module>kbs-frontoffice-activity-news-plugin</module>
         <module>kbs-frontoffice-activity-podcasts-plugin</module>
         <module>kbs-frontoffice-application</module>

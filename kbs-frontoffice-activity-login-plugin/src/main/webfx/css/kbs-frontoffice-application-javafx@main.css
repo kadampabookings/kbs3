@@ -1,0 +1,9 @@
+/* JavaFX doesn't support url in variables for now, so we rewrite the CSS rule instead
+* {
+    -webfx-login-portal-background-image: url(...);
+}*/
+
+.login {
+    -fx-background-image: url("webfx-css:/frontoffice/images/Manjushri.jpg");
+}
+

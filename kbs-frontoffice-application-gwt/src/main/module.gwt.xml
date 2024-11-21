@@ -96,6 +96,10 @@
     <public path="" includes="org/kadampabookings/kbs/frontoffice/activities/books/"/>
     <!--======================< kbs-frontoffice-activity-home-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/home"/>
+    <!--=====================< kbs-frontoffice-activity-login-plugin >======================-->
+    <source path="org/kadampabookings/kbs/frontoffice/activities/login"/>
+    <resource path="dev/webfx/kit/css/frontoffice/images"/>
+    <public path="" includes="dev/webfx/kit/css/frontoffice/images/"/>
     <!--======================< kbs-frontoffice-activity-news-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/news"/>
     <!--====================< kbs-frontoffice-activity-podcasts-plugin >====================-->
@@ -107,8 +111,6 @@
     <public path="" includes="images/organizations/"/>
     <resource path="org/kadampabookings/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/frontoffice/booking/"/>
-    <resource path="org/kadampabookings/frontoffice/login"/>
-    <public path="" includes="org/kadampabookings/frontoffice/login/"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->
@@ -636,8 +638,6 @@
     <source path="dev/webfx/stack/authn/login/ui/spi/impl/portal"/>
     <resource path="dev/webfx/kit/css/fonts/password"/>
     <public path="" includes="dev/webfx/kit/css/fonts/password/"/>
-    <resource path="dev/webfx/kit/css/loginportal/images"/>
-    <public path="" includes="dev/webfx/kit/css/loginportal/images/"/>
     <!--========================< webfx-stack-authn-logout-client >=========================-->
     <source path="dev/webfx/stack/authn/logout/client/operation"/>
     <!--============================< webfx-stack-authn-remote >============================-->

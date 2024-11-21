@@ -27,6 +27,12 @@
 
 @font-face {
     font-family: 'Poppins';
+    font-style: normal;
+    src: url('webfx-css:fonts/poppins/Poppins-Regular.otf');
+}
+
+@font-face {
+    font-family: 'Poppins';
     font-weight: bold;
     src: url('webfx-css:fonts/poppins/Poppins-Bold.otf');
 }
@@ -536,27 +542,24 @@ HtmlText, HtmlTextEditor {
 
 /*===== webfx-stack-authn-login-ui-portal-javafx@main.css from webfx-stack-authn-login-ui-portal =====*/
 
+* {
+    -webfx-login-portal-background-image: none; /* Specify the path to your image */
+}
+
 .login {
-     -fx-background-image: url("webfx-css:/loginportal/images/login-background-image.png"); /* Specify the path to your image */
-     -fx-background-repeat: no-repeat;               /* Prevents the image from repeating */
-     -fx-background-size: cover;                     /* Scales the image to cover the area */
-     -fx-background-position: center;
+    -fx-background-image: -webfx-login-portal-background-image;
+    -fx-background-repeat: no-repeat; /* Prevents the image from repeating */
+    -fx-background-size: cover; /* Scales the image to cover the area */
+    -fx-background-position: center;
 }
 
 .login .background {
-     -fx-background-image: none;
-     -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-image: none;
+    -fx-background-color: rgba(255, 255, 255, 0.7);
     -fx-background-radius: 20px;
     -fx-border-color: lightgray;
     -fx-border-radius: 20px;
     -fx-effect: dropshadow(gaussian, lightgray, 10, 0, 0, 0);
-}
-
-.login-child {
-    -fx-min-width: 586px;
-    -fx-max-width: 586px;
-    -fx-min-height: 506px;
-    -fx-max-height: 506px;
 }
 
 /*===== modality-client-javafx@main.css from modality-base-client-application =====*/
@@ -588,6 +591,41 @@ Text, Label, Button, TextField {
     -fx-alignment: center;
  /*  -fx-font-family: "Google Sans", Roboto, Arial;*/
     -fx-font-weight: bolder;
+}
+
+/*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
+
+CollapsePane.menu-bar.non-mobile {
+    -fx-background-color: white;
+    -fx-border-width: 0 0 1px 0 ;
+    -fx-border-color: lightgray;
+}
+
+.menu-bar {
+    -fx-font-family: "Poppins";
+}
+
+.menu-bar Button {
+    -fx-background-color: white; /* removes old-style button gradient */
+}
+
+.main-menu-bar Button {
+    -fx-text-fill: black;
+}
+
+.user-menu-bar Label, .user-menu-bar Button {
+    -fx-font-size: 12px;
+    -fx-text-fill: #838788;
+}
+
+.main-menu-bar Label.brand {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0096D6;
+}
+
+.main-menu-bar Label.brand SVGPath {
+    -fx-fill: #0096D6;
 }
 
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
@@ -796,3 +834,15 @@ Text, Label, Button, TextField {
     -fx-background-insets: 0;
     -fx-padding: 5px;
 }
+
+/*===== kbs-frontoffice-application-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/
+
+/* JavaFX doesn't support url in variables for now, so we rewrite the CSS rule instead
+* {
+    -webfx-login-portal-background-image: url(...);
+}*/
+
+.login {
+    -fx-background-image: url("webfx-css:/frontoffice/images/Manjushri.jpg");
+}
+
