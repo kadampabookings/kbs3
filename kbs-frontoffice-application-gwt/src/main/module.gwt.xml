@@ -96,6 +96,8 @@
     <public path="" includes="org/kadampabookings/kbs/frontoffice/activities/books/"/>
     <!--======================< kbs-frontoffice-activity-home-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/home"/>
+    <resource path="dev/webfx/kit/css/home"/>
+    <public path="" includes="dev/webfx/kit/css/home/"/>
     <!--=====================< kbs-frontoffice-activity-login-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/login"/>
     <resource path="dev/webfx/kit/css/frontoffice/images"/>

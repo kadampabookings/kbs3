@@ -1039,6 +1039,85 @@ progress::-moz-progress-bar { /* For FireFox */
     background-color: var(--kadampa-org-orange-color);
 }
 
+/*===== modality-frontoffice-home-web@main.css from kbs-frontoffice-activity-home-plugin =====*/
+
+:root {
+    --spring-festival-color: #159428;
+    --summer-festival-color: #FEBC21;
+    --fall-festival-color: #FFA264;
+}
+
+.festivals-header {
+    font-family: "Poppins";
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.festival-thumbnail fx-text {
+    font-family: "Robotto", "Poppins";
+    font-weight: medium;
+    font-size: 13px;
+}
+
+
+.festival-thumbnail fx-label fx-text {
+    font-family: "Poppins";
+    font-weight: regular;
+    font-size: 36px;
+}
+
+.festival-thumbnail > fx-background {
+    border-radius: 8px;
+    background-repeat: repeat, no-repeat;
+    background-size: cover, cover;
+    background-position: center, center;
+}
+
+.festival-thumbnail.spring-festival > fx-background {
+    background-image: url("./home/pixel-white-80.png"), url("./home/spring-background.png");
+}
+
+.festival-thumbnail.summer-festival > fx-background {
+    background-image: url("./home/pixel-white-80.png"), url("./home/summer-background.png");
+}
+
+.festival-thumbnail.fall-festival > fx-background {
+    background-image: url("./home/pixel-white-80.png"), url("./home/fall-background.png");
+}
+
+.festival-thumbnail.spring-festival fx-label {
+    color: var(--spring-festival-color);
+}
+
+.festival-thumbnail.summer-festival fx-label {
+    color: var(--summer-festival-color);
+}
+
+.festival-thumbnail.fall-festival fx-label {
+    color: var(--fall-festival-color);
+}
+
+.festival-thumbnail fx-button {
+    font-family: "Poppins";
+    font-weight: semi-bold;
+    font-size: 16px;
+    color: white;
+    --fx-background-radius: 8px;
+    --fx-border-style: none;
+}
+
+.festival-thumbnail.spring-festival fx-button {
+    --fx-button-background: var(--spring-festival-color);
+}
+
+.festival-thumbnail.summer-festival fx-button {
+    --fx-button-background: var(--summer-festival-color);
+}
+
+.festival-thumbnail.fall-festival fx-button {
+    --fx-button-background: var(--fall-festival-color);
+}
+
 /*===== kbs-frontoffice-application-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
 :root {

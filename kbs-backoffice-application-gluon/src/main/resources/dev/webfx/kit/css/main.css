@@ -595,7 +595,7 @@ HtmlText, HtmlTextEditor {
 }
 
 .login {
-    -fx-background-image: -webfx-login-portal-background-image;
+    -fx-background-image: none; /*-webfx-login-portal-background-image; not working*/
     -fx-background-repeat: no-repeat; /* Prevents the image from repeating */
     -fx-background-size: cover; /* Scales the image to cover the area */
     -fx-background-position: center;

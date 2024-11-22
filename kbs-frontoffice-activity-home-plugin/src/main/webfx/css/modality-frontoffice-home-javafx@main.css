@@ -1,0 +1,78 @@
+* {
+    -spring-festival-color: #159428;
+    -summer-festival-color: #FEBC21;
+    -fall-festival-color: #FFA264;
+}
+
+.festivals-header {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: bold;
+    -fx-font-size: 40px;
+}
+
+.festival-thumbnail {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: regular;
+    -fx-font-size: 36px;
+    -fx-background-radius: 8px, 8px;
+    -fx-background-repeat: no-repeat, no-repeat;
+    -fx-background-size: cover, cover;
+    -fx-background-position: center, center;
+}
+
+.festival-thumbnail Text {
+    -fx-font-family: "Robotto", "Poppins";
+    -fx-font-weight: medium;
+    -fx-font-size: 13px;
+}
+
+.festival-thumbnail.spring-festival {
+    -fx-background-image: url("webfx-css:home/spring-background.png"), url("webfx-css:home/pixel-white-80.png");
+    -fx-background-radius: 8px, 8px;
+}
+
+.festival-thumbnail.summer-festival {
+    -fx-background-image: url("webfx-css:home/summer-background.png"), url("webfx-css:home/pixel-white-80.png");
+}
+
+.festival-thumbnail.fall-festival {
+    -fx-background-image: url("webfx-css:home/fall-background.png"), url("webfx-css:home/pixel-white-80.png");
+}
+
+.festival-thumbnail.spring-festival Label {
+    -fx-text-fill: -spring-festival-color;
+}
+
+.festival-thumbnail.summer-festival Label {
+    -fx-text-fill: -summer-festival-color;
+}
+
+.festival-thumbnail.fall-festival Label {
+    -fx-text-fill: -fall-festival-color;
+}
+
+.festival-thumbnail Button {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: semi-bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+}
+
+.festival-thumbnail.spring-festival Button {
+    -fx-background-color: -spring-festival-color;
+}
+
+.festival-thumbnail.summer-festival Button {
+    -fx-background-color: -summer-festival-color;
+}
+
+.festival-thumbnail.fall-festival Button {
+    -fx-background-color: -fall-festival-color;
+}
+
+.more-events {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 16px;
+    -fx-text-fill: #0096D6;
+}
