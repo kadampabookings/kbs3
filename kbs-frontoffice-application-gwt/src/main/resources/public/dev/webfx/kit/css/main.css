@@ -725,30 +725,24 @@ input[type="password"]:not([value=""]) {
     --brand-main-color: #0096D6;
     --brand-main-background-color: #0096D6;
 }
-/*===== modality-client-web@main.css from modality-base-client-application =====*/
+/*===== modality-client-css-web@main.css from modality-base-client-css =====*/
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+    --montserrat-font-family: "Montserrat";
+    --roboto-font-family: "Roboto";
+    --poppins-font-family: "Poppins";
+    --vollkorn-font-family: "Vollkorn SC";
 
-@font-face {
-    font-family: "Montserrat";
-    src: url("./fonts/montserrat/Montserrat-VF.woff2") format("woff2");
-    font-weight: 100 900;
+    /* Overriding some WebFX Extras CSS variables  */
+    --webfx-switch-selected-background-color: var(--brand-main-background-color);
+    --webfx-visualgrid-selection-color: #BBBBBB;
 }
 
 /* Applying Montserrat as default font for Modality */
 body, textarea /* because textarea has explicit default monospace font */ {
-    font-family: Montserrat, serif;
+    font-family: var(--montserrat-font-family), serif;
     font-size: 13px;
     -webkit-font-smoothing: antialiased;
-}
-
-
-/*===== modality-client-web@main.css from modality-base-client-css =====*/
-
-:root {
-    /* Overriding some WebFX Extras CSS variables  */
-    --webfx-switch-selected-background-color: --brand-main-background-color;
-    --webfx-visualgrid-selection-color: #BBBBBB;
 }
 
 /* Not sure if it's the right place for this CSS rules */
@@ -778,7 +772,7 @@ fx-collapsepane.menu-bar > fx-border {
 }
 
 .menu-bar {
-    font-family: "Poppins", sans-serif;
+    font-family: var(--poppins-font-family), sans-serif;
 }
 
 .menu-bar fx-button {
@@ -794,12 +788,12 @@ fx-collapsepane.menu-bar > fx-border {
 }
 
 .main-menu-bar fx-label.brand {
-    font-family: "Roboto", sans-serif;
+    font-family: var(--roboto-font-family), sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: #0096D6;
-    white-space: pre-line;
+    color: var(--brand-main-color);
     line-height: 1.2;
+    --fx-svg-path-fill: var(--brand-main-color);
 }
 
 .user-menu-bar fx-label, .user-menu-bar fx-button {
@@ -976,22 +970,11 @@ progress::-moz-progress-bar { /* For FireFox */
     --spring-festival-color: #159428;
     --summer-festival-color: #FEBC21;
     --fall-festival-color: #FFA264;
+    --home-header-color: #4A4748;
 }
 
-.festivals-header, .podcasts-header {
-    font-family: "Poppins", serif;
-    font-weight: bold;
-    font-size: 40px;
-}
-
-.festival-thumbnail fx-text {
-    font-family: "Robotto", "Poppins", serif;
-    font-weight: 500;
-    font-size: 13px;
-}
-
-
-.festival-thumbnail fx-label fx-text {
+.festival-thumbnail .home-podcasts {
+    font-family: var(--poppins-font-family), serif;
     font-weight: 400;
     font-size: 36px;
 }
@@ -1001,6 +984,23 @@ progress::-moz-progress-bar { /* For FireFox */
     background-repeat: repeat, no-repeat;
     background-size: cover, cover;
     background-position: center, center;
+}
+
+.festivals-header, .podcasts-header {
+    font-weight: bold;
+    font-size: 40px;
+    color: var(--home-header-color);
+}
+
+.festival-thumbnail fx-label fx-text {
+    font-weight: 400;
+    font-size: 36px;
+}
+
+.festival-thumbnail fx-label.festival-name {
+    font-family: var(--vollkorn-font-family);
+    font-weight: 500;
+    font-size: 33px;
 }
 
 .festival-thumbnail.spring-festival > fx-background {
@@ -1054,7 +1054,7 @@ progress::-moz-progress-bar { /* For FireFox */
 
 .more-events {
     font-size: 16px;
-    color: #0096D6;
+    color: var(--brand-main-color);
 }
 
 .podcasts-card > fx-background {
@@ -1078,7 +1078,7 @@ progress::-moz-progress-bar { /* For FireFox */
     font-size: 16px;
     color: white;
     --fx-background-radius: 8px;
-    --fx-button-background: #4A4748;
+    --fx-button-background: var(--home-header-color);
     --fx-border-style: none;
     cursor: pointer;
 }

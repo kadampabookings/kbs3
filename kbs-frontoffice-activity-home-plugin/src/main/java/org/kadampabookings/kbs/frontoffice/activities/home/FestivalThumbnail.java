@@ -29,13 +29,16 @@ final class FestivalThumbnail {
     }
 
     Node getView() {
-        Label label = I18nControls.newLabel("[" + festivalType.getI18nKey() + "] " + festival.getStartDate().getYear());
-        label.setWrapText(true);
-        label.setTextAlignment(TextAlignment.CENTER);
+        Label festivalName = I18nControls.newLabel("[" + festivalType.getI18nKey() + "] " + festival.getStartDate().getYear());
+        festivalName.setWrapText(true);
+        festivalName.setTextAlignment(TextAlignment.CENTER);
+        festivalName.getStyleClass().setAll("festival-name");
+
         Button button = I18nControls.newButton("View");
         button.setPrefSize(240, 48);
+
         VBox container = new VBox(48,
-            label,
+            festivalName,
             I18n.newText(new I18nSubKey("expression: dateIntervalFormat(startDate, endDate)", festival)),
             button
         );

@@ -12,6 +12,7 @@ module kbs.frontoffice.activity.news.plugin {
     requires javafx.web;
     requires modality.base.client.activity;
     requires modality.base.client.brand;
+    requires modality.base.client.css;
     requires modality.base.client.mainframe.fx;
     requires modality.base.client.util;
     requires modality.base.frontoffice.mainframe.fx;

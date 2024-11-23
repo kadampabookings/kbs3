@@ -1,6 +1,30 @@
 /* @font-face rules listed first, otherwise they are ignored (OpenJFX bug) */
 
 @font-face {
+    font-family: 'Roboto';
+    font-weight: bold;
+    src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    src: url('webfx-css:fonts/roboto/Roboto-Italic.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: light;
+    src: url('webfx-css:fonts/roboto/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-weight: bold;
+    font-style: italic;
+    src: url('webfx-css:fonts/roboto/Roboto-BoldItalic.ttf');
+}
+@font-face {
     font-family: 'Montserrat';
     font-style: normal;
     src: url('webfx-css:fonts/montserrat/Montserrat-Regular.ttf');
@@ -49,32 +73,6 @@
     font-style: italic;
     src: url('webfx-css:fonts/poppins/Poppins-BoldItalic.otf');
 }
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: bold;
-    src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-style: italic;
-    src: url('webfx-css:fonts/roboto/Roboto-Italic.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-style: light;
-    src: url('webfx-css:fonts/roboto/Roboto-Light.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: bold;
-    font-style: italic;
-    src: url('webfx-css:fonts/roboto/Roboto-BoldItalic.ttf');
-}
-
 
 
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
@@ -568,27 +566,34 @@ HtmlText, HtmlTextEditor {
     -brand-main-color: #0096D6;
     -brand-main-background-color: #0096D6;
 }
-/*===== modality-client-javafx@main.css from modality-base-client-application =====*/
+/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
 
-Text, Label, Button, TextField {
-    -fx-font-family: 'Montserrat';
-}
+/*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
 
-.scroll-pane {
-   -fx-background-color: transparent;
-   -fx-padding: 0;
-}
-
-.scroll-pane > .viewport {
-   -fx-background-color: transparent;
-}
-
-/*===== modality-client-javafx@main.css from modality-base-client-css =====*/
+/*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
 
 * {
+    -montserrat-font-family: "Montserrat";
+    -roboto-font-family: "Roboto";
+    -poppins-font-family: "Poppins";
+    -vollkorn-font-family: "Roboto"; /* for now */
+
     /* Overriding some WebFX Extras CSS variables  */
     -webfx-switch-selected-background-color: -brand-main-background-color;
     -webfx-visualgrid-selection-color: #BBBBBB;
+}
+
+Text, Label, Button, TextField {
+    -fx-font-family: -montserrat-font-family;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
 }
 
 /* Not sure if it's the right place for this CSS rules */
@@ -600,6 +605,8 @@ Text, Label, Button, TextField {
     -fx-font-weight: bolder;
 }
 
+/*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
+
 /*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
 CollapsePane.menu-bar.non-mobile {
@@ -609,7 +616,7 @@ CollapsePane.menu-bar.non-mobile {
 }
 
 .menu-bar {
-    -fx-font-family: "Poppins";
+    -fx-font-family: -poppins-font-family;
 }
 
 .menu-bar Button {
@@ -684,7 +691,7 @@ CollapsePane.menu-bar.non-mobile {
 }
 
 .h1 {
-    -fx-font-family: "Roboto";
+    -fx-font-family: -roboto-font-family;
     -fx-font-size: 34px;
     -fx-font-weight: normal;
     -fx-line-spacing: 6px; /* Line height in JavaFX is set through line-spacing */
@@ -692,7 +699,7 @@ CollapsePane.menu-bar.non-mobile {
 }
 
 .h2 {
-    -fx-font-family: "Poppins";
+    -fx-font-family: -poppins-font-family;
     -fx-font-size: 40px;
     -fx-font-weight: bold;         /* 'bold' is equivalent to 700 weight */
     -fx-line-spacing: 20px;
@@ -812,27 +819,31 @@ CollapsePane.menu-bar.non-mobile {
     -home-header-color: #4A4748;
 }
 
-.festivals-header, .podcasts-header {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: bold;
-    -fx-font-size: 40px;
-    -fx-text-fill: -home-header-color;
-}
-
 .festival-thumbnail, .home-podcasts {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: regular;
-    -fx-font-size: 36px;
+    -fx-font-family: -poppins-font-family;
+    font-weight: 400;
+    font-size: 36px;
     -fx-background-radius: 8px, 8px;
     -fx-background-repeat: no-repeat, no-repeat;
     -fx-background-size: cover, cover;
     -fx-background-position: center, center;
 }
 
-.festival-thumbnail Text {
-    -fx-font-family: "Robotto", "Poppins";
-    -fx-font-weight: medium;
-    -fx-font-size: 13px;
+.festivals-header, .podcasts-header {
+    -fx-font-weight: bold;
+    -fx-font-size: 40px;
+    -fx-text-fill: -home-header-color;
+}
+
+.festival-thumbnail Label {
+    font-weight: 400;
+    font-size: 36px;
+}
+
+.festival-thumbnail Label.festival-name {
+    -fx-font-family: -vollkorn-font-family;
+    -fx-font-weight: 500;
+    -fx-font-size: 33px;
 }
 
 .festival-thumbnail.spring-festival {
@@ -861,8 +872,8 @@ CollapsePane.menu-bar.non-mobile {
 }
 
 .festival-thumbnail Button {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-family: -poppins-font-family;
+    -fx-font-weight: 600;
     -fx-font-size: 16px;
     -fx-text-fill: white;
     -fx-background-radius: 8px;
@@ -882,9 +893,9 @@ CollapsePane.menu-bar.non-mobile {
 }
 
 .more-events {
-    -fx-font-family: "Poppins";
+    -fx-font-family: -poppins-font-family;
     -fx-font-size: 16px;
-    -fx-text-fill: #0096D6;
+    -fx-text-fill: -brand-main-color;
 }
 
 .home-podcasts {
@@ -897,25 +908,22 @@ CollapsePane.menu-bar.non-mobile {
 }
 
 .podcasts-card .card-title {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-weight: 600;
     -fx-font-size: 16px;
 }
 
 .podcasts-card .card-content {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-weight: 600;
     -fx-font-size: 13px;
     -fx-text-fill: #838788;
 }
 
 .home-podcasts Button {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-weight: 600;
     -fx-font-size: 16px;
     -fx-text-fill: white;
     -fx-background-radius: 8px;
-    -fx-background-color: #4A4748;
+    -fx-background-color: -home-header-color;
     -fx-cursor: hand;
 }
 /*===== kbs-frontoffice-application-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/

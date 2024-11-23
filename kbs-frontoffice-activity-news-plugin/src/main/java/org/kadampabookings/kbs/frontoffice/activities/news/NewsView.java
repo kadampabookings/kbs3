@@ -17,6 +17,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import one.modality.base.client.brand.Brand;
+import one.modality.base.client.css.Fonts;
 import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.frontoffice.utility.tyler.TextUtility;
@@ -75,10 +76,10 @@ public final class NewsView {
             double fontFactor = GeneralUtility.computeFontFactor(width);
             if (fontFactor != this.fontFactor) {
                 this.fontFactor = fontFactor;
-                GeneralUtility.setLabeledFont(titleLink,    StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
-                TextUtility.setTextFont(      dateText,     StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.SUB_TEXT_SIZE);
-                GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
-                GeneralUtility.setLabeledFont(readMoreLink, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(titleLink,    Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
+                TextUtility.setTextFont(      dateText,     Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.NORMAL, fontFactor * StyleUtility.SUB_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(excerptLabel, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.NORMAL, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(readMoreLink, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
             }
             /* Title: */       titleY = 0;                                titleHeight = titleLink.prefHeight(rightWidth);
             if (width <= 500) { // Small screen => vertical alignment: title above image, date, excerpt, buttons & favorite

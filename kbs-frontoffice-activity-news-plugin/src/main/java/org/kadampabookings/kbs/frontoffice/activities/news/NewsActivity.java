@@ -40,9 +40,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.brand.Brand;
+import one.modality.base.client.css.Fonts;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
-import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.frontoffice.utility.tyler.TextUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Topic;
@@ -76,7 +76,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
     @Override
     public Node buildUi() {
         Text headerText = TextUtility.createText(NewsI18nKeys.newsHeaderText, Brand.getBrandMainColor());
-        TextUtility.setTextFont(headerText, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32);
+        TextUtility.setTextFont(headerText, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.BOLD, 32);
         headerText.setWrappingWidth(250);
 
         String headerImageUrl = SourcesConfig.getSourcesRootConfig().childConfigAt("kbs.frontoffice.activity.news").getString("headerImageUrl");

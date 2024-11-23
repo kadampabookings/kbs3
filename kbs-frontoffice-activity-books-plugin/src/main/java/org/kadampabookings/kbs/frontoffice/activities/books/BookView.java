@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
 import one.modality.base.client.brand.Brand;
+import one.modality.base.client.css.Fonts;
 import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
@@ -67,11 +68,11 @@ public final class BookView {
             double fontFactor = GeneralUtility.computeFontFactor(width);
             if (fontFactor != this.fontFactor) {
                 this.fontFactor = fontFactor;
-                GeneralUtility.setLabeledFont(titleLink,    StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
-                GeneralUtility.setLabeledFont(excerptLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL,    fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
-                GeneralUtility.setLabeledFont(freeLink,     StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
-                GeneralUtility.setLabeledFont(orderLink,    StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
-                GeneralUtility.setLabeledFont(extractsLink, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(titleLink,    Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(excerptLabel, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.NORMAL, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(freeLink,     Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(orderLink,    Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(extractsLink, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MEDIUM_TEXT_SIZE);
             }
             double vGap;
             if (width <= 500) { // Small screen => vertical alignment: title above image, date, excerpt, buttons & favorite

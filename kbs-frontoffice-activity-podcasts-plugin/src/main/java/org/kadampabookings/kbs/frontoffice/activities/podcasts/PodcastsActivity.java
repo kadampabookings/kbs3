@@ -39,6 +39,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.brand.Brand;
+import one.modality.base.client.css.Fonts;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
@@ -234,10 +235,10 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
 
         FXProperties.runOnDoublePropertyChange(width -> {
             double fontFactor = GeneralUtility.computeFontFactor(width);
-            GeneralUtility.setLabeledFont(podcastsLabel, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, fontFactor * 21);
-            GeneralUtility.setLabeledFont(alsoAvailableOnLabel, StyleUtility.TEXT_FAMILY, FontWeight.NORMAL, fontFactor * 8);
+            GeneralUtility.setLabeledFont(podcastsLabel, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.BOLD, fontFactor * 21);
+            GeneralUtility.setLabeledFont(alsoAvailableOnLabel, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.NORMAL, fontFactor * 8);
             for (Label button : podcastsChannelButtons)
-                GeneralUtility.setLabeledFont(button, StyleUtility.TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
+                GeneralUtility.setLabeledFont(button, Fonts.MONTSERRAT_TEXT_FAMILY, FontWeight.SEMI_BOLD, fontFactor * StyleUtility.MAIN_TEXT_SIZE);
             // Setting the teacher button max scale proportionally to the width but always between 1 & 2.5
             double scale = Math.max(1, Math.min(width / 600, 2.5));
             scaledTeacherButton.setMaxScale(scale);

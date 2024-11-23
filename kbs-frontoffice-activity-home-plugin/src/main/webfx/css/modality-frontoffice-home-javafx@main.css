@@ -5,27 +5,31 @@
     -home-header-color: #4A4748;
 }
 
-.festivals-header, .podcasts-header {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: bold;
-    -fx-font-size: 40px;
-    -fx-text-fill: -home-header-color;
-}
-
 .festival-thumbnail, .home-podcasts {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: regular;
-    -fx-font-size: 36px;
+    -fx-font-family: -poppins-font-family;
+    font-weight: 400;
+    font-size: 36px;
     -fx-background-radius: 8px, 8px;
     -fx-background-repeat: no-repeat, no-repeat;
     -fx-background-size: cover, cover;
     -fx-background-position: center, center;
 }
 
-.festival-thumbnail Text {
-    -fx-font-family: "Robotto", "Poppins";
-    -fx-font-weight: medium;
-    -fx-font-size: 13px;
+.festivals-header, .podcasts-header {
+    -fx-font-weight: bold;
+    -fx-font-size: 40px;
+    -fx-text-fill: -home-header-color;
+}
+
+.festival-thumbnail Label {
+    font-weight: 400;
+    font-size: 36px;
+}
+
+.festival-thumbnail Label.festival-name {
+    -fx-font-family: -vollkorn-font-family;
+    -fx-font-weight: 500;
+    -fx-font-size: 33px;
 }
 
 .festival-thumbnail.spring-festival {
@@ -54,8 +58,8 @@
 }
 
 .festival-thumbnail Button {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-family: -poppins-font-family;
+    -fx-font-weight: 600;
     -fx-font-size: 16px;
     -fx-text-fill: white;
     -fx-background-radius: 8px;
@@ -75,9 +79,9 @@
 }
 
 .more-events {
-    -fx-font-family: "Poppins";
+    -fx-font-family: -poppins-font-family;
     -fx-font-size: 16px;
-    -fx-text-fill: #0096D6;
+    -fx-text-fill: -brand-main-color;
 }
 
 .home-podcasts {
@@ -90,24 +94,21 @@
 }
 
 .podcasts-card .card-title {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-weight: 600;
     -fx-font-size: 16px;
 }
 
 .podcasts-card .card-content {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-weight: 600;
     -fx-font-size: 13px;
     -fx-text-fill: #838788;
 }
 
 .home-podcasts Button {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: semi-bold;
+    -fx-font-weight: 600;
     -fx-font-size: 16px;
     -fx-text-fill: white;
     -fx-background-radius: 8px;
-    -fx-background-color: #4A4748;
+    -fx-background-color: -home-header-color;
     -fx-cursor: hand;
 }
