@@ -1,9 +1,3 @@
-/* Customizing the switch color to orange (when selected) */
-* {
-    -kadampa-org-orange-color: #F5761A;
-    -webfx-switch-selected-background-color: -kadampa-org-orange-color;
-}
-
 .podcasts-activity .webfx-switch {
     -fx-cursor: hand;
 }
@@ -20,7 +14,7 @@
 }
 
 .progress-bar .bar {
-    -fx-background-color: -kadampa-org-orange-color;
+    -fx-background-color: -brand-main-background-color;
     -fx-background-insets: 0;
     -fx-padding: 5px;
 }

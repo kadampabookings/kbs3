@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import one.modality.base.client.brand.Brand;
 import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.frontoffice.utility.tyler.TextUtility;
@@ -29,13 +30,13 @@ public final class NewsView {
 
     private final BrowsingHistory history;
     private News news;
-    private final Hyperlink titleLink = GeneralUtility.createHyperlink(StyleUtility.MAIN_BRAND_COLOR);
+    private final Hyperlink titleLink = GeneralUtility.createHyperlink(Brand.getBrandMainColor());
     private final Text dateText = TextUtility.createText(StyleUtility.ELEMENT_GRAY_COLOR);
     private final Label excerptLabel = GeneralUtility.createLabel(Color.BLACK);
     private final ImageView imageView = new ImageView();
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
-    private final Hyperlink readMoreLink = GeneralUtility.createHyperlink(NewsI18nKeys.readMore, StyleUtility.MAIN_BRAND_COLOR);
+    private final Hyperlink readMoreLink = GeneralUtility.createHyperlink(NewsI18nKeys.readMore, Brand.getBrandMainColor());
     private final Pane newsContainer = new Pane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight, readMoreX, readMoreY, readMoreHeight;

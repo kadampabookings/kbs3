@@ -38,6 +38,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
+import one.modality.base.client.brand.Brand;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
@@ -85,11 +86,11 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
 
     @Override
     public Node buildUi() {
-        Label podcastsLabel = GeneralUtility.createLabel(PodcastsI18nKeys.podcastsLabel, StyleUtility.MAIN_BRAND_COLOR);
+        Label podcastsLabel = GeneralUtility.createLabel(PodcastsI18nKeys.podcastsLabel, Brand.getBrandMainColor());
         podcastsLabel.setContentDisplay(ContentDisplay.TOP);
         podcastsLabel.setTextAlignment(TextAlignment.CENTER);
 
-        Label alsoAvailableOnLabel = GeneralUtility.createLabel(PodcastsI18nKeys.alsoAvailableOn, StyleUtility.MAIN_BRAND_COLOR);
+        Label alsoAvailableOnLabel = GeneralUtility.createLabel(PodcastsI18nKeys.alsoAvailableOn, Brand.getBrandMainColor());
         Label[] podcastsChannelButtons = {
             createPodcastsChannelButton(PodcastsI18nKeys.Spotify, "https://open.spotify.com/show/5QPCFEyZz74nOHZbQr1B4z"),
             createPodcastsChannelButton(PodcastsI18nKeys.ApplePodcasts, "https://podcasts.apple.com/us/podcast/living-clarity/id1719104184"),

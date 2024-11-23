@@ -39,6 +39,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
+import one.modality.base.client.brand.Brand;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
@@ -74,7 +75,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
 
     @Override
     public Node buildUi() {
-        Text headerText = TextUtility.createText(NewsI18nKeys.newsHeaderText, StyleUtility.MAIN_BRAND_COLOR);
+        Text headerText = TextUtility.createText(NewsI18nKeys.newsHeaderText, Brand.getBrandMainColor());
         TextUtility.setTextFont(headerText, StyleUtility.TEXT_FAMILY, FontWeight.BOLD, 32);
         headerText.setWrappingWidth(250);
 

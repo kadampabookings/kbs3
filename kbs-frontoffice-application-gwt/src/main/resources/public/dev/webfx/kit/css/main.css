@@ -719,6 +719,12 @@ input[type="password"]:not([value=""]) {
 }
 
 
+/*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
+
+:root {
+    --brand-main-color: #0096D6;
+    --brand-main-background-color: #0096D6;
+}
 /*===== modality-client-web@main.css from modality-base-client-application =====*/
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
@@ -740,10 +746,12 @@ body, textarea /* because textarea has explicit default monospace font */ {
 /*===== modality-client-web@main.css from modality-base-client-css =====*/
 
 :root {
-    --webfx-switch-selected-background-color: #0096D6;
+    /* Overriding some WebFX Extras CSS variables  */
+    --webfx-switch-selected-background-color: --brand-main-background-color;
     --webfx-visualgrid-selection-color: #BBBBBB;
 }
 
+/* Not sure if it's the right place for this CSS rules */
 .event-button {
     border-radius: 4px;
     height: 35px;
@@ -854,7 +862,7 @@ fx-collapsepane.menu-bar > fx-border {
 
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
 
-* {
+:root {
     --fx-event-description-text-color: #444;
 }
 
@@ -903,7 +911,7 @@ fx-collapsepane.menu-bar > fx-border {
 
 .event-date-cell.date-selected > fx-background,
 .event-date-cell.date-already-booked > fx-background {
-    background-color: #F5761A;
+    background-color: var(--brand-main-color);
 }
 
 .event-date-cell.date-selected > fx-border,
@@ -938,36 +946,7 @@ fx-collapsepane.menu-bar > fx-border {
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 
-/*===== kbs3-frontoffice-news-web@main.css from kbs-frontoffice-activity-news-plugin =====*/
-
-/* Customizing the switch color to orange (when selected) */
-.news-activity {
-    --kadampa-org-orange-color: #F5761A;
-    --webfx-switch-selected-background-color: var(--kadampa-org-orange-color);
-}
-
-.news-activity .webfx-switch {
-    cursor: pointer;
-}
-
-/* Adding round border on searchbar */
-.searchbar > fx-border {
-    border: 1px solid lightgray;
-    border-radius: 50px;
-}
-
-/* Removing text field border in search bar */
-.searchbar fx-textfield > fx-border {
-    border: none;
-}
-
 /*===== kbs3-frontoffice-podcasts-web@main.css from kbs-frontoffice-activity-podcasts-plugin =====*/
-
-/* Customizing the switch color to orange (when selected) */
-.podcasts-activity {
-    --kadampa-org-orange-color: #F5761A;
-    --webfx-switch-selected-background-color: var(--kadampa-org-orange-color);
-}
 
 .podcasts-activity .webfx-switch {
     cursor: pointer;
@@ -984,11 +963,11 @@ progress::-webkit-progress-bar { /* For Chrome & Safari */
 }
 
 progress::-webkit-progress-value { /* For Chrome & Safari */
-    background-color: var(--kadampa-org-orange-color);
+    background-color: var(--brand-main-background-color);
 }
 
 progress::-moz-progress-bar { /* For FireFox */
-    background-color: var(--kadampa-org-orange-color);
+    background-color: var(--brand-main-background-color);
 }
 
 /*===== modality-frontoffice-home-web@main.css from kbs-frontoffice-activity-home-plugin =====*/
@@ -999,26 +978,25 @@ progress::-moz-progress-bar { /* For FireFox */
     --fall-festival-color: #FFA264;
 }
 
-.festivals-header {
-    font-family: "Poppins";
+.festivals-header, .podcasts-header {
+    font-family: "Poppins", serif;
     font-weight: bold;
     font-size: 40px;
 }
 
 .festival-thumbnail fx-text {
-    font-family: "Robotto", "Poppins";
-    font-weight: medium;
+    font-family: "Robotto", "Poppins", serif;
+    font-weight: 500;
     font-size: 13px;
 }
 
 
 .festival-thumbnail fx-label fx-text {
-    font-family: "Poppins";
-    font-weight: regular;
+    font-weight: 400;
     font-size: 36px;
 }
 
-.festival-thumbnail > fx-background {
+.festival-thumbnail > fx-background, .home-podcasts > fx-background {
     border-radius: 8px;
     background-repeat: repeat, no-repeat;
     background-size: cover, cover;
@@ -1049,13 +1027,17 @@ progress::-moz-progress-bar { /* For FireFox */
     color: var(--fall-festival-color);
 }
 
+.home-podcasts > fx-background {
+    background-image: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+}
+
 .festival-thumbnail fx-button {
-    font-family: "Poppins";
-    font-weight: semi-bold;
+    font-weight: 600;
     font-size: 16px;
     color: white;
     --fx-background-radius: 8px;
     --fx-border-style: none;
+    cursor: pointer;
 }
 
 .festival-thumbnail.spring-festival fx-button {
@@ -1070,6 +1052,36 @@ progress::-moz-progress-bar { /* For FireFox */
     --fx-button-background: var(--fall-festival-color);
 }
 
+.more-events {
+    font-size: 16px;
+    color: #0096D6;
+}
+
+.podcasts-card > fx-background {
+    background-color: white;
+    border-radius: 8px;
+}
+
+.podcasts-card .card-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.podcasts-card .card-content {
+    font-weight: 600;
+    font-size: 13px;
+    color: #838788;
+}
+
+.home-podcasts fx-button {
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    --fx-background-radius: 8px;
+    --fx-button-background: #4A4748;
+    --fx-border-style: none;
+    cursor: pointer;
+}
 /*===== kbs-frontoffice-application-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
 :root {
@@ -1081,3 +1093,28 @@ progress::-moz-progress-bar { /* For FireFox */
 fx-aspectratiopane {
     overflow: hidden;
 }
+/*===== kbs3-frontoffice-news-web@main.css from kbs-frontoffice-activity-news-plugin =====*/
+
+.news-activity .webfx-switch {
+    cursor: pointer;
+}
+
+/* Adding round border on searchbar */
+.searchbar > fx-border {
+    border: 1px solid lightgray;
+    border-radius: 50px;
+}
+
+/* Removing text field border in search bar */
+.searchbar fx-textfield > fx-border {
+    border: none;
+}
+
+/*===== override@modality-client-brand-web@main.css from kbs-frontoffice-application =====*/
+
+/*
+:root {
+    --kadampa-org-orange-color: red;
+    --brand-main-color: var(--kadampa-org-orange-color);
+    --brand-main-background-color: var(--kadampa-org-orange-color);
+}*/

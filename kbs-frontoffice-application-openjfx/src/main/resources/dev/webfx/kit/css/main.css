@@ -562,6 +562,12 @@ HtmlText, HtmlTextEditor {
     -fx-effect: dropshadow(gaussian, lightgray, 10, 0, 0, 0);
 }
 
+/*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
+
+* {
+    -brand-main-color: #0096D6;
+    -brand-main-background-color: #0096D6;
+}
 /*===== modality-client-javafx@main.css from modality-base-client-application =====*/
 
 Text, Label, Button, TextField {
@@ -580,16 +586,17 @@ Text, Label, Button, TextField {
 /*===== modality-client-javafx@main.css from modality-base-client-css =====*/
 
 * {
-    -webfx-switch-selected-background-color: #0096D6;
+    /* Overriding some WebFX Extras CSS variables  */
+    -webfx-switch-selected-background-color: -brand-main-background-color;
     -webfx-visualgrid-selection-color: #BBBBBB;
 }
 
+/* Not sure if it's the right place for this CSS rules */
 .event-button Button {
     -fx-background-radius: 4;
     -fx-pref-height:36px;
     -fx-max-height:36px;
     -fx-alignment: center;
- /*  -fx-font-family: "Google Sans", Roboto, Arial;*/
     -fx-font-weight: bolder;
 }
 
@@ -621,11 +628,11 @@ CollapsePane.menu-bar.non-mobile {
 .main-menu-bar Label.brand {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0096D6;
+    -fx-text-fill: -brand-main-color;
 }
 
 .main-menu-bar Label.brand SVGPath {
-    -fx-fill: #0096D6;
+    -fx-fill: -brand-main-color;
 }
 
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
@@ -751,7 +758,7 @@ CollapsePane.menu-bar.non-mobile {
 .event-date-cell.date-selected,
 .event-date-cell.date-already-booked {
     -fx-border-color: none;
-    -fx-background-color: #F5761A;
+    -fx-background-color: -brand-main-color;
 }
 
 .event-date-cell.date-selected Text {
@@ -773,46 +780,7 @@ CollapsePane.menu-bar.non-mobile {
 /*===== modality-frontoffice-booking-javafx@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 
-/*===== kbs3-frontoffice-news-javafx@main.css from kbs-frontoffice-activity-news-plugin =====*/
-
-/* Customizing the switch color to orange (when selected) */
-* {
-    -kadampa-org-orange-color: #F5761A;
-    -webfx-switch-selected-background-color: -kadampa-org-orange-color;
-}
-
-.news-activity .webfx-switch {
-    -fx-cursor: hand;
-}
-
-/* Removing hyperlink default padding (ex: News title) */
-.hyperlink {
-    -fx-padding: 0;
-}
-
-.searchbar {
-    -fx-border-color: lightgray;
-    -fx-border-width: 1px;
-    -fx-border-radius: 50px;
-}
-
-.searchbar TextField {
-    -fx-border: none;
-    -fx-background: none;
-}
-
-.searchbar TextField:focused {
-    -fx-border: none;
-    -fx-background-color: transparent;
-    -fx-highlight-fill: transparent;
-}
 /*===== kbs3-frontoffice-podcasts-javafx@main.css from kbs-frontoffice-activity-podcasts-plugin =====*/
-
-/* Customizing the switch color to orange (when selected) */
-* {
-    -kadampa-org-orange-color: #F5761A;
-    -webfx-switch-selected-background-color: -kadampa-org-orange-color;
-}
 
 .podcasts-activity .webfx-switch {
     -fx-cursor: hand;
@@ -830,7 +798,7 @@ CollapsePane.menu-bar.non-mobile {
 }
 
 .progress-bar .bar {
-    -fx-background-color: -kadampa-org-orange-color;
+    -fx-background-color: -brand-main-background-color;
     -fx-background-insets: 0;
     -fx-padding: 5px;
 }
@@ -841,15 +809,17 @@ CollapsePane.menu-bar.non-mobile {
     -spring-festival-color: #159428;
     -summer-festival-color: #FEBC21;
     -fall-festival-color: #FFA264;
+    -home-header-color: #4A4748;
 }
 
-.festivals-header {
+.festivals-header, .podcasts-header {
     -fx-font-family: "Poppins";
     -fx-font-weight: bold;
     -fx-font-size: 40px;
+    -fx-text-fill: -home-header-color;
 }
 
-.festival-thumbnail {
+.festival-thumbnail, .home-podcasts {
     -fx-font-family: "Poppins";
     -fx-font-weight: regular;
     -fx-font-size: 36px;
@@ -896,6 +866,7 @@ CollapsePane.menu-bar.non-mobile {
     -fx-font-size: 16px;
     -fx-text-fill: white;
     -fx-background-radius: 8px;
+    -fx-cursor: hand;
 }
 
 .festival-thumbnail.spring-festival Button {
@@ -916,6 +887,37 @@ CollapsePane.menu-bar.non-mobile {
     -fx-text-fill: #0096D6;
 }
 
+.home-podcasts {
+    -fx-background-image: url("webfx-css:home/podcasts-background.png"), url("webfx-css:home/pixel-white-80.png");
+}
+
+.podcasts-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+}
+
+.podcasts-card .card-title {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: semi-bold;
+    -fx-font-size: 16px;
+}
+
+.podcasts-card .card-content {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: semi-bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.home-podcasts Button {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: semi-bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-background-color: #4A4748;
+    -fx-cursor: hand;
+}
 /*===== kbs-frontoffice-application-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
 /* JavaFX doesn't support url in variables for now, so we rewrite the CSS rule instead
@@ -927,3 +929,39 @@ CollapsePane.menu-bar.non-mobile {
     -fx-background-image: url("webfx-css:/frontoffice/images/Manjushri.jpg");
 }
 
+
+/*===== kbs3-frontoffice-news-javafx@main.css from kbs-frontoffice-activity-news-plugin =====*/
+
+.news-activity .webfx-switch {
+    -fx-cursor: hand;
+}
+
+/* Removing hyperlink default padding (ex: News title) */
+.hyperlink {
+    -fx-padding: 0;
+}
+
+.searchbar {
+    -fx-border-color: lightgray;
+    -fx-border-width: 1px;
+    -fx-border-radius: 50px;
+}
+
+.searchbar TextField {
+    -fx-border: none;
+    -fx-background: none;
+}
+
+.searchbar TextField:focused {
+    -fx-border: none;
+    -fx-background-color: transparent;
+    -fx-highlight-fill: transparent;
+}
+/*===== override@modality-client-brand-javafx@main.css from kbs-frontoffice-application =====*/
+
+/*
+* {
+    -kadampa-org-orange-color: #F5761A;
+    -brand-main-color: -kadampa-org-orange-color;
+    -brand-main-background-color: -kadampa-org-orange-color;
+}*/

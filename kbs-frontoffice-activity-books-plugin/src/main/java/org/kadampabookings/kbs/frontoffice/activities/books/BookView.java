@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
+import one.modality.base.client.brand.Brand;
 import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
@@ -21,12 +22,12 @@ public final class BookView {
 
     private Book book;
     private boolean hasFreeUrl;
-    private final Hyperlink titleLink = GeneralUtility.createHyperlink(StyleUtility.MAIN_BRAND_COLOR);
+    private final Hyperlink titleLink = GeneralUtility.createHyperlink(Brand.getBrandMainColor());
     private final Label excerptLabel = GeneralUtility.createLabel(Color.BLACK);
     private final ImageView imageView = new ImageView();
-    private final Hyperlink freeLink = GeneralUtility.createHyperlink(BooksI18nKeys.FreeDownload, StyleUtility.MAIN_BRAND_COLOR);
-    private final Hyperlink orderLink = GeneralUtility.createHyperlink(BooksI18nKeys.Order, StyleUtility.MAIN_BRAND_COLOR);
-    private final Hyperlink extractsLink = GeneralUtility.createHyperlink(BooksI18nKeys.AudioExtracts, StyleUtility.MAIN_BRAND_COLOR);
+    private final Hyperlink freeLink = GeneralUtility.createHyperlink(BooksI18nKeys.FreeDownload, Brand.getBrandMainColor());
+    private final Hyperlink orderLink = GeneralUtility.createHyperlink(BooksI18nKeys.Order, Brand.getBrandMainColor());
+    private final Hyperlink extractsLink = GeneralUtility.createHyperlink(BooksI18nKeys.AudioExtracts, Brand.getBrandMainColor());
     private final Pane bookContainer = new Pane(imageView, titleLink, excerptLabel, freeLink, orderLink, extractsLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, titleY, titleHeight, excerptY, excerptHeight,

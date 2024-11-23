@@ -10,6 +10,7 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires javafx.controls;
     requires javafx.graphics;
     requires modality.base.client.activity;
+    requires modality.base.client.brand;
     requires modality.base.client.mainframe.fx;
     requires modality.base.client.tile;
     requires modality.base.frontoffice.mainframe.fx;

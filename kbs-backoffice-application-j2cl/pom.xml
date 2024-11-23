@@ -446,15 +446,15 @@
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>one.modality</groupId>
-                                            <artifactId>modality-base-backoffice-mainframe-activity</artifactId>
-                                            <version>1.0.0-SNAPSHOT</version>
-                                            <includes>one/modality/base/backoffice/activities/mainframe/</includes>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>one.modality</groupId>
                                             <artifactId>modality-base-backoffice-gantt-canvas</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
                                             <includes>one/modality/base/backoffice/ganttcanvas/images/s32/</includes>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>one.modality</groupId>
+                                            <artifactId>modality-base-client-brand</artifactId>
+                                            <version>1.0.0-SNAPSHOT</version>
+                                            <includes>one/modality/base/client/brand/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>dev.webfx</groupId>
