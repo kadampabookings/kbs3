@@ -4,26 +4,25 @@
     --fall-festival-color: #FFA264;
 }
 
-.festivals-header {
-    font-family: "Poppins";
+.festivals-header, .podcasts-header {
+    font-family: "Poppins", serif;
     font-weight: bold;
     font-size: 40px;
 }
 
 .festival-thumbnail fx-text {
-    font-family: "Robotto", "Poppins";
-    font-weight: medium;
+    font-family: "Robotto", "Poppins", serif;
+    font-weight: 500;
     font-size: 13px;
 }
 
 
 .festival-thumbnail fx-label fx-text {
-    font-family: "Poppins";
-    font-weight: regular;
+    font-weight: 400;
     font-size: 36px;
 }
 
-.festival-thumbnail > fx-background {
+.festival-thumbnail > fx-background, .home-podcasts > fx-background {
     border-radius: 8px;
     background-repeat: repeat, no-repeat;
     background-size: cover, cover;
@@ -54,13 +53,17 @@
     color: var(--fall-festival-color);
 }
 
+.home-podcasts > fx-background {
+    background-image: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+}
+
 .festival-thumbnail fx-button {
-    font-family: "Poppins";
-    font-weight: semi-bold;
+    font-weight: 600;
     font-size: 16px;
     color: white;
     --fx-background-radius: 8px;
     --fx-border-style: none;
+    cursor: pointer;
 }
 
 .festival-thumbnail.spring-festival fx-button {
@@ -73,4 +76,35 @@
 
 .festival-thumbnail.fall-festival fx-button {
     --fx-button-background: var(--fall-festival-color);
+}
+
+.more-events {
+    font-size: 16px;
+    color: #0096D6;
+}
+
+.podcasts-card > fx-background {
+    background-color: white;
+    border-radius: 8px;
+}
+
+.podcasts-card .card-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.podcasts-card .card-content {
+    font-weight: 600;
+    font-size: 13px;
+    color: #838788;
+}
+
+.home-podcasts fx-button {
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    --fx-background-radius: 8px;
+    --fx-button-background: #4A4748;
+    --fx-border-style: none;
+    cursor: pointer;
 }

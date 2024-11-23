@@ -6,8 +6,6 @@ module kbs.frontoffice.activity.home.plugin {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires kbs.frontoffice.activity.books.plugin;
-    requires kbs.frontoffice.activity.news.plugin;
     requires kbs.frontoffice.activity.podcasts.plugin;
     requires modality.base.client.application;
     requires modality.base.frontoffice.utility;

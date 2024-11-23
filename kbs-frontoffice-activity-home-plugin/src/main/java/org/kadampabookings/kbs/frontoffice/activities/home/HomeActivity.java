@@ -13,6 +13,7 @@ import dev.webfx.stack.ui.action.ActionBinder;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
@@ -63,14 +64,19 @@ final class HomeActivity extends ViewDomainActivityBase implements OperationActi
         VBox container = new VBox(64,
             festivalsHeaderLabel,
             columnsPane,
-            moreEventsLabel
+            moreEventsLabel,
+            HomePodcastsView.createView(getHistory())
         );
         container.setAlignment(Pos.TOP_CENTER);
+        container.setPadding(new Insets(88, 0, 160, 0));
 
         ObservableLists.bindConverted(columnsPane.getChildren(), festivals, festival ->
             new FestivalThumbnail(festival).getView());
 
-        return FrontOfficeActivityUtil.restrictToMaxPageWidth(container, 88, 0);
+        FrontOfficeActivityUtil.restrictToMaxPageWidth(columnsPane, false);
+
+        return container;
+        //return FrontOfficeActivityUtil.restrictToMaxPageWidth(container, 88, 0);
     }
 
     private Hyperlink routingHyperlink(Function<BrowsingHistory, ?> routeRequestFactory) {
