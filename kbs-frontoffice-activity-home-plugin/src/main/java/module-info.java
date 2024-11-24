@@ -7,7 +7,6 @@ module kbs.frontoffice.activity.home.plugin {
     requires javafx.controls;
     requires javafx.graphics;
     requires kbs.frontoffice.activity.podcasts.plugin;
-    requires modality.base.client.application;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires webfx.extras.panes;
@@ -22,7 +21,6 @@ module kbs.frontoffice.activity.home.plugin {
     requires webfx.stack.orm.entity;
     requires webfx.stack.routing.router.client;
     requires webfx.stack.routing.uirouter;
-    requires webfx.stack.ui.action;
     requires webfx.stack.ui.operation;
     requires webfx.stack.ui.operation.action;
 

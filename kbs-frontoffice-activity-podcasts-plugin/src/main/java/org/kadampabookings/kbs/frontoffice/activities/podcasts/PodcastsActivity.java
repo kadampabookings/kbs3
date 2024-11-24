@@ -44,7 +44,7 @@ import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
-import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.shared.entities.Podcast;
@@ -314,9 +314,9 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
             }, scrollPane.vvalueProperty());
         });
 
-        carousel.getContainer().setPadding(FrontOfficeActivityUtil.createLeftRightPageInsets(0, 0));
+        carousel.getContainer().setPadding(FOPageUtil.createLeftRightPageInsets(0, 0));
 
-        return FrontOfficeActivityUtil.restrictToMaxPageWidth(pageContainer, false);
+        return FOPageUtil.restrictToMaxPageWidth(pageContainer);
     }
 
     private void setScrollPaneBackground(Background background) {

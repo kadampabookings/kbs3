@@ -1,30 +1,24 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.panes.ColumnsPane;
-import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.kit.util.properties.ObservableLists;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.uischeduler.UiScheduler;
-import dev.webfx.platform.windowhistory.spi.BrowsingHistory;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import dev.webfx.stack.orm.entity.EntityStore;
-import dev.webfx.stack.ui.action.ActionBinder;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import one.modality.base.client.application.RoutingActions;
-import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.shared.entities.Event;
 
 import java.util.Collections;
-import java.util.function.Function;
 
 final class HomeActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
@@ -68,22 +62,22 @@ final class HomeActivity extends ViewDomainActivityBase implements OperationActi
             HomePodcastsView.createView(getHistory())
         );
         container.setAlignment(Pos.TOP_CENTER);
-        container.setPadding(new Insets(88, 0, 160, 0));
 
         ObservableLists.bindConverted(columnsPane.getChildren(), festivals, festival ->
             new FestivalThumbnail(festival).getView());
 
-        FrontOfficeActivityUtil.restrictToMaxPageWidth(columnsPane, false);
+        FOPageUtil.restrictToMaxPageWidth(columnsPane);
 
-        return container;
-        //return FrontOfficeActivityUtil.restrictToMaxPageWidth(container, 88, 0);
+        return FOPageUtil.applyTopBottomPagePadding(container);
     }
 
+/*
     private Hyperlink routingHyperlink(Function<BrowsingHistory, ?> routeRequestFactory) {
         Hyperlink hyperlink = ActionBinder.newActionHyperlink(RoutingActions.newRoutingAction(routeRequestFactory, this));
         FXProperties.setEvenIfBound(hyperlink.visibleProperty(), true);
         FXProperties.setEvenIfBound(hyperlink.disableProperty(), false);
         return hyperlink;
     }
+*/
 
 }

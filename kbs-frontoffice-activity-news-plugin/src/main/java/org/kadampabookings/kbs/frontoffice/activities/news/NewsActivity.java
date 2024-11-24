@@ -42,7 +42,7 @@ import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.client.brand.Brand;
 import one.modality.base.client.css.Fonts;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
-import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.frontoffice.utility.tyler.TextUtility;
 import one.modality.base.shared.entities.News;
 import one.modality.base.shared.entities.Topic;
@@ -153,7 +153,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
         VBox.setMargin(filterBar, new Insets(20));
 
         pageContainer.setAlignment(Pos.CENTER);
-        VBox.setMargin(carousel.getContainer(), FrontOfficeActivityUtil.createLeftRightPageInsets(30, 10));
+        VBox.setMargin(carousel.getContainer(), FOPageUtil.createLeftRightPageInsets(30, 10));
         carousel.setShowingDots(false);
 
         pageContainer.getChildren().setAll(
@@ -225,7 +225,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             }, scrollPane.vvalueProperty());
         });
 
-        return FrontOfficeActivityUtil.restrictToMaxPageWidth(pageContainer, false);
+        return FOPageUtil.restrictToMaxPageWidth(pageContainer);
         //return FrontOfficeActivityUtil.createActivityPageScrollPane(pageContainer, true, false);
     }
 

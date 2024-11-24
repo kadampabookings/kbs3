@@ -13,7 +13,6 @@ module kbs.frontoffice.activity.login.plugin {
     requires webfx.extras.util.animation;
     requires webfx.kit.util;
     requires webfx.platform.boot;
-    requires webfx.platform.console;
     requires webfx.platform.scheduler;
     requires webfx.platform.uischeduler;
     requires webfx.platform.util;

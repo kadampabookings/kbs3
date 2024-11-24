@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
-import one.modality.base.frontoffice.utility.activity.FrontOfficeActivityUtil;
+import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Book;
 import one.modality.base.shared.entities.Video;
@@ -49,7 +49,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
         collectedWorksVideo.setImageUrl(Resource.toUrl("CollectedWorks.png", getClass()));
         VideoView collectedWorksVideoView = new VideoView();
         collectedWorksVideoView.setDecorated(false);
-        collectedWorksVideoView.setWideVideoMaxWidth(FrontOfficeActivityUtil.MAX_PAGE_WIDTH);
+        collectedWorksVideoView.setWideVideoMaxWidth(FOPageUtil.MAX_PAGE_WIDTH);
         collectedWorksVideoView.setMediaInfo(collectedWorksVideo);
 
         // Setting a max width for big desktop screens

@@ -466,6 +466,37 @@ Switch.webfx-switch Circle.knob {
      -fx-background-insets: 0, 0, 0;
 }
 
+/*===== webfx-extra-player-audio-javafxmedia-javafx@main.css from webfx-extras-player-audio-javafxmedia =====*/
+
+.audio-player {
+    -fx-background-color: #838788; /* Background color */
+     -fx-background-radius: 30;
+}
+
+.audio-player h4 {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-alignment: left;
+     -fx-text-fill: white;
+}
+
+
+.audio-player .progress-bar {
+    -fx-accent: #0096D6; /* Progress fill color */
+    -fx-background-color: #E0E0E0; /* Background color */
+    -fx-background-radius: 15; /* Rounded background */
+    -fx-border-radius: 15; /* Rounded border */
+    -fx-padding: 2; /* Padding around progress */
+}
+
+.audio-player .time {
+    -fx-font-family: "Poppins";
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+
 /*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid-peers-openjfx =====*/
 
 VisualGrid {
@@ -682,7 +713,7 @@ CollapsePane.menu-bar.non-mobile {
     -bootstrap-orange5: #985f0d ;
     -bootstrap-orange6: #8a6d3b ;
 
-    -bootstrap-red1: #d9534f ;
+    -bootstrap-red1: #FF0404 ;
     -bootstrap-red2: #d43f3a ;
     -bootstrap-red3: #c9302c ;
     -bootstrap-red4: #ac2925 ;
@@ -705,6 +736,64 @@ CollapsePane.menu-bar.non-mobile {
     -fx-line-spacing: 20px;
     -fx-text-alignment: center;    /* Aligns text within its container */
     }
+
+.btn-black {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
+
+.btn-black:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-grey7;
+    -fx-border-color: -bootstrap-grey7;
+}
+/*===== modality-event-frontoffice-activities-audiorecordings-javafx@main.css from modality-event-frontoffice-activity-audiorecordings-plugin =====*/
+
+.audio-library .h3 {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: semibold;
+    -fx-font-size: 15px;
+    -fx-text-alignment: left; /* Aligns text */
+}
+
+.audio-library .comment {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: light;
+    -fx-font-size: 10px;
+    -fx-text-fill: #838788;
+    -fx-text-alignment: left; /* Aligns text */
+}
+
+.audio-library .description {
+    -fx-min-width: 450;
+    -fx-max-width: 450;
+}
+
+.list-tracks-title {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+    -fx-text-fill: #4A4748;
+    -fx-text-alignment: left;
+}
+
+.bottom-border {
+    -fx-padding: 0 0 20 -50;
+    -fx-border-color: transparent transparent #4A4748 transparent; -fx-border-width: 0 0 0.2 0;
+}
+
+
+/*===== modality-event-frontoffice-activities-videos-javafx@main.css from modality-event-frontoffice-activity-videos-plugin =====*/
+
+.media-library .h3 {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-alignment: left; /* Aligns text */
+}
 
 /*===== modality-event-client-recurringevents-javafx@main.css from modality-event-client-recurringevents =====*/
 

@@ -606,6 +606,50 @@ fx-textfield.material > fx-border {
 fx-textfield.material > fx-background {
     background: none;
 }
+/*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
+
+.audio-player > fx-background {
+     background-color: #838788;  /* Background color */
+     border-radius: 30px;
+}
+
+.audio-player .h4 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    color: white;
+}
+
+/* Customizing the progress bar for podcasts */
+.audio-player progress {
+    border: none;
+    background-color: lightgray;
+    border-radius: 10px; /* Adjust the value for more or less rounding */
+    overflow: hidden;/* For FireFox */
+}
+
+.audio-player progress::-webkit-progress-bar { /* For Chrome & Safari */
+    background-color: lightgray;
+    border-radius: 10px;
+}
+
+.audio-player progress::-webkit-progress-value { /* For Chrome & Safari */
+    background-color: #0096D6;
+     border-radius: 10px;
+}
+
+.audio-player progress::-moz-progress-bar { /* For FireFox */
+    background-color: #0096D6;
+     border-radius: 10px;
+}
+
+
+.audio-player .time {
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-size: 13px;
+}
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid-peers-gwt-j2cl =====*/
 
 :root {
@@ -880,7 +924,7 @@ fx-collapsepane.menu-bar > fx-border {
     --bootstrap-green3: #449d44 ;
     --bootstrap-green4: #398439 ;
     --bootstrap-green5: #255625 ;
-     -bootstrap-green6: #41BA4D ;
+    --bootstrap-green6: #41BA4D ;
 
     --bootstrap-orange1: #f0ad4e ;
     --bootstrap-orange2: #eea236 ;
@@ -889,7 +933,7 @@ fx-collapsepane.menu-bar > fx-border {
     --bootstrap-orange5: #985f0d ;
     --bootstrap-orange6: #8a6d3b ;
 
-    --bootstrap-red1: #d9534f ;
+    --bootstrap-red1: #FF0404 ;
     --bootstrap-red2: #d43f3a ;
     --bootstrap-red3: #c9302c ;
     --bootstrap-red4: #ac2925 ;
@@ -901,7 +945,75 @@ fx-collapsepane.menu-bar > fx-border {
     cursor: not-allowed;
  }
 
+.btn-black {
+    color: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--bootstrap-white);
+}
 
+.btn-black > fx-background {
+    background: black;
+}
+
+.btn-black > fx-border {
+    border-color: black;
+}
+
+.btn-black:hover:not(.disabled){
+    color: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--bootstrap-white);
+}
+
+.btn-black:hover:not(.disabled)> fx-background {
+    background-color: var(--bootstrap-grey7);
+}
+
+.btn-black:hover:not(.disabled)> fx-border {
+    border-color: var(--bootstrap-grey7);
+}
+
+
+/*===== modality-event-frontoffice-activities-audiorecordings-web@main.css from modality-event-frontoffice-activity-audiorecordings-plugin =====*/
+
+.audio-library .h3 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400; /* Semibold equivalent */
+    font-size: 15px;
+    text-align: left; /* Aligns text */
+}
+
+.audio-library .comment {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300; /* Light equivalent */
+    font-size: 10px;
+    color: #838788; /* Text color equivalent to -fx-text-fill */
+    text-align: left; /* Aligns text */
+}
+
+.audio-library .description > fx-children > fx-text {
+    min-width: 410px;
+    max-width: 410px;
+    overflow: hidden; /* Hide overflowed text */
+    text-overflow: ellipsis;
+}
+
+.list-tracks-title {
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: #4A4748; /* Text color equivalent to -fx-text-fill */
+    text-align: left; /* Aligns text */
+}
+
+.bottom-border {
+    margin-top: 20px;
+    border-color:     transparent transparent #e6e6e6 transparent;
+    border-width: 0 0 1px 0; /* Border width translated to px */
+    border-style: solid;
+}
+
+.bottom-border > fx-children {
+    margin-top: -10px;
+}
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
 
 :root {

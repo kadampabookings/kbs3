@@ -463,16 +463,16 @@
                                             <includes>dev/webfx/extras/webview/pane/</includes>
                                         </artifactItem>
                                         <artifactItem>
-                                            <groupId>one.modality</groupId>
-                                            <artifactId>modality-base-client-application</artifactId>
-                                            <version>1.0.0-SNAPSHOT</version>
-                                            <includes>images/buddhas/ , one/modality/base/client/images/ , dev/webfx/kit/css/fonts/montserrat/ , dev/webfx/kit/css/fonts/roboto/ , dev/webfx/kit/css/fonts/poppins/</includes>
-                                        </artifactItem>
-                                        <artifactItem>
                                             <groupId>org.kadampabookings</groupId>
                                             <artifactId>kbs-frontoffice-activity-books-plugin</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
                                             <includes>org/kadampabookings/kbs/frontoffice/activities/books/</includes>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>one.modality</groupId>
+                                            <artifactId>modality-base-client-application</artifactId>
+                                            <version>1.0.0-SNAPSHOT</version>
+                                            <includes>images/buddhas/ , one/modality/base/client/images/ , dev/webfx/kit/css/fonts/montserrat/ , dev/webfx/kit/css/fonts/roboto/ , dev/webfx/kit/css/fonts/poppins/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>one.modality</groupId>
