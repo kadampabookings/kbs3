@@ -72,7 +72,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
         }, pageContainer.widthProperty());
 
         pageContainer.getStyleClass().add("podcasts-activity"); // for CSS styling
-        return pageContainer;
+        return FOPageUtil.restrictToMaxPageWidthAndApplyPageTopBottomPadding(pageContainer);
         //return FrontOfficeActivityUtil.createActivityPageScrollPane(carousel.getContainer(), true);
     }
 
