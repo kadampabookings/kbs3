@@ -231,14 +231,14 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
 
     @Override
     protected void startLogic() {
-        // Resetting news limit to initial value whenever the user plays with filters
+        // Resetting news limit to initial value whenever the user plays with filters, or change language
         FXProperties.runOnPropertiesChange(() -> {
             lastLoadedVideo = null;
             loadNewsBeforeDateProperty.set(null);
             lastLoadedVideo = null;
             latestLoadedVideoProperty.set(null);
             carousel.displaySlide(videosSwitch.isSelected() ? videosContainer : newsContainer);
-        }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty());
+        }, searchTextField.textProperty(), topicProperty, videosSwitch.selectedProperty(), I18n.languageProperty());
 
         // News loader
         ReactiveEntitiesMapper.<News>createReactiveChain(this)
