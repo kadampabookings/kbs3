@@ -43,6 +43,7 @@ final class FestivalThumbnail {
         MonoPane festivalNamePane = new MonoPane(festivalName);
         festivalNamePane.setMaxHeight(Double.MAX_VALUE);
         VBox.setVgrow(festivalNamePane, Priority.SOMETIMES);
+        festivalNamePane.setAlignment(Pos.TOP_CENTER);
 
         VBox container = new VBox(48,
             festivalNamePane,
