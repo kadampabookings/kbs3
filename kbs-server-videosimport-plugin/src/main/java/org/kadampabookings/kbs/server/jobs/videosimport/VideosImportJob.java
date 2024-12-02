@@ -116,7 +116,7 @@ public class VideosImportJob implements ApplicationJob {
                                 }
                                 UpdateStore updateStore = UpdateStore.createAbove(entityStore);
                                 entityStore.<Video>executeQuery(
-                                            "select wistiaVideoId from Video where wistiaVideoId in (" + Collections.toString(Collections.map(wistiaIdsQueue.keySet(), wistiaId -> "'" + wistiaId + "'"), false, false) + ")")
+                                        "select wistiaVideoId from Video where wistiaVideoId in (" + Collections.toStringCommaSeparatedWithSingleQuotedStrings(wistiaIdsQueue.keySet()) + ")")
                                     .onFailure(e -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading videos from database", e))
                                     .compose(existingVideos -> {
                                         List<String> existingWistiaIds = Collections.map(existingVideos, Video::getWistiaVideoId);
