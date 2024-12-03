@@ -31,7 +31,7 @@ module kbs.frontoffice.activity.home.plugin {
     opens dev.webfx.kit.css.home;
 
     // Provided services
-    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.home.HomeRouting.HomeUiRoute;
-    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.home.HomeRouting.RouteToHomeRequestEmitter;
+    provides dev.webfx.stack.routing.uirouter.UiRoute with org.kadampabookings.kbs.frontoffice.activities.home.FrontOfficeHomeRouting.HomeUiRoute;
+    provides dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter with org.kadampabookings.kbs.frontoffice.activities.home.FrontOfficeHomeRouting.RouteToHomeRequestEmitter;
 
 }

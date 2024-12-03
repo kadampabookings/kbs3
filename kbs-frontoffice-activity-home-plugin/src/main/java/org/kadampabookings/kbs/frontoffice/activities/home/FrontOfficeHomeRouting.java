@@ -11,7 +11,7 @@ import dev.webfx.stack.routing.uirouter.operations.RoutePushRequest;
 import dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter;
 import dev.webfx.stack.ui.operation.HasOperationCode;
 
-public final class HomeRouting {
+public final class FrontOfficeHomeRouting {
 
     private final static String PATH = "/home";
     private final static String OPERATION_CODE = "RouteToHome";
@@ -27,9 +27,9 @@ public final class HomeRouting {
         }
 
         public static UiRoute<?> uiRoute() {
-            return UiRoute.create(HomeRouting.getPath()
+            return UiRoute.create(FrontOfficeHomeRouting.getPath()
                     , false
-                    , HomeActivity::new
+                    , FrontOfficeHomeActivity::new
                     , ViewDomainActivityContextFinal::new
             );
         }
@@ -48,7 +48,7 @@ public final class HomeRouting {
 
         @Override
         public Object getI18nKey() {
-            return HomeI18nKeys.Home;
+            return FrontOfficeHomeI18nKeys.Home;
         }
     }
 

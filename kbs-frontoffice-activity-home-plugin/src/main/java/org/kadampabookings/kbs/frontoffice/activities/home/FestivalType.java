@@ -7,11 +7,11 @@ import java.util.Arrays;
  */
 public enum FestivalType {
 
-    SPRING_FESTIVAL(35, HomeI18nKeys.SpringFestival, "spring-festival"),
+    SPRING_FESTIVAL(35, FrontOfficeHomeI18nKeys.SpringFestival, "spring-festival"),
 
-    SUMMER_FESTIVAL(36, HomeI18nKeys.SummerFestival, "summer-festival"),
+    SUMMER_FESTIVAL(36, FrontOfficeHomeI18nKeys.SummerFestival, "summer-festival"),
 
-    FALL_FESTIVAL(37, HomeI18nKeys.FallFestival, "fall-festival");
+    FALL_FESTIVAL(37, FrontOfficeHomeI18nKeys.FallFestival, "fall-festival");
 
     private final int typeId;
     private final String i18nKey;

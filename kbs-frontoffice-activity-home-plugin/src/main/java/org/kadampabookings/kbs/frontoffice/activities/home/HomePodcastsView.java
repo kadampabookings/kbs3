@@ -18,7 +18,7 @@ final class HomePodcastsView {
 
     static Node createView(BrowsingHistory browsingHistory) {
 
-        Label podcastsHeaderLabel = I18nControls.newLabel(HomeI18nKeys.PodcastsHeader);
+        Label podcastsHeaderLabel = I18nControls.newLabel(FrontOfficeHomeI18nKeys.PodcastsHeader);
         podcastsHeaderLabel.getStyleClass().setAll("podcasts-header");
 
         Button seeAllButton = I18nControls.newButton("See all");
@@ -28,12 +28,12 @@ final class HomePodcastsView {
         });
 
         ColumnsPane columnsPane = new ColumnsPane(16, 16,
-            PodcastsCard.createCard(HomeI18nKeys.PodcastsCard1Title, HomeI18nKeys.PodcastsCard1Content),
-            PodcastsCard.createCard(HomeI18nKeys.PodcastsCard2Title, HomeI18nKeys.PodcastsCard2Content),
-            PodcastsCard.createCard(HomeI18nKeys.PodcastsCard3Title, HomeI18nKeys.PodcastsCard3Content),
-            PodcastsCard.createCard(HomeI18nKeys.PodcastsCard4Title, HomeI18nKeys.PodcastsCard4Content),
-            PodcastsCard.createCard(HomeI18nKeys.PodcastsCard5Title, HomeI18nKeys.PodcastsCard5Content),
-            PodcastsCard.createCard(HomeI18nKeys.PodcastsCard6Title, HomeI18nKeys.PodcastsCard6Content)
+            PodcastsCard.createCard(FrontOfficeHomeI18nKeys.PodcastsCard1Title, FrontOfficeHomeI18nKeys.PodcastsCard1Content),
+            PodcastsCard.createCard(FrontOfficeHomeI18nKeys.PodcastsCard2Title, FrontOfficeHomeI18nKeys.PodcastsCard2Content),
+            PodcastsCard.createCard(FrontOfficeHomeI18nKeys.PodcastsCard3Title, FrontOfficeHomeI18nKeys.PodcastsCard3Content),
+            PodcastsCard.createCard(FrontOfficeHomeI18nKeys.PodcastsCard4Title, FrontOfficeHomeI18nKeys.PodcastsCard4Content),
+            PodcastsCard.createCard(FrontOfficeHomeI18nKeys.PodcastsCard5Title, FrontOfficeHomeI18nKeys.PodcastsCard5Content),
+            PodcastsCard.createCard(FrontOfficeHomeI18nKeys.PodcastsCard6Title, FrontOfficeHomeI18nKeys.PodcastsCard6Content)
         );
         columnsPane.setFixedColumnCount(3);
 

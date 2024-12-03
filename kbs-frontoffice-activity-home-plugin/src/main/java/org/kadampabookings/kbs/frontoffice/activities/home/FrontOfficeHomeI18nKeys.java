@@ -1,7 +1,7 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
-public interface HomeI18nKeys {
+public interface FrontOfficeHomeI18nKeys {
 
     String Home = "Home";
     String FestivalsHeader = "FestivalsHeader";

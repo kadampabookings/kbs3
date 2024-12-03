@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.shared.entities.Event;
 
-final class HomeActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
+final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
     private final ObservableList<Event> festivals = FXCollections.observableArrayList();
 
@@ -55,10 +55,10 @@ final class HomeActivity extends ViewDomainActivityBase implements OperationActi
         Hyperlink booksLink    = routingHyperlink(BooksRouting.RouteToBooksRequest::new);
 */
 
-        Label festivalsHeaderLabel = I18nControls.newLabel(HomeI18nKeys.FestivalsHeader);
+        Label festivalsHeaderLabel = I18nControls.newLabel(FrontOfficeHomeI18nKeys.FestivalsHeader);
         festivalsHeaderLabel.getStyleClass().setAll("festivals-header");
 
-        Hyperlink moreEventsLabel = I18nControls.newHyperlink(HomeI18nKeys.MoreEvents);
+        Hyperlink moreEventsLabel = I18nControls.newHyperlink(FrontOfficeHomeI18nKeys.MoreEvents);
         moreEventsLabel.getStyleClass().setAll("more-events");
 
         VBox container = new VBox(64,
