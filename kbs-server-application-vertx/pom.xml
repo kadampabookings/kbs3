@@ -18,11 +18,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.kadampabookings</groupId>
             <artifactId>kbs-server-application</artifactId>
             <version>1.0.0-SNAPSHOT</version>
