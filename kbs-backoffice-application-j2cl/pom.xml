@@ -35,6 +35,12 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-base-client-css</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-base-client-entities</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -415,6 +421,12 @@
                                             <includes>javafx/scene/control/skin/checkbox/</includes>
                                         </artifactItem>
                                         <artifactItem>
+                                            <groupId>one.modality</groupId>
+                                            <artifactId>modality-base-client-css</artifactId>
+                                            <version>1.0.0-SNAPSHOT</version>
+                                            <includes>dev/webfx/kit/css/fonts/vollkornsc/ , dev/webfx/kit/css/fonts/montserrat/ , dev/webfx/kit/css/fonts/roboto/ , dev/webfx/kit/css/fonts/poppins/</includes>
+                                        </artifactItem>
+                                        <artifactItem>
                                             <groupId>dev.webfx</groupId>
                                             <artifactId>webfx-stack-ui-controls</artifactId>
                                             <version>0.1.0-SNAPSHOT</version>
@@ -455,12 +467,6 @@
                                             <artifactId>modality-base-client-brand</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
                                             <includes>one/modality/base/client/brand/</includes>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>one.modality</groupId>
-                                            <artifactId>modality-base-client-css</artifactId>
-                                            <version>1.0.0-SNAPSHOT</version>
-                                            <includes>dev/webfx/kit/css/fonts/montserrat/ , dev/webfx/kit/css/fonts/roboto/ , dev/webfx/kit/css/fonts/poppins/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>dev.webfx</groupId>

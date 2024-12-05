@@ -6,7 +6,7 @@
 }
 
 .festival-thumbnail, .home-podcasts {
-    -fx-font-family: -poppins-font-family;
+    -fx-font-family: "Poppins"; /*-poppins-font-family;*/
     font-weight: 400;
     font-size: 36px;
     -fx-background-radius: 8px, 8px;
@@ -27,7 +27,7 @@
 }
 
 .festival-thumbnail Label.festival-name {
-    -fx-font-family: -vollkorn-font-family;
+    -fx-font-family: "Vollkorn SC"; /* -vollkorn-font-family; */
     -fx-font-weight: 500;
     -fx-font-size: 33px;
 }
@@ -58,7 +58,7 @@
 }
 
 .festival-thumbnail Button {
-    -fx-font-family: -poppins-font-family;
+    -fx-font-family: "Poppins"; /*-poppins-font-family;*/
     -fx-font-weight: 600;
     -fx-font-size: 16px;
     -fx-text-fill: white;
@@ -79,7 +79,7 @@
 }
 
 .more-events {
-    -fx-font-family: -poppins-font-family;
+    -fx-font-family: "Poppins"; /* -poppins-font-family; */
     -fx-font-size: 16px;
     -fx-text-fill: -brand-main-color;
 }

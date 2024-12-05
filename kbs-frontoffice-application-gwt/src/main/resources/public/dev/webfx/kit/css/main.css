@@ -1013,7 +1013,7 @@ btn-white {
  .livestream h4 {
     font-family: "Poppins", sans-serif;
     font-size: 24px;
-    font-weight: semi-bold;
+    font-weight: 600; /* semi-bold */
     text-align: left; /* Aligns text */
  }
 
@@ -1141,7 +1141,7 @@ progress::-moz-progress-bar { /* For FireFox */
     background-color: var(--brand-main-background-color);
 }
 
-/*===== modality-frontoffice-home-web@main.css from kbs-frontoffice-activity-home-plugin =====*/
+/*===== kbs-frontoffice-home-web@main.css from kbs-frontoffice-activity-home-plugin =====*/
 
 :root {
     --spring-festival-color: #159428;
