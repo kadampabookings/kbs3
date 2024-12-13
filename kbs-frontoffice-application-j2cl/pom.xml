@@ -488,12 +488,6 @@
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>one.modality</groupId>
-                                            <artifactId>modality-base-frontoffice-activity-account-plugin</artifactId>
-                                            <version>1.0.0-SNAPSHOT</version>
-                                            <includes>one/modality/base/frontoffice/activities/account/images/</includes>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>one.modality</groupId>
                                             <artifactId>modality-event-frontoffice-activity-booking-plugin</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
                                             <includes>one/modality/event/frontoffice/activities/booking/map/</includes>

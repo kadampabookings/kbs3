@@ -214,20 +214,6 @@
     <source path="one/modality/base/client/util/log"/>
     <source path="one/modality/base/client/util/masterslave"/>
     <source path="one/modality/base/client/util/routing"/>
-    <!--========================< modality-base-client-validation >=========================-->
-    <source path="one/modality/base/client/validation"/>
-    <!--===============< modality-base-frontoffice-activity-account-plugin >================-->
-    <source path="one/modality/base/frontoffice/activities/account"/>
-    <source path="one/modality/base/frontoffice/activities/account/friendsfamily"/>
-    <source path="one/modality/base/frontoffice/activities/account/friendsfamily/edit"/>
-    <source path="one/modality/base/frontoffice/activities/account/personalinfo"/>
-    <source path="one/modality/base/frontoffice/activities/account/routing"/>
-    <source path="one/modality/base/frontoffice/activities/account/settings"/>
-    <source path="one/modality/base/frontoffice/operations/routes/account"/>
-    <resource path="one/modality/base/frontoffice/activities/account/images"/>
-    <public path="" includes="one/modality/base/frontoffice/activities/account/images/"/>
-    <!--================< modality-base-frontoffice-activity-alerts-plugin >================-->
-    <source path="one/modality/base/frontoffice/activities/alerts"/>
     <!--=====================< modality-base-frontoffice-application >======================-->
     <source path="one/modality/base/frontoffice/application"/>
     <!--==================< modality-base-frontoffice-mainframe-activity >==================-->
@@ -277,6 +263,10 @@
     <source path="one/modality/crm/client/controls/personaldetails"/>
     <!--=======================< modality-crm-client-profile-plugin >=======================-->
     <source path="one/modality/crm/client/profile"/>
+    <!--=============< modality-crm-frontoffice-activity-createaccount-plugin >=============-->
+    <source path="one/modality/crm/frontoffice/activities/createaccount"/>
+    <!--==============< modality-crm-frontoffice-activity-userprofile-plugin >==============-->
+    <source path="one/modality/crm/frontoffice/activities/userprofile"/>
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
@@ -910,6 +900,7 @@
     <!--========================< webfx-stack-ui-operation-action >=========================-->
     <source path="dev/webfx/stack/ui/operation/action"/>
     <!--===========================< webfx-stack-ui-validation >============================-->
+    <source path="dev/webfx/stack/ui/validation"/>
     <source path="dev/webfx/stack/ui/validation/controlsfx/control/decoration"/>
     <source path="dev/webfx/stack/ui/validation/controlsfx/impl"/>
     <source path="dev/webfx/stack/ui/validation/controlsfx/impl/skin"/>
