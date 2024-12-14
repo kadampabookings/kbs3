@@ -295,8 +295,6 @@
     <source path="one/modality/base/client/util/log"/>
     <source path="one/modality/base/client/util/masterslave"/>
     <source path="one/modality/base/client/util/routing"/>
-    <!--========================< modality-base-client-validation >=========================-->
-    <source path="one/modality/base/client/validation"/>
     <!--==========================< modality-base-shared-context >==========================-->
     <source path="one/modality/base/shared/context"/>
     <source path="one/modality/base/shared/context/serial"/>
@@ -341,6 +339,8 @@
     <source path="one/modality/crm/client/controls/personaldetails"/>
     <!--=======================< modality-crm-client-profile-plugin >=======================-->
     <source path="one/modality/crm/client/profile"/>
+    <!--=============< modality-crm-frontoffice-activity-createaccount-plugin >=============-->
+    <source path="one/modality/crm/frontoffice/activities/createaccount"/>
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
@@ -1015,6 +1015,7 @@
     <!--========================< webfx-stack-ui-operation-action >=========================-->
     <source path="dev/webfx/stack/ui/operation/action"/>
     <!--===========================< webfx-stack-ui-validation >============================-->
+    <source path="dev/webfx/stack/ui/validation"/>
     <source path="dev/webfx/stack/ui/validation/controlsfx/control/decoration"/>
     <source path="dev/webfx/stack/ui/validation/controlsfx/impl"/>
     <source path="dev/webfx/stack/ui/validation/controlsfx/impl/skin"/>
