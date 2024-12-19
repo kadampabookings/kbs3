@@ -893,6 +893,16 @@ CollapsePane.menu-bar.lang-menu-bar {
      -fx-font-size: 14px;
 }
 
+/*===== modality-front-office-userprofile-javafx@main.css from modality-crm-frontoffice-activity-userprofile-plugin =====*/
+
+.user-profile-modal-window {
+    -fx-background-image: none;
+    -fx-background-color: rgba(255, 255, 255,1);
+    -fx-background-radius: 20px;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(gaussian, lightgray, 10, 0, 0, 0);
+}
 /*===== modality-event-frontoffice-activities-audiorecordings-javafx@main.css from modality-event-frontoffice-activity-audiorecordings-plugin =====*/
 
 .audio-library .h3 {
