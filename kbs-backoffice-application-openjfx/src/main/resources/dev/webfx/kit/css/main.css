@@ -863,19 +863,6 @@ Text, Label, Button, TextField {
     -fx-background-color: -bootstrap-grey1;
     -fx-border-color: black;
 }
-/*===== one-modality-crm-frontoffice-activities-createaccount-javafx@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
-
-/* We don't want the default white background for WebFX Extras material text fields in the login window */
-.user-account * {
-    -webfx-material-background-color: transparent;
-    -webfx-material-idle-text-fill: black;
-}
-
-.user-account Text.material-label {
-     -fx-font-weight: 900;
-     -fx-font-size: 14px;
-}
-
 /*===== modality-event-client-recurringevents-javafx@main.css from modality-event-client-recurringevents =====*/
 
 * {

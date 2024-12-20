@@ -339,8 +339,6 @@
     <source path="one/modality/crm/client/controls/personaldetails"/>
     <!--=======================< modality-crm-client-profile-plugin >=======================-->
     <source path="one/modality/crm/client/profile"/>
-    <!--=============< modality-crm-frontoffice-activity-createaccount-plugin >=============-->
-    <source path="one/modality/crm/frontoffice/activities/createaccount"/>
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
