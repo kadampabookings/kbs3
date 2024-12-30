@@ -593,6 +593,44 @@ Switch.webfx-switch Circle.knob {
 }
 
 
+/*===== webfx-extras-time-pickers-javafx@main.css from webfx-extras-time-pickers =====*/
+
+* {
+    -webfx-time-pickers-blue1-color: #0096D6;
+    -webfx-time-pickers-blue2-color: #afe7ff;
+    -webfx-time-pickers-gray-color: #cccccc;
+
+    -webfx-time-pickers-arrow-color: -webfx-time-pickers-blue1-color;
+    -webfx-time-pickers-month-color: -webfx-time-pickers-blue1-color;
+    -webfx-time-pickers-border-color: -webfx-time-pickers-gray-color;
+    -webfx-time-pickers-date-background-color: -webfx-time-pickers-gray-color;
+    -webfx-time-pickers-selected-date-background-color: -webfx-time-pickers-blue2-color;
+}
+
+.webfx-datepicker.border {
+    -fx-border-color: -webfx-time-pickers-border-color;
+    -fx-border-radius: 10px;
+}
+
+.webfx-datepicker .date-selected {
+    -fx-background-color: -webfx-time-pickers-selected-date-background-color;
+    -fx-background-radius: 10px;
+}
+
+.webfx-datepicker .date-secondary {
+    -fx-background-color: -webfx-time-pickers-date-background-color;
+    -fx-background-radius: 10px;
+}
+
+.webfx-datepicker .arrow {
+    -fx-fill: -webfx-time-pickers-arrow-color;
+}
+
+.webfx-datepicker .month {
+    -fx-text-fill: -webfx-time-pickers-month-color;
+    -fx-font-size: 14px;
+}
+
 /*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid-peers-openjfx =====*/
 
 VisualGrid {
@@ -903,6 +941,12 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-border-radius: 20px;
     -fx-effect: dropshadow(gaussian, lightgray, 10, 0, 0, 0);
 }
+
+.user-profile .material-label { /* is actually a JavaFX Text */
+     -fx-fill: #000000;
+     -fx-font-weight: 800;
+}
+
 /*===== modality-event-frontoffice-activities-audiorecordings-javafx@main.css from modality-event-frontoffice-activity-audiorecordings-plugin =====*/
 
 .audio-library .h3 {
