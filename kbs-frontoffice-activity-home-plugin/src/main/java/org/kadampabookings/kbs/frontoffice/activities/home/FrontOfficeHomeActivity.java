@@ -2,45 +2,22 @@ package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.panes.ColumnsPane;
 import dev.webfx.kit.util.properties.ObservableLists;
-import dev.webfx.platform.console.Console;
-import dev.webfx.platform.uischeduler.UiScheduler;
-import dev.webfx.platform.util.collection.Collections;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
-import dev.webfx.stack.orm.entity.EntityStore;
-import dev.webfx.stack.orm.entity.EntityStoreQuery;
 import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
-import one.modality.base.shared.entities.Event;
+import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 
 final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
-    private final ObservableList<Event> festivals = FXCollections.observableArrayList();
-
     @Override
     protected void startLogic() {
-        // Creating our own entity store to hold the loaded data without interfering with other activities
-        EntityStore entityStore = EntityStore.create(getDataSourceModel()); // Activity datasource model is available at this point
-        String select = "select name,type.name,startDate,endDate from Event where type in (?) and name not like '%Online%' order by startDate desc limit 1";
-        entityStore.executeQueryBatch(
-            new EntityStoreQuery(select, new Object[] { FestivalType.SPRING_FESTIVAL.getTypeId() }),
-            new EntityStoreQuery(select, new Object[] { FestivalType.SUMMER_FESTIVAL.getTypeId() }),
-            new EntityStoreQuery(select, new Object[] { FestivalType.FALL_FESTIVAL.getTypeId() }))
-            .onFailure(Console::log)
-            .onSuccess(festivalsLists -> UiScheduler.runInUiThread(() -> {
-                festivals.setAll(
-                    (Event) Collections.first(festivalsLists[0]), // Spring Festival
-                    (Event) Collections.first(festivalsLists[1]), // Summer Festival
-                    (Event) Collections.first(festivalsLists[2])  // Fall Festival
-                );
-            }));
+        FXFestivals.init();
     }
 
     @Override
@@ -69,7 +46,7 @@ final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements Op
         );
         container.setAlignment(Pos.TOP_CENTER);
 
-        ObservableLists.bindConverted(columnsPane.getChildren(), festivals, festival ->
+        ObservableLists.bindConverted(columnsPane.getChildren(), FXFestivals.lastFestivals(), festival ->
             new FestivalThumbnail(festival).getView());
 
         FOPageUtil.restrictToMaxPageWidth(columnsPane);

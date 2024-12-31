@@ -5,9 +5,6 @@ public interface FrontOfficeHomeI18nKeys {
 
     String Home = "Home";
     String FestivalsHeader = "FestivalsHeader";
-    String SpringFestival = "SpringFestival";
-    String SummerFestival = "SummerFestival";
-    String FallFestival = "FallFestival";
     String MoreEvents = "MoreEvents";
     String PodcastsHeader = "PodcastsHeader";
     String PodcastsCard1Title = "PodcastsCard1Title";
