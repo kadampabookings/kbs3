@@ -27,23 +27,26 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
     @Source("dev/webfx/stack/i18n/en.json")
     TextResource r6();
 
-    @Source("dev/webfx/stack/i18n/fr.properties")
+    @Source("dev/webfx/stack/i18n/es.properties")
     TextResource r7();
 
-    @Source("dev/webfx/stack/i18n/pt.properties")
+    @Source("dev/webfx/stack/i18n/fr.properties")
     TextResource r8();
 
-    @Source("dev/webfx/stack/i18n/sp.properties")
+    @Source("dev/webfx/stack/i18n/pt.properties")
     TextResource r9();
 
-    @Source("dev/webfx/stack/i18n/vi.properties")
+    @Source("dev/webfx/stack/i18n/sp.properties")
     TextResource r10();
 
-    @Source("one/modality/base/shared/domainmodel/DomainModelSnapshot.json")
+    @Source("dev/webfx/stack/i18n/vi.properties")
     TextResource r11();
 
-    @Source("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js")
+    @Source("one/modality/base/shared/domainmodel/DomainModelSnapshot.json")
     TextResource r12();
+
+    @Source("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js")
+    TextResource r13();
 
 
 
@@ -55,12 +58,13 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
             registerResource("dev/webfx/stack/i18n/ca.properties", R.r4());
             registerResource("dev/webfx/stack/i18n/de.properties", R.r5());
             registerResource("dev/webfx/stack/i18n/en.json", R.r6());
-            registerResource("dev/webfx/stack/i18n/fr.properties", R.r7());
-            registerResource("dev/webfx/stack/i18n/pt.properties", R.r8());
-            registerResource("dev/webfx/stack/i18n/sp.properties", R.r9());
-            registerResource("dev/webfx/stack/i18n/vi.properties", R.r10());
-            registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", R.r11());
-            registerResource("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js", R.r12());
+            registerResource("dev/webfx/stack/i18n/es.properties", R.r7());
+            registerResource("dev/webfx/stack/i18n/fr.properties", R.r8());
+            registerResource("dev/webfx/stack/i18n/pt.properties", R.r9());
+            registerResource("dev/webfx/stack/i18n/sp.properties", R.r10());
+            registerResource("dev/webfx/stack/i18n/vi.properties", R.r11());
+            registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", R.r12());
+            registerResource("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js", R.r13());
 
         }
     }
