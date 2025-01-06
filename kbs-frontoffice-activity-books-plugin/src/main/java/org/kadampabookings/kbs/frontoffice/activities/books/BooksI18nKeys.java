@@ -3,9 +3,9 @@ package org.kadampabookings.kbs.frontoffice.activities.books;
 
 public interface BooksI18nKeys {
 
-    String Books = "Books";
-    String FreeDownload = "FreeDownload";
     String Order = "Order";
     String AudioExtracts = "AudioExtracts";
+    String FreeDownload = "FreeDownload";
+    String Books = "Books";
 
 }

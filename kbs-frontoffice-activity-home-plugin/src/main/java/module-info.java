@@ -3,16 +3,14 @@
 module kbs.frontoffice.activity.home.plugin {
 
     // Direct dependencies modules
-    requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
+    requires kbs.client.festivaltypes;
     requires kbs.frontoffice.activity.podcasts.plugin;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires webfx.extras.panes;
     requires webfx.kit.util;
-    requires webfx.platform.console;
-    requires webfx.platform.uischeduler;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;

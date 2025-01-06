@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import one.modality.base.shared.entities.Event;
+import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
 /**
  * @author Bruno Salmon
@@ -31,7 +32,7 @@ final class FestivalThumbnail {
     }
 
     Node getView() {
-        Label festivalName = I18nControls.newLabel("[" + festivalType.getI18nKey() + "] " + festival.getStartDate().getYear());
+        Label festivalName = I18nControls.newLabel("[" + festivalType.getLongI18nKey() + "] " + festival.getStartDate().getYear());
         festivalName.setWrapText(true);
         festivalName.setTextAlignment(TextAlignment.CENTER);
         festivalName.getStyleClass().setAll("festival-name");
