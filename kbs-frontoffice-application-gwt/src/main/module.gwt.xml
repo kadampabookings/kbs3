@@ -90,6 +90,8 @@
     <inherits name="com.google.gwt.user.User"/>
     <!--=================================< java-nio-emul >==================================-->
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
+    <!--============================< kbs-client-festivaltypes >============================-->
+    <source path="org/kadampabookings/kbs/client/festivaltypes"/>
     <!--=====================< kbs-frontoffice-activity-books-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/books"/>
     <resource path="org/kadampabookings/kbs/frontoffice/activities/books"/>
