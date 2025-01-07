@@ -3,7 +3,7 @@
 /**
  * A button in the back-office header to allow managers to create events.
  */
-module kbs.backoffice.header.eventcreator.plugin {
+module kbs.backoffice.header.festivalcreator.plugin {
 
     // Direct dependencies modules
     requires javafx.base;
@@ -38,9 +38,9 @@ module kbs.backoffice.header.eventcreator.plugin {
     requires webfx.stack.ui.validation;
 
     // Exported packages
-    exports one.modality.event.backoffice.events.eventcreator;
+    exports org.kadampabookings.kbs.backoffice.festivalcreator;
 
     // Provided services
-    provides one.modality.base.backoffice.mainframe.headernode.MainFrameHeaderNodeProvider with one.modality.event.backoffice.events.eventcreator.MainFrameHeaderEventCreatorProvider;
+    provides one.modality.base.backoffice.mainframe.headernode.MainFrameHeaderNodeProvider with org.kadampabookings.kbs.backoffice.festivalcreator.MainFrameHeaderFestivalCreatorProvider;
 
 }

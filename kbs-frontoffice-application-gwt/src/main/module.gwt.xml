@@ -113,8 +113,8 @@
     <public path="" includes="images/events/"/>
     <resource path="images/organizations"/>
     <public path="" includes="images/organizations/"/>
-    <resource path="org/kadampabookings/frontoffice/booking"/>
-    <public path="" includes="org/kadampabookings/frontoffice/booking/"/>
+    <resource path="org/kadampabookings/kbs/frontoffice/booking"/>
+    <public path="" includes="org/kadampabookings/kbs/frontoffice/booking/"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->

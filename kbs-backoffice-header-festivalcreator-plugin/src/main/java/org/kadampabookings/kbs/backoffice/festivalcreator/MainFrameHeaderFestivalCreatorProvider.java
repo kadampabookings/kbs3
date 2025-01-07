@@ -1,4 +1,4 @@
-package one.modality.event.backoffice.events.eventcreator;
+package org.kadampabookings.kbs.backoffice.festivalcreator;
 
 import dev.webfx.extras.panes.ColumnsPane;
 import dev.webfx.extras.panes.ScalePane;
@@ -48,14 +48,14 @@ import java.time.LocalDate;
 /**
  * @author Bruno Salmon
  */
-public class MainFrameHeaderEventCreatorProvider implements MainFrameHeaderNodeProvider {
+public class MainFrameHeaderFestivalCreatorProvider implements MainFrameHeaderNodeProvider {
 
-    private final Button createHeaderButton = Bootstrap.successButton(I18nControls.newButton(EventCreatorI18nKeys.CreateEvent));
+    private final Button createHeaderButton = Bootstrap.successButton(I18nControls.newButton(FestivalCreatorI18nKeys.CreateFestival));
     private ToggleGroup toggleGroup; // Not final because renewing it on each dialog, so old listeners are not triggered anymore
 
     @Override
     public String getName() {
-        return "eventCreator";
+        return "festivalCreator";
     }
 
     @Override
@@ -73,9 +73,9 @@ public class MainFrameHeaderEventCreatorProvider implements MainFrameHeaderNodeP
 
     private void openNKTFestivalCreatorDialog() {
         toggleGroup = new ToggleGroup();
-        ToggleButton springButton = createEventTypeButton(EventCreatorI18nKeys.SpringCard, FestivalType.SPRING_FESTIVAL);
-        ToggleButton summerButton = createEventTypeButton(EventCreatorI18nKeys.SummerCard, FestivalType.SUMMER_FESTIVAL);
-        ToggleButton fallButton = createEventTypeButton(EventCreatorI18nKeys.FallCard, FestivalType.FALL_FESTIVAL);
+        ToggleButton springButton = createEventTypeButton(FestivalCreatorI18nKeys.SpringCard, FestivalType.SPRING_FESTIVAL);
+        ToggleButton summerButton = createEventTypeButton(FestivalCreatorI18nKeys.SummerCard, FestivalType.SUMMER_FESTIVAL);
+        ToggleButton fallButton = createEventTypeButton(FestivalCreatorI18nKeys.FallCard, FestivalType.FALL_FESTIVAL);
         HBox eventTypeBar = new HBox(10, springButton, summerButton, fallButton);
         Button cancelButton = Bootstrap.secondaryButton(I18nControls.newButton(ModalityI18nKeys.Cancel));
         LayoutUtil.setMinWidthToPref(cancelButton); // to avoid the button to stretch (will be scaled down instead)
@@ -86,10 +86,10 @@ public class MainFrameHeaderEventCreatorProvider implements MainFrameHeaderNodeP
         ));
         buttonBar.setAlignment(Pos.CENTER);
         //TextField eventNameTextField = new TextField();
-        DateField startDateField = createDateField(EventCreatorI18nKeys.StartDate);
-        DateField endDateField = createDateField(EventCreatorI18nKeys.EndDate);
+        DateField startDateField = createDateField(FestivalCreatorI18nKeys.StartDate);
+        DateField endDateField = createDateField(FestivalCreatorI18nKeys.EndDate);
         VBox mainContent = new VBox(80,
-            I18nControls.newLabel(EventCreatorI18nKeys.SelectEventType),
+            I18nControls.newLabel(FestivalCreatorI18nKeys.SelectFestivalType),
             eventTypeBar,
             /*I18nControls.newLabel(EventCreatorI18nKeys.NameEvent),
             MaterialUtil.makeMaterial(eventNameTextField),*/
@@ -206,7 +206,7 @@ public class MainFrameHeaderEventCreatorProvider implements MainFrameHeaderNodeP
     private ToggleButton createEventTypeButton(String cardI18nKey, FestivalType festivalType) {
         // card18nKey has a graphic and a text such as "[Spring] {0}" where {0} is supposed to be the year of the next festival to create
         ObservableValue<Integer> nextYearProperty = FXProperties.compute(FXFestivals.lastFestivalProperty(festivalType),
-            MainFrameHeaderEventCreatorProvider::nextFestivalYear);
+            MainFrameHeaderFestivalCreatorProvider::nextFestivalYear);
         ToggleButton button = I18nControls.newToggleButton(cardI18nKey, nextYearProperty);
         button.setContentDisplay(ContentDisplay.TOP);
         button.setGraphicTextGap(20);

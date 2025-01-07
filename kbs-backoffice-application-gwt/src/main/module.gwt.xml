@@ -157,8 +157,8 @@
     <inherits name="com.google.gwt.user.User"/>
     <!--=================================< java-nio-emul >==================================-->
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
-    <!--===================< kbs-backoffice-header-eventcreator-plugin >====================-->
-    <source path="one/modality/event/backoffice/events/eventcreator"/>
+    <!--==================< kbs-backoffice-header-festivalcreator-plugin >==================-->
+    <source path="org/kadampabookings/kbs/backoffice/festivalcreator"/>
     <!--============================< kbs-client-festivaltypes >============================-->
     <source path="org/kadampabookings/kbs/client/festivaltypes"/>
     <!--================< modality-base-backoffice-activity-filters-plugin >================-->
