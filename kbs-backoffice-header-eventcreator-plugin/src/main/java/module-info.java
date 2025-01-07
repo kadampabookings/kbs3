@@ -14,19 +14,27 @@ module kbs.backoffice.header.eventcreator.plugin {
     requires modality.base.backoffice.mainframe.headernode;
     requires modality.base.client.i18n;
     requires modality.base.client.mainframe.fx;
+    requires modality.base.shared.entities;
     requires modality.crm.backoffice.organization.fx;
+    requires modality.event.backoffice.activity.pricing.plugin;
+    requires modality.event.client.event.fx;
     requires webfx.extras.panes;
     requires webfx.extras.styles.bootstrap;
     requires webfx.extras.styles.materialdesign;
+    requires webfx.extras.time.pickers;
     requires webfx.extras.util.layout;
     requires webfx.kit.util;
+    requires webfx.platform.console;
     requires webfx.platform.util;
+    requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;
     requires webfx.stack.i18n.controls;
+    requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
     requires webfx.stack.ui.controls;
     requires webfx.stack.ui.dialog;
+    requires webfx.stack.ui.operation;
     requires webfx.stack.ui.validation;
 
     // Exported packages
