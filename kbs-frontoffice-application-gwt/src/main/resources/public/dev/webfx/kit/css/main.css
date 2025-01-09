@@ -689,6 +689,7 @@ fx-switch.webfx-switch fx-circle.knob {
     --webfx-time-pickers-date-background-color: var(--webfx-time-pickers-gray-color);
     --webfx-time-pickers-selected-date-background-color: var(--webfx-time-pickers-blue2-color);
     --webfx-time-pickers-unselectable-date-background-color: var(--webfx-time-pickers-gray-color);
+    --webfx-time-pickers-background-color: #FFFFFF;
 }
 
 .webfx-datepicker.border > fx-border {
@@ -719,6 +720,10 @@ fx-switch.webfx-switch fx-circle.knob {
 .webfx-datepicker .month {
     color: var(--webfx-time-pickers-month-color);
     font-size: 14px;
+}
+
+.webfx-datepicker .background {
+    background-color: var(--webfx-time-pickers-background-color);
 }
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
 
