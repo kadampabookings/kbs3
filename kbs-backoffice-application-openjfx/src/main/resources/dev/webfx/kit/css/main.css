@@ -606,6 +606,7 @@ Switch.webfx-switch Circle.knob {
     -webfx-time-pickers-date-background-color: -webfx-time-pickers-gray-color;
     -webfx-time-pickers-selected-date-background-color: -webfx-time-pickers-blue2-color;
     -webfx-time-pickers-unselectable-date-background-color: -webfx-time-pickers-gray-color;
+    -webfx-time-pickers-background-color: #FFFFFF;
 }
 
 .webfx-datepicker.border {
@@ -635,6 +636,10 @@ Switch.webfx-switch Circle.knob {
 .webfx-datepicker .month {
     -fx-text-fill: -webfx-time-pickers-month-color;
     -fx-font-size: 14px;
+}
+
+.webfx-datepicker .background {
+    -fx-background-color: -webfx-time-pickers-background-color;
 }
 
 /*===== webfx-extras-visual-charts-javafx@main.css from webfx-extras-visual-charts-peers-openjfx =====*/
@@ -1106,5 +1111,93 @@ Text, Label, Button, TextField {
 .booking-total-count {
     -fx-text-fill: #FF0404;
     -fx-font-size: 9px;
+}
+
+.recurring-event .webfx-datepicker .background {
+    -fx-background-color: none;
+}
+
+
+/*===== modality-backoffice-eventcreator-javafx@main.css from kbs-backoffice-header-eventcreator-plugin =====*/
+
+* {
+    -kbs-spring-color: #41BA4D;
+    -kbs-summer-color: #F7931E;
+    -kbs-fall-color: #8264A0;
+}
+
+.event-creator-dialog {
+    -fx-font-family: Montserrat, sans-serif;
+    -fx-font-size: 24px;
+}
+
+.event-creator-dialog Label {
+    -fx-text-fill: #838788;
+}
+
+.event-creator-dialog ToggleButton {
+    -fx-background-color: white;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, lightgray, 11, 0, 4, 4);
+}
+
+.event-creator-dialog ToggleButton.spring-festival {
+    -fx-text-fill: -kbs-spring-color;
+}
+
+.event-creator-dialog ToggleButton.spring-festival SVGPath {
+    -fx-fill: -kbs-spring-color;
+}
+
+.event-creator-dialog ToggleButton.summer-festival {
+    -fx-text-fill: -kbs-summer-color;
+}
+
+.event-creator-dialog ToggleButton.summer-festival SVGPath {
+    -fx-fill: -kbs-summer-color;
+}
+
+.event-creator-dialog ToggleButton.fall-festival {
+    -fx-text-fill: -kbs-fall-color;
+}
+
+.event-creator-dialog ToggleButton.fall-festival SVGPath {
+    -fx-fill: -kbs-fall-color;
+}
+
+.event-creator-dialog ToggleButton.spring-festival:selected {
+    -fx-background-color: -kbs-spring-color;
+}
+
+.event-creator-dialog ToggleButton.spring-festival:selected SVGPath {
+    -fx-fill: white;
+}
+
+.event-creator-dialog ToggleButton.spring-festival:selected {
+    -fx-text-fill: white;
+}
+
+.event-creator-dialog ToggleButton.summer-festival:selected {
+    -fx-background-color: -kbs-summer-color;
+}
+
+.event-creator-dialog ToggleButton.summer-festival:selected SVGPath {
+    -fx-fill: white;
+}
+
+.event-creator-dialog ToggleButton.summer-festival:selected {
+    -fx-text-fill: white;
+}
+
+.event-creator-dialog ToggleButton.fall-festival:selected {
+    -fx-background-color: -kbs-fall-color;
+}
+
+.event-creator-dialog ToggleButton.fall-festival:selected SVGPath {
+    -fx-fill: white;
+}
+
+.event-creator-dialog ToggleButton.fall-festival:selected {
+    -fx-text-fill: white;
 }
 

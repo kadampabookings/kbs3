@@ -645,6 +645,7 @@ fx-switch.webfx-switch fx-circle.knob {
     --webfx-time-pickers-date-background-color: var(--webfx-time-pickers-gray-color);
     --webfx-time-pickers-selected-date-background-color: var(--webfx-time-pickers-blue2-color);
     --webfx-time-pickers-unselectable-date-background-color: var(--webfx-time-pickers-gray-color);
+    --webfx-time-pickers-background-color: #FFFFFF;
 }
 
 .webfx-datepicker.border > fx-border {
@@ -675,6 +676,10 @@ fx-switch.webfx-switch fx-circle.knob {
 .webfx-datepicker .month {
     color: var(--webfx-time-pickers-month-color);
     font-size: 14px;
+}
+
+.webfx-datepicker .background {
+    background-color: var(--webfx-time-pickers-background-color);
 }
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
 
@@ -1224,4 +1229,56 @@ tr.branch, .grid-row.branch {
 .booking-total-count {
     color: #FF0404;
     font-size: 9px;
+}
+
+.webfx-datepicker .background {
+    background-color: transparent;
+}
+
+/*===== modality-backoffice-eventcreator-web@main.css from kbs-backoffice-header-eventcreator-plugin =====*/
+
+:root {
+    --kbs-spring-color: #41BA4D;
+    --kbs-summer-color: #F7931E;
+    --kbs-fall-color: #8264A0;
+}
+
+.event-creator-dialog {
+    font-family: Montserrat, sans-serif;
+    font-size: 24px;
+}
+
+.event-creator-dialog fx-label {
+    color: #838788;
+}
+
+.event-creator-dialog fx-togglebutton {
+    cursor: pointer;
+    filter: drop-shadow(4px 4px 5px lightgray);
+    --fx-border-style: none;
+    --fx-button-background: white;
+    --fx-border-radius: 0;
+}
+
+.event-creator-dialog fx-togglebutton.spring-festival {
+    color: var(--kbs-spring-color);
+    --fx-svg-path-fill: var(--kbs-spring-color);
+    --fx-togglebutton-selected-background: var(--kbs-spring-color);
+}
+
+.event-creator-dialog fx-togglebutton.summer-festival {
+    color: var(--kbs-summer-color);
+    --fx-svg-path-fill: var(--kbs-summer-color);
+    --fx-togglebutton-selected-background: var(--kbs-summer-color);
+}
+
+.event-creator-dialog fx-togglebutton.fall-festival {
+    color: var(--kbs-fall-color);
+    --fx-svg-path-fill: var(--kbs-fall-color);
+    --fx-togglebutton-selected-background: var(--kbs-fall-color);
+}
+
+.event-creator-dialog fx-togglebutton.selected {
+    color: white;
+    --fx-svg-path-fill: white;
 }
