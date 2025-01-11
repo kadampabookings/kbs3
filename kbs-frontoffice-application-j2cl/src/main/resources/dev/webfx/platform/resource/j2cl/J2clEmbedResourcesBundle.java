@@ -38,20 +38,17 @@ public interface J2clEmbedResourcesBundle extends ClientBundle {
     @Source("/dev/webfx/stack/i18n/pt.properties")
     TextResource r9();
 
-    @Source("/dev/webfx/stack/i18n/sp.properties")
+    @Source("/dev/webfx/stack/i18n/vi.properties")
     TextResource r10();
 
-    @Source("/dev/webfx/stack/i18n/vi.properties")
+    @Source("/dev/webfx/stack/i18n/zh.properties")
     TextResource r11();
 
-    @Source("/dev/webfx/stack/i18n/zh.properties")
+    @Source("/one/modality/base/shared/domainmodel/DomainModelSnapshot.json")
     TextResource r12();
 
-    @Source("/one/modality/base/shared/domainmodel/DomainModelSnapshot.json")
-    TextResource r13();
-
     @Source("/one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js")
-    TextResource r14();
+    TextResource r13();
 
     final class ProvidedJ2clResourceBundle extends J2clResourceBundleBase {
         public ProvidedJ2clResourceBundle() {
@@ -64,11 +61,10 @@ public interface J2clEmbedResourcesBundle extends ClientBundle {
             registerResource("dev/webfx/stack/i18n/es.properties", () -> R.r7().getText());
             registerResource("dev/webfx/stack/i18n/fr.properties", () -> R.r8().getText());
             registerResource("dev/webfx/stack/i18n/pt.properties", () -> R.r9().getText());
-            registerResource("dev/webfx/stack/i18n/sp.properties", () -> R.r10().getText());
-            registerResource("dev/webfx/stack/i18n/vi.properties", () -> R.r11().getText());
-            registerResource("dev/webfx/stack/i18n/zh.properties", () -> R.r12().getText());
-            registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", () -> R.r13().getText());
-            registerResource("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js", () -> R.r14().getText());
+            registerResource("dev/webfx/stack/i18n/vi.properties", () -> R.r10().getText());
+            registerResource("dev/webfx/stack/i18n/zh.properties", () -> R.r11().getText());
+            registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", () -> R.r12().getText());
+            registerResource("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js", () -> R.r13().getText());
         }
     }
 }
