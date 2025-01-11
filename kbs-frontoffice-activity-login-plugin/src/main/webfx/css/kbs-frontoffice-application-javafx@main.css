@@ -3,7 +3,7 @@
     -webfx-login-portal-background-image: url(...);
 }*/
 
-.login {
+.kbs-main-login .login {
     -fx-background-image: url("webfx-css:/frontoffice/images/Manjushri.jpg");
 }
 

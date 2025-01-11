@@ -14,6 +14,8 @@ import dev.webfx.extras.util.animation.Animations;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.uischeduler.UiScheduler;
+import dev.webfx.platform.util.Strings;
+import dev.webfx.platform.windowlocation.WindowLocation;
 import dev.webfx.stack.authn.login.ui.LoginUiService;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import javafx.geometry.Insets;
@@ -25,6 +27,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import one.modality.base.client.icons.SvgIcons;
+import one.modality.crm.client.activities.login.LoginActivity;
 
 /**
  * @author Bruno Salmon
@@ -43,6 +46,12 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
 
     @Override
     public Node buildUi() {
+        // All login windows have been redirected to this activity, however we want to decorate only the main login
+        // window (when the users click on the Login button). For other login windows embedded in other pages such as
+        // during the booking process, we return the default Modality login window (not decorated).
+        if (!Strings.endsWith(WindowLocation.getPath(), "/login"))
+            return LoginActivity.buildDefaultUi();
+
         displayDroneVideo();
         player.setPlayerGroup(null);
         aspectRatioPane.setContent(player.getMediaView());
@@ -66,6 +75,8 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
             if (player.getMedia() == droneMedia)
                 showVideo(false);
         });
+
+        stackPane.getStyleClass().setAll("kbs-main-login");
 
         return stackPane;
     }

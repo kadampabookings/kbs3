@@ -16,6 +16,7 @@ module kbs.frontoffice.activity.login.plugin {
     requires webfx.platform.scheduler;
     requires webfx.platform.uischeduler;
     requires webfx.platform.util;
+    requires webfx.platform.windowlocation;
     requires webfx.stack.authn.login.ui;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.routing.activity;
