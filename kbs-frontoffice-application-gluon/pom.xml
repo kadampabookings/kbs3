@@ -412,8 +412,8 @@
                         <list>one/modality/base/client/images/[^/]+$</list>
                         <list>one/modality/base/shared/domainmodel/[^/]+$</list>
                         <list>one/modality/event/frontoffice/activities/booking/map/[^/]+$</list>
-                        <list>org/kadampabookings/frontoffice/booking/[^/]+$</list>
                         <list>org/kadampabookings/kbs/frontoffice/activities/books/[^/]+$</list>
+                        <list>org/kadampabookings/kbs/frontoffice/booking/[^/]+$</list>
                     </resourcesList>
                     <appIdentifier>org.kadampabookings.kbs.frontoffice</appIdentifier>
                     <releaseConfiguration>

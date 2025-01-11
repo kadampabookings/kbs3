@@ -12,9 +12,9 @@
     </dependencies>
 
     <providers>
-        <provider interface="one.modality.base.backoffice.mainframe.headernode.MainFrameHeaderNodeProvider">one.modality.event.backoffice.events.eventcreator.MainFrameHeaderEventCreatorProvider</provider>
+        <provider interface="one.modality.base.backoffice.mainframe.headernode.MainFrameHeaderNodeProvider">org.kadampabookings.kbs.backoffice.festivalcreator.MainFrameHeaderFestivalCreatorProvider</provider>
     </providers>
 
-    <i18n javaKeysClass="one.modality.event.backoffice.events.eventcreator.EventCreatorI18nKeys"/>
+    <i18n javaKeysClass="org.kadampabookings.kbs.backoffice.festivalcreator.FestivalCreatorI18nKeys"/>
 
 </project>

@@ -81,7 +81,7 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-backoffice-header-eventcreator-plugin</artifactId>
+            <artifactId>kbs-backoffice-header-festivalcreator-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>

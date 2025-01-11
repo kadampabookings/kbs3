@@ -424,7 +424,7 @@
                                             <groupId>org.kadampabookings</groupId>
                                             <artifactId>kbs-frontoffice-application</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
-                                            <includes>images/organizations/ , images/events/ , org/kadampabookings/frontoffice/booking/</includes>
+                                            <includes>images/organizations/ , images/events/ , org/kadampabookings/kbs/frontoffice/booking/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>dev.webfx</groupId>

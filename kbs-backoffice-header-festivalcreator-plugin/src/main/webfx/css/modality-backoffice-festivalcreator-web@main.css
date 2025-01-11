@@ -4,7 +4,7 @@
     --kbs-fall-color: #8264A0;
 }
 
-.event-creator-dialog {
+.event-creator-dialog, .event-creator-dialog input {
     font-family: Montserrat, sans-serif;
     font-size: 24px;
 }

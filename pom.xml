@@ -49,7 +49,7 @@
         <module>kbs-backoffice-application-gwt</module>
         <module>kbs-backoffice-application-j2cl</module>
         <module>kbs-backoffice-application-openjfx</module>
-        <module>kbs-backoffice-header-eventcreator-plugin</module>
+        <module>kbs-backoffice-header-festivalcreator-plugin</module>
         <module>kbs-client-conf-gluon-plugin</module>
         <module>kbs-client-conf-plugin</module>
         <module>kbs-client-festivaltypes</module>

@@ -28,7 +28,7 @@
         <!-- Event activities -->
         <plugin-module>modality-event-backoffice-max-plugin</plugin-module>
         <!-- This will add the create event button in the main frame header -->
-        <plugin-module>kbs-backoffice-header-eventcreator-plugin</plugin-module>
+        <plugin-module>kbs-backoffice-header-festivalcreator-plugin</plugin-module>
 
         <!-- Catering activities -->
         <plugin-module>modality-catering-backoffice-max-plugin</plugin-module>
