@@ -1283,7 +1283,7 @@ tr.branch, .grid-row.branch {
     background-color: transparent;
 }
 
-/*===== modality-backoffice-eventcreator-web@main.css from kbs-backoffice-header-eventcreator-plugin =====*/
+/*===== modality-backoffice-festivalcreator-web@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
 
 :root {
     --kbs-spring-color: #41BA4D;
@@ -1291,7 +1291,7 @@ tr.branch, .grid-row.branch {
     --kbs-fall-color: #8264A0;
 }
 
-.event-creator-dialog {
+.event-creator-dialog, .event-creator-dialog input {
     font-family: Montserrat, sans-serif;
     font-size: 24px;
 }
