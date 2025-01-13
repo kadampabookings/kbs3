@@ -26,12 +26,6 @@ final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements Op
         columnsPane.setMaxWidth(Double.MAX_VALUE);
         columnsPane.setHgap(40);
 
-/*
-        Hyperlink newsLink     = routingHyperlink(NewsRouting.RouteToNewsRequest::new);
-        Hyperlink podcastsLink = routingHyperlink(PodcastsRouting.RouteToPodcastsRequest::new);
-        Hyperlink booksLink    = routingHyperlink(BooksRouting.RouteToBooksRequest::new);
-*/
-
         Label festivalsHeaderLabel = I18nControls.newLabel(FrontOfficeHomeI18nKeys.FestivalsHeader);
         festivalsHeaderLabel.getStyleClass().setAll("festivals-header");
 
@@ -53,14 +47,4 @@ final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements Op
 
         return FOPageUtil.applyTopBottomPagePadding(container);
     }
-
-/*
-    private Hyperlink routingHyperlink(Function<BrowsingHistory, ?> routeRequestFactory) {
-        Hyperlink hyperlink = ActionBinder.newActionHyperlink(RoutingActions.newRoutingAction(routeRequestFactory, this));
-        FXProperties.setEvenIfBound(hyperlink.visibleProperty(), true);
-        FXProperties.setEvenIfBound(hyperlink.disableProperty(), false);
-        return hyperlink;
-    }
-*/
-
 }

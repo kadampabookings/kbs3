@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import one.modality.base.shared.entities.Event;
+import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
 /**
@@ -27,7 +28,7 @@ final class FestivalThumbnail {
 
     public FestivalThumbnail(Event festival) {
         this.festival = festival;
-        int typeId = Numbers.toInteger(Entities.getPrimaryKey(festival.getType().getId()));
+        int typeId = Numbers.toInteger(Entities.getPrimaryKey(festival.getType()));
         festivalType = FestivalType.fromTypeId(typeId);
     }
 
@@ -37,7 +38,7 @@ final class FestivalThumbnail {
         festivalName.setTextAlignment(TextAlignment.CENTER);
         festivalName.getStyleClass().setAll("festival-name");
 
-        Button button = I18nControls.newButton("View");
+        Button button = I18nControls.newButton(BookingI18nKeys.comingSoon);
         button.setPrefSize(240, 48);
 
         // Embedding the festival name into a growing pane so that dates and button all aligned the same at the bottom across the 3 thumbnails
@@ -55,7 +56,6 @@ final class FestivalThumbnail {
         container.setPadding(new Insets(48));
         container.setAlignment(Pos.TOP_CENTER);
         container.getStyleClass().setAll("festival-thumbnail", festivalType.getStyleClass());
-        //container.setBackground(Background.fill(Color.GRAY));
         return container;
     }
 }
