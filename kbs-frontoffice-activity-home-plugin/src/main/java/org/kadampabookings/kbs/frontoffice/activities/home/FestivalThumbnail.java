@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import one.modality.base.shared.entities.Event;
@@ -52,8 +53,9 @@ final class FestivalThumbnail {
             I18n.newText(new I18nSubKey("expression: dateIntervalFormat(startDate, endDate)", festival)),
             button
         );
-        container.setMaxWidth(340);
-        container.setPadding(new Insets(48));
+        container.setPrefSize(360, 400);
+        container.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        container.setPadding(new Insets(48, 8, 48, 8));
         container.setAlignment(Pos.TOP_CENTER);
         container.getStyleClass().setAll("festival-thumbnail", festivalType.getStyleClass());
         return container;
