@@ -43,7 +43,7 @@ import one.modality.base.client.css.Fonts;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.client.tile.Tab;
 import one.modality.base.client.tile.TabsBar;
-import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
+import one.modality.base.frontoffice.mainframe.fx.FXCollapseMenu;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.frontoffice.utility.tyler.GeneralUtility;
 import one.modality.base.frontoffice.utility.tyler.StyleUtility;
@@ -299,7 +299,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
                     if (backgroundTimeline != null)
                         backgroundTimeline.stop();
                     backgroundTimeline = Animations.animateProperty(backgroundColorProperty, newBlackOpaque ? Color.BLACK : Color.TRANSPARENT);
-                    FXCollapseFooter.setCollapseFooter(opaqueBlack);
+                    FXCollapseMenu.setCollapseMenu(opaqueBlack);
                 }
                 double bottomOffset = topOffset + scrollPane.getViewportBounds().getHeight();
                 if (bottomOffset > pageContainer.getHeight() - lazyLoadingBottomSpace) {

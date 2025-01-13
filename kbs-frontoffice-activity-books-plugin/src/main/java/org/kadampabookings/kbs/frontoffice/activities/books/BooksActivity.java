@@ -20,7 +20,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
-import one.modality.base.frontoffice.mainframe.fx.FXCollapseFooter;
+import one.modality.base.frontoffice.mainframe.fx.FXCollapseMenu;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Book;
@@ -36,7 +36,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
     private final Carousel carousel = new Carousel(pageContainer, videosContainer);
     private final BooleanProperty showVideosProperty = FXProperties.newBooleanProperty(showVideos -> {
         carousel.displaySlide(showVideos ? videosContainer : pageContainer);
-        FXCollapseFooter.setCollapseFooter(showVideos);
+        FXCollapseMenu.setCollapseMenu(showVideos);
     });
 
     @Override

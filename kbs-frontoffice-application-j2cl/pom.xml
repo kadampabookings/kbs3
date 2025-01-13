@@ -487,6 +487,12 @@
                                             <includes>dev/webfx/extras/webview/pane/</includes>
                                         </artifactItem>
                                         <artifactItem>
+                                            <groupId>one.modality</groupId>
+                                            <artifactId>modality-event-frontoffice-activity-booking-plugin</artifactId>
+                                            <version>1.0.0-SNAPSHOT</version>
+                                            <includes>one/modality/event/frontoffice/activities/booking/map/</includes>
+                                        </artifactItem>
+                                        <artifactItem>
                                             <groupId>org.kadampabookings</groupId>
                                             <artifactId>kbs-frontoffice-activity-books-plugin</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
@@ -497,12 +503,6 @@
                                             <artifactId>modality-base-client-application</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
                                             <includes>images/buddhas/ , one/modality/base/client/images/</includes>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>one.modality</groupId>
-                                            <artifactId>modality-event-frontoffice-activity-booking-plugin</artifactId>
-                                            <version>1.0.0-SNAPSHOT</version>
-                                            <includes>one/modality/event/frontoffice/activities/booking/map/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>dev.webfx</groupId>

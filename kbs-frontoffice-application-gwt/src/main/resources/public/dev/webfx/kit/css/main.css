@@ -908,8 +908,8 @@ input[type="password"]:not([value=""]) {
 /*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
 
 :root {
-    --brand-main-color: #0096D6;
-    --brand-main-background-color: #0096D6;
+    --brand-main-color: #F6782E;
+    --brand-main-background-color: #F6782E;
 }
 /*===== modality-client-css-web@main.css from modality-base-client-css =====*/
 
@@ -943,6 +943,92 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .event-button > fx-border {
     border: none;
 }
+
+/*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
+
+:root {
+    --fx-event-description-text-color: #444;
+}
+
+.event-title {
+    color: white;
+    --fx-svg-path-fill: white;
+}
+
+/* .text-justified */
+.event-description-text {
+    color: var(--fx-event-description-text-color);
+    text-align: justify;
+    line-height: 1.7em;
+}
+
+/* Date cells for recurring events */
+
+.event-date-cell > fx-border {
+    border: 1px solid #cccccc;
+}
+
+.event-date-cell.date-unselected {
+    color: #444;
+}
+
+.event-date-cell .event-time {
+    color: #838788;
+}
+
+.event-date-cell.date-unselected > fx-background {
+    background: none;
+}
+
+.event-date-cell.date-non-selectable > fx-background {
+    background-color: #dddddd;
+}
+
+.event-date-cell.date-non-selectable > fx-border {
+    border-color: #cccccc;
+}
+
+.event-date-cell.date-non-selectable,
+.event-date-cell.date-non-selectable .event-time {
+    color: #aaaaaa;
+}
+
+.event-date-cell.date-selected > fx-background,
+.event-date-cell.date-already-booked > fx-background {
+    background-color: var(--brand-main-color);
+}
+
+.event-date-cell.date-selected > fx-border,
+.event-date-cell.date-already-booked > fx-border {
+    border: none;
+}
+
+.event-date-cell.date-selected,
+.event-date-cell.date-selected .event-time {
+    color: white;
+}
+
+.event-date-cell.date-already-booked,
+.event-date-cell.date-already-booked .event-time {
+    color: #eeeeee;
+}
+
+
+/* .subtitle-grey */
+.subtitle-grey {
+    color: grey;
+    font-size: 14px;
+}
+
+.line-total > fx-background {
+    background-color: #CCCCCC;
+}
+
+.line-total span {
+    font-weight: bolder;
+}
+/*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
+
 
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
@@ -1195,92 +1281,6 @@ btn-white {
  }
 
 
-/*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
-
-:root {
-    --fx-event-description-text-color: #444;
-}
-
-.event-title {
-    color: white;
-    --fx-svg-path-fill: white;
-}
-
-/* .text-justified */
-.event-description-text {
-    color: var(--fx-event-description-text-color);
-    text-align: justify;
-    line-height: 1.7em;
-}
-
-/* Date cells for recurring events */
-
-.event-date-cell > fx-border {
-    border: 1px solid #cccccc;
-}
-
-.event-date-cell.date-unselected {
-    color: #444;
-}
-
-.event-date-cell .event-time {
-    color: #838788;
-}
-
-.event-date-cell.date-unselected > fx-background {
-    background: none;
-}
-
-.event-date-cell.date-non-selectable > fx-background {
-    background-color: #dddddd;
-}
-
-.event-date-cell.date-non-selectable > fx-border {
-    border-color: #cccccc;
-}
-
-.event-date-cell.date-non-selectable,
-.event-date-cell.date-non-selectable .event-time {
-    color: #aaaaaa;
-}
-
-.event-date-cell.date-selected > fx-background,
-.event-date-cell.date-already-booked > fx-background {
-    background-color: var(--brand-main-color);
-}
-
-.event-date-cell.date-selected > fx-border,
-.event-date-cell.date-already-booked > fx-border {
-    border: none;
-}
-
-.event-date-cell.date-selected,
-.event-date-cell.date-selected .event-time {
-    color: white;
-}
-
-.event-date-cell.date-already-booked,
-.event-date-cell.date-already-booked .event-time {
-    color: #eeeeee;
-}
-
-
-/* .subtitle-grey */
-.subtitle-grey {
-    color: grey;
-    font-size: 14px;
-}
-
-.line-total > fx-background {
-    background-color: #CCCCCC;
-}
-
-.line-total span {
-    font-weight: bolder;
-}
-/*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
-
-
 /*===== kbs3-frontoffice-podcasts-web@main.css from kbs-frontoffice-activity-podcasts-plugin =====*/
 
 .podcasts-activity .webfx-switch {
@@ -1425,7 +1425,7 @@ progress::-moz-progress-bar { /* For FireFox */
 }
 /*===== kbs-frontoffice-application-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
-:root {
+.kbs-main-login {
     --webfx-login-portal-background-image: url("./frontoffice/images/Manjushri.jpg");
 }
 
