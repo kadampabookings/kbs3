@@ -160,6 +160,14 @@ public class MainFrameHeaderFestivalCreatorProvider implements MainFrameHeaderNo
                 site.setMain(true);
                 site.setOrd(10);
                 //event.setVenue(site); // cyclic reference issue => postponed below
+                // Creating SiteItemFamily for teachings & audio recordings (so we can see the rates in KBS2
+                // back-office, but probably not necessary for KBS3).
+                SiteItemFamily sif = updateStore.insertEntity(SiteItemFamily.class);
+                sif.setSite(site);
+                sif.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
+                sif = updateStore.insertEntity(SiteItemFamily.class);
+                sif.setSite(site);
+                sif.setItemFamily(KnownItemFamily.AUDIO_RECORDING.getPrimaryKey());
                 // Bookable scheduled items
                 int festivalItemPrimaryKey = FestivalType.getFestivalItemPrimaryKey();
                 for (LocalDate date = event.getStartDate(); !date.isAfter(event.getEndDate()) ; date = date.plusDays(1)) {
@@ -169,11 +177,6 @@ public class MainFrameHeaderFestivalCreatorProvider implements MainFrameHeaderNo
                     si.setItem(festivalItemPrimaryKey);
                     si.setDate(date);
                 }
-                Rate rate = updateStore.insertEntity(Rate.class);
-                rate.setSite(site);
-                rate.setItem(festivalItemPrimaryKey);
-                rate.setPerDay(true);
-                rate.setPrice(0);
                 OperationUtil.turnOnButtonsWaitModeDuringExecution(
                     updateStore.submitChanges()
                         // Setting venue afterwards TODO: Improve EntityChangesToSubmitBatchGenerator to solve cyclic references
