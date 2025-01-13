@@ -780,8 +780,8 @@ HtmlText, HtmlTextEditor {
 /*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
 
 * {
-    -brand-main-color: #0096D6;
-    -brand-main-background-color: #0096D6;
+    -brand-main-color: #F6782E;
+    -brand-main-background-color: #F6782E;
 }
 /*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
 
@@ -1008,7 +1008,7 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 
 .audio-library .description {
-    -fx-min-width: 450;
+    -fx-pref-width: 450;
     -fx-max-width: 450;
 }
 
@@ -1021,7 +1021,7 @@ CollapsePane.menu-bar.lang-menu-bar {
 }
 
 .bottom-border {
-    -fx-padding: 0 0 20 -50;
+    -fx-padding: 0 10 20 -50;
     -fx-border-color: transparent transparent #4A4748 transparent; -fx-border-width: 0 0 0.2 0;
 }
 
@@ -1290,7 +1290,7 @@ CollapsePane.menu-bar.lang-menu-bar {
     -webfx-login-portal-background-image: url(...);
 }*/
 
-.login {
+.kbs-main-login .login {
     -fx-background-image: url("webfx-css:/frontoffice/images/Manjushri.jpg");
 }
 
