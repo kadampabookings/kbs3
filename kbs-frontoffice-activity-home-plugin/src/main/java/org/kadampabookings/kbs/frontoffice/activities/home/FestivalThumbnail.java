@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.platform.util.Numbers;
+import dev.webfx.platform.util.time.Times;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.i18n.spi.impl.I18nSubKey;
@@ -34,7 +35,15 @@ final class FestivalThumbnail {
     }
 
     Node getView() {
-        Label festivalName = I18nControls.newLabel("[" + festivalType.getLongI18nKey() + "] " + festival.getStartDate().getYear());
+        int year = festival.getStartDate().getYear();
+        // If the loaded festival is past, we rather display the next festival with estimated dates and coming soon button
+        if (Times.isPast(festival.getEndDate())) {
+            year++;
+            // Note: a bit dirty, but we changed the festival dates with the estimated one for next year
+            festival.setStartDate(festivalType.evaluateStartDate(year));
+            festival.setEndDate(festivalType.evaluateEndDate(festival.getStartDate()));
+        }
+        Label festivalName = I18nControls.newLabel("[" + festivalType.getLongI18nKey() + "] " + year);
         festivalName.setWrapText(true);
         festivalName.setTextAlignment(TextAlignment.CENTER);
         festivalName.getStyleClass().setAll("festival-name");

@@ -13,6 +13,7 @@ module kbs.frontoffice.activity.home.plugin {
     requires webfx.extras.panes;
     requires webfx.kit.util;
     requires webfx.platform.util;
+    requires webfx.platform.util.time;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;
     requires webfx.stack.i18n.controls;
