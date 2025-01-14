@@ -47,9 +47,9 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
     @Override
     public Node buildUi() {
         // All login windows have been redirected to this activity, however we want to decorate only the main login
-        // window (when the users click on the Login button). For other login windows embedded in other pages such as
-        // during the booking process, we return the default Modality login window (not decorated).
-        if (!Strings.endsWith(WindowLocation.getPath(), "/login"))
+        // windows, not the one embedded in the booking process. In the later case, we return the default Modality login
+        // window (not decorated).
+        if (Strings.contains(WindowLocation.getPath(), "/booking/"))
             return LoginActivity.buildDefaultUi();
 
         displayDroneVideo();
