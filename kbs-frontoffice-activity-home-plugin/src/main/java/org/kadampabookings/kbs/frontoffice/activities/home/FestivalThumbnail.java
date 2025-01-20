@@ -37,7 +37,8 @@ final class FestivalThumbnail {
     Node getView() {
         int year = festival.getStartDate().getYear();
         // If the loaded festival is past, we rather display the next festival with estimated dates and coming soon button
-        if (Times.isPast(festival.getEndDate())) {
+        boolean inferNextFestival = Times.isPast(festival.getEndDate());
+        if (inferNextFestival) {
             year++;
             // Note: a bit dirty, but we changed the festival dates with the estimated one for next year
             festival.setStartDate(festivalType.evaluateStartDate(year));
@@ -48,7 +49,7 @@ final class FestivalThumbnail {
         festivalName.setTextAlignment(TextAlignment.CENTER);
         festivalName.getStyleClass().setAll("festival-name");
 
-        Button button = I18nControls.newButton(BookingI18nKeys.comingSoon);
+        Button button = I18nControls.newButton(inferNextFestival ? BookingI18nKeys.comingSoon : "View");
         button.setPrefSize(240, 48);
 
         // Embedding the festival name into a growing pane so that dates and button all aligned the same at the bottom across the 3 thumbnails
