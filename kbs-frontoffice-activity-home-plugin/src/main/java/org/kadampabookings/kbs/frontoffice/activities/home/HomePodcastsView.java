@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting;
 
 /**
@@ -41,11 +42,11 @@ final class HomePodcastsView {
 
         VBox container = new VBox(88,
             podcastsHeaderLabel,
-            new ScalePane(columnsPane),
+            FOPageUtil.restrictToMaxPageWidthAndApplyPageLeftRightPadding(new ScalePane(columnsPane)),
             seeAllButton
         );
         container.setAlignment(Pos.TOP_CENTER);
-        container.setPadding(new Insets(88));
+        container.setPadding(new Insets(88, 0, 88, 0));
         container.getStyleClass().setAll("home-podcasts");
 
         return container;

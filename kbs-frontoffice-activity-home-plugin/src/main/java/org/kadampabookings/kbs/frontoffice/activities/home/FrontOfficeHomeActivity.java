@@ -41,7 +41,7 @@ final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements Op
         ));
         festivalsBox.setAlignment(Pos.TOP_CENTER);
 
-        Node podcastsBox = FOPageUtil.restrictToMaxPageWidthAndApplyPageLeftRightPadding(HomePodcastsView.createView(getHistory()));
+        Node podcastsBox = HomePodcastsView.createView(getHistory());
 
         VBox container = new VBox(64,
             festivalsBox,
