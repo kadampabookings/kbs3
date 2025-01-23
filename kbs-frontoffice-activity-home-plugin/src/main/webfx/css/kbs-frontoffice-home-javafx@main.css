@@ -18,7 +18,7 @@
 .festivals-header, .podcasts-header {
     -fx-font-weight: bold;
     -fx-font-size: 40px;
-    -fx-text-fill: -home-header-color;
+    -fx-fill: -home-header-color;
 }
 
 .festival-thumbnail Label {

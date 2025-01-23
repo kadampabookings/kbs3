@@ -23,7 +23,8 @@ final class PodcastsCard {
             contentLabel
         );
         vBox.getStyleClass().setAll("podcasts-card");
-        vBox.setMaxWidth(275);
+        vBox.setMinWidth(210);
+        vBox.setMaxWidth(300);
         vBox.setPadding(new Insets(18));
         return vBox;
     }

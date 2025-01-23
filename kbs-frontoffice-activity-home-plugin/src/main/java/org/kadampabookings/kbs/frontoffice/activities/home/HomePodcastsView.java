@@ -1,14 +1,16 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.panes.ColumnsPane;
+import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.platform.windowhistory.spi.BrowsingHistory;
+import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting;
 
 /**
@@ -16,9 +18,9 @@ import org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting;
  */
 final class HomePodcastsView {
 
-    static Node createView(BrowsingHistory browsingHistory) {
+    static Region createView(BrowsingHistory browsingHistory) {
 
-        Label podcastsHeaderLabel = I18nControls.newLabel(FrontOfficeHomeI18nKeys.PodcastsHeader);
+        Text podcastsHeaderLabel = I18n.newText(FrontOfficeHomeI18nKeys.PodcastsHeader);
         podcastsHeaderLabel.getStyleClass().setAll("podcasts-header");
 
         Button seeAllButton = I18nControls.newButton("See all");
@@ -39,7 +41,7 @@ final class HomePodcastsView {
 
         VBox container = new VBox(88,
             podcastsHeaderLabel,
-            columnsPane,
+            new ScalePane(columnsPane),
             seeAllButton
         );
         container.setAlignment(Pos.TOP_CENTER);
