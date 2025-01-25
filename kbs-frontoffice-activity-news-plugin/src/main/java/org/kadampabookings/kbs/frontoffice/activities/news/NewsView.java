@@ -1,11 +1,11 @@
 package org.kadampabookings.kbs.frontoffice.activities.news;
 
 import dev.webfx.extras.imagestore.ImageStore;
+import dev.webfx.extras.panes.HorizontalBiasLayoutPane;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.platform.util.Objects;
 import dev.webfx.platform.windowhistory.spi.BrowsingHistory;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -38,19 +38,19 @@ public final class NewsView {
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
     private final Hyperlink readMoreLink = GeneralUtility.createHyperlink(NewsI18nKeys.readMore, Brand.getBrandMainColor());
-    private final Pane newsContainer = new Pane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
+    private final Pane newsContainer = new HorizontalBiasLayoutPane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight, readMoreX, readMoreY, readMoreHeight;
         @Override
-        protected void layoutChildren() {
-            computeLayout(getWidth());
+        protected void layoutChildren(double width, double height) {
+            computeLayout(width);
             imageView.setFitWidth(imageWidth);
-            layoutInArea(imageView, 0, imageY, imageWidth, imageHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(titleLink, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(readMoreLink, readMoreX, readMoreY, rightWidth, readMoreHeight, 0, HPos.LEFT, VPos.CENTER);
+            layoutInArea(imageView, 0, imageY, imageWidth, imageHeight);
+            layoutInArea(titleLink, rightX, titleY, rightWidth, titleHeight);
+            layoutInArea(dateText, rightX, dateY, rightWidth, dateHeight);
+            layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight);
+            layoutInArea(favoritePane, rightX, favoriteY, rightWidth, favoriteHeight);
+            layoutInArea(readMoreLink, readMoreX, readMoreY, rightWidth, readMoreHeight, Pos.CENTER_LEFT);
         }
 
         @Override

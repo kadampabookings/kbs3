@@ -1,9 +1,9 @@
 package org.kadampabookings.kbs.frontoffice.activities.books;
 
 import dev.webfx.extras.imagestore.ImageStore;
+import dev.webfx.extras.panes.HorizontalBiasLayoutPane;
 import dev.webfx.platform.util.Objects;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -29,20 +29,20 @@ public final class BookView {
     private final Hyperlink freeLink = GeneralUtility.createHyperlink(BooksI18nKeys.FreeDownload, Brand.getBrandMainColor());
     private final Hyperlink orderLink = GeneralUtility.createHyperlink(BooksI18nKeys.Order, Brand.getBrandMainColor());
     private final Hyperlink extractsLink = GeneralUtility.createHyperlink(BooksI18nKeys.AudioExtracts, Brand.getBrandMainColor());
-    private final Pane bookContainer = new Pane(imageView, titleLink, excerptLabel, freeLink, orderLink, extractsLink) {
+    private final Pane bookContainer = new HorizontalBiasLayoutPane(imageView, titleLink, excerptLabel, freeLink, orderLink, extractsLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, titleY, titleHeight, excerptY, excerptHeight,
             linksY, linksHeight, freeX, orderX, extractsX;
         @Override
-        protected void layoutChildren() {
-            computeLayout(getWidth());
+        protected void layoutChildren(double width, double height) {
+            computeLayout(width);
             imageView.setFitWidth(imageWidth);
-            layoutInArea(imageView, 0, imageY, imageWidth, imageHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(titleLink, rightX, titleY, rightWidth, titleHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight, 0, HPos.LEFT, VPos.TOP);
-            layoutInArea(freeLink, freeX, linksY, rightWidth, linksHeight, 0, HPos.LEFT, VPos.CENTER);
-            layoutInArea(orderLink, orderX, linksY, rightWidth, linksHeight, 0, HPos.LEFT, VPos.CENTER);
-            layoutInArea(extractsLink, extractsX, linksY, rightWidth, linksHeight, 0, HPos.LEFT, VPos.CENTER);
+            layoutInArea(imageView, 0, imageY, imageWidth, imageHeight);
+            layoutInArea(titleLink, rightX, titleY, rightWidth, titleHeight);
+            layoutInArea(excerptLabel, rightX, excerptY, rightWidth, excerptHeight);
+            layoutInArea(freeLink, freeX, linksY, rightWidth, linksHeight, Pos.CENTER_LEFT);
+            layoutInArea(orderLink, orderX, linksY, rightWidth, linksHeight, Pos.CENTER_LEFT);
+            layoutInArea(extractsLink, extractsX, linksY, rightWidth, linksHeight, Pos.CENTER_LEFT);
         }
 
         @Override

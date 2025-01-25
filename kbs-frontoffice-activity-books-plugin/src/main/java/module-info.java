@@ -15,6 +15,7 @@ module kbs.frontoffice.activity.books.plugin {
     requires modality.event.client.mediaview;
     requires webfx.extras.carousel;
     requires webfx.extras.imagestore;
+    requires webfx.extras.panes;
     requires webfx.extras.player;
     requires webfx.kit.util;
     requires webfx.platform.resource;
