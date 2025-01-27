@@ -1,7 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.activities.books;
 
 import dev.webfx.extras.imagestore.ImageStore;
-import dev.webfx.extras.panes.HorizontalBiasLayoutPane;
+import dev.webfx.extras.panes.HPane;
 import dev.webfx.platform.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -29,7 +29,7 @@ public final class BookView {
     private final Hyperlink freeLink = GeneralUtility.createHyperlink(BooksI18nKeys.FreeDownload, Brand.getBrandMainColor());
     private final Hyperlink orderLink = GeneralUtility.createHyperlink(BooksI18nKeys.Order, Brand.getBrandMainColor());
     private final Hyperlink extractsLink = GeneralUtility.createHyperlink(BooksI18nKeys.AudioExtracts, Brand.getBrandMainColor());
-    private final Pane bookContainer = new HorizontalBiasLayoutPane(imageView, titleLink, excerptLabel, freeLink, orderLink, extractsLink) {
+    private final Pane bookContainer = new HPane(imageView, titleLink, excerptLabel, freeLink, orderLink, extractsLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, titleY, titleHeight, excerptY, excerptHeight,
             linksY, linksHeight, freeX, orderX, extractsX;

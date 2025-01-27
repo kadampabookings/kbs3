@@ -1,7 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.activities.news;
 
 import dev.webfx.extras.imagestore.ImageStore;
-import dev.webfx.extras.panes.HorizontalBiasLayoutPane;
+import dev.webfx.extras.panes.HPane;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.platform.util.Objects;
 import dev.webfx.platform.windowhistory.spi.BrowsingHistory;
@@ -38,7 +38,7 @@ public final class NewsView {
     private final SVGPath favoriteSvgPath = new SVGPath();
     private final Pane favoritePane = new MonoPane(favoriteSvgPath);
     private final Hyperlink readMoreLink = GeneralUtility.createHyperlink(NewsI18nKeys.readMore, Brand.getBrandMainColor());
-    private final Pane newsContainer = new HorizontalBiasLayoutPane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
+    private final Pane newsContainer = new HPane(imageView, titleLink, dateText, excerptLabel, favoritePane, readMoreLink) {
         private double fontFactor;
         private double imageY, imageWidth, imageHeight, rightX, rightWidth, dateY, dateHeight, titleY, titleHeight, excerptY, excerptHeight, favoriteY, favoriteHeight, readMoreX, readMoreY, readMoreHeight;
         @Override
