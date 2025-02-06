@@ -66,7 +66,7 @@ public class FXFestivals {
 
     private static void loadLastFestivals() {
         EntityStore entityStore = EntityStore.create(DataSourceModelService.getDefaultDataSourceModel());
-        String select = "select name,type.name,startDate,endDate from Event where type in (?) order by startDate desc, name like '%Online%' ? 1 : 0 limit 1";
+        String select = "select name,type.name,startDate,endDate,kbs3 from Event where type in (?) order by startDate desc, name like '%Online%' ? 1 : 0 limit 1";
         entityStore.executeQueryBatch(
                 new EntityStoreQuery(select, new Object[] { FestivalType.SPRING_FESTIVAL.getTypeId() }),
                 new EntityStoreQuery(select, new Object[] { FestivalType.SUMMER_FESTIVAL.getTypeId() }),

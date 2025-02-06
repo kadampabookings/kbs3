@@ -1,6 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.panes.MonoPane;
+import dev.webfx.platform.util.Booleans;
 import dev.webfx.platform.util.Numbers;
 import dev.webfx.platform.util.time.Times;
 import dev.webfx.stack.i18n.I18n;
@@ -49,7 +50,7 @@ final class FestivalThumbnail {
         festivalName.setTextAlignment(TextAlignment.CENTER);
         festivalName.getStyleClass().setAll("festival-name");
 
-        Button button = I18nControls.newButton(inferNextFestival ? BookingI18nKeys.comingSoon : "View");
+        Button button = I18nControls.newButton(inferNextFestival || Booleans.isNotTrue(festival.isKbs3()) ? BookingI18nKeys.comingSoon : "View");
         button.setPrefSize(240, 48);
 
         // Embedding the festival name into a growing pane so that dates and button all aligned the same at the bottom across the 3 thumbnails
