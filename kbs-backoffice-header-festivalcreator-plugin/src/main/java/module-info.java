@@ -26,7 +26,6 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires webfx.kit.util;
     requires webfx.platform.async;
     requires webfx.platform.console;
-    requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;
     requires webfx.stack.i18n.controls;
@@ -34,6 +33,7 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
     requires webfx.stack.ui.action;
+    requires webfx.stack.ui.action.tuner;
     requires webfx.stack.ui.controls;
     requires webfx.stack.ui.dialog;
     requires webfx.stack.ui.exceptions;
