@@ -6,7 +6,7 @@ import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.extras.styles.materialdesign.textfield.MaterialTextField;
 import dev.webfx.extras.styles.materialdesign.util.MaterialUtil;
 import dev.webfx.extras.time.pickers.DateField;
-import dev.webfx.extras.util.layout.LayoutUtil;
+import dev.webfx.extras.util.layout.Layouts;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.async.Future;
 import dev.webfx.platform.async.Promise;
@@ -54,7 +54,7 @@ final class CreateFestivalExecutor {
         ToggleButton fallButton = createEventTypeButton(FestivalCreatorI18nKeys.FallCard, FestivalType.FALL_FESTIVAL);
         HBox eventTypeBar = new HBox(10, springButton, summerButton, fallButton);
         Button cancelButton = Bootstrap.secondaryButton(I18nControls.newButton(ModalityI18nKeys.Cancel));
-        LayoutUtil.setMinWidthToPref(cancelButton); // to avoid the button to stretch (will be scaled down instead)
+        Layouts.setMinWidthToPref(cancelButton); // to avoid the button to stretch (will be scaled down instead)
         Button createButton = Bootstrap.largeSuccessButton(I18nControls.newButton(ModalityI18nKeys.Create), false);
         HBox buttonBar = Bootstrap.large(new HBox(10,
             cancelButton,
