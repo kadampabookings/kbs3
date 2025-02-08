@@ -4,7 +4,7 @@ import dev.webfx.extras.carousel.Carousel;
 import dev.webfx.extras.panes.*;
 import dev.webfx.extras.switches.Switch;
 import dev.webfx.extras.util.animation.Animations;
-import dev.webfx.extras.util.control.ControlUtil;
+import dev.webfx.extras.util.control.Controls;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.browser.Browser;
 import dev.webfx.platform.console.Console;
@@ -283,14 +283,14 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
         });
 
         // Lazy loading when the user scrolls down
-        ControlUtil.onScrollPaneAncestorSet(pageContainer, scrollPane -> {
+        Controls.onScrollPaneAncestorSet(pageContainer, scrollPane -> {
             this.scrollPane = scrollPane;
 
             // Lazy loading when the user scrolls down
             double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
             pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
             FXProperties.runOnPropertyChange(() -> {
-                double topOffset = ControlUtil.computeScrollPaneVTopOffset(scrollPane);
+                double topOffset = Controls.computeScrollPaneVTopOffset(scrollPane);
                 boolean scrollDown = topOffset > lastTopOffset;
                 lastTopOffset = topOffset;
                 boolean newBlackOpaque = videosSwitch.isSelected() && topOffset > filterBar.getLayoutY() + (scrollDown ? filterBar.getHeight() : 0);

@@ -6,7 +6,7 @@ import dev.webfx.extras.panes.FlexPane;
 import dev.webfx.extras.panes.ScaleMode;
 import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.extras.switches.Switch;
-import dev.webfx.extras.util.control.ControlUtil;
+import dev.webfx.extras.util.control.Controls;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.conf.SourcesConfig;
 import dev.webfx.platform.util.collection.Collections;
@@ -209,11 +209,11 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
         });
 
         // Lazy loading when the user scrolls down
-        ControlUtil.onScrollPaneAncestorSet(pageContainer, scrollPane -> {
+        Controls.onScrollPaneAncestorSet(pageContainer, scrollPane -> {
             double lazyLoadingBottomSpace = Screen.getPrimary().getVisualBounds().getHeight();
             pageContainer.setPadding(new Insets(0, 0, lazyLoadingBottomSpace, 0));
             FXProperties.runOnPropertyChange(() -> {
-                if (ControlUtil.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
+                if (Controls.computeScrollPaneVBottomOffset(scrollPane) > pageContainer.getHeight() - lazyLoadingBottomSpace) {
                     if (videosSwitch.isSelected()) {
                         if (lastLoadedVideo != null && videosFeed.isEmpty())
                             FXProperties.setIfNotEquals(latestLoadedVideoProperty, lastLoadedVideo);
