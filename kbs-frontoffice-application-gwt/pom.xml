@@ -122,6 +122,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.kadampabookings</groupId>
+            <artifactId>kbs-frontoffice-bookingform-sttp-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-backoffice-mainframe-headernode</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -530,6 +537,13 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-event-frontoffice-activity-videos-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-event-frontoffice-bookingform-recurringevent-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
