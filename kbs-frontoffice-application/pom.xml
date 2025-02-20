@@ -61,6 +61,13 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
+            <artifactId>kbs-frontoffice-bookingform-onlinefestival-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kadampabookings</groupId>
             <artifactId>kbs-frontoffice-bookingform-sttp-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>runtime</scope>

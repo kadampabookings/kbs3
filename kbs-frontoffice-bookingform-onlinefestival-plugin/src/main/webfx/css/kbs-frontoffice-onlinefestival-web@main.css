@@ -1,0 +1,23 @@
+.online-festival-booking-form .top-bar {
+    font-family: "Poppins", sans-serif;
+}
+
+.online-festival-booking-form .top-bar > fx-border {
+    background-color: #E7E7E7;
+    border: 1px solid #E7E7E7;
+    border-radius: 8px;
+}
+
+.online-festival-booking-form .top-bar .title > fx-border {
+    background-color: white;
+    border: 1px solid #E7E7E7;
+    border-radius: 8px;
+}
+
+.online-festival-booking-form .price-bar > fx-background {
+    background-color: #F4F4F4;
+}
+
+.online-festival-booking-form .price-bar fx-label.price {
+    color: #838788;
+}

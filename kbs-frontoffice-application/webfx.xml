@@ -42,6 +42,7 @@
         <!-- Event activities (booking page) -->
         <plugin-module>modality-event-frontoffice-max-plugin</plugin-module>
         <plugin-module>kbs-frontoffice-bookingform-sttp-plugin</plugin-module>
+        <plugin-module>kbs-frontoffice-bookingform-onlinefestival-plugin</plugin-module>
 
         <!-- Catering activities -->
         <!-- None - this layer has only back-office activities so far -->

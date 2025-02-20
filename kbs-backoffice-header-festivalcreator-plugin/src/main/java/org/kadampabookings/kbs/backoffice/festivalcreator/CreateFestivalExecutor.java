@@ -113,7 +113,7 @@ final class CreateFestivalExecutor {
             if (validationSupport.isValid()) {
                 // Getting the festival type selected by the user (was stored in the toggle button user data)
                 FestivalType festivalType = getSelectedFestivalType();
-                int year = nextFestivalYear(festivalType);
+                int year = startDateField.getDate().getYear();
                 // Creating the festival event
                 UpdateStore updateStore = UpdateStore.create(DataSourceModelService.getDefaultDataSourceModel());
                 Event event = updateStore.insertEntity(Event.class);

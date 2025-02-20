@@ -1320,6 +1320,31 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-background-color: transparent;
     -fx-highlight-fill: transparent;
 }
+/*===== kbs-frontoffice-onlinefestival-javafx@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
+
+.online-festival-booking-form .top-bar {
+    -fx-font-family: "Poppins";
+}
+
+.online-festival-booking-form .top-bar {
+    -fx-background-color: #E7E7E7;
+    -fx-background-radius: 5px;
+    -fx-border-color: #E7E7E7;
+    -fx-border-radius: 8px;
+}
+
+.online-festival-booking-form .top-bar .title {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+}
+
+.online-festival-booking-form .price-bar {
+    -fx-background-color: #F4F4F4;
+}
+
+.online-festival-booking-form .price-bar Label.price {
+    -fx-text-fill: #838788;
+}
 /*===== override@modality-client-brand-javafx@main.css from kbs-frontoffice-application =====*/
 
 /*

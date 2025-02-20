@@ -1,5 +1,9 @@
 package org.kadampabookings.kbs.client.festivaltypes;
 
+import dev.webfx.platform.util.Numbers;
+import dev.webfx.stack.orm.entity.Entities;
+import one.modality.base.shared.entities.Event;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -70,5 +74,9 @@ public enum FestivalType {
 
     public static int getFestivalItemPrimaryKey() {
         return FESTIVAL_ITEM_PRIMARY_KEY;
+    }
+
+    public static boolean isFestival(Event event) {
+        return fromTypeId(Numbers.toInteger(Entities.getPrimaryKey(event.getType()))) != null;
     }
 }

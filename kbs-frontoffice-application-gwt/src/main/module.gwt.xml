@@ -115,6 +115,8 @@
     <public path="" includes="images/organizations/"/>
     <resource path="org/kadampabookings/kbs/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/kbs/frontoffice/booking/"/>
+    <!--===============< kbs-frontoffice-bookingform-onlinefestival-plugin >================-->
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival"/>
     <!--====================< kbs-frontoffice-bookingform-sttp-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/sttp"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
@@ -280,6 +282,8 @@
     <source path="one/modality/crm/shared/services/authn/serial"/>
     <!--=========================< modality-ecommerce-client-i18n >=========================-->
     <source path="one/modality/ecommerce/client/i18n"/>
+    <!--====================< modality-ecommerce-client-workingbooking >====================-->
+    <source path="one/modality/ecommerce/client/workingbooking"/>
     <!--======================< modality-ecommerce-document-service >=======================-->
     <source path="one/modality/ecommerce/document/service"/>
     <source path="one/modality/ecommerce/document/service/events"/>
@@ -314,6 +318,8 @@
     <source path="one/modality/ecommerce/payment/client"/>
     <!--=======================< modality-ecommerce-payment-remote >========================-->
     <source path="one/modality/ecommerce/payment/spi/impl/remote"/>
+    <!--=========================< modality-event-client-booking >==========================-->
+    <source path="one/modality/event/client/booking"/>
     <!--=========================< modality-event-client-event-fx >=========================-->
     <source path="one/modality/event/client/event/fx"/>
     <!--========================< modality-event-client-mediaview >=========================-->

@@ -17,7 +17,7 @@ import one.modality.base.shared.entities.Event;
 /**
  * @author Bruno Salmon
  */
-public class FXFestivals {
+public final class FXFestivals {
 
     private static final ObservableList<Event> LAST_FESTIVALS = FXCollections.observableArrayList(); // Will hold last Spring, Summer & Fall festivals
 
