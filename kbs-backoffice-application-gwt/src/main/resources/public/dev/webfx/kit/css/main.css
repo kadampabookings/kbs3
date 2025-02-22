@@ -114,28 +114,6 @@ iframe {
     border: none;
 }
 
-/*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
-
-:root {
-    --webfx-switch-unselected-background-color: lightgray;
-    --webfx-switch-selected-background-color: #23EA00;
-    --webfx-switch-knob-background-color: white;
-}
-
-fx-switch.webfx-switch > fx-background {
-    background-color: var(--webfx-switch-unselected-background-color);
-    border-radius: 10px;
-    transition-duration: 200ms;
-}
-
-fx-switch.webfx-switch.selected > fx-background {
-    background-color: var(--webfx-switch-selected-background-color);
-    transition-duration: 200ms;
-}
-
-fx-switch.webfx-switch fx-circle.knob {
-    background-color: var(--webfx-switch-knob-background-color);
-}
 /*===== webfx-extras-bootstrap-web@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
@@ -631,6 +609,28 @@ fx-switch.webfx-switch fx-circle.knob {
     --webfx-material-label-fill: var(--webfx-material-invalid-fill);
     --webfx-material-line-fill: var(--webfx-material-invalid-fill);
     --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
+}
+/*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
+
+:root {
+    --webfx-switch-unselected-background-color: lightgray;
+    --webfx-switch-selected-background-color: #23EA00;
+    --webfx-switch-knob-background-color: white;
+}
+
+fx-switch.webfx-switch > fx-background {
+    background-color: var(--webfx-switch-unselected-background-color);
+    border-radius: 10px;
+    transition-duration: 200ms;
+}
+
+fx-switch.webfx-switch.selected > fx-background {
+    background-color: var(--webfx-switch-selected-background-color);
+    transition-duration: 200ms;
+}
+
+fx-switch.webfx-switch fx-circle.knob {
+    background-color: var(--webfx-switch-knob-background-color);
 }
 /*===== webfx-extras-time-pickers-web@main.css from webfx-extras-time-pickers =====*/
 

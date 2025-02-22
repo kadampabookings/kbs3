@@ -18,6 +18,8 @@
 
         <!-- CRM activities -->
         <plugin-module>modality-crm-backoffice-max-plugin</plugin-module>
+        <!-- Was designed for both clients, but actually used only in the back-office for now -->
+        <plugin-module>modality-crm-client-profile-plugin</plugin-module>
 
         <!-- Ecommerce activities -->
         <plugin-module>modality-ecommerce-backoffice-max-plugin</plugin-module>

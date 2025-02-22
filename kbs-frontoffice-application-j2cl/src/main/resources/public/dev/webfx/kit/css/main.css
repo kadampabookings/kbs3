@@ -162,6 +162,50 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
     --fx-svg-path-fill: transparent; /* then the fill is transparent */
     fill: var(--fx-svg-path-fill);
 }
+/*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
+
+.audio-player > fx-background {
+     background-color: #838788;  /* Background color */
+     border-radius: 30px;
+}
+
+.audio-player .h4 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    color: white;
+}
+
+/* Customizing the progress bar for podcasts */
+.audio-player progress {
+    border: none;
+    background-color: lightgray;
+    border-radius: 10px; /* Adjust the value for more or less rounding */
+    overflow: hidden;/* For FireFox */
+}
+
+.audio-player progress::-webkit-progress-bar { /* For Chrome & Safari */
+    background-color: lightgray;
+    border-radius: 10px;
+}
+
+.audio-player progress::-webkit-progress-value { /* For Chrome & Safari */
+    background-color: #0096D6;
+     border-radius: 10px;
+}
+
+.audio-player progress::-moz-progress-bar { /* For FireFox */
+    background-color: #0096D6;
+     border-radius: 10px;
+}
+
+
+.audio-player .time {
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-size: 13px;
+}
 /*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
 
 :root {
@@ -679,50 +723,6 @@ fx-switch.webfx-switch fx-circle.knob {
     --webfx-material-label-fill: var(--webfx-material-invalid-fill);
     --webfx-material-line-fill: var(--webfx-material-invalid-fill);
     --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
-}
-/*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
-
-.audio-player > fx-background {
-     background-color: #838788;  /* Background color */
-     border-radius: 30px;
-}
-
-.audio-player .h4 {
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    text-align: left;
-    color: white;
-}
-
-/* Customizing the progress bar for podcasts */
-.audio-player progress {
-    border: none;
-    background-color: lightgray;
-    border-radius: 10px; /* Adjust the value for more or less rounding */
-    overflow: hidden;/* For FireFox */
-}
-
-.audio-player progress::-webkit-progress-bar { /* For Chrome & Safari */
-    background-color: lightgray;
-    border-radius: 10px;
-}
-
-.audio-player progress::-webkit-progress-value { /* For Chrome & Safari */
-    background-color: #0096D6;
-     border-radius: 10px;
-}
-
-.audio-player progress::-moz-progress-bar { /* For FireFox */
-    background-color: #0096D6;
-     border-radius: 10px;
-}
-
-
-.audio-player .time {
-    font-family: "Poppins", sans-serif;
-    color: white;
-    font-size: 13px;
 }
 /*===== webfx-extras-time-pickers-web@main.css from webfx-extras-time-pickers =====*/
 

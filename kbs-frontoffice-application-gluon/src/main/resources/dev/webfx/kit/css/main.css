@@ -111,6 +111,37 @@
 }
 
 
+/*===== webfx-extra-player-audio-javafxmedia-javafx@main.css from webfx-extras-player-audio-javafxmedia =====*/
+
+.audio-player {
+    -fx-background-color: #838788; /* Background color */
+     -fx-background-radius: 30;
+}
+
+.audio-player h4 {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-alignment: left;
+     -fx-text-fill: white;
+}
+
+
+.audio-player .progress-bar {
+    -fx-accent: #0096D6; /* Progress fill color */
+    -fx-background-color: #E0E0E0; /* Background color */
+    -fx-background-radius: 15; /* Rounded background */
+    -fx-border-radius: 15; /* Rounded border */
+    -fx-padding: 2; /* Padding around progress */
+}
+
+.audio-player .time {
+    -fx-font-family: "Poppins";
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
 
 * {
@@ -592,37 +623,6 @@ Switch.webfx-switch Circle.knob {
      -webfx-material-line-fill: -webfx-material-invalid-fill;
      -webfx-material-focused-line-fill: -webfx-material-invalid-fill;
 }
-
-/*===== webfx-extra-player-audio-javafxmedia-javafx@main.css from webfx-extras-player-audio-javafxmedia =====*/
-
-.audio-player {
-    -fx-background-color: #838788; /* Background color */
-     -fx-background-radius: 30;
-}
-
-.audio-player h4 {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-text-alignment: left;
-     -fx-text-fill: white;
-}
-
-
-.audio-player .progress-bar {
-    -fx-accent: #0096D6; /* Progress fill color */
-    -fx-background-color: #E0E0E0; /* Background color */
-    -fx-background-radius: 15; /* Rounded background */
-    -fx-border-radius: 15; /* Rounded border */
-    -fx-padding: 2; /* Padding around progress */
-}
-
-.audio-player .time {
-    -fx-font-family: "Poppins";
-    -fx-text-fill: white;
-    -fx-font-size: 13px;
-}
-
 
 /*===== webfx-extras-time-pickers-javafx@main.css from webfx-extras-time-pickers =====*/
 
