@@ -1322,11 +1322,12 @@ CollapsePane.menu-bar.lang-menu-bar {
 }
 /*===== kbs-frontoffice-onlinefestival-javafx@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
 
-.online-festival-booking-form .top-bar {
+.online-festival-booking-form {
     -fx-font-family: "Poppins";
 }
 
 .online-festival-booking-form .top-bar {
+    -fx-font-weight: bold;
     -fx-background-color: #E7E7E7;
     -fx-background-radius: 5px;
     -fx-border-color: #E7E7E7;
@@ -1340,9 +1341,23 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 .online-festival-booking-form .price-bar {
     -fx-background-color: #F4F4F4;
+    -fx-font-weight: bold;
 }
 
 .online-festival-booking-form .price-bar Label.price {
+    -fx-text-fill: #838788;
+}
+
+.teaching-option-radio-button {
+    -fx-font-weight: bold;
+}
+
+.teaching-option-period-label {
+    -fx-text-fill: #838788;
+}
+
+.teaching-option-price-label {
+    -fx-font-weight: bold;
     -fx-text-fill: #838788;
 }
 /*===== override@modality-client-brand-javafx@main.css from kbs-frontoffice-application =====*/

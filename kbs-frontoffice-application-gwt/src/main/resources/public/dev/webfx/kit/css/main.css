@@ -1453,8 +1453,12 @@ fx-aspectratiopane {
 
 /*===== kbs-frontoffice-onlinefestival-web@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
 
-.online-festival-booking-form .top-bar {
+.online-festival-booking-form {
     font-family: "Poppins", sans-serif;
+}
+
+.online-festival-booking-form .top-bar {
+    font-weight: bold;
 }
 
 .online-festival-booking-form .top-bar > fx-border {
@@ -1469,11 +1473,28 @@ fx-aspectratiopane {
     border-radius: 8px;
 }
 
+.online-festival-booking-form .price-bar {
+    font-weight: bold;
+}
+
 .online-festival-booking-form .price-bar > fx-background {
     background-color: #F4F4F4;
 }
 
 .online-festival-booking-form .price-bar fx-label.price {
+    color: #838788;
+}
+
+.teaching-option-radio-button {
+    font-weight: bold;
+}
+
+.teaching-option-period-label {
+    color: #838788;
+}
+
+.teaching-option-price-label {
+    font-weight: bold;
     color: #838788;
 }
 /*===== override@modality-client-brand-web@main.css from kbs-frontoffice-application =====*/

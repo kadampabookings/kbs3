@@ -2,15 +2,15 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import one.modality.ecommerce.client.workingbooking.WorkingBooking;
+import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.event.frontoffice.activities.booking.process.event.AbstractBookingForm;
 import one.modality.event.frontoffice.activities.booking.process.event.BookEventActivity;
 
 /**
  * @author Bruno Salmon
  */
-public class OnlineFestivalBookingForm extends AbstractBookingForm {
+final class OnlineFestivalBookingForm extends AbstractBookingForm {
 
     private static final double MAX_WIDTH = 800;
 
@@ -22,11 +22,13 @@ public class OnlineFestivalBookingForm extends AbstractBookingForm {
 
     @Override
     public Node buildUi() {
+        WorkingBookingProperties workingBookingProperties = activity.getWorkingBookingProperties();
+        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
         navigationBar.setLabelI18nKey(OnlineFestivalI18nKeys.TeachingsOnline);
         BorderPane container = new BorderPane();
         container.setTop(navigationBar.getView());
-        container.setCenter(new Rectangle(300, 300, Color.TRANSPARENT));
-        container.setBottom(new PriceBar(activity.getWorkingBookingProperties()).getView());
+        container.setCenter(new TeachingOptionsView(workingBooking).getView());
+        container.setBottom(new PriceBar(workingBookingProperties).getView());
         container.getStyleClass().add("online-festival-booking-form");
         container.setMaxWidth(MAX_WIDTH);
         return container;
@@ -34,7 +36,7 @@ public class OnlineFestivalBookingForm extends AbstractBookingForm {
 
     @Override
     public void onWorkingBookingLoaded() {
-        bookWholeEvent();
+        //bookWholeEvent();
     }
 
 }
