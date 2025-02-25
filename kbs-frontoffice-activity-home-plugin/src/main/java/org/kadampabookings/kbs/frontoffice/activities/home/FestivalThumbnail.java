@@ -20,7 +20,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
@@ -79,7 +78,8 @@ final class FestivalThumbnail {
             button
         );
         container.setPrefSize(360, 400);
-        container.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        container.setMinSize(360, 400);
+        container.setMaxSize(2 * 360, 2 * 400);
         container.setPadding(new Insets(48, 8, 48, 8));
         container.setAlignment(Pos.TOP_CENTER);
         container.getStyleClass().setAll("festival-thumbnail", festivalType.getStyleClass());
