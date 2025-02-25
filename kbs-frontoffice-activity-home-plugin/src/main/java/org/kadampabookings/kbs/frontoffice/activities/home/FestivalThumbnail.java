@@ -96,12 +96,11 @@ final class FestivalThumbnail {
         bookNowOptionsBox.setAlignment(Pos.CENTER);
         Pane bookNowDialog = new GoldenRatioPane(bookNowOptionsBox);
         bookNowDialog.getStyleClass().setAll("book-now-dialog");
-        Rectangle2D bounds = Screen.getPrimary().getBounds();
-        bookNowDialog.setPrefSize(bounds.getWidth() * 0.4, bounds.getHeight() * 0.3);
-        DialogCallback callback = DialogUtil.showModalNodeInGoldLayout(bookNowDialog, FXMainFrameDialogArea.getDialogArea());
-        FXMainFrameDialogArea.getDialogArea().setOnMouseClicked(e2 -> {
-            callback.closeDialog();
-        });
+        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        bookNowDialog.setPrefSize(Math.min(700, screenBounds.getWidth() * 0.8), Math.min(500, screenBounds.getHeight() * 0.3));
+        Pane dialogArea = FXMainFrameDialogArea.getDialogArea();
+        DialogCallback callback = DialogUtil.showModalNodeInGoldLayout(bookNowDialog, dialogArea);
+        dialogArea.setOnMouseClicked(e2 -> callback.closeDialog());
         bookInPersonLink.setOnAction(e2 -> {
             BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(festival));
             callback.closeDialog();
