@@ -9,11 +9,11 @@ module kbs.frontoffice.activity.home.plugin {
     requires kbs.frontoffice.activity.podcasts.plugin;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
+    requires modality.event.client.lifecycle;
     requires modality.event.frontoffice.activity.booking.plugin;
     requires webfx.extras.panes;
     requires webfx.kit.util;
     requires webfx.platform.util;
-    requires webfx.platform.util.time;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;
     requires webfx.stack.i18n.controls;

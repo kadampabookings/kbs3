@@ -1,10 +1,9 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.panes.MonoPane;
-import dev.webfx.platform.util.Booleans;
 import dev.webfx.platform.util.Numbers;
-import dev.webfx.platform.util.time.Times;
 import dev.webfx.stack.i18n.I18n;
+import dev.webfx.stack.i18n.I18nKeys;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.i18n.spi.impl.I18nSubKey;
 import dev.webfx.stack.orm.entity.Entities;
@@ -17,7 +16,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Event;
+import one.modality.event.client.lifecycle.EventLifeCycle;
 import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
@@ -38,20 +39,26 @@ final class FestivalThumbnail {
     Node getView() {
         int year = festival.getStartDate().getYear();
         // If the loaded festival is past, we rather display the next festival with estimated dates and coming soon button
-        boolean inferNextFestival = Times.isPast(festival.getEndDate());
+        boolean inferNextFestival = EventLifeCycle.isPastEvent(festival);
         if (inferNextFestival) {
             year++;
             // Note: a bit dirty, but we changed the festival dates with the estimated one for next year
             festival.setStartDate(festivalType.evaluateStartDate(year));
             festival.setEndDate(festivalType.evaluateEndDate(festival.getStartDate()));
         }
-        Label festivalName = I18nControls.newLabel("[" + festivalType.getLongI18nKey() + "] " + year);
+        Label festivalName = I18nControls.newLabel(I18nKeys.embedInString("[0] {0}", festivalType.getLongI18nKey()), year);
         festivalName.setWrapText(true);
         festivalName.setTextAlignment(TextAlignment.CENTER);
         festivalName.getStyleClass().setAll("festival-name");
 
-        Button button = I18nControls.newButton(inferNextFestival || Booleans.isNotTrue(festival.isKbs3()) ? BookingI18nKeys.comingSoon : "View");
+        boolean canBookNow = EventLifeCycle.canBookNow(festival);
+        Button button = I18nControls.newButton(canBookNow ? BookingI18nKeys.bookNow : BookingI18nKeys.comingSoon);
         button.setPrefSize(240, 48);
+        if (canBookNow) {
+            button.setOnAction(e -> {
+                BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(festival));
+            });
+        }
 
         // Embedding the festival name into a growing pane so that dates and button all aligned the same at the bottom across the 3 thumbnails
         MonoPane festivalNamePane = new MonoPane(festivalName);
