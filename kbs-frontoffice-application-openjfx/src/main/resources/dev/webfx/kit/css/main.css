@@ -1176,8 +1176,8 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 .festival-thumbnail, .home-podcasts {
     -fx-font-family: "Poppins"; /*-poppins-font-family;*/
-    font-weight: 400;
-    font-size: 36px;
+    -fx-font-weight: 400;
+    -fx-font-size: 12px;
     -fx-background-radius: 8px, 8px;
     -fx-background-repeat: no-repeat, no-repeat;
     -fx-background-size: cover, cover;
@@ -1280,6 +1280,14 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-background-radius: 8px;
     -fx-background-color: -home-header-color;
     -fx-cursor: hand;
+}
+
+.book-now-dialog {
+    -fx-background-color: white;
+    -fx-background-radius: 20px;
+    -fx-font-family: "Poppins"; /*-poppins-font-family;*/
+    -fx-font-weight: 400;
+    -fx-font-size: 32px;
 }
 /*===== kbs-frontoffice-application-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/
 

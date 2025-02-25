@@ -11,16 +11,18 @@ public interface FrontOfficeHomeI18nKeys {
     String SpringFestival = "SpringFestival";
     String PodcastsCard5Title = "PodcastsCard5Title";
     String PodcastsCard6Content = "PodcastsCard6Content";
+    String BookOnline = "BookOnline";
     String PodcastsCard3Content = "PodcastsCard3Content";
     String PodcastsCard5Content = "PodcastsCard5Content";
     String PodcastsCard1Content = "PodcastsCard1Content";
+    String PodcastsCard2Title = "PodcastsCard2Title";
     String PodcastsCard2Content = "PodcastsCard2Content";
+    String BookInPerson = "BookInPerson";
+    String PodcastsCard1Title = "PodcastsCard1Title";
     String FallFestival = "FallFestival";
     String FestivalsHeader = "FestivalsHeader";
     String SummerFestival = "SummerFestival";
     String PodcastsCard4Title = "PodcastsCard4Title";
     String Home = "Home";
-    String PodcastsCard1Title = "PodcastsCard1Title";
-    String PodcastsCard2Title = "PodcastsCard2Title";
 
 }

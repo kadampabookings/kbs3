@@ -1423,6 +1423,17 @@ progress::-moz-progress-bar { /* For FireFox */
     --fx-border-style: none;
     cursor: pointer;
 }
+
+.book-now-dialog {
+    font-family: "Poppins";
+    font-weight: 400;
+    font-size: 28px;
+}
+
+.book-now-dialog > fx-border {
+    background-color: white;
+    border-radius: 20px;
+}
 /*===== kbs-frontoffice-application-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
 .kbs-main-login {

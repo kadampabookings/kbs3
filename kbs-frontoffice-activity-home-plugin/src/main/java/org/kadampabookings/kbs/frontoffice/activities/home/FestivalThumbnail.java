@@ -1,21 +1,30 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
+import dev.webfx.extras.panes.GoldenRatioPane;
 import dev.webfx.extras.panes.MonoPane;
+import dev.webfx.extras.util.animation.Animations;
 import dev.webfx.platform.util.Numbers;
 import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.i18n.I18nKeys;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import dev.webfx.stack.i18n.spi.impl.I18nSubKey;
 import dev.webfx.stack.orm.entity.Entities;
+import dev.webfx.stack.ui.dialog.DialogCallback;
+import dev.webfx.stack.ui.dialog.DialogUtil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Screen;
+import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Event;
 import one.modality.event.client.lifecycle.EventLifeCycle;
@@ -55,9 +64,7 @@ final class FestivalThumbnail {
         Button button = I18nControls.newButton(canBookNow ? BookingI18nKeys.bookNow : BookingI18nKeys.comingSoon);
         button.setPrefSize(240, 48);
         if (canBookNow) {
-            button.setOnAction(e -> {
-                BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(festival));
-            });
+            button.setOnAction(e -> openBookNowDialog());
         }
 
         // Embedding the festival name into a growing pane so that dates and button all aligned the same at the bottom across the 3 thumbnails
@@ -77,5 +84,28 @@ final class FestivalThumbnail {
         container.setAlignment(Pos.TOP_CENTER);
         container.getStyleClass().setAll("festival-thumbnail", festivalType.getStyleClass());
         return container;
+    }
+
+    private void openBookNowDialog() {
+        Hyperlink bookInPersonLink = I18nControls.newHyperlink(FrontOfficeHomeI18nKeys.BookInPerson);
+        Label bookOnline = I18nControls.newLabel(FrontOfficeHomeI18nKeys.BookOnline);
+        bookOnline.setWrapText(true);
+        bookOnline.setTextAlignment(TextAlignment.CENTER);
+        bookOnline.setDisable(true);
+        VBox bookNowOptionsBox = new VBox(20, bookInPersonLink, bookOnline);
+        bookNowOptionsBox.setAlignment(Pos.CENTER);
+        Pane bookNowDialog = new GoldenRatioPane(bookNowOptionsBox);
+        bookNowDialog.getStyleClass().setAll("book-now-dialog");
+        Rectangle2D bounds = Screen.getPrimary().getBounds();
+        bookNowDialog.setPrefSize(bounds.getWidth() * 0.4, bounds.getHeight() * 0.3);
+        DialogCallback callback = DialogUtil.showModalNodeInGoldLayout(bookNowDialog, FXMainFrameDialogArea.getDialogArea());
+        FXMainFrameDialogArea.getDialogArea().setOnMouseClicked(e2 -> {
+            callback.closeDialog();
+        });
+        bookInPersonLink.setOnAction(e2 -> {
+            BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(festival));
+            callback.closeDialog();
+        });
+        Animations.fadeIn(bookNowDialog);
     }
 }

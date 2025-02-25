@@ -4,16 +4,15 @@ module kbs.frontoffice.activity.home.plugin {
 
     // Direct dependencies modules
     requires javafx.controls;
-    requires javafx.graphics;
     requires kbs.client.festivaltypes;
     requires kbs.frontoffice.activity.podcasts.plugin;
+    requires modality.base.client.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires modality.event.client.lifecycle;
     requires modality.event.frontoffice.activity.booking.plugin;
     requires webfx.extras.panes;
     requires webfx.kit.util;
-    requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.i18n;
     requires webfx.stack.i18n.controls;
@@ -21,8 +20,11 @@ module kbs.frontoffice.activity.home.plugin {
     requires webfx.stack.orm.entity;
     requires webfx.stack.routing.router.client;
     requires webfx.stack.routing.uirouter;
+    requires webfx.stack.ui.dialog;
     requires webfx.stack.ui.operation;
     requires webfx.stack.ui.operation.action;
+    requires webfx.extras.util.background;
+    requires webfx.extras.util.animation;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.home;
