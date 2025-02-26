@@ -1387,7 +1387,7 @@ progress::-moz-progress-bar { /* For FireFox */
 }
 
 .festival-thumbnail fx-label.festival-name {
-    font-family: var(--vollkorn-font-family);
+    font-family: var(--vollkorn-font-family), serif;
     font-weight: 500;
     font-size: 33px;
 }
@@ -1473,9 +1473,9 @@ progress::-moz-progress-bar { /* For FireFox */
 }
 
 .book-now-dialog {
-    font-family: "Poppins";
+    font-family: "Poppins", serif;
     font-weight: 400;
-    font-size: 28px;
+    font-size: 2em;
 }
 
 .book-now-dialog > fx-border {

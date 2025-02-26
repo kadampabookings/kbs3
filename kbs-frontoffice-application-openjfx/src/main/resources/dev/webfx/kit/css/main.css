@@ -1287,7 +1287,7 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-background-radius: 20px;
     -fx-font-family: "Poppins"; /*-poppins-font-family;*/
     -fx-font-weight: 400;
-    -fx-font-size: 28px;
+    -fx-font-size: 2em;
 }
 /*===== kbs-frontoffice-application-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
