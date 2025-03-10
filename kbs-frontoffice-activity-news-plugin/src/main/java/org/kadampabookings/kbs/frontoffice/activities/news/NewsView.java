@@ -3,6 +3,7 @@ package org.kadampabookings.kbs.frontoffice.activities.news;
 import dev.webfx.extras.imagestore.ImageStore;
 import dev.webfx.extras.panes.HPane;
 import dev.webfx.extras.panes.MonoPane;
+import dev.webfx.extras.time.format.LocalizedTime;
 import dev.webfx.platform.util.Objects;
 import dev.webfx.platform.windowhistory.spi.BrowsingHistory;
 import javafx.geometry.Pos;
@@ -23,7 +24,7 @@ import one.modality.base.frontoffice.utility.tyler.StyleUtility;
 import one.modality.base.frontoffice.utility.tyler.TextUtility;
 import one.modality.base.shared.entities.News;
 
-import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 public final class NewsView {
 
@@ -114,7 +115,7 @@ public final class NewsView {
     public void setNews(News news) {
         this.news = news;
         updateLabeled(titleLink, news.getTitle());
-        updateText(dateText, DateTimeFormatter.ofPattern("d MMMM yyyy").format(news.getDate()));
+        updateText(dateText, LocalizedTime.formatLocalDate(news.getDate(), FormatStyle.LONG));
         updateLabeled(excerptLabel, news.getExcerpt());
         imageView.setImage(ImageStore.getOrCreateImage(news.getImageUrl()));
         updateFavorite();

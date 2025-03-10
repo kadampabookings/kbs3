@@ -23,6 +23,7 @@ module kbs.frontoffice.activity.news.plugin {
     requires webfx.extras.imagestore;
     requires webfx.extras.panes;
     requires webfx.extras.switches;
+    requires webfx.extras.time.format;
     requires webfx.extras.util.control;
     requires webfx.kit.util;
     requires webfx.platform.ast;

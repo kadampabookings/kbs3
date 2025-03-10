@@ -669,10 +669,13 @@ Switch.webfx-switch Circle.knob {
     -fx-font-size: 14px;
 }
 
-.webfx-datepicker .background {
+.webfx-datepicker.background, .webfx-datepicker .background {
     -fx-background-color: -webfx-time-pickers-background-color;
 }
 
+.webfx-datepicker.background {
+    -fx-background-radius: 10px;
+}
 /*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid-peers-openjfx =====*/
 
 VisualGrid {
