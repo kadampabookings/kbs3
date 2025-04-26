@@ -506,6 +506,12 @@
                                             <includes>images/buddhas/ , one/modality/base/client/images/</includes>
                                         </artifactItem>
                                         <artifactItem>
+                                            <groupId>one.modality</groupId>
+                                            <artifactId>modality-event-frontoffice-activity-audiorecordings-plugin</artifactId>
+                                            <version>1.0.0-SNAPSHOT</version>
+                                            <includes>one/modality/event/frontoffice/activities/audiorecordings/</includes>
+                                        </artifactItem>
+                                        <artifactItem>
                                             <groupId>dev.webfx</groupId>
                                             <artifactId>webfx-stack-authn-login-ui-portal</artifactId>
                                             <version>0.1.0-SNAPSHOT</version>
