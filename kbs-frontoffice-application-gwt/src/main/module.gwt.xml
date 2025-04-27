@@ -205,8 +205,6 @@
     <public path="" includes="images/svg/mono/"/>
     <!--=======================< modality-base-client-mainframe-fx >========================-->
     <source path="one/modality/base/client/mainframe/fx"/>
-    <!--=========================< modality-base-client-messaging >=========================-->
-    <source path="one/modality/base/client/messaging"/>
     <!--==============< modality-base-client-operationactionsloading-plugin >===============-->
     <source path="one/modality/base/client/operationactionsloading"/>
     <!--=====================< modality-base-client-presentationmodel >=====================-->
@@ -842,9 +840,6 @@
     <!--========================< webfx-stack-orm-entity-controls >=========================-->
     <source path="dev/webfx/stack/orm/entity/controls/entity/selector"/>
     <source path="dev/webfx/stack/orm/entity/controls/entity/sheet"/>
-    <!--========================< webfx-stack-orm-entity-messaging >========================-->
-    <source path="dev/webfx/stack/orm/entity/messaging"/>
-    <source path="dev/webfx/stack/orm/entity/messaging/serial"/>
     <!--===========================< webfx-stack-orm-expression >===========================-->
     <source path="dev/webfx/stack/orm/expression"/>
     <source path="dev/webfx/stack/orm/expression/builder"/>
