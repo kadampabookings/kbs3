@@ -29,7 +29,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import one.modality.base.client.i18n.ModalityI18nKeys;
+import one.modality.base.client.i18n.BaseI18nKeys;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.shared.entities.*;
 import one.modality.event.backoffice.activities.pricing.EventPricingRouting;
@@ -53,9 +53,9 @@ final class CreateFestivalExecutor {
         ToggleButton summerButton = createEventTypeButton(FestivalCreatorI18nKeys.SummerCard, FestivalType.SUMMER_FESTIVAL);
         ToggleButton fallButton = createEventTypeButton(FestivalCreatorI18nKeys.FallCard, FestivalType.FALL_FESTIVAL);
         HBox eventTypeBar = new HBox(10, springButton, summerButton, fallButton);
-        Button cancelButton = Bootstrap.secondaryButton(I18nControls.newButton(ModalityI18nKeys.Cancel));
+        Button cancelButton = Bootstrap.secondaryButton(I18nControls.newButton(BaseI18nKeys.Cancel));
         Layouts.setMinWidthToPref(cancelButton); // to avoid the button to stretch (will be scaled down instead)
-        Button createButton = Bootstrap.largeSuccessButton(I18nControls.newButton(ModalityI18nKeys.Create), false);
+        Button createButton = Bootstrap.largeSuccessButton(I18nControls.newButton(BaseI18nKeys.Create), false);
         HBox buttonBar = Bootstrap.large(new HBox(10,
             cancelButton,
             createButton

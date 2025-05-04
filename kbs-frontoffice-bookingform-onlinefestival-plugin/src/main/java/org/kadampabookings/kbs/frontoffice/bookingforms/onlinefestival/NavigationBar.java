@@ -9,7 +9,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import one.modality.base.client.i18n.ModalityI18nKeys;
+import one.modality.base.client.i18n.BaseI18nKeys;
 
 /**
  * @author Bruno Salmon
@@ -30,8 +30,8 @@ final class NavigationBar {
 
     public NavigationBar() {
         container.getStyleClass().add("top-bar");
-        container.setLeft(createNavigationButton(ModalityI18nKeys.Back));
-        container.setRight(createNavigationButton(ModalityI18nKeys.Next));
+        container.setLeft(createNavigationButton(BaseI18nKeys.Back));
+        container.setRight(createNavigationButton(BaseI18nKeys.Next));
         container.setMinHeight(51);
     }
 

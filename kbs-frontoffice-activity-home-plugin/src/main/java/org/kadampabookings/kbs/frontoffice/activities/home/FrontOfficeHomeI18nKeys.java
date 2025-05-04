@@ -8,7 +8,6 @@ public interface FrontOfficeHomeI18nKeys {
     String MoreEvents = "MoreEvents";
     String PodcastsHeader = "PodcastsHeader";
     String PodcastsCard4Content = "PodcastsCard4Content";
-    String SpringFestival = "SpringFestival";
     String PodcastsCard5Title = "PodcastsCard5Title";
     String PodcastsCard6Content = "PodcastsCard6Content";
     String BookOnline = "BookOnline";
@@ -19,9 +18,7 @@ public interface FrontOfficeHomeI18nKeys {
     String PodcastsCard2Content = "PodcastsCard2Content";
     String BookInPerson = "BookInPerson";
     String PodcastsCard1Title = "PodcastsCard1Title";
-    String FallFestival = "FallFestival";
     String FestivalsHeader = "FestivalsHeader";
-    String SummerFestival = "SummerFestival";
     String PodcastsCard4Title = "PodcastsCard4Title";
     String Home = "Home";
 
