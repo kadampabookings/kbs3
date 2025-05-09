@@ -270,6 +270,8 @@
     <source path="one/modality/crm/frontoffice/activities/createaccount"/>
     <!--==============< modality-crm-frontoffice-activity-userprofile-plugin >==============-->
     <source path="one/modality/crm/frontoffice/activities/userprofile"/>
+    <!--=========================< modality-crm-frontoffice-help >==========================-->
+    <source path="one/modality/crm/frontoffice/help"/>
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
