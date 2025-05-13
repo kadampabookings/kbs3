@@ -187,7 +187,7 @@ final class CreateFestivalExecutor {
 
     private ToggleButton createEventTypeButton(String cardI18nKey, FestivalType festivalType) {
         // card18nKey has a graphic and a text such as "[Spring] {0}" where {0} is supposed to be the year of the next festival to create
-        ObservableValue<Integer> nextYearProperty = FXProperties.compute(FXFestivals.lastFestivalProperty(festivalType),
+        ObservableValue<Integer> nextYearProperty = FXProperties.compute(FXFestivals.lastFestivalProperty(festivalType, false),
             CreateFestivalExecutor::nextFestivalYear);
         ToggleButton button = I18nControls.newToggleButton(cardI18nKey, nextYearProperty);
         button.setContentDisplay(ContentDisplay.TOP);
@@ -202,7 +202,7 @@ final class CreateFestivalExecutor {
     // Static methods
 
     private static Integer nextFestivalYear(FestivalType festivalType) {
-        return FXFestivals.lastFestivalProperty(festivalType).getValue().getStartDate().getYear() + 1;
+        return FXFestivals.lastFestivalProperty(festivalType, false).getValue().getStartDate().getYear() + 1;
     }
 
     private static Integer nextFestivalYear(Event lastFestival) {

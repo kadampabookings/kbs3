@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -28,6 +29,7 @@ import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Event;
 import one.modality.event.client.lifecycle.EventLifeCycle;
 import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
+import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
 /**
@@ -87,13 +89,22 @@ final class FestivalThumbnail {
     }
 
     private void openBookNowDialog() {
-        Hyperlink bookInPersonLink = I18nControls.newHyperlink(FrontOfficeHomeI18nKeys.BookInPerson);
-        Label bookOnline = I18nControls.newLabel(FrontOfficeHomeI18nKeys.BookOnline);
+        Hyperlink bookInPersonLink = I18nControls.newHyperlink(FrontOfficeHomeI18nKeys.AttendInPerson);
+
+        Event onlineFestival = FXFestivals.lastFestivalProperty(festivalType, true).get();
+        Labeled bookOnline;
+        if (!EventLifeCycle.canBookNow(onlineFestival)) {
+            bookOnline = I18nControls.newLabel(FrontOfficeHomeI18nKeys.OnlineBookingsOpenLater);
+            bookOnline.setDisable(true);
+        } else {
+            bookOnline = I18nControls.newHyperlink(FrontOfficeHomeI18nKeys.AttendOnline);
+        }
         bookOnline.setWrapText(true);
         bookOnline.setTextAlignment(TextAlignment.CENTER);
-        bookOnline.setDisable(true);
+
         VBox bookNowOptionsBox = new VBox(20, bookInPersonLink, bookOnline);
         bookNowOptionsBox.setAlignment(Pos.CENTER);
+
         Pane bookNowDialog = new GoldenRatioPane(bookNowOptionsBox);
         bookNowDialog.getStyleClass().setAll("book-now-dialog");
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
@@ -101,10 +112,19 @@ final class FestivalThumbnail {
         Pane dialogArea = FXMainFrameDialogArea.getDialogArea();
         DialogCallback callback = DialogUtil.showModalNodeInGoldLayout(bookNowDialog, dialogArea);
         dialogArea.setOnMouseClicked(e2 -> callback.closeDialog());
+
         bookInPersonLink.setOnAction(e2 -> {
             BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(festival));
             callback.closeDialog();
         });
+
+        if (bookOnline instanceof Hyperlink) {
+            ((Hyperlink) bookOnline).setOnAction(e2 -> {
+                BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(onlineFestival));
+                callback.closeDialog();
+            });
+        }
+
         Animations.fadeIn(bookNowDialog);
     }
 }
