@@ -550,6 +550,7 @@
     <source path="dev/webfx/extras/visual/controls"/>
     <!--============================< webfx-extras-visual-grid >============================-->
     <source path="dev/webfx/extras/visual/controls/grid"/>
+    <source path="dev/webfx/extras/visual/controls/grid/skin"/>
     <!--====================< webfx-extras-visual-grid-peers-gwt-j2cl >=====================-->
     <source path="dev/webfx/extras/visual/controls/grid/peers/gwt/html"/>
     <source path="dev/webfx/extras/visual/controls/grid/registry"/>

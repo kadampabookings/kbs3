@@ -927,6 +927,13 @@ fx-homepane fx-tile * {
     --brand-main-color: var(--brand-orange-color);
     --brand-main-background-color: var(--brand-orange-color);
 }
+/*===== modality-backoffice-mainframe-web@main.css from modality-base-backoffice-mainframe-activity =====*/
+
+/* Applying some blur in the dialog area to focus user on the dialog itself */
+.modality-dialog-area {
+    backdrop-filter: blur(3px);
+}
+
 /*===== modality-client-css-web@main.css from modality-base-client-css =====*/
 
 :root {
