@@ -327,10 +327,10 @@
     <source path="one/modality/event/client/mediaview"/>
     <!--=====================< modality-event-client-recurringevents >======================-->
     <source path="one/modality/event/client/recurringevents"/>
-    <!--===========< modality-event-frontoffice-activity-audiorecordings-plugin >===========-->
-    <source path="one/modality/event/frontoffice/activities/audiorecordings"/>
-    <resource path="one/modality/event/frontoffice/activities/audiorecordings"/>
-    <public path="" includes="one/modality/event/frontoffice/activities/audiorecordings/"/>
+    <!--============< modality-event-frontoffice-activity-audiolibrary-plugin >=============-->
+    <source path="one/modality/event/frontoffice/activities/audiolibrary"/>
+    <resource path="one/modality/event/frontoffice/activities/audiolibrary"/>
+    <public path="" includes="one/modality/event/frontoffice/activities/audiolibrary/"/>
     <!--===============< modality-event-frontoffice-activity-booking-plugin >===============-->
     <source path="one/modality/event/frontoffice/activities/booking"/>
     <source path="one/modality/event/frontoffice/activities/booking/fx"/>

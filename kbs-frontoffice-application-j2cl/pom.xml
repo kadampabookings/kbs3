@@ -507,9 +507,9 @@
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>one.modality</groupId>
-                                            <artifactId>modality-event-frontoffice-activity-audiorecordings-plugin</artifactId>
+                                            <artifactId>modality-event-frontoffice-activity-audiolibrary-plugin</artifactId>
                                             <version>1.0.0-SNAPSHOT</version>
-                                            <includes>one/modality/event/frontoffice/activities/audiorecordings/</includes>
+                                            <includes>one/modality/event/frontoffice/activities/audiolibrary/</includes>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>dev.webfx</groupId>

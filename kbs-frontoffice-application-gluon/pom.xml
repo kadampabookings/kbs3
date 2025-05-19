@@ -411,7 +411,7 @@
                         <list>one/modality/base/client/brand/[^/]+$</list>
                         <list>one/modality/base/client/images/[^/]+$</list>
                         <list>one/modality/base/shared/domainmodel/[^/]+$</list>
-                        <list>one/modality/event/frontoffice/activities/audiorecordings/[^/]+$</list>
+                        <list>one/modality/event/frontoffice/activities/audiolibrary/[^/]+$</list>
                         <list>one/modality/event/frontoffice/activities/booking/map/[^/]+$</list>
                         <list>org/kadampabookings/kbs/frontoffice/activities/books/[^/]+$</list>
                         <list>org/kadampabookings/kbs/frontoffice/booking/[^/]+$</list>

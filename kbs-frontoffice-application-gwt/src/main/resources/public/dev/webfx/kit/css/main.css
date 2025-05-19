@@ -1181,7 +1181,7 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
     box-shadow: 0px 0px 10px lightgray; /* Corrected drop shadow syntax */
 }
 
-/*===== modality-event-frontoffice-activities-audiorecordings-web@main.css from modality-event-frontoffice-activity-audiorecordings-plugin =====*/
+/*===== modality-event-frontoffice-activities-audiorecordings-web@main.css from modality-event-frontoffice-activity-audiolibrary-plugin =====*/
 
 .audio-library {
     font-family: "Poppins", sans-serif;
