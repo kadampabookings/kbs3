@@ -41,6 +41,7 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
 
     private final Node loginUI = LoginUiService.createLoginUI();
     private final MonoClipPane cornerButton = new MonoClipPane(true, SvgIcons.createSVGPath(DRONE_SVG_PATH));
+    private final HtmlText helpText = new HtmlText();
     private final Player player = new MultiPlayer(new YoutubeVideoPlayer(), new WistiaVideoPlayer());
     private final Media droneMedia = player.acceptMedia("youtube:sYYuOC2Wxy8");
     private final AspectRatioPane aspectRatioPane = new AspectRatioPane(16d / 9);
@@ -64,7 +65,6 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
         SvgIcons.armButton(cornerButton, () -> showVideo(loginUI.getOpacity() == 1));
         cornerButton.setPrefSize(50, 50);
         Layouts.setMinMaxSizeToPref(cornerButton);
-        HtmlText helpText = new HtmlText();
         I18n.bindI18nTextProperty(helpText.textProperty(), KbsFrontOfficeLoginI18nKeys.KbsLoginHelp);
         helpText.setMinWidth(0);
         Layouts.setMaxSizeToPref(helpText);
@@ -110,12 +110,14 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
                 showingDroneScheduled = UiScheduler.scheduleDelay(300, () -> {
                     //cornerButton.setContent(SvgIcons.createSVGPath(EXIT_SVG_PATH));
                     cornerButton.setVisible(false);
+                    helpText.setVisible(false);
                     Animations.animateProperty(loginUI.opacityProperty(), 0);
                 });
             }
         } else/* if (loginUI.getOpacity() == 0)*/ {
             cornerButton.setContent(SvgIcons.createSVGPath(DRONE_SVG_PATH));
             cornerButton.setVisible(true);
+            helpText.setVisible(true);
             Animations.setOrCallOnTimelineFinished(Animations.animateProperty(loginUI.opacityProperty(), 1), e2 ->
                 player.pause());
         }
