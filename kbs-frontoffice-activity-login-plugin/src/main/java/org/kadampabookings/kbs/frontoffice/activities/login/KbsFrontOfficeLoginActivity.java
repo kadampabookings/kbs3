@@ -11,19 +11,21 @@ import dev.webfx.extras.player.multi.MultiPlayer;
 import dev.webfx.extras.player.video.web.wistia.WistiaVideoPlayer;
 import dev.webfx.extras.player.video.web.youtube.YoutubeVideoPlayer;
 import dev.webfx.extras.util.animation.Animations;
+import dev.webfx.extras.util.layout.Layouts;
+import dev.webfx.extras.webtext.HtmlText;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.platform.util.Strings;
 import dev.webfx.platform.windowlocation.WindowLocation;
 import dev.webfx.stack.authn.login.ui.LoginUiService;
+import dev.webfx.stack.i18n.I18n;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import one.modality.base.client.icons.SvgIcons;
@@ -46,7 +48,7 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
 
     @Override
     public Node buildUi() {
-        // All login windows have been redirected to this activity, however we want to decorate only the main login
+        // All login windows have been redirected to this activity; however, we want to decorate only the main login
         // windows, not the one embedded in the booking process. In the later case, we return the default Modality login
         // window (not decorated).
         if (Strings.contains(WindowLocation.getPath(), "/booking/"))
@@ -55,19 +57,24 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
         displayDroneVideo();
         player.setPlayerGroup(null);
         aspectRatioPane.setContent(player.getMediaView());
-        aspectRatioPane.setMinHeight(Region.USE_PREF_SIZE);
-        aspectRatioPane.setMaxHeight(Region.USE_PREF_SIZE);
+        Layouts.setMinMaxHeightToPref(aspectRatioPane);
 
         cornerButton.setBackground(Background.fill(Color.WHITE));
         cornerButton.setOpacity(0.75);
         SvgIcons.armButton(cornerButton, () -> showVideo(loginUI.getOpacity() == 1));
-        cornerButton.setMinSize(50, 50);
         cornerButton.setPrefSize(50, 50);
-        cornerButton.setMaxSize(50, 50);
+        Layouts.setMinMaxSizeToPref(cornerButton);
+        HtmlText helpText = new HtmlText();
+        I18n.bindI18nTextProperty(helpText.textProperty(), KbsFrontOfficeLoginI18nKeys.KbsLoginHelp);
+        helpText.setMinWidth(0);
+        Layouts.setMaxSizeToPref(helpText);
+        helpText.getStyleClass().add("help-text");
         StackPane.setMargin(cornerButton, new Insets(10));
+        StackPane.setMargin(helpText, new Insets(10));
         StackPane.setAlignment(cornerButton, Pos.TOP_RIGHT);
+        StackPane.setAlignment(helpText, Pos.BOTTOM_CENTER);
 
-        StackPane stackPane = new StackPane(aspectRatioPane, loginUI, cornerButton);
+        StackPane stackPane = new StackPane(aspectRatioPane, loginUI, cornerButton, helpText);
 
         aspectRatioPane.prefHeightProperty().bind(stackPane.minHeightProperty());
 

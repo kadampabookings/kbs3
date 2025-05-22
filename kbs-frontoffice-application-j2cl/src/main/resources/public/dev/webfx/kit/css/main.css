@@ -1596,7 +1596,7 @@ progress::-moz-progress-bar { /* For FireFox */
     background-color: white;
     border-radius: 20px;
 }
-/*===== kbs-frontoffice-application-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
+/*===== kbs-frontoffice-login-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
 .kbs-main-login {
     --webfx-login-portal-background-image: url("./frontoffice/images/Manjushri.jpg");
@@ -1606,6 +1606,20 @@ progress::-moz-progress-bar { /* For FireFox */
    instead of the clip size, enlarging the scroll pane height unnecessarily. */
 fx-aspectratiopane {
     overflow: hidden;
+}
+
+.kbs-main-login .help-text {
+    text-align: center;
+    color: white;
+    padding: 5px 5px 1px 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    border-color: rgba(255, 255, 255, 0.21);
+}
+
+.kbs-main-login .help-text a {
+    color: white;
 }
 /*===== kbs3-frontoffice-news-web@main.css from kbs-frontoffice-activity-news-plugin =====*/
 

@@ -7,12 +7,15 @@
     </exported-packages>
 
     <dependencies>
-        <used-by-source-modules/>
+        <used-by-source-modules>
+            <undetected-module>javafx-controls</undetected-module>
+        </used-by-source-modules>
     </dependencies>
 
     <providers>
         <provider interface="dev.webfx.platform.boot.spi.ApplicationJob">org.kadampabookings.kbs.frontoffice.activities.login.KbsFrontOfficeLoginOverriderJob</provider>
     </providers>
 
+    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.activities.login.KbsFrontOfficeLoginI18nKeys"/>
 
 </project>

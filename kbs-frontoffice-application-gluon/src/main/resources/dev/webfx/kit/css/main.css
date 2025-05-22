@@ -1340,7 +1340,7 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-font-weight: 400;
     -fx-font-size: 2em;
 }
-/*===== kbs-frontoffice-application-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/
+/*===== kbs-frontoffice-login-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
 /* JavaFX doesn't support url in variables for now, so we rewrite the CSS rule instead
 * {
