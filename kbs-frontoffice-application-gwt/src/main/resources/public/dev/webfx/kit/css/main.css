@@ -1228,6 +1228,11 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
 
 /*===== modality-event-frontoffice-activities-videos-web@main.css from modality-event-frontoffice-activity-videostreaming-plugin =====*/
 
+.livestream {
+    /* Overriding some WebFX Extras CSS variables  */
+    --webfx-switch-selected-background-color: var(--brand-blue-color);
+}
+
 .livestream h3 {
      font-family: "Poppins", sans-serif;
      font-size: 24px;
