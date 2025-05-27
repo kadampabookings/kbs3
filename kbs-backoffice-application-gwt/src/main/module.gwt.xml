@@ -603,6 +603,7 @@
     <source path="dev/webfx/kit/registry/javafxweb"/>
     <!--===============================< webfx-kit-launcher >===============================-->
     <source path="dev/webfx/kit/launcher"/>
+    <source path="dev/webfx/kit/launcher/aria"/>
     <source path="dev/webfx/kit/launcher/spi"/>
     <source path="dev/webfx/kit/launcher/spi/impl/base"/>
     <!--=================================< webfx-kit-util >=================================-->
