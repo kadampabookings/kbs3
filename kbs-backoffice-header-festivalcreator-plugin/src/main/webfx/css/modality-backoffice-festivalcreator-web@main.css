@@ -24,19 +24,19 @@
 .event-creator-dialog fx-togglebutton.spring-festival {
     color: var(--kbs-spring-color);
     --fx-svg-path-fill: var(--kbs-spring-color);
-    --fx-togglebutton-selected-background: var(--kbs-spring-color);
+    --fx-button-background-selected: var(--kbs-spring-color);
 }
 
 .event-creator-dialog fx-togglebutton.summer-festival {
     color: var(--kbs-summer-color);
     --fx-svg-path-fill: var(--kbs-summer-color);
-    --fx-togglebutton-selected-background: var(--kbs-summer-color);
+    --fx-button-background-selected: var(--kbs-summer-color);
 }
 
 .event-creator-dialog fx-togglebutton.fall-festival {
     color: var(--kbs-fall-color);
     --fx-svg-path-fill: var(--kbs-fall-color);
-    --fx-togglebutton-selected-background: var(--kbs-fall-color);
+    --fx-button-background-selected: var(--kbs-fall-color);
 }
 
 .event-creator-dialog fx-togglebutton.selected {
