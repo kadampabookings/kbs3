@@ -3,95 +3,69 @@
     --summer-festival-color: #FEBC21;
     --fall-festival-color: #FFA264;
     --home-header-color: #4A4748;
-}
-
-.festival-thumbnail .home-podcasts {
-    font-family: var(--poppins-font-family), serif;
-    font-weight: 400;
-    font-size: 36px;
-}
-
-.festival-thumbnail > fx-background, .home-podcasts > fx-background {
-    border-radius: 8px;
-    background-repeat: repeat, no-repeat;
-    background-size: cover, cover;
-    background-position: center, center;
+    --festival-color: unset;
+    --festival-background-url: unset;
 }
 
 .festivals-header, .podcasts-header {
     font-weight: bold;
     font-size: 40px;
-    color: var(--home-header-color);
+    --fx-text-fill: var(--home-header-color);
 }
 
-.festival-thumbnail fx-label fx-text {
+.festival-thumbnail, .home-podcasts {
+    font-family: var(--poppins-font-family), serif;
     font-weight: 400;
-    font-size: 36px;
+    font-size: 13px;
+    --fx-border-radius: 8px;
+    --fx-background: url("./home/pixel-white-80.png") center center / cover repeat, var(--festival-background-url) center center / cover no-repeat;
 }
 
 .festival-thumbnail fx-label.festival-name {
     font-family: var(--vollkorn-font-family), serif;
     font-weight: 500;
-    font-size: 33px;
-}
-
-.festival-thumbnail.spring-festival > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/spring-background.png");
-}
-
-.festival-thumbnail.summer-festival > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/summer-background.png");
-}
-
-.festival-thumbnail.fall-festival > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/fall-background.png");
-}
-
-.festival-thumbnail.spring-festival fx-label {
-    color: var(--spring-festival-color);
-}
-
-.festival-thumbnail.summer-festival fx-label {
-    color: var(--summer-festival-color);
-}
-
-.festival-thumbnail.fall-festival fx-label {
-    color: var(--fall-festival-color);
-}
-
-.home-podcasts > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+    font-size: 36px;
+    --fx-text-fill: var(--festival-color);
 }
 
 .festival-thumbnail fx-button {
     font-weight: 600;
     font-size: 16px;
-    color: white;
-    --fx-background-radius: 8px;
-    --fx-border-style: none;
+    --fx-button-background: var(--festival-color);
+    --fx-text-fill: white;
+    --fx-border: none;
+    --fx-border-radius: 8px;
     cursor: pointer;
 }
 
-.festival-thumbnail.spring-festival fx-button {
-    --fx-button-background: var(--spring-festival-color);
+.festival-thumbnail.spring-festival {
+    --festival-background-url: url("./home/spring-background.png");
+    --festival-color: var(--spring-festival-color);
 }
 
-.festival-thumbnail.summer-festival fx-button {
-    --fx-button-background: var(--summer-festival-color);
+.festival-thumbnail.summer-festival {
+    --festival-background-url: url("./home/summer-background.png");
+    --festival-color: var(--summer-festival-color);
 }
 
-.festival-thumbnail.fall-festival fx-button {
-    --fx-button-background: var(--fall-festival-color);
+.festival-thumbnail.fall-festival {
+    --festival-background-url:  url("./home/fall-background.png");
+    --festival-color: var(--fall-festival-color);
 }
+
+.home-podcasts {
+    --fx-background: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+}
+
 
 .more-events {
     font-size: 16px;
-    color: var(--brand-main-color);
+    --fx-text-fill: var(--brand-main-color);
 }
 
-.podcasts-card > fx-background {
-    background-color: white;
-    border-radius: 8px;
+.podcasts-card {
+    --fx-background: white;
+    --fx-border-radius: 8px;
 }
 
 .podcasts-card .card-title {
@@ -109,9 +83,9 @@
     font-weight: 600;
     font-size: 16px;
     color: white;
-    --fx-background-radius: 8px;
     --fx-button-background: var(--home-header-color);
-    --fx-border-style: none;
+    --fx-border-radius: 8px;
+    --fx-border: none;
     cursor: pointer;
 }
 
@@ -121,7 +95,7 @@
     font-size: 2em;
 }
 
-.book-now-dialog > fx-border {
-    background-color: white;
-    border-radius: 20px;
+.book-now-dialog {
+    --fx-background: white;
+    --fx-border-radius: 20px;
 }

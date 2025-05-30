@@ -2,6 +2,7 @@
     --kbs-spring-color: #41BA4D;
     --kbs-summer-color: #F7931E;
     --kbs-fall-color: #8264A0;
+    --kbs-festival-color: unset;
 }
 
 .event-creator-dialog, .event-creator-dialog input {
@@ -16,30 +17,25 @@
 .event-creator-dialog fx-togglebutton {
     cursor: pointer;
     filter: drop-shadow(4px 4px 5px lightgray);
-    --fx-border-style: none;
-    --fx-button-background: white;
+    --fx-border: none;
     --fx-border-radius: 0;
+    --fx-button-background: white;
+    --fx-button-background-selected: var(--kbs-festival-color);
+    --fx-text-fill: var(--kbs-festival-color);
 }
 
 .event-creator-dialog fx-togglebutton.spring-festival {
-    color: var(--kbs-spring-color);
-    --fx-svg-path-fill: var(--kbs-spring-color);
-    --fx-button-background-selected: var(--kbs-spring-color);
+    --kbs-festival-color: var(--kbs-spring-color);
 }
 
 .event-creator-dialog fx-togglebutton.summer-festival {
-    color: var(--kbs-summer-color);
-    --fx-svg-path-fill: var(--kbs-summer-color);
-    --fx-button-background-selected: var(--kbs-summer-color);
+    --kbs-festival-color: var(--kbs-summer-color);
 }
 
 .event-creator-dialog fx-togglebutton.fall-festival {
-    color: var(--kbs-fall-color);
-    --fx-svg-path-fill: var(--kbs-fall-color);
-    --fx-button-background-selected: var(--kbs-fall-color);
+    --kbs-festival-color: var(--kbs-fall-color);
 }
 
-.event-creator-dialog fx-togglebutton.selected {
-    color: white;
-    --fx-svg-path-fill: white;
+.event-creator-dialog fx-togglebutton.pseudo-selected {
+    --fx-text-fill: white;
 }

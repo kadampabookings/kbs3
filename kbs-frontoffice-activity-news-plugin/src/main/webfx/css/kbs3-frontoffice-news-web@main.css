@@ -3,12 +3,12 @@
 }
 
 /* Adding round border on searchbar */
-.searchbar > fx-border {
-    border: 1px solid lightgray;
-    border-radius: 50px;
+.searchbar {
+    --fx-border: 1px solid lightgray;
+    --fx-border-radius: 50px;
 }
 
 /* Removing text field border in search bar */
-.searchbar fx-textfield > fx-border {
-    border: none;
+.searchbar fx-textfield {
+    --fx-border: none;
 }
