@@ -4,20 +4,25 @@
 
 .online-festival-booking-form .top-bar {
     font-weight: bold;
-    --fx-background: #E7E7E7;
-    --fx-border: 1px solid #E7E7E7;
+    --fx-background-color: #E7E7E7;
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
     --fx-border-radius: 8px;
 }
 
 .online-festival-booking-form .top-bar .title {
-    --fx-background: white;
-    --fx-border: 1px solid #E7E7E7;
+    --fx-background-color: white;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
     --fx-border-radius: 8px;
 }
 
 .online-festival-booking-form .price-bar {
     font-weight: bold;
-    --fx-background: #F4F4F4;
+    --fx-background-color: #F4F4F4;
 }
 
 .online-festival-booking-form .price-bar fx-label.price {

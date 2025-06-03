@@ -19,8 +19,11 @@
     font-family: var(--poppins-font-family), serif;
     font-weight: 400;
     font-size: 13px;
-    --fx-border-radius: 8px;
-    --fx-background: var(--pixel-white-80-url) center center / cover repeat, var(--festival-background-url) center center / cover no-repeat;
+    --fx-background-image: var(--pixel-white-80-url), var(--festival-background-url);
+    --fx-background-position: center center, center center;
+    --fx-background-size: cover, cover;
+    --fx-background-repeat: repeat, no-repeat;
+    --fx-background-radius: 8px;
 }
 
 .festival-thumbnail fx-label.festival-name {
@@ -33,9 +36,9 @@
 .festival-thumbnail fx-button {
     font-weight: 600;
     font-size: 16px;
-    --fx-button-background: var(--festival-color);
+    --fx-button-background-color: var(--festival-color);
     --fx-text-fill: white;
-    --fx-border: none;
+    --fx-border-style: none;
     --fx-border-radius: 8px;
     cursor: pointer;
 }
@@ -56,7 +59,7 @@
 }
 
 .home-podcasts {
-    --fx-background: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+    --fx-background-image: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
 }
 
 
@@ -66,8 +69,8 @@
 }
 
 .podcasts-card {
-    --fx-background: white;
-    --fx-border-radius: 8px;
+    --fx-background-color: white;
+    --fx-background-radius: 8px;
 }
 
 .podcasts-card .card-title {
@@ -85,9 +88,9 @@
     font-weight: 600;
     font-size: 16px;
     color: white;
-    --fx-button-background: var(--home-header-color);
+    --fx-button-background-color: var(--home-header-color);
     --fx-border-radius: 8px;
-    --fx-border: none;
+    --fx-border-style: none;
     cursor: pointer;
 }
 
@@ -98,6 +101,6 @@
 }
 
 .book-now-dialog {
-    --fx-background: white;
-    --fx-border-radius: 20px;
+    --fx-background-color: white;
+    --fx-background-radius: 20px;
 }

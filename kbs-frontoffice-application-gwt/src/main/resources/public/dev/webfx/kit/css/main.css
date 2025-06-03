@@ -8,10 +8,17 @@
     --safe-area-inset-left:   env(safe-area-inset-left);
     --body-user-select: none;
     --text-user-select: text;
-    --fx-border: none;
-    --fx-border-radius: 5px;
+    --fx-border-style: none;
+    --fx-border-color: transparent;
+    --fx-border-radius: 0;
+    --fx-border-width: 0;
     --fx-border-color-focus: #0096D6;
-    --fx-background: none;
+    --fx-background-color: transparent;
+    --fx-background-radius: var(--fx-border-radius);
+    --fx-background-image: none;
+    --fx-background-position: none;
+    --fx-background-repeat: none;
+    --fx-background-size: none;
     --fx-text-fill: black;
     --fx-svg-path-fill: var(--fx-text-fill);
 }
@@ -44,18 +51,32 @@ body > fx-scene { /* main stage scene only */
 }
 
 fx-background {
-    background: var(--fx-background);
-    border-radius: var(--fx-border-radius);
+    background-color: var(--fx-background-color);
+    border-radius: var(--fx-background-radius);
+    background-image: var(--fx-background-image);
+    background-position: var(--fx-background-position);
+    background-repeat: var(--fx-background-repeat);
+    background-size: var(--fx-background-size);
 }
 
 fx-border {
-    border: var(--fx-border);
+    border-style: var(--fx-border-style);
+    border-color: var(--fx-border-color);
+    border-width: var(--fx-border-width);
     border-radius: var(--fx-border-radius);
 }
 
 fx-children { /* Stopping propagation of background and border CSS variables to children */
-    --fx-background: none;
-    --fx-border: none;
+    --fx-background-color: transparent;
+    --fx-background-radius: var(--fx-border-radius);
+    --fx-background-image: none;
+    --fx-background-position: none;
+    --fx-background-repeat: none;
+    --fx-background-size: none;
+    --fx-border-style: none;
+    --fx-border-color: none;
+    --fx-border-radius: 0;
+    --fx-border-width: 0;
 }
 
 /* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
@@ -88,10 +109,23 @@ fx-text {
     --fx-textfield-background: white;
     --fx-textfield-border: 1px solid #c0c0c0;
     --fx-textarea-border: var(--fx-textfield-border);
-    --fx-button-background: linear-gradient(180deg, white, #e0e0e0);
-    --fx-button-background-selected: linear-gradient(180deg, #f0f0f0, #d0d0d0);
-    --fx-button-border: 1px solid #c0c0c0;
+    --fx-button-background-color: transparent;
+    --fx-button-background-radius: var(--fx-button-border-radius);
+    --fx-button-background-image: linear-gradient(180deg, white, #e0e0e0);
+    /* Necessary (probably never used)? */
+    --fx-button-background-position: none;
+    --fx-button-background-repeat: none;
+    --fx-button-background-size: none;
+
+    --fx-button-background-color-selected: transparent;
+    --fx-button-background-image-selected: linear-gradient(180deg, #f0f0f0, #d0d0d0);
+
+
+    --fx-button-border-style: solid;
+    --fx-button-border-color: #c0c0c0;
     --fx-button-border-radius: 5px;
+    --fx-button-border-width: 1px;
+
     --fx-placholder-color: #888;
 }
 
@@ -105,13 +139,21 @@ fx-label, fx-button, fx-togglebutton {
 }
 
 fx-button, fx-togglebutton {
-    --fx-border: var(--fx-button-border);
+    --fx-border-style: var(--fx-button-border-style);
+    --fx-border-color: var(--fx-button-border-color);
     --fx-border-radius: var(--fx-button-border-radius);
-    --fx-background: var(--fx-button-background);
+    --fx-border-width: var(--fx-button-border-width);
+    --fx-background-color: var(--fx-button-background-color);
+    --fx-background-radius: var(--fx-button-background-radius);
+    --fx-background-image: var(--fx-button-background-image);
+    --fx-background-position: var(--fx-button-background-position);
+    --fx-background-repeat: var(--fx-button-background-repeat);
+    --fx-background-size: var(--fx-button-background-size);
 }
 
 fx-togglebutton.pseudo-selected {
-    --fx-background: var(--fx-button-background-selected);
+    --fx-background-color-color: var(--fx-button-background-color-selected);
+    --fx-background-color-image: var(--fx-button-background-image-selected);
 }
 
 fx-hyperlink fx-text:hover {
@@ -119,8 +161,8 @@ fx-hyperlink fx-text:hover {
 }
 
 fx-textfield {
-    --fx-background: var(--fx-textfield-background);
-    --fx-border: var(--fx-textfield-border);
+    --fx-background-color: var(--fx-textfield-background);
+    --fx-border-color: var(--fx-textfield-border);
 }
 
 fx-textfield:focus-within > fx-border, textarea:focus {
@@ -141,7 +183,7 @@ textarea {
     border-radius: var(--fx-border-radius);
     padding: 8px;
     box-sizing: border-box;
-    --fx-border: var(--fx-textarea-border);
+    --fx-border-color: var(--fx-textarea-border);
 }
 
 fx-titledpane textarea {
@@ -175,7 +217,7 @@ iframe {
 /*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
 
 .audio-player {
-     --fx-background: #838788;  /* Background color */
+     --fx-background-color: #838788;  /* Background color */
      --fx-border-radius: 30px;
 }
 
@@ -224,13 +266,13 @@ iframe {
 }
 
 fx-switch.webfx-switch {
-    --fx-background: var(--webfx-switch-unselected-background-color);
-    --fx-border-radius: 10px;
+    --fx-background-color: var(--webfx-switch-unselected-background-color);
+    --fx-background-radius: 10px;
     transition-duration: 200ms;
 }
 
 fx-switch.webfx-switch.selected {
-    --fx-background: var(--webfx-switch-selected-background-color);
+    --fx-background-color: var(--webfx-switch-selected-background-color);
     transition-duration: 200ms;
 }
 
@@ -388,12 +430,27 @@ tr.selected, .grid-row.selected {
 /* Buttons */
 
 .btn {
-    --fx-button-background: unset; /* to unset linear gradient */
-    --fx-button-border: 1px solid transparent;
-    --fx-button-border-radius: 4px;
-}
 
-.btn {
+    --fx-border-style: var(--fx-button-border-style);
+    --fx-border-color: var(--fx-button-border-color);
+    --fx-border-radius: var(--fx-button-border-radius);
+    --fx-border-width: var(--fx-button-border-width);
+    --fx-background-color: var(--fx-button-background-color);
+    --fx-background-radius: var(--fx-button-background-radius);
+    --fx-background-image: var(--fx-button-background-image);
+    --fx-background-position: var(--fx-button-background-position);
+    --fx-background-repeat: var(--fx-button-background-repeat);
+    --fx-background-size: var(--fx-button-background-size);
+
+    /* to unset linear gradient */
+    --fx-button-background-image: none;
+    --fx-button-background-image-selected: none;
+    --fx-button-background-radius: var(--fx-button-border-radius);
+    --fx-button-style: solid;
+    --fx-button-border-color: transparent;
+    --fx-button-border-width: 1px;
+    --fx-button-border-radius: 4px;
+
     cursor: pointer;
     font-weight: normal;
     text-align: center;
@@ -401,19 +458,14 @@ tr.selected, .grid-row.selected {
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.btn {
-    --fx-background: var(--fx-button-background);
-    --fx-border-radius: var(--fx-button-border-radius);
-}
-
-.btn:hover:not(.disabled) {
+/*.btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-grey7);
-}
+}*/
 
 .btn-default, .btn.default, .default .btn {
     --fx-text-fill: var(--bootstrap-grey7);
-    --fx-button-background: var(--bootstrap-white);
-    --fx-border: var(--bootstrap-grey3);
+    --fx-button-background-color: var(--bootstrap-white);
+    --fx-border-color: var(--bootstrap-grey3);
 }
 
 .btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled) {
@@ -421,80 +473,80 @@ tr.selected, .grid-row.selected {
 }
 
 .btn-default:hover, .btn.default:hover, .default .btn:hover {
-    --fx-button-background: var(--bootstrap-grey1);
-    --fx-border: var(--bootstrap-grey5);
+    --fx-button-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey5);
 }
 
 .btn-primary, .btn.primary, .primary .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-blue5);
-    --fx-border: var(--bootstrap-blue6);
+    --fx-button-background-color: var(--bootstrap-blue5);
+    --fx-border-color: var(--bootstrap-blue6);
 }
 
 .btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-blue8);
-    --fx-border: var(--bootstrap-blue9);
+    --fx-button-background-color: var(--bootstrap-blue8);
+    --fx-border-color: var(--bootstrap-blue9);
 }
 
 .btn-secondary, .btn.secondary, .secondary .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-grey4);
-    --fx-border: var(--bootstrap-grey5);
+    --fx-button-background-color: var(--bootstrap-grey4);
+    --fx-border-color: var(--bootstrap-grey5);
 }
 
 .btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-grey5);
-    --fx-border: var(--bootstrap-grey6);
+    --fx-button-background-color: var(--bootstrap-grey5);
+    --fx-border-color: var(--bootstrap-grey6);
 }
 
 .btn-success, .btn.success, .success .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-green1);
-    --fx-border: var(--bootstrap-green2);
+    --fx-button-background-color: var(--bootstrap-green1);
+    --fx-border-color: var(--bootstrap-green2);
 }
 
 .btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-green3);
-    --fx-border: var(--bootstrap-green4);
+    --fx-button-background-color: var(--bootstrap-green3);
+    --fx-border-color: var(--bootstrap-green4);
 }
 
 .btn-info, .btn.info, .info .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-blue1);
-    --fx-border: var(--bootstrap-blue2);
+    --fx-button-background-color: var(--bootstrap-blue1);
+    --fx-border-color: var(--bootstrap-blue2);
 }
 
 .btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-blue3);
-    --fx-border: var(--bootstrap-blue4);
+    --fx-button-background-color: var(--bootstrap-blue3);
+    --fx-border-color: var(--bootstrap-blue4);
 }
 
 .btn-warning, .btn.warning, .warning .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-orange1);
-    --fx-border: var(--bootstrap-orange2);
+    --fx-button-background-color: var(--bootstrap-orange1);
+    --fx-border-color: var(--bootstrap-orange2);
 }
 
 .btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-orange3);
-    --fx-border: var(--bootstrap-orange4);
+    --fx-button-background-color: var(--bootstrap-orange3);
+    --fx-border-color: var(--bootstrap-orange4);
 }
 
 .btn-danger, .btn.danger, .danger .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-red1);
-    --fx-border: var(--bootstrap-red2);
+    --fx-button-background-color: var(--bootstrap-red1);
+    --fx-border-color: var(--bootstrap-red2);
 }
 
 .btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background: var(--bootstrap-red3);
-    --fx-border: var(--bootstrap-red4);
+    --fx-button-background-color: var(--bootstrap-red3);
+    --fx-border-color: var(--bootstrap-red4);
 }
 
 .btn-lg, .btn.lg, .lg .btn {
@@ -723,27 +775,27 @@ tr.selected, .grid-row.selected {
 /*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
 
 :root {
-    --webfx-aria-toggle-button-border: 1px solid black;
-    --webfx-aria-toggle-button-background: white;
-    --webfx-aria-toggle-button-background-focused: lightgray;
-    --webfx-aria-toggle-button-background-hover: -webfx-aria-toggle-button-background-focused;
-    --webfx-aria-toggle-button-background-fired: blue;
+    --webfx-aria-toggle-button-border-color: black;
+    --webfx-aria-toggle-button-background-color: white;
+    --webfx-aria-toggle-button-background-color-focused: lightgray;
+    --webfx-aria-toggle-button-background-color-hover: var(--webfx-aria-toggle-button-background-color-focused);
+    --webfx-aria-toggle-button-background-color-fired: blue;
     --webfx-aria-toggle-button-text-fill-fired: white;
 }
 
 fx-togglebutton.aria-toggle {
-    --fx-button-border: var(--webfx-aria-toggle-button-border);
-    --fx-button-background: var(--webfx-aria-toggle-button-background);
-    --fx-button-background-selected: var(--webfx-aria-toggle-button-background-focused);
+    --fx-button-border-color: var(--webfx-aria-toggle-button-border-color);
+    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color);
+    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-focused);
 }
 
 fx-togglebutton.aria-toggle:hover {
-    --fx-button-background: var(--webfx-aria-toggle-button-background-hover);
+    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-hover);
 }
 
 fx-togglebutton.aria-toggle.fired {
-    --fx-button-background: var(--webfx-aria-toggle-button-background-fired);
-    --fx-button-background-selected: var(--webfx-aria-toggle-button-background-fired);
+    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
+    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
     --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
 }
 /*===== webfx-extras-time-pickers-web@main.css from webfx-extras-time-pickers =====*/
@@ -768,11 +820,11 @@ fx-togglebutton.aria-toggle.fired {
 }
 
 .webfx-datepicker .date-selected {
-    --fx-background: var(--webfx-time-pickers-selected-date-background-color);
+    --fx-background-color: var(--webfx-time-pickers-selected-date-background-color);
 }
 
 .webfx-datepicker .date-unselectable {
-    --fx-background: var(--webfx-time-pickers-unselectable-date-background-color);
+    --fx-background-color: var(--webfx-time-pickers-unselectable-date-background-color);
 }
 
 .webfx-datepicker .date-secondary {
@@ -789,7 +841,7 @@ fx-togglebutton.aria-toggle.fired {
 }
 
 .webfx-datepicker {
-    --fx-background: var(--webfx-time-pickers-background-color);
+    --fx-background-color: var(--webfx-time-pickers-background-color);
     --fx-border-radius: 10px;
 }
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
@@ -797,8 +849,8 @@ fx-togglebutton.aria-toggle.fired {
 /* We dont want any background or border for the FilePicker button */
 
 .file-picker fx-button {
-    --fx-background: none;
-    --fx-border: none;
+    --fx-background-color: transparent;
+    --fx-border-style: none;
 }
 
 /*===== webfx-extras-ckeditor-web@main.css from webfx-extras-webtext-peers-gwt-j2cl =====*/
@@ -845,7 +897,10 @@ input[type="password"]:not([value=""]) {
 }
 
 .login {
-    --fx-background: var(--webfx-login-portal-background-image) no-repeat center / cover;
+    --fx-background-image: var(--webfx-login-portal-background-image);
+    --fx-background-position: center;
+    --fx-background-size: cover;
+    --fx-background-repeat: no-repeat;
     --fx-border-radius: 21px;
 }
 
@@ -854,7 +909,7 @@ input[type="password"]:not([value=""]) {
 }
 
 .login-child {
-    --fx-background: rgba(255, 255, 255, 0.8);
+    --fx-background-color: rgba(255, 255, 255, 0.8);
     --fx-border-radius: 21px;
    /* border: 1px solid lightgray;*/
    /* box-shadow: 0px 0px 10px lightgray;*/
@@ -877,12 +932,12 @@ input[type="password"]:not([value=""]) {
 }
 
 .login .line {
-    --fx-background: lightgray;
+    --fx-background-color: lightgray;
 }
 
 .transparent-input {
-    --fx-background: transparent;
-    --fx-border: none;
+    --fx-background-color: transparent;
+    --fx-border-style: none;
 }
 
 
@@ -920,7 +975,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
     max-height: 35px;
     text-align: center;
     font-weight: normal;
-    --fx-border: none;
+    --fx-border-style: none;
     --fx-border-radius: 4px;
 }
 
@@ -930,22 +985,22 @@ body, textarea /* because textarea has explicit default monospace font */ {
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
 fx-collapsepane.menu-bar {
-    --fx-background: white;
-    --fx-border: 1px solid lightgray;
+    --fx-background-color: white;
+    --fx-border-style: solid;
+    --fx-border-color: lightgray;
+    --fx-border-width: 0 0 1px 0;
     --fx-border-radius: 0;
 }
 
-fx-collapsepane.menu-bar > fx-border {
-    border-width: 0 0 1px 0;
-}
-
 fx-collapsepane.menu-bar.lang-menu-bar {
-    --fx-border: none;
+    --fx-border-style: none;
 }
 
 .menu-bar {
     font-family: var(--montserrat-font-family), sans-serif;
-    --fx-button-background: white; /* removes old-style button gradient */
+    /* removes old-style button gradient */
+    --fx-button-background-image: none;
+    --fx-button-background-color: white;
     --fx-text-fill: black;
 }
 
@@ -954,7 +1009,7 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 }
 
 .menu-bar fx-button {
-    --fx-border: none;
+    --fx-border-style: none;
 }
 
 .main-menu-bar fx-label.brand {
@@ -980,8 +1035,8 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     --webfx-visualgrid-col-border-color: transparent;
 
     /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
-    --webfx-aria-toggle-button-background-focused: var(--bootstrap-grey1);
-    --webfx-aria-toggle-button-background-fired: var(--brand-blue-color);
+    --webfx-aria-toggle-button-background-color-focused: var(--bootstrap-grey1);
+    --webfx-aria-toggle-button-background-color-fired: var(--brand-blue-color);
 }
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
@@ -1043,24 +1098,24 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 .btn-black {
     --fx-text-fill: var(--bootstrap-white);
     --fx-svg-path-fill: var(--fx-text-fill);
-    --fx-background: black;
-    --fx-border: black;
+    --fx-background-color: black;
+    --fx-border-color: black;
 }
 
 .btn-black:hover:not(.disabled) {
-    --fx-background: var(--bootstrap-grey7);
-    --fx-border: var(--bootstrap-grey7);
+    --fx-background-color: var(--bootstrap-grey7);
+    --fx-border-color: var(--bootstrap-grey7);
 }
 
 .btn-white {
     --fx-svg-path-fill: var(--bootstrap-white);
-    --fx-background: white;
-    --fx-border: black;
+    --fx-background-color: white;
+    --fx-border-color: black;
 }
 
 .btn-white:hover:not(.disabled) {
     --fx-text-fill: black;
-    --fx-background: var(--bootstrap-grey1);
+    --fx-background-color: var(--bootstrap-grey1);
 }
 
 /*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
@@ -1220,7 +1275,9 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 /* Date cells for recurring events */
 
 .event-date-cell {
-    --fx-border: 1px solid #cccccc;
+    --fx-border-style: solid;
+    --fx-border-color: #cccccc;
+    --fx-border-width: 1px;
 }
 
 .event-date-cell.date-unselected {
@@ -1232,15 +1289,17 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 }
 
 .event-date-cell.date-unselected {
-    --fx-background: none;
+    --fx-background-color: transparent;
 }
 
 .event-date-cell.date-non-selectable {
-    --fx-background: #dddddd;
+    --fx-background-color: #dddddd;
 }
 
 .event-date-cell.date-non-selectable {
-    --fx-border-color: 1px solid #cccccc;
+    --fx-border-style: solid;
+    --fx-border-color: #cccccc;
+    --fx-border-width: 1px;
 }
 
 .event-date-cell.date-non-selectable,
@@ -1250,8 +1309,8 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 
 .event-date-cell.date-selected,
 .event-date-cell.date-already-booked {
-    --fx-background: var(--brand-main-color);
-    --fx-border: none;
+    --fx-background-color: var(--brand-main-color);
+    --fx-border-style: none;
 }
 
 .event-date-cell.date-selected,
@@ -1272,7 +1331,7 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 }
 
 .line-total {
-    --fx-background: #CCCCCC;
+    --fx-background-color: #CCCCCC;
 }
 
 .line-total span {
@@ -1325,8 +1384,11 @@ progress::-moz-progress-bar { /* For FireFox */
     font-family: var(--poppins-font-family), serif;
     font-weight: 400;
     font-size: 13px;
-    --fx-border-radius: 8px;
-    --fx-background: var(--pixel-white-80-url) center center / cover repeat, var(--festival-background-url) center center / cover no-repeat;
+    --fx-background-image: var(--pixel-white-80-url), var(--festival-background-url);
+    --fx-background-position: center center, center center;
+    --fx-background-size: cover, cover;
+    --fx-background-repeat: repeat, no-repeat;
+    --fx-background-radius: 8px;
 }
 
 .festival-thumbnail fx-label.festival-name {
@@ -1339,9 +1401,9 @@ progress::-moz-progress-bar { /* For FireFox */
 .festival-thumbnail fx-button {
     font-weight: 600;
     font-size: 16px;
-    --fx-button-background: var(--festival-color);
+    --fx-button-background-color: var(--festival-color);
     --fx-text-fill: white;
-    --fx-border: none;
+    --fx-border-style: none;
     --fx-border-radius: 8px;
     cursor: pointer;
 }
@@ -1362,7 +1424,7 @@ progress::-moz-progress-bar { /* For FireFox */
 }
 
 .home-podcasts {
-    --fx-background: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+    --fx-background-image: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
 }
 
 
@@ -1372,8 +1434,8 @@ progress::-moz-progress-bar { /* For FireFox */
 }
 
 .podcasts-card {
-    --fx-background: white;
-    --fx-border-radius: 8px;
+    --fx-background-color: white;
+    --fx-background-radius: 8px;
 }
 
 .podcasts-card .card-title {
@@ -1391,9 +1453,9 @@ progress::-moz-progress-bar { /* For FireFox */
     font-weight: 600;
     font-size: 16px;
     color: white;
-    --fx-button-background: var(--home-header-color);
+    --fx-button-background-color: var(--home-header-color);
     --fx-border-radius: 8px;
-    --fx-border: none;
+    --fx-border-style: none;
     cursor: pointer;
 }
 
@@ -1404,8 +1466,8 @@ progress::-moz-progress-bar { /* For FireFox */
 }
 
 .book-now-dialog {
-    --fx-background: white;
-    --fx-border-radius: 20px;
+    --fx-background-color: white;
+    --fx-background-radius: 20px;
 }
 /*===== kbs-frontoffice-login-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
@@ -1440,13 +1502,15 @@ fx-aspectratiopane {
 
 /* Adding round border on searchbar */
 .searchbar {
-    --fx-border: 1px solid lightgray;
+    --fx-border-style: solid;
+    --fx-border-color: lightgray;
+    --fx-border-width: 1px;
     --fx-border-radius: 50px;
 }
 
 /* Removing text field border in search bar */
 .searchbar fx-textfield {
-    --fx-border: none;
+    --fx-border-style: none;
 }
 
 /*===== kbs-frontoffice-onlinefestival-web@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
@@ -1457,20 +1521,25 @@ fx-aspectratiopane {
 
 .online-festival-booking-form .top-bar {
     font-weight: bold;
-    --fx-background: #E7E7E7;
-    --fx-border: 1px solid #E7E7E7;
+    --fx-background-color: #E7E7E7;
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
     --fx-border-radius: 8px;
 }
 
 .online-festival-booking-form .top-bar .title {
-    --fx-background: white;
-    --fx-border: 1px solid #E7E7E7;
+    --fx-background-color: white;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
     --fx-border-radius: 8px;
 }
 
 .online-festival-booking-form .price-bar {
     font-weight: bold;
-    --fx-background: #F4F4F4;
+    --fx-background-color: #F4F4F4;
 }
 
 .online-festival-booking-form .price-bar fx-label.price {
