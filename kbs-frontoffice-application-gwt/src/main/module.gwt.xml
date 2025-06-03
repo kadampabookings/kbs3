@@ -25,6 +25,7 @@
     <!--=========================< webfx-kit-javafxcontrols-emul >==========================-->
     <source path="com/sun/javafx/scene/control"/>
     <source path="com/sun/javafx/scene/control/behavior"/>
+    <source path="com/sun/javafx/scene/control/inputmap"/>
     <source path="com/sun/javafx/scene/control/skin"/>
     <source path="javafx/scene/control"/>
     <source path="javafx/scene/control/skin"/>
@@ -348,6 +349,8 @@
     <source path="one/modality/event/frontoffice/bookingforms/recurringevent"/>
     <!--=======================< modality-event-frontoffice-medias >========================-->
     <source path="one/modality/event/frontoffice/medias"/>
+    <!--===============================< webfx-extras-aria >================================-->
+    <source path="dev/webfx/extras/aria"/>
     <!--==============================< webfx-extras-canvas >===============================-->
     <source path="dev/webfx/extras/canvas"/>
     <source path="dev/webfx/extras/canvas/impl"/>

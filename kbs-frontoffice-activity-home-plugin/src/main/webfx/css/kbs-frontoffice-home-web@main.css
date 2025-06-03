@@ -5,6 +5,8 @@
     --home-header-color: #4A4748;
     --festival-color: unset;
     --festival-background-url: unset;
+    /* Using a data url for immediate result instead of loading the png file */
+    --pixel-white-80-url: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8fwYAAtABzbrmHzgAAAAASUVORK5CYII=);
 }
 
 .festivals-header, .podcasts-header {
@@ -18,7 +20,7 @@
     font-weight: 400;
     font-size: 13px;
     --fx-border-radius: 8px;
-    --fx-background: url("./home/pixel-white-80.png") center center / cover repeat, var(--festival-background-url) center center / cover no-repeat;
+    --fx-background: var(--pixel-white-80-url) center center / cover repeat, var(--festival-background-url) center center / cover no-repeat;
 }
 
 .festival-thumbnail fx-label.festival-name {

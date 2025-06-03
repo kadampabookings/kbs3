@@ -683,6 +683,34 @@ VisualGrid {
      -webfx-material-focused-line-fill: -webfx-material-invalid-fill;
 }
 
+/*===== webfx-extras-aria-javafx@main.css from webfx-extras-aria =====*/
+
+* {
+    -webfx-aria-toggle-button-border: transparent;
+    -webfx-aria-toggle-button-background: white;
+    -webfx-aria-toggle-button-background-focused: lightgray;
+    -webfx-aria-toggle-button-background-hover: -webfx-aria-toggle-button-background-focused;
+    -webfx-aria-toggle-button-background-fired: blue;
+    -webfx-aria-toggle-button-text-fill-fired: white;
+}
+
+ToggleButton.aria-toggle {
+    -fx-border-color: -webfx-aria-toggle-button-border;
+    -fx-background-color: -webfx-aria-toggle-button-background;
+}
+
+ToggleButton.aria-toggle:hover {
+    -fx-background-color: -webfx-aria-toggle-button-background-hover;
+}
+
+ToggleButton.aria-toggle:selected {
+    -fx-background-color: -webfx-aria-toggle-button-background-focused;
+}
+
+ToggleButton.aria-toggle.fired {
+    -fx-background-color: -webfx-aria-toggle-button-background-fired;
+    -fx-text-fill: -webfx-aria-toggle-button-text-fill-fired;
+}
 /*===== webfx-extras-time-pickers-javafx@main.css from webfx-extras-time-pickers =====*/
 
 * {
@@ -844,7 +872,7 @@ CollapsePane.menu-bar.lang-menu-bar {
 }
 
 .menu-bar {
-    -fx-font-family: -poppins-font-family;
+    -fx-font-family: "Montserrat";
 }
 
 .lang-menu-bar .selected Text {
@@ -877,7 +905,12 @@ CollapsePane.menu-bar.lang-menu-bar {
 /*===== modality-base-front-office-javafx@main.css from modality-base-frontoffice-application =====*/
 
 * {
+    /* We don't show the vertical grid lines in the front office (ex: AudioLibraryActivity or VideoStreamingActivity) */
     -webfx-visualgrid-col-border-color: transparent;
+
+    /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
+    -webfx-aria-toggle-button-background-focused: -bootstrap-grey1;
+    -webfx-aria-toggle-button-background-fired: -brand-blue-color;
 }
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
 
@@ -927,20 +960,19 @@ CollapsePane.menu-bar.lang-menu-bar {
     -bootstrap-red6: #FF0404 ;
 }
 
-.h1 {
-    -fx-font-family: "Roboto"; /*-roboto-font-family */
+/*.h1 {
+    -fx-font-family: "Roboto"; !*-roboto-font-family *!
     -fx-font-size: 34px;
     -fx-font-weight: normal;
-    -fx-line-spacing: 6px; /* Line height in JavaFX is set through line-spacing */
+    -fx-line-spacing: 6px; !* Line height in JavaFX is set through line-spacing *!
     -fx-text-alignment: left;
-}
+}*/
 
 .h2 {
-    -fx-font-family: "Poppins"; /* -poppins-font-family; */
     -fx-font-size: 40px;
-    -fx-font-weight: bold;         /* 'bold' is equivalent to 700 weight */
-    -fx-line-spacing: 20px;
-    -fx-text-alignment: center;    /* Aligns text within its container */
+    -fx-font-weight: bold;
+    /*-fx-line-spacing: 20px;
+    -fx-text-alignment: center;*/
     }
 
 .btn-black {
@@ -1066,22 +1098,6 @@ CollapsePane.menu-bar.lang-menu-bar {
 .livestream .text-info {
     -fx-text-fill: black;
     -fx-font-weight: normal;
-}
-
-/* Styling the DaySwitch (each day is a ToggleButton) */
-
-.livestream ToggleButton {
-    -fx-background-color: white;
-    -fx-border-color: black;
-}
-
-.livestream ToggleButton:hover {
-    -fx-background-color: -bootstrap-grey1;
-}
-
-.livestream ToggleButton:selected {
-    -fx-background-color: -brand-blue-color;
-    -fx-text-fill: white;
 }
 
 /** styles for the video desktop table and mobile view **/

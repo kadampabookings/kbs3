@@ -6,14 +6,14 @@
     --safe-area-inset-right:  env(safe-area-inset-right);
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
     --safe-area-inset-left:   env(safe-area-inset-left);
-    --fx-border-color: #c0c0c0;
-    --fx-border-radius: 5px;
-    --fx-border-style: solid;
-    --fx-border-width: 1px;
-    --fx-border-color-focus: #0096D6;
-    --fx-svg-path-fill: black;
     --body-user-select: none;
     --text-user-select: text;
+    --fx-border: none;
+    --fx-border-radius: 5px;
+    --fx-border-color-focus: #0096D6;
+    --fx-background: none;
+    --fx-text-fill: black;
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -28,19 +28,37 @@ body {
     -webkit-touch-callout: none;
 }
 
+fx-scene { /* main stage scene or popup scenes */
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+body > fx-scene { /* main stage scene only */
+    height: 100dvh;
+}
+
 /* Making disabled nodes semi-transparent */
 .disabled {
     opacity: 50%;
 }
 
-.fx-border > fx-border {
-    border-color: var(--fx-border-color);
-    border-style: var(--fx-border-style);
-    border-width: var(--fx-border-width);
+fx-background {
+    background: var(--fx-background);
     border-radius: var(--fx-border-radius);
 }
 
-/* Applying the default JavaFX behaviour for SVGPath */
+fx-border {
+    border: var(--fx-border);
+    border-radius: var(--fx-border-radius);
+}
+
+fx-children { /* Stopping propagation of background and border CSS variables to children */
+    --fx-background: none;
+    --fx-border: none;
+}
+
+/* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
     fill: var(--fx-svg-path-fill);  /* then the fill is black */
 }
@@ -53,6 +71,7 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
 /* The default JavaFX behaviour for Text wrapping is equivalent to HTML "break-word", which is not the default in HTML
    (the default in HTML being "normal"). So we apply "break-word". */
 fx-text {
+    color: var(--fx-text-fill);
     word-break: break-word;
     overflow-wrap: break-word; /* fallback for better browser support */
 /* Also enabling selection on text (as opposed to JavaFX, but it's expected by most web users) */
@@ -65,55 +84,49 @@ fx-text {
 
 /***** Global variables *****/
 :root {
-    --fx-border-color-focus: #0096D6;
+    --fx-border-focus: 1px dashed #0096D620;
     --fx-textfield-background: white;
-    --fx-button-text-color: inherited;
+    --fx-textfield-border: 1px solid #c0c0c0;
+    --fx-textarea-border: var(--fx-textfield-border);
     --fx-button-background: linear-gradient(180deg, white, #e0e0e0);
     --fx-button-background-selected: linear-gradient(180deg, #f0f0f0, #d0d0d0);
+    --fx-button-border: 1px solid #c0c0c0;
+    --fx-button-border-radius: 5px;
+    --fx-placholder-color: #888;
 }
 
 ::placeholder {
-    color: #888;
+    color: var(--fx-placholder-color);
+}
+
+/* Applying text color to svg path as well by default */
+fx-label, fx-button, fx-togglebutton {
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 fx-button, fx-togglebutton {
-    color: var(--fx-button-text-color);
-    --fx-svg-path-fill: var(--fx-button-text-color);
+    --fx-border: var(--fx-button-border);
+    --fx-border-radius: var(--fx-button-border-radius);
+    --fx-background: var(--fx-button-background);
 }
 
-fx-button > fx-background, fx-togglebutton > fx-background {
-    background: var(--fx-button-background);
-    border-radius: var(--fx-border-radius);
-}
-
-fx-togglebutton.selected > fx-background {
-    background: var(--fx-button-background-selected);
-}
-
-fx-button > fx-border, fx-togglebutton > fx-border, fx-textfield > fx-border, textarea {
-    border-color: var(--fx-border-color);
-    border-style: var(--fx-border-style);
-    border-width: var(--fx-border-width);
-    border-radius: var(--fx-border-radius);
-}
-
-fx-textfield:focus-within > fx-border, textarea:focus {
-    border-color: var(--fx-border-color-focus);
-    outline: none !important;
-}
-
-textarea {
-    padding: 8px;
-    box-sizing: border-box;
+fx-togglebutton.pseudo-selected {
+    --fx-background: var(--fx-button-background-selected);
 }
 
 fx-hyperlink fx-text:hover {
     text-decoration: underline;
 }
 
-fx-textfield > fx-background {
-    background: var(--fx-textfield-background);
-    border-radius: var(--fx-border-radius);
+fx-textfield {
+    --fx-background: var(--fx-textfield-background);
+    --fx-border: var(--fx-textfield-border);
+}
+
+fx-textfield:focus-within > fx-border, textarea:focus {
+    border: var(--fx-border-focus);
+    border-radius: 0;
+    outline: none !important;
 }
 
 /* Removing borders, outlines and background for input elements (to not interfere with the above) */
@@ -121,6 +134,18 @@ input, input[type="text"], input[type="password"] { /* is input rule not enough?
     border: none;
     outline: none;
     background-color: transparent;
+}
+
+textarea {
+    border: var(--fx-border);
+    border-radius: var(--fx-border-radius);
+    padding: 8px;
+    box-sizing: border-box;
+    --fx-border: var(--fx-textarea-border);
+}
+
+fx-titledpane textarea {
+    border-radius: 0 0 5px 5px;
 }
 
 /* Cross for the tab close button */
@@ -154,14 +179,14 @@ iframe {
     --safe-area-inset-right:  env(safe-area-inset-right);
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
     --safe-area-inset-left:   env(safe-area-inset-left);
-    --fx-border-color: #c0c0c0;
-    --fx-border-radius: 5px;
-    --fx-border-style: solid;
-    --fx-border-width: 1px;
-    --fx-border-color-focus: #0096D6;
-    --fx-svg-path-fill: black;
     --body-user-select: none;
     --text-user-select: text;
+    --fx-border: none;
+    --fx-border-radius: 5px;
+    --fx-border-color-focus: #0096D6;
+    --fx-background: none;
+    --fx-text-fill: black;
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -176,19 +201,37 @@ body {
     -webkit-touch-callout: none;
 }
 
+fx-scene { /* main stage scene or popup scenes */
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+body > fx-scene { /* main stage scene only */
+    height: 100dvh;
+}
+
 /* Making disabled nodes semi-transparent */
 .disabled {
     opacity: 50%;
 }
 
-.fx-border > fx-border {
-    border-color: var(--fx-border-color);
-    border-style: var(--fx-border-style);
-    border-width: var(--fx-border-width);
+fx-background {
+    background: var(--fx-background);
     border-radius: var(--fx-border-radius);
 }
 
-/* Applying the default JavaFX behaviour for SVGPath */
+fx-border {
+    border: var(--fx-border);
+    border-radius: var(--fx-border-radius);
+}
+
+fx-children { /* Stopping propagation of background and border CSS variables to children */
+    --fx-background: none;
+    --fx-border: none;
+}
+
+/* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
     fill: var(--fx-svg-path-fill);  /* then the fill is black */
 }
@@ -201,6 +244,7 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
 /* The default JavaFX behaviour for Text wrapping is equivalent to HTML "break-word", which is not the default in HTML
    (the default in HTML being "normal"). So we apply "break-word". */
 fx-text {
+    color: var(--fx-text-fill);
     word-break: break-word;
     overflow-wrap: break-word; /* fallback for better browser support */
 /* Also enabling selection on text (as opposed to JavaFX, but it's expected by most web users) */
@@ -361,11 +405,8 @@ tr.selected, .grid-row.selected {
 
 .btn {
     --fx-button-background: unset; /* to unset linear gradient */
-    --fx-border-radius: 4px;
-    --fx-border-style: solid;
-    --fx-border-color: transparent;
-    --fx-border-width: 1px;
-    --fx-button-text-color: inherited;
+    --fx-button-border: 1px solid transparent;
+    --fx-button-border-radius: 4px;
 }
 
 .btn {
@@ -373,111 +414,103 @@ tr.selected, .grid-row.selected {
     font-weight: normal;
     text-align: center;
     font-size: var(--bootstrap-font-size);
-    color: var(--fx-button-text-color);
-    --fx-svg-path-fill: var(--fx-button-text-color);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.btn > fx-background {
-    background: var(--fx-button-background);
-    border-radius: var(--fx-border-radius);
-}
-
-.btn > fx-border {
-    border-color: var(--fx-border-color);
-    border-style: var(--fx-border-style);
-    border-width: var(--fx-border-width);
-    border-radius: var(--fx-border-radius);
+.btn {
+    --fx-background: var(--fx-button-background);
+    --fx-border-radius: var(--fx-button-border-radius);
 }
 
 .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
 }
 
 .btn-default, .btn.default, .default .btn {
-    --fx-button-text-color: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
     --fx-button-background: var(--bootstrap-white);
-    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border: var(--bootstrap-grey3);
 }
 
 .btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
 }
 
 .btn-default:hover, .btn.default:hover, .default .btn:hover {
     --fx-button-background: var(--bootstrap-grey1);
-    --fx-border-color: var(--bootstrap-grey5);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-primary, .btn.primary, .primary .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue5);
-    --fx-border-color: var(--bootstrap-blue6);
+    --fx-border: var(--bootstrap-blue6);
 }
 
 .btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue8);
-    --fx-border-color: var(--bootstrap-blue9);
+    --fx-border: var(--bootstrap-blue9);
 }
 
 .btn-secondary, .btn.secondary, .secondary .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-grey4);
-    --fx-border-color: var(--bootstrap-grey5);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-grey5);
-    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border: var(--bootstrap-grey6);
 }
 
 .btn-success, .btn.success, .success .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-green1);
-    --fx-border-color: var(--bootstrap-green2);
+    --fx-border: var(--bootstrap-green2);
 }
 
 .btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-green3);
-    --fx-border-color: var(--bootstrap-green4);
+    --fx-border: var(--bootstrap-green4);
 }
 
 .btn-info, .btn.info, .info .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue1);
-    --fx-border-color: var(--bootstrap-blue2);
+    --fx-border: var(--bootstrap-blue2);
 }
 
 .btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue3);
-    --fx-border-color: var(--bootstrap-blue4);
+    --fx-border: var(--bootstrap-blue4);
 }
 
 .btn-warning, .btn.warning, .warning .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-orange1);
-    --fx-border-color: var(--bootstrap-orange2);
+    --fx-border: var(--bootstrap-orange2);
 }
 
 .btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-orange3);
-    --fx-border-color: var(--bootstrap-orange4);
+    --fx-border: var(--bootstrap-orange4);
 }
 
 .btn-danger, .btn.danger, .danger .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-red1);
-    --fx-border-color: var(--bootstrap-red2);
+    --fx-border: var(--bootstrap-red2);
 }
 
 .btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-red3);
-    --fx-border-color: var(--bootstrap-red4);
+    --fx-border: var(--bootstrap-red4);
 }
 
 .btn-lg, .btn.lg, .lg .btn {
@@ -605,38 +638,38 @@ tr.selected, .grid-row.selected {
 }
 
 .txt-muted {
-    color: var(--bootstrap-grey6);
-    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-primary, .txt.primary, .primary .txt {
-    color: var(--bootstrap-blue5);
-    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-secondary, .txt.secondary, .secondary .txt {
-    color: var(--bootstrap-grey5);
-    --fx-svg-path-fill: var(--bootstrap-grey5);
+    --fx-text-fill: var(--bootstrap-grey5);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-success, .txt.success, .success .txt {
-    color: var(--bootstrap-green6);
-    --fx-svg-path-fill: var(--bootstrap-green6);
+    --fx-text-fill: var(--bootstrap-green6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-info, .txt.info,  .info .txt {
-    color: var(--bootstrap-blue11);
-    --fx-svg-path-fill: var(--bootstrap-blue11);
+    --fx-text-fill: var(--bootstrap-blue11);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-warning, .txt.warning, .warning .txt {
-    color: var(--bootstrap-orange6);
-    --fx-svg-path-fill: var(--bootstrap-orange6);
+    --fx-text-fill: var(--bootstrap-orange6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-danger, .txt.danger, .danger .txt {
-    color: var(--bootstrap-red6);
-    --fx-svg-path-fill: var(--bootstrap-red6);
+    --fx-text-fill: var(--bootstrap-red6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
@@ -711,14 +744,14 @@ tr.selected, .grid-row.selected {
     --webfx-switch-knob-background-color: white;
 }
 
-fx-switch.webfx-switch > fx-background {
-    background-color: var(--webfx-switch-unselected-background-color);
-    border-radius: 10px;
+fx-switch.webfx-switch {
+    --fx-background: var(--webfx-switch-unselected-background-color);
+    --fx-border-radius: 10px;
     transition-duration: 200ms;
 }
 
-fx-switch.webfx-switch.selected > fx-background {
-    background-color: var(--webfx-switch-selected-background-color);
+fx-switch.webfx-switch.selected {
+    --fx-background: var(--webfx-switch-selected-background-color);
     transition-duration: 200ms;
 }
 
@@ -741,25 +774,21 @@ fx-switch.webfx-switch fx-circle.knob {
     --webfx-time-pickers-background-color: #FFFFFF;
 }
 
-.webfx-datepicker.border > fx-border {
-    border-color: var(--webfx-time-pickers-border-color);
-    border-style: solid;
-    border-radius: 10px;
+.webfx-datepicker {
+    --fx-border-color: 1px solid var(--webfx-time-pickers-border-color);
+    --fx-border-radius: 10px;
 }
 
-.webfx-datepicker .date-selected > fx-background {
-    background-color: var(--webfx-time-pickers-selected-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-selected {
+    --fx-background: var(--webfx-time-pickers-selected-date-background-color);
 }
 
-.webfx-datepicker .date-unselectable > fx-background {
-    background-color: var(--webfx-time-pickers-unselectable-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-unselectable {
+    --fx-background: var(--webfx-time-pickers-unselectable-date-background-color);
 }
 
-.webfx-datepicker .date-secondary > fx-background {
-    background-color: var(--webfx-time-pickers-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-secondary {
+    --fx-background-color: var(--webfx-time-pickers-date-background-color);
 }
 
 .webfx-datepicker .arrow svg path:not([fill]):not([stroke]) {
@@ -767,33 +796,28 @@ fx-switch.webfx-switch fx-circle.knob {
 }
 
 .webfx-datepicker .month {
-    color: var(--webfx-time-pickers-month-color);
+    --fx-text-fill: var(--webfx-time-pickers-month-color);
     font-size: 14px;
 }
 
-.webfx-datepicker.background, .webfx-datepicker .background {
-    background-color: var(--webfx-time-pickers-background-color);
-}
-
-.webfx-datepicker.background {
-    border-radius: 10px;
+.webfx-datepicker {
+    --fx-background: var(--webfx-time-pickers-background-color);
+    --fx-border-radius: 10px;
 }
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
 
 /* We dont want any background or border for the FilePicker button */
 
-.file-picker fx-button > fx-background {
-    background: none;
-}
-
-.file-picker fx-button > fx-border {
-    border: none;
+.file-picker fx-button {
+    --fx-background: none;
+    --fx-border: none;
 }
 
 /*===== webfx-extras-ckeditor-web@main.css from webfx-extras-webtext-peers-gwt-j2cl =====*/
 
 /* Applying same user-select setting as fx-text to fx-htmltext */
 fx-htmltext {
+    color: var(--fx-text-fill);
     -webkit-user-select: var(--text-user-select);
     -moz-user-select: var(--text-user-select);
     -ms-user-select: var(--text-user-select);
@@ -812,6 +836,12 @@ fx-htmltext {
 }
 /*===== webfx-stack-authn-login-ui-portal-web@main.css from webfx-stack-authn-login-ui-portal =====*/
 
+@font-face {
+    font-family: "Password";
+    src: url("./fonts/password/password.woff") format("woff");
+    font-weight: 100 900;
+}
+
 :root {
     --webfx-login-portal-background-image: none;
     --webfx-login-portal-title-color: #0096D6;
@@ -826,17 +856,8 @@ input[type="password"]:not([value=""]) {
     letter-spacing: 0.15em;
 }
 
-@font-face {
-    font-family: "Password";
-    src: url("./fonts/password/password.woff") format("woff");
-    font-weight: 100 900;
-}
-
 .login {
-    background-image: var(--webfx-login-portal-background-image); /* Specify the path to your image */
-    background-repeat: no-repeat;               /* Prevents the image from repeating */
-    background-size: cover;                     /* Scales the image to cover the area */
-    background-position: center;                /* Centers the image */
+    --fx-background: var(--webfx-login-portal-background-image) no-repeat center / cover;
     --fx-border-radius: 21px;
 }
 
@@ -845,8 +866,8 @@ input[type="password"]:not([value=""]) {
 }
 
 .login-child {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 21px;
+    --fx-background: rgba(255, 255, 255, 0.8);
+    --fx-border-radius: 21px;
    /* border: 1px solid lightgray;*/
    /* box-shadow: 0px 0px 10px lightgray;*/
     width: 586px; /* Sets the fixed width */
@@ -860,23 +881,20 @@ input[type="password"]:not([value=""]) {
     font-family: 'Poppins', sans-serif; /* Sets the font to Poppins, with a fallback to sans-serif */
     font-weight: bold;
     line-height: 0.5;
-    color: var(--webfx-login-portal-title-color);
+    --fx-text-fill: var(--webfx-login-portal-title-color);
 }
 
 .login .or {
-    color: #888;
+    --fx-text-fill: #888;
 }
 
 .login .line {
-    background-color: lightgray;
+    --fx-background: lightgray;
 }
 
-.transparent-input > fx-background {
-    background-color: transparent;
-}
-
-.transparent-input > fx-border {
-    border-style: none;
+.transparent-input {
+    --fx-background: transparent;
+    --fx-border: none;
 }
 
 
@@ -924,15 +942,12 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /* Not sure if it's the right place for this CSS rules */
 .event-button {
-    border-radius: 4px;
     height: 35px;
     max-height: 35px;
     text-align: center;
     font-weight: normal;
-}
-
-.event-button > fx-border {
-    border: none;
+    --fx-border: none;
+    --fx-border-radius: 4px;
 }
 
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
@@ -983,58 +998,37 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --bootstrap-red6: #FF0404;
 }
 
+.h2 {
+    font-size: 40px;
+    font-weight: bold;
+}
+
 .disabled:hover {
     cursor: not-allowed;
 }
 
 .btn-black {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-black > fx-background {
-    background: black;
-}
-
-.btn-black > fx-border {
-    border-color: black;
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--fx-text-fill);
+    --fx-background: black;
+    --fx-border: black;
 }
 
 .btn-black:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-black:hover:not(.disabled) > fx-background {
-    background-color: var(--bootstrap-grey7);
-}
-
-.btn-black:hover:not(.disabled) > fx-border {
-    border-color: var(--bootstrap-grey7);
+    --fx-background: var(--bootstrap-grey7);
+    --fx-border: var(--bootstrap-grey7);
 }
 
 .btn-white {
     --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-white > fx-background {
-    background: white;
-}
-
-.btn-white > fx-border {
-    border-color: black;
+    --fx-background: white;
+    --fx-border: black;
 }
 
 .btn-white:hover:not(.disabled) {
-    color: black;
-    --fx-svg-path-fill: black;
+    --fx-text-fill: black;
+    --fx-background: var(--bootstrap-grey1);
 }
-
-.btn-white:hover:not(.disabled) > fx-background {
-    background-color: var(--bootstrap-grey1);
-}
-
-
 
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
 
@@ -1043,8 +1037,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
 }
 
 .event-title {
-    color: white;
-    --fx-svg-path-fill: white;
+    --fx-text-fill: white;
 }
 
 /* .text-justified */
@@ -1056,64 +1049,60 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /* Date cells for recurring events */
 
-.event-date-cell > fx-border {
-    border: 1px solid #cccccc;
+.event-date-cell {
+    --fx-border: 1px solid #cccccc;
 }
 
 .event-date-cell.date-unselected {
-    color: #444;
+    --fx-text-fill: #444;
 }
 
 .event-date-cell .event-time {
-    color: #838788;
+    --fx-text-fill: #838788;
 }
 
-.event-date-cell.date-unselected > fx-background {
-    background: none;
+.event-date-cell.date-unselected {
+    --fx-background: none;
 }
 
-.event-date-cell.date-non-selectable > fx-background {
-    background-color: #dddddd;
+.event-date-cell.date-non-selectable {
+    --fx-background: #dddddd;
 }
 
-.event-date-cell.date-non-selectable > fx-border {
-    border-color: #cccccc;
+.event-date-cell.date-non-selectable {
+    --fx-border-color: 1px solid #cccccc;
 }
 
 .event-date-cell.date-non-selectable,
 .event-date-cell.date-non-selectable .event-time {
-    color: #aaaaaa;
+    --fx-text-fill: #aaaaaa;
 }
 
-.event-date-cell.date-selected > fx-background,
-.event-date-cell.date-already-booked > fx-background {
-    background-color: var(--brand-main-color);
-}
-
-.event-date-cell.date-selected > fx-border,
-.event-date-cell.date-already-booked > fx-border {
-    border: none;
+.event-date-cell.date-selected,
+.event-date-cell.date-already-booked {
+    --fx-background: var(--brand-main-color);
+    --fx-border: none;
 }
 
 .event-date-cell.date-selected,
 .event-date-cell.date-selected .event-time {
-    color: white;
+    --fx-text-fill: white;
 }
 
 .event-date-cell.date-already-booked,
 .event-date-cell.date-already-booked .event-time {
-    color: #eeeeee;
+    --fx-text-fill: #eeeeee;
 }
 
 
 /* .subtitle-grey */
 .subtitle-grey {
-    color: grey;
+    --fx-text-fill: grey;
     font-size: 14px;
 }
 
-.line-total > fx-background {
-    background-color: #CCCCCC;
+.line-total {
+    --fx-background: #CCCCCC;
 }
 
 .line-total span {
@@ -1259,12 +1248,13 @@ tr.branch, .grid-row.branch {
     background-color: transparent;
 }
 
-/*===== modality-backoffice-festivalcreator-web@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
+/*===== kbs-backoffice-festivalcreator-web@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
 
 :root {
     --kbs-spring-color: #41BA4D;
     --kbs-summer-color: #F7931E;
     --kbs-fall-color: #8264A0;
+    --kbs-festival-color: unset;
 }
 
 .event-creator-dialog, .event-creator-dialog input {
@@ -1279,30 +1269,25 @@ tr.branch, .grid-row.branch {
 .event-creator-dialog fx-togglebutton {
     cursor: pointer;
     filter: drop-shadow(4px 4px 5px lightgray);
-    --fx-border-style: none;
-    --fx-button-background: white;
+    --fx-border: none;
     --fx-border-radius: 0;
+    --fx-button-background: white;
+    --fx-button-background-selected: var(--kbs-festival-color);
+    --fx-text-fill: var(--kbs-festival-color);
 }
 
 .event-creator-dialog fx-togglebutton.spring-festival {
-    color: var(--kbs-spring-color);
-    --fx-svg-path-fill: var(--kbs-spring-color);
-    --fx-button-background-selected: var(--kbs-spring-color);
+    --kbs-festival-color: var(--kbs-spring-color);
 }
 
 .event-creator-dialog fx-togglebutton.summer-festival {
-    color: var(--kbs-summer-color);
-    --fx-svg-path-fill: var(--kbs-summer-color);
-    --fx-button-background-selected: var(--kbs-summer-color);
+    --kbs-festival-color: var(--kbs-summer-color);
 }
 
 .event-creator-dialog fx-togglebutton.fall-festival {
-    color: var(--kbs-fall-color);
-    --fx-svg-path-fill: var(--kbs-fall-color);
-    --fx-button-background-selected: var(--kbs-fall-color);
+    --kbs-festival-color: var(--kbs-fall-color);
 }
 
-.event-creator-dialog fx-togglebutton.selected {
-    color: white;
-    --fx-svg-path-fill: white;
+.event-creator-dialog fx-togglebutton.pseudo-selected {
+    --fx-text-fill: white;
 }

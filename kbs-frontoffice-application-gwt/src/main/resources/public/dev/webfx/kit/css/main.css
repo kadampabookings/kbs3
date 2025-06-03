@@ -6,14 +6,14 @@
     --safe-area-inset-right:  env(safe-area-inset-right);
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
     --safe-area-inset-left:   env(safe-area-inset-left);
-    --fx-border-color: #c0c0c0;
-    --fx-border-radius: 5px;
-    --fx-border-style: solid;
-    --fx-border-width: 1px;
-    --fx-border-color-focus: #0096D6;
-    --fx-svg-path-fill: black;
     --body-user-select: none;
     --text-user-select: text;
+    --fx-border: none;
+    --fx-border-radius: 5px;
+    --fx-border-color-focus: #0096D6;
+    --fx-background: none;
+    --fx-text-fill: black;
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -28,19 +28,37 @@ body {
     -webkit-touch-callout: none;
 }
 
+fx-scene { /* main stage scene or popup scenes */
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+body > fx-scene { /* main stage scene only */
+    height: 100dvh;
+}
+
 /* Making disabled nodes semi-transparent */
 .disabled {
     opacity: 50%;
 }
 
-.fx-border > fx-border {
-    border-color: var(--fx-border-color);
-    border-style: var(--fx-border-style);
-    border-width: var(--fx-border-width);
+fx-background {
+    background: var(--fx-background);
     border-radius: var(--fx-border-radius);
 }
 
-/* Applying the default JavaFX behaviour for SVGPath */
+fx-border {
+    border: var(--fx-border);
+    border-radius: var(--fx-border-radius);
+}
+
+fx-children { /* Stopping propagation of background and border CSS variables to children */
+    --fx-background: none;
+    --fx-border: none;
+}
+
+/* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
     fill: var(--fx-svg-path-fill);  /* then the fill is black */
 }
@@ -53,6 +71,7 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
 /* The default JavaFX behaviour for Text wrapping is equivalent to HTML "break-word", which is not the default in HTML
    (the default in HTML being "normal"). So we apply "break-word". */
 fx-text {
+    color: var(--fx-text-fill);
     word-break: break-word;
     overflow-wrap: break-word; /* fallback for better browser support */
 /* Also enabling selection on text (as opposed to JavaFX, but it's expected by most web users) */
@@ -65,55 +84,49 @@ fx-text {
 
 /***** Global variables *****/
 :root {
-    --fx-border-color-focus: #0096D6;
+    --fx-border-focus: 1px dashed #0096D620;
     --fx-textfield-background: white;
-    --fx-button-text-color: inherited;
+    --fx-textfield-border: 1px solid #c0c0c0;
+    --fx-textarea-border: var(--fx-textfield-border);
     --fx-button-background: linear-gradient(180deg, white, #e0e0e0);
     --fx-button-background-selected: linear-gradient(180deg, #f0f0f0, #d0d0d0);
+    --fx-button-border: 1px solid #c0c0c0;
+    --fx-button-border-radius: 5px;
+    --fx-placholder-color: #888;
 }
 
 ::placeholder {
-    color: #888;
+    color: var(--fx-placholder-color);
+}
+
+/* Applying text color to svg path as well by default */
+fx-label, fx-button, fx-togglebutton {
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 fx-button, fx-togglebutton {
-    color: var(--fx-button-text-color);
-    --fx-svg-path-fill: var(--fx-button-text-color);
+    --fx-border: var(--fx-button-border);
+    --fx-border-radius: var(--fx-button-border-radius);
+    --fx-background: var(--fx-button-background);
 }
 
-fx-button > fx-background, fx-togglebutton > fx-background {
-    background: var(--fx-button-background);
-    border-radius: var(--fx-border-radius);
-}
-
-fx-togglebutton.selected > fx-background {
-    background: var(--fx-button-background-selected);
-}
-
-fx-button > fx-border, fx-togglebutton > fx-border, fx-textfield > fx-border, textarea {
-    border-color: var(--fx-border-color);
-    border-style: var(--fx-border-style);
-    border-width: var(--fx-border-width);
-    border-radius: var(--fx-border-radius);
-}
-
-fx-textfield:focus-within > fx-border, textarea:focus {
-    border-color: var(--fx-border-color-focus);
-    outline: none !important;
-}
-
-textarea {
-    padding: 8px;
-    box-sizing: border-box;
+fx-togglebutton.pseudo-selected {
+    --fx-background: var(--fx-button-background-selected);
 }
 
 fx-hyperlink fx-text:hover {
     text-decoration: underline;
 }
 
-fx-textfield > fx-background {
-    background: var(--fx-textfield-background);
-    border-radius: var(--fx-border-radius);
+fx-textfield {
+    --fx-background: var(--fx-textfield-background);
+    --fx-border: var(--fx-textfield-border);
+}
+
+fx-textfield:focus-within > fx-border, textarea:focus {
+    border: var(--fx-border-focus);
+    border-radius: 0;
+    outline: none !important;
 }
 
 /* Removing borders, outlines and background for input elements (to not interfere with the above) */
@@ -121,6 +134,18 @@ input, input[type="text"], input[type="password"] { /* is input rule not enough?
     border: none;
     outline: none;
     background-color: transparent;
+}
+
+textarea {
+    border: var(--fx-border);
+    border-radius: var(--fx-border-radius);
+    padding: 8px;
+    box-sizing: border-box;
+    --fx-border: var(--fx-textarea-border);
+}
+
+fx-titledpane textarea {
+    border-radius: 0 0 5px 5px;
 }
 
 /* Cross for the tab close button */
@@ -149,9 +174,9 @@ iframe {
 
 /*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
 
-.audio-player > fx-background {
-     background-color: #838788;  /* Background color */
-     border-radius: 30px;
+.audio-player {
+     --fx-background: #838788;  /* Background color */
+     --fx-border-radius: 30px;
 }
 
 .audio-player .h4 {
@@ -159,7 +184,7 @@ iframe {
     font-weight: 600;
     font-size: 13px;
     text-align: left;
-    color: white;
+    --fx-text-fill: white;
 }
 
 /* Customizing the progress bar for podcasts */
@@ -177,19 +202,18 @@ iframe {
 
 .audio-player progress::-webkit-progress-value { /* For Chrome & Safari */
     background-color: #0096D6;
-     border-radius: 10px;
+    border-radius: 10px;
 }
 
 .audio-player progress::-moz-progress-bar { /* For FireFox */
     background-color: #0096D6;
-     border-radius: 10px;
+    border-radius: 10px;
 }
-
 
 .audio-player .time {
     font-family: "Poppins", sans-serif;
-    color: white;
     font-size: 13px;
+    --fx-text-fill: white;
 }
 /*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
 
@@ -199,14 +223,14 @@ iframe {
     --webfx-switch-knob-background-color: white;
 }
 
-fx-switch.webfx-switch > fx-background {
-    background-color: var(--webfx-switch-unselected-background-color);
-    border-radius: 10px;
+fx-switch.webfx-switch {
+    --fx-background: var(--webfx-switch-unselected-background-color);
+    --fx-border-radius: 10px;
     transition-duration: 200ms;
 }
 
-fx-switch.webfx-switch.selected > fx-background {
-    background-color: var(--webfx-switch-selected-background-color);
+fx-switch.webfx-switch.selected {
+    --fx-background: var(--webfx-switch-selected-background-color);
     transition-duration: 200ms;
 }
 
@@ -365,11 +389,8 @@ tr.selected, .grid-row.selected {
 
 .btn {
     --fx-button-background: unset; /* to unset linear gradient */
-    --fx-border-radius: 4px;
-    --fx-border-style: solid;
-    --fx-border-color: transparent;
-    --fx-border-width: 1px;
-    --fx-button-text-color: inherited;
+    --fx-button-border: 1px solid transparent;
+    --fx-button-border-radius: 4px;
 }
 
 .btn {
@@ -377,111 +398,103 @@ tr.selected, .grid-row.selected {
     font-weight: normal;
     text-align: center;
     font-size: var(--bootstrap-font-size);
-    color: var(--fx-button-text-color);
-    --fx-svg-path-fill: var(--fx-button-text-color);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.btn > fx-background {
-    background: var(--fx-button-background);
-    border-radius: var(--fx-border-radius);
-}
-
-.btn > fx-border {
-    border-color: var(--fx-border-color);
-    border-style: var(--fx-border-style);
-    border-width: var(--fx-border-width);
-    border-radius: var(--fx-border-radius);
+.btn {
+    --fx-background: var(--fx-button-background);
+    --fx-border-radius: var(--fx-button-border-radius);
 }
 
 .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
 }
 
 .btn-default, .btn.default, .default .btn {
-    --fx-button-text-color: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
     --fx-button-background: var(--bootstrap-white);
-    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border: var(--bootstrap-grey3);
 }
 
 .btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
 }
 
 .btn-default:hover, .btn.default:hover, .default .btn:hover {
     --fx-button-background: var(--bootstrap-grey1);
-    --fx-border-color: var(--bootstrap-grey5);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-primary, .btn.primary, .primary .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue5);
-    --fx-border-color: var(--bootstrap-blue6);
+    --fx-border: var(--bootstrap-blue6);
 }
 
 .btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue8);
-    --fx-border-color: var(--bootstrap-blue9);
+    --fx-border: var(--bootstrap-blue9);
 }
 
 .btn-secondary, .btn.secondary, .secondary .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-grey4);
-    --fx-border-color: var(--bootstrap-grey5);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-grey5);
-    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border: var(--bootstrap-grey6);
 }
 
 .btn-success, .btn.success, .success .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-green1);
-    --fx-border-color: var(--bootstrap-green2);
+    --fx-border: var(--bootstrap-green2);
 }
 
 .btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-green3);
-    --fx-border-color: var(--bootstrap-green4);
+    --fx-border: var(--bootstrap-green4);
 }
 
 .btn-info, .btn.info, .info .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue1);
-    --fx-border-color: var(--bootstrap-blue2);
+    --fx-border: var(--bootstrap-blue2);
 }
 
 .btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-blue3);
-    --fx-border-color: var(--bootstrap-blue4);
+    --fx-border: var(--bootstrap-blue4);
 }
 
 .btn-warning, .btn.warning, .warning .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-orange1);
-    --fx-border-color: var(--bootstrap-orange2);
+    --fx-border: var(--bootstrap-orange2);
 }
 
 .btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-orange3);
-    --fx-border-color: var(--bootstrap-orange4);
+    --fx-border: var(--bootstrap-orange4);
 }
 
 .btn-danger, .btn.danger, .danger .btn {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-red1);
-    --fx-border-color: var(--bootstrap-red2);
+    --fx-border: var(--bootstrap-red2);
 }
 
 .btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled) {
-    --fx-button-text-color: var(--bootstrap-white);
+    --fx-text-fill: var(--bootstrap-white);
     --fx-button-background: var(--bootstrap-red3);
-    --fx-border-color: var(--bootstrap-red4);
+    --fx-border: var(--bootstrap-red4);
 }
 
 .btn-lg, .btn.lg, .lg .btn {
@@ -609,38 +622,38 @@ tr.selected, .grid-row.selected {
 }
 
 .txt-muted {
-    color: var(--bootstrap-grey6);
-    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-primary, .txt.primary, .primary .txt {
-    color: var(--bootstrap-blue5);
-    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-secondary, .txt.secondary, .secondary .txt {
-    color: var(--bootstrap-grey5);
-    --fx-svg-path-fill: var(--bootstrap-grey5);
+    --fx-text-fill: var(--bootstrap-grey5);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-success, .txt.success, .success .txt {
-    color: var(--bootstrap-green6);
-    --fx-svg-path-fill: var(--bootstrap-green6);
+    --fx-text-fill: var(--bootstrap-green6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-info, .txt.info,  .info .txt {
-    color: var(--bootstrap-blue11);
-    --fx-svg-path-fill: var(--bootstrap-blue11);
+    --fx-text-fill: var(--bootstrap-blue11);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-warning, .txt.warning, .warning .txt {
-    color: var(--bootstrap-orange6);
-    --fx-svg-path-fill: var(--bootstrap-orange6);
+    --fx-text-fill: var(--bootstrap-orange6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-danger, .txt.danger, .danger .txt {
-    color: var(--bootstrap-red6);
-    --fx-svg-path-fill: var(--bootstrap-red6);
+    --fx-text-fill: var(--bootstrap-red6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
@@ -707,6 +720,32 @@ tr.selected, .grid-row.selected {
     --webfx-material-line-fill: var(--webfx-material-invalid-fill);
     --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
 }
+/*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
+
+:root {
+    --webfx-aria-toggle-button-border: 1px solid black;
+    --webfx-aria-toggle-button-background: white;
+    --webfx-aria-toggle-button-background-focused: lightgray;
+    --webfx-aria-toggle-button-background-hover: -webfx-aria-toggle-button-background-focused;
+    --webfx-aria-toggle-button-background-fired: blue;
+    --webfx-aria-toggle-button-text-fill-fired: white;
+}
+
+fx-togglebutton.aria-toggle {
+    --fx-button-border: var(--webfx-aria-toggle-button-border);
+    --fx-button-background: var(--webfx-aria-toggle-button-background);
+    --fx-button-background-selected: var(--webfx-aria-toggle-button-background-focused);
+}
+
+fx-togglebutton.aria-toggle:hover {
+    --fx-button-background: var(--webfx-aria-toggle-button-background-hover);
+}
+
+fx-togglebutton.aria-toggle.fired {
+    --fx-button-background: var(--webfx-aria-toggle-button-background-fired);
+    --fx-button-background-selected: var(--webfx-aria-toggle-button-background-fired);
+    --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
+}
 /*===== webfx-extras-time-pickers-web@main.css from webfx-extras-time-pickers =====*/
 
 :root {
@@ -723,25 +762,21 @@ tr.selected, .grid-row.selected {
     --webfx-time-pickers-background-color: #FFFFFF;
 }
 
-.webfx-datepicker.border > fx-border {
-    border-color: var(--webfx-time-pickers-border-color);
-    border-style: solid;
-    border-radius: 10px;
+.webfx-datepicker {
+    --fx-border-color: 1px solid var(--webfx-time-pickers-border-color);
+    --fx-border-radius: 10px;
 }
 
-.webfx-datepicker .date-selected > fx-background {
-    background-color: var(--webfx-time-pickers-selected-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-selected {
+    --fx-background: var(--webfx-time-pickers-selected-date-background-color);
 }
 
-.webfx-datepicker .date-unselectable > fx-background {
-    background-color: var(--webfx-time-pickers-unselectable-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-unselectable {
+    --fx-background: var(--webfx-time-pickers-unselectable-date-background-color);
 }
 
-.webfx-datepicker .date-secondary > fx-background {
-    background-color: var(--webfx-time-pickers-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-secondary {
+    --fx-background-color: var(--webfx-time-pickers-date-background-color);
 }
 
 .webfx-datepicker .arrow svg path:not([fill]):not([stroke]) {
@@ -749,33 +784,28 @@ tr.selected, .grid-row.selected {
 }
 
 .webfx-datepicker .month {
-    color: var(--webfx-time-pickers-month-color);
+    --fx-text-fill: var(--webfx-time-pickers-month-color);
     font-size: 14px;
 }
 
-.webfx-datepicker.background, .webfx-datepicker .background {
-    background-color: var(--webfx-time-pickers-background-color);
-}
-
-.webfx-datepicker.background {
-    border-radius: 10px;
+.webfx-datepicker {
+    --fx-background: var(--webfx-time-pickers-background-color);
+    --fx-border-radius: 10px;
 }
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
 
 /* We dont want any background or border for the FilePicker button */
 
-.file-picker fx-button > fx-background {
-    background: none;
-}
-
-.file-picker fx-button > fx-border {
-    border: none;
+.file-picker fx-button {
+    --fx-background: none;
+    --fx-border: none;
 }
 
 /*===== webfx-extras-ckeditor-web@main.css from webfx-extras-webtext-peers-gwt-j2cl =====*/
 
 /* Applying same user-select setting as fx-text to fx-htmltext */
 fx-htmltext {
+    color: var(--fx-text-fill);
     -webkit-user-select: var(--text-user-select);
     -moz-user-select: var(--text-user-select);
     -ms-user-select: var(--text-user-select);
@@ -794,6 +824,12 @@ fx-htmltext {
 }
 /*===== webfx-stack-authn-login-ui-portal-web@main.css from webfx-stack-authn-login-ui-portal =====*/
 
+@font-face {
+    font-family: "Password";
+    src: url("./fonts/password/password.woff") format("woff");
+    font-weight: 100 900;
+}
+
 :root {
     --webfx-login-portal-background-image: none;
     --webfx-login-portal-title-color: #0096D6;
@@ -808,17 +844,8 @@ input[type="password"]:not([value=""]) {
     letter-spacing: 0.15em;
 }
 
-@font-face {
-    font-family: "Password";
-    src: url("./fonts/password/password.woff") format("woff");
-    font-weight: 100 900;
-}
-
 .login {
-    background-image: var(--webfx-login-portal-background-image); /* Specify the path to your image */
-    background-repeat: no-repeat;               /* Prevents the image from repeating */
-    background-size: cover;                     /* Scales the image to cover the area */
-    background-position: center;                /* Centers the image */
+    --fx-background: var(--webfx-login-portal-background-image) no-repeat center / cover;
     --fx-border-radius: 21px;
 }
 
@@ -827,8 +854,8 @@ input[type="password"]:not([value=""]) {
 }
 
 .login-child {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 21px;
+    --fx-background: rgba(255, 255, 255, 0.8);
+    --fx-border-radius: 21px;
    /* border: 1px solid lightgray;*/
    /* box-shadow: 0px 0px 10px lightgray;*/
     width: 586px; /* Sets the fixed width */
@@ -842,23 +869,20 @@ input[type="password"]:not([value=""]) {
     font-family: 'Poppins', sans-serif; /* Sets the font to Poppins, with a fallback to sans-serif */
     font-weight: bold;
     line-height: 0.5;
-    color: var(--webfx-login-portal-title-color);
+    --fx-text-fill: var(--webfx-login-portal-title-color);
 }
 
 .login .or {
-    color: #888;
+    --fx-text-fill: #888;
 }
 
 .login .line {
-    background-color: lightgray;
+    --fx-background: lightgray;
 }
 
-.transparent-input > fx-background {
-    background-color: transparent;
-}
-
-.transparent-input > fx-border {
-    border-style: none;
+.transparent-input {
+    --fx-background: transparent;
+    --fx-border: none;
 }
 
 
@@ -892,15 +916,12 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /* Not sure if it's the right place for this CSS rules */
 .event-button {
-    border-radius: 4px;
     height: 35px;
     max-height: 35px;
     text-align: center;
     font-weight: normal;
-}
-
-.event-button > fx-border {
-    border: none;
+    --fx-border: none;
+    --fx-border-radius: 4px;
 }
 
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
@@ -908,57 +929,44 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
-fx-collapsepane.menu-bar > fx-background {
-    background-color: white;
+fx-collapsepane.menu-bar {
+    --fx-background: white;
+    --fx-border: 1px solid lightgray;
+    --fx-border-radius: 0;
 }
 
 fx-collapsepane.menu-bar > fx-border {
-    border-style: solid;
     border-width: 0 0 1px 0;
-    border-color: lightgray;
-    border-radius: 0;
 }
 
-fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
-    border: none;
+fx-collapsepane.menu-bar.lang-menu-bar {
+    --fx-border: none;
 }
 
 .menu-bar {
-    font-family: var(--poppins-font-family), sans-serif;
+    font-family: var(--montserrat-font-family), sans-serif;
+    --fx-button-background: white; /* removes old-style button gradient */
+    --fx-text-fill: black;
 }
 
-.lang-menu-bar .selected fx-text {
-    color: white;
+.lang-menu-bar .selected {
+    --fx-text-fill: white;
 }
-
 
 .menu-bar fx-button {
-    --fx-button-background: white; /* removes old-style button gradient */
-}
-
-.menu-bar fx-button > fx-border {
-    border: none;
-}
-
-.main-menu-bar fx-button {
-    color: black;
+    --fx-border: none;
 }
 
 .main-menu-bar fx-label.brand {
-    font-family: var(--roboto-font-family), sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--brand-blue-color);
-    line-height: 1.2;
-    --fx-svg-path-fill: var(--brand-blue-color);
+    font-size: 16px;
+    font-weight: bold;
+    --fx-text-fill: var(--brand-blue-color);
 }
 
 .user-menu-bar fx-label, .user-menu-bar fx-button {
     font-size: 12px;
-    color: #838788;
-    --fx-svg-path-fill: #838788
+    --fx-text-fill: #838788;
 }
-
 
 .modality-dialog-area .gold-layout {
     backdrop-filter: blur(3px);
@@ -968,7 +976,12 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
 /*===== modality-base-front-office-web@main.css from modality-base-frontoffice-application =====*/
 
 :root {
+    /* We don't show the vertical grid lines in the front office (ex: AudioLibraryActivity or VideoStreamingActivity) */
     --webfx-visualgrid-col-border-color: transparent;
+
+    /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
+    --webfx-aria-toggle-button-background-focused: var(--bootstrap-grey1);
+    --webfx-aria-toggle-button-background-fired: var(--brand-blue-color);
 }
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
@@ -1018,58 +1031,37 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
     --bootstrap-red6: #FF0404;
 }
 
+.h2 {
+    font-size: 40px;
+    font-weight: bold;
+}
+
 .disabled:hover {
     cursor: not-allowed;
 }
 
 .btn-black {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-black > fx-background {
-    background: black;
-}
-
-.btn-black > fx-border {
-    border-color: black;
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--fx-text-fill);
+    --fx-background: black;
+    --fx-border: black;
 }
 
 .btn-black:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-black:hover:not(.disabled) > fx-background {
-    background-color: var(--bootstrap-grey7);
-}
-
-.btn-black:hover:not(.disabled) > fx-border {
-    border-color: var(--bootstrap-grey7);
+    --fx-background: var(--bootstrap-grey7);
+    --fx-border: var(--bootstrap-grey7);
 }
 
 .btn-white {
     --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-white > fx-background {
-    background: white;
-}
-
-.btn-white > fx-border {
-    border-color: black;
+    --fx-background: white;
+    --fx-border: black;
 }
 
 .btn-white:hover:not(.disabled) {
-    color: black;
-    --fx-svg-path-fill: black;
+    --fx-text-fill: black;
+    --fx-background: var(--bootstrap-grey1);
 }
-
-.btn-white:hover:not(.disabled) > fx-background {
-    background-color: var(--bootstrap-grey1);
-}
-
-
 
 /*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
 
@@ -1139,13 +1131,13 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
     --webfx-switch-selected-background-color: var(--brand-blue-color);
 }
 
-.livestream h3 {
+.livestream .h3 {
      font-family: "Poppins", sans-serif;
      font-size: 24px;
      font-weight: bold;
  }
 
-.livestream h4 {
+.livestream .h4 {
     font-family: "Poppins", sans-serif;
     font-size: 24px;
     font-weight: 600; /* semi-bold */
@@ -1163,24 +1155,6 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
      font-weight: normal;
      color: black;
 }
-
-
-/* Styling the DaySwitch (each day is a ToggleButton) */
-
-.livestream fx-togglebutton {
-    --fx-border-color: black;
-    --fx-button-background: white;
-    --fx-button-background-selected: var(--brand-blue-color);
-}
-
-.livestream fx-togglebutton:hover:not(.selected) {
-    --fx-button-background: var(--bootstrap-grey1);
-}
-
-.livestream fx-togglebutton.selected, .livestream fx-togglebutton.selected:hover {
-    --fx-button-text-color: white;
-}
-
 
 /** styles for the video desktop table and mobile view **/
 
@@ -1233,8 +1207,7 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
 }
 
 .event-title {
-    color: white;
-    --fx-svg-path-fill: white;
+    --fx-text-fill: white;
 }
 
 /* .text-justified */
@@ -1246,64 +1219,60 @@ fx-collapsepane.menu-bar.lang-menu-bar > fx-border {
 
 /* Date cells for recurring events */
 
-.event-date-cell > fx-border {
-    border: 1px solid #cccccc;
+.event-date-cell {
+    --fx-border: 1px solid #cccccc;
 }
 
 .event-date-cell.date-unselected {
-    color: #444;
+    --fx-text-fill: #444;
 }
 
 .event-date-cell .event-time {
-    color: #838788;
+    --fx-text-fill: #838788;
 }
 
-.event-date-cell.date-unselected > fx-background {
-    background: none;
+.event-date-cell.date-unselected {
+    --fx-background: none;
 }
 
-.event-date-cell.date-non-selectable > fx-background {
-    background-color: #dddddd;
+.event-date-cell.date-non-selectable {
+    --fx-background: #dddddd;
 }
 
-.event-date-cell.date-non-selectable > fx-border {
-    border-color: #cccccc;
+.event-date-cell.date-non-selectable {
+    --fx-border-color: 1px solid #cccccc;
 }
 
 .event-date-cell.date-non-selectable,
 .event-date-cell.date-non-selectable .event-time {
-    color: #aaaaaa;
+    --fx-text-fill: #aaaaaa;
 }
 
-.event-date-cell.date-selected > fx-background,
-.event-date-cell.date-already-booked > fx-background {
-    background-color: var(--brand-main-color);
-}
-
-.event-date-cell.date-selected > fx-border,
-.event-date-cell.date-already-booked > fx-border {
-    border: none;
+.event-date-cell.date-selected,
+.event-date-cell.date-already-booked {
+    --fx-background: var(--brand-main-color);
+    --fx-border: none;
 }
 
 .event-date-cell.date-selected,
 .event-date-cell.date-selected .event-time {
-    color: white;
+    --fx-text-fill: white;
 }
 
 .event-date-cell.date-already-booked,
 .event-date-cell.date-already-booked .event-time {
-    color: #eeeeee;
+    --fx-text-fill: #eeeeee;
 }
 
 
 /* .subtitle-grey */
 .subtitle-grey {
-    color: grey;
+    --fx-text-fill: grey;
     font-size: 14px;
 }
 
-.line-total > fx-background {
-    background-color: #CCCCCC;
+.line-total {
+    --fx-background: #CCCCCC;
 }
 
 .line-total span {
@@ -1340,95 +1309,71 @@ progress::-moz-progress-bar { /* For FireFox */
     --summer-festival-color: #FEBC21;
     --fall-festival-color: #FFA264;
     --home-header-color: #4A4748;
-}
-
-.festival-thumbnail .home-podcasts {
-    font-family: var(--poppins-font-family), serif;
-    font-weight: 400;
-    font-size: 36px;
-}
-
-.festival-thumbnail > fx-background, .home-podcasts > fx-background {
-    border-radius: 8px;
-    background-repeat: repeat, no-repeat;
-    background-size: cover, cover;
-    background-position: center, center;
+    --festival-color: unset;
+    --festival-background-url: unset;
+    /* Using a data url for immediate result instead of loading the png file */
+    --pixel-white-80-url: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8fwYAAtABzbrmHzgAAAAASUVORK5CYII=);
 }
 
 .festivals-header, .podcasts-header {
     font-weight: bold;
     font-size: 40px;
-    color: var(--home-header-color);
+    --fx-text-fill: var(--home-header-color);
 }
 
-.festival-thumbnail fx-label fx-text {
+.festival-thumbnail, .home-podcasts {
+    font-family: var(--poppins-font-family), serif;
     font-weight: 400;
-    font-size: 36px;
+    font-size: 13px;
+    --fx-border-radius: 8px;
+    --fx-background: var(--pixel-white-80-url) center center / cover repeat, var(--festival-background-url) center center / cover no-repeat;
 }
 
 .festival-thumbnail fx-label.festival-name {
     font-family: var(--vollkorn-font-family), serif;
     font-weight: 500;
-    font-size: 33px;
-}
-
-.festival-thumbnail.spring-festival > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/spring-background.png");
-}
-
-.festival-thumbnail.summer-festival > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/summer-background.png");
-}
-
-.festival-thumbnail.fall-festival > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/fall-background.png");
-}
-
-.festival-thumbnail.spring-festival fx-label {
-    color: var(--spring-festival-color);
-}
-
-.festival-thumbnail.summer-festival fx-label {
-    color: var(--summer-festival-color);
-}
-
-.festival-thumbnail.fall-festival fx-label {
-    color: var(--fall-festival-color);
-}
-
-.home-podcasts > fx-background {
-    background-image: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+    font-size: 36px;
+    --fx-text-fill: var(--festival-color);
 }
 
 .festival-thumbnail fx-button {
     font-weight: 600;
     font-size: 16px;
-    color: white;
-    --fx-background-radius: 8px;
-    --fx-border-style: none;
+    --fx-button-background: var(--festival-color);
+    --fx-text-fill: white;
+    --fx-border: none;
+    --fx-border-radius: 8px;
     cursor: pointer;
 }
 
-.festival-thumbnail.spring-festival fx-button {
-    --fx-button-background: var(--spring-festival-color);
+.festival-thumbnail.spring-festival {
+    --festival-background-url: url("./home/spring-background.png");
+    --festival-color: var(--spring-festival-color);
 }
 
-.festival-thumbnail.summer-festival fx-button {
-    --fx-button-background: var(--summer-festival-color);
+.festival-thumbnail.summer-festival {
+    --festival-background-url: url("./home/summer-background.png");
+    --festival-color: var(--summer-festival-color);
 }
 
-.festival-thumbnail.fall-festival fx-button {
-    --fx-button-background: var(--fall-festival-color);
+.festival-thumbnail.fall-festival {
+    --festival-background-url:  url("./home/fall-background.png");
+    --festival-color: var(--fall-festival-color);
 }
+
+.home-podcasts {
+    --fx-background: url("./home/pixel-white-80.png"), url("./home/podcasts-background.png");
+}
+
 
 .more-events {
     font-size: 16px;
-    color: var(--brand-main-color);
+    --fx-text-fill: var(--brand-main-color);
 }
 
-.podcasts-card > fx-background {
-    background-color: white;
-    border-radius: 8px;
+.podcasts-card {
+    --fx-background: white;
+    --fx-border-radius: 8px;
 }
 
 .podcasts-card .card-title {
@@ -1446,9 +1391,9 @@ progress::-moz-progress-bar { /* For FireFox */
     font-weight: 600;
     font-size: 16px;
     color: white;
-    --fx-background-radius: 8px;
     --fx-button-background: var(--home-header-color);
-    --fx-border-style: none;
+    --fx-border-radius: 8px;
+    --fx-border: none;
     cursor: pointer;
 }
 
@@ -1458,9 +1403,9 @@ progress::-moz-progress-bar { /* For FireFox */
     font-size: 2em;
 }
 
-.book-now-dialog > fx-border {
-    background-color: white;
-    border-radius: 20px;
+.book-now-dialog {
+    --fx-background: white;
+    --fx-border-radius: 20px;
 }
 /*===== kbs-frontoffice-login-web@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
@@ -1494,14 +1439,14 @@ fx-aspectratiopane {
 }
 
 /* Adding round border on searchbar */
-.searchbar > fx-border {
-    border: 1px solid lightgray;
-    border-radius: 50px;
+.searchbar {
+    --fx-border: 1px solid lightgray;
+    --fx-border-radius: 50px;
 }
 
 /* Removing text field border in search bar */
-.searchbar fx-textfield > fx-border {
-    border: none;
+.searchbar fx-textfield {
+    --fx-border: none;
 }
 
 /*===== kbs-frontoffice-onlinefestival-web@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
@@ -1512,30 +1457,24 @@ fx-aspectratiopane {
 
 .online-festival-booking-form .top-bar {
     font-weight: bold;
+    --fx-background: #E7E7E7;
+    --fx-border: 1px solid #E7E7E7;
+    --fx-border-radius: 8px;
 }
 
-.online-festival-booking-form .top-bar > fx-border {
-    background-color: #E7E7E7;
-    border: 1px solid #E7E7E7;
-    border-radius: 8px;
-}
-
-.online-festival-booking-form .top-bar .title > fx-border {
-    background-color: white;
-    border: 1px solid #E7E7E7;
-    border-radius: 8px;
+.online-festival-booking-form .top-bar .title {
+    --fx-background: white;
+    --fx-border: 1px solid #E7E7E7;
+    --fx-border-radius: 8px;
 }
 
 .online-festival-booking-form .price-bar {
     font-weight: bold;
-}
-
-.online-festival-booking-form .price-bar > fx-background {
-    background-color: #F4F4F4;
+    --fx-background: #F4F4F4;
 }
 
 .online-festival-booking-form .price-bar fx-label.price {
-    color: #838788;
+    --fx-text-fill: #838788;
 }
 
 .teaching-option-radio-button {
@@ -1543,12 +1482,12 @@ fx-aspectratiopane {
 }
 
 .teaching-option-period-label {
-    color: #838788;
+    --fx-text-fill: #838788;
 }
 
 .teaching-option-price-label {
     font-weight: bold;
-    color: #838788;
+    --fx-text-fill: #838788;
 }
 /*===== override@modality-client-brand-web@main.css from kbs-frontoffice-application =====*/
 

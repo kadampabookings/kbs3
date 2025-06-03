@@ -864,20 +864,19 @@ Text, Label, Button, TextField {
     -bootstrap-red6: #FF0404 ;
 }
 
-.h1 {
-    -fx-font-family: "Roboto"; /*-roboto-font-family */
+/*.h1 {
+    -fx-font-family: "Roboto"; !*-roboto-font-family *!
     -fx-font-size: 34px;
     -fx-font-weight: normal;
-    -fx-line-spacing: 6px; /* Line height in JavaFX is set through line-spacing */
+    -fx-line-spacing: 6px; !* Line height in JavaFX is set through line-spacing *!
     -fx-text-alignment: left;
-}
+}*/
 
 .h2 {
-    -fx-font-family: "Poppins"; /* -poppins-font-family; */
     -fx-font-size: 40px;
-    -fx-font-weight: bold;         /* 'bold' is equivalent to 700 weight */
-    -fx-line-spacing: 20px;
-    -fx-text-alignment: center;    /* Aligns text within its container */
+    -fx-font-weight: bold;
+    /*-fx-line-spacing: 20px;
+    -fx-text-alignment: center;*/
     }
 
 .btn-black {
@@ -1120,12 +1119,13 @@ Text, Label, Button, TextField {
 }
 
 
-/*===== modality-backoffice-festivalcreator-javafx@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
+/*===== kbs-backoffice-festivalcreator-javafx@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
 
 * {
     -kbs-spring-color: #41BA4D;
     -kbs-summer-color: #F7931E;
     -kbs-fall-color: #8264A0;
+    -kbs-festival-color: unset;
 }
 
 .event-creator-dialog {
@@ -1141,65 +1141,31 @@ Text, Label, Button, TextField {
     -fx-background-color: white;
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, lightgray, 11, 0, 4, 4);
+    -fx-text-fill: -kbs-festival-color;
 }
 
-.event-creator-dialog ToggleButton.spring-festival {
-    -fx-text-fill: -kbs-spring-color;
+.event-creator-dialog ToggleButton SVGPath {
+    -fx-fill: -kbs-festival-color;
 }
 
-.event-creator-dialog ToggleButton.spring-festival SVGPath {
-    -fx-fill: -kbs-spring-color;
-}
-
-.event-creator-dialog ToggleButton.summer-festival {
-    -fx-text-fill: -kbs-summer-color;
-}
-
-.event-creator-dialog ToggleButton.summer-festival SVGPath {
-    -fx-fill: -kbs-summer-color;
-}
-
-.event-creator-dialog ToggleButton.fall-festival {
-    -fx-text-fill: -kbs-fall-color;
-}
-
-.event-creator-dialog ToggleButton.fall-festival SVGPath {
-    -fx-fill: -kbs-fall-color;
-}
-
-.event-creator-dialog ToggleButton.spring-festival:selected {
-    -fx-background-color: -kbs-spring-color;
-}
-
-.event-creator-dialog ToggleButton.spring-festival:selected SVGPath {
-    -fx-fill: white;
-}
-
-.event-creator-dialog ToggleButton.spring-festival:selected {
+.event-creator-dialog ToggleButton:selected {
+    -fx-background-color: -kbs-festival-color;
     -fx-text-fill: white;
 }
 
-.event-creator-dialog ToggleButton.summer-festival:selected {
-    -fx-background-color: -kbs-summer-color;
-}
-
-.event-creator-dialog ToggleButton.summer-festival:selected SVGPath {
+.event-creator-dialog ToggleButton:selected SVGPath {
     -fx-fill: white;
 }
 
-.event-creator-dialog ToggleButton.summer-festival:selected {
-    -fx-text-fill: white;
+.event-creator-dialog .spring-festival, .event-creator-dialog .spring-festival SVGPath {
+    -kbs-festival-color: -kbs-spring-color;
 }
 
-.event-creator-dialog ToggleButton.fall-festival:selected {
-    -fx-background-color: -kbs-fall-color;
+.event-creator-dialog .summer-festival, .event-creator-dialog .summer-festival SVGPath {
+    -kbs-festival-color: -kbs-summer-color;
 }
 
-.event-creator-dialog ToggleButton.fall-festival:selected SVGPath {
-    -fx-fill: white;
-}
-
-.event-creator-dialog ToggleButton.fall-festival:selected {
-    -fx-text-fill: white;
+.event-creator-dialog .fall-festival, .event-creator-dialog .fall-festival SVGPath {
+    -kbs-festival-color: -kbs-fall-color;
 }
 
