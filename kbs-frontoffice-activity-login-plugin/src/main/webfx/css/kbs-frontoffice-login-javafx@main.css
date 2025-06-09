@@ -1,5 +1,5 @@
 /* JavaFX doesn't support url in variables for now, so we rewrite the CSS rule instead
-* {
+.root {
     -webfx-login-portal-background-image: url(...);
 }*/
 
