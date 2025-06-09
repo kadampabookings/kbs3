@@ -13,6 +13,7 @@ module kbs.frontoffice.activity.home.plugin {
     requires modality.event.client.lifecycle;
     requires modality.event.frontoffice.activity.booking.plugin;
     requires webfx.extras.panes;
+    requires webfx.extras.styles.bootstrap;
     requires webfx.extras.util.animation;
     requires webfx.kit.util;
     requires webfx.platform.util;

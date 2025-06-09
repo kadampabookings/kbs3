@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.frontoffice.activities.home;
 
 import dev.webfx.extras.panes.GoldenRatioPane;
 import dev.webfx.extras.panes.MonoPane;
+import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.extras.util.animation.Animations;
 import dev.webfx.platform.util.Numbers;
 import dev.webfx.stack.i18n.I18n;
@@ -62,7 +63,7 @@ final class FestivalThumbnail {
         festivalName.getStyleClass().setAll("festival-name");
 
         boolean canBookNow = EventLifeCycle.canBookNow(festival);
-        Button button = I18nControls.newButton(canBookNow ? BookingI18nKeys.bookNow : BookingI18nKeys.comingSoon);
+        Button button = Bootstrap.button(I18nControls.newButton(canBookNow ? BookingI18nKeys.bookNow : BookingI18nKeys.comingSoon));
         button.setPrefSize(240, 48);
         if (canBookNow) {
             button.setOnAction(e -> openBookNowDialog());
