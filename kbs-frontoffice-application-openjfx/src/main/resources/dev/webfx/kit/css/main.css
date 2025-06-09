@@ -111,6 +111,22 @@
 }
 
 
+/*===== webfx-kit-javafxgraphics-javafx@main.css from webfx-kit-javafxgraphics-openjfx =====*/
+
+.root {
+    -fx-focus-color: #0096D6;
+    -fx-border-style-focus: dotted;
+    -fx-border-color-focus: -fx-focus-color;
+    -fx-border-width-focus: 1px;
+}
+
+/* General rule, commented for now as this interferes with WebFX extras material fields
+:focused {
+    -fx-border-style: dotted; !* -fx-border-style-focus not supported by JavaFX *!
+    -fx-border-color: -fx-border-color-focus;
+    -fx-border-width: 1px; !* -fx-border-width-focus not supported by JavaFX *!
+}*/
+
 /*===== webfx-extra-player-audio-javafxmedia-javafx@main.css from webfx-extras-player-audio-javafxmedia =====*/
 
 .audio-player {
@@ -144,7 +160,7 @@
 
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
 
-* {
+.root {
     -webfx-switch-unselected-background-color: lightgray;
     -webfx-switch-selected-background-color: #23EA00;
     -webfx-switch-knob-background-color: white;
@@ -168,7 +184,7 @@ VisualGrid {
     -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
 }
 
-* {
+.root {
     -webfx-visualgrid-row-border-color: #D3D3D3;
     -webfx-visualgrid-col-border-color: #D3D3D3;
     -webfx-visualgrid-selection-color: #AED6F1;
@@ -224,7 +240,7 @@ VisualGrid {
 /*===== webfx-extras-bootstrap-javafx@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
-* {
+.root {
     -bootstrap-white: #fff ;
     
     -bootstrap-grey1: #e6e6e6 ;
@@ -621,7 +637,7 @@ VisualGrid {
 
 /*===== webfx-extras-material-javafx@main.css from webfx-extras-styles-materialdesign =====*/
 
-* {
+.root {
      /* Colors shared by different Material components */
      -webfx-material-input-text-fill: #1e1e1e;
      -webfx-material-idle-text-fill: #6d6d6d;
@@ -685,35 +701,35 @@ VisualGrid {
 
 /*===== webfx-extras-aria-javafx@main.css from webfx-extras-aria =====*/
 
-* {
-    -webfx-aria-toggle-button-border: transparent;
-    -webfx-aria-toggle-button-background: white;
-    -webfx-aria-toggle-button-background-focused: lightgray;
-    -webfx-aria-toggle-button-background-hover: -webfx-aria-toggle-button-background-focused;
-    -webfx-aria-toggle-button-background-fired: blue;
+.root {
+    -webfx-aria-toggle-button-border-color: transparent;
+    -webfx-aria-toggle-button-background-color: white;
+    -webfx-aria-toggle-button-background-color-focused: lightgray;
+    -webfx-aria-toggle-button-background-color-hover: -webfx-aria-toggle-button-background-focused;
+    -webfx-aria-toggle-button-background-color-fired: blue;
     -webfx-aria-toggle-button-text-fill-fired: white;
 }
 
 ToggleButton.aria-toggle {
-    -fx-border-color: -webfx-aria-toggle-button-border;
-    -fx-background-color: -webfx-aria-toggle-button-background;
+    -fx-border-color: -webfx-aria-toggle-button-border-color;
+    -fx-background-color: -webfx-aria-toggle-button-background-color;
 }
 
 ToggleButton.aria-toggle:hover {
-    -fx-background-color: -webfx-aria-toggle-button-background-hover;
+    -fx-background-color: -webfx-aria-toggle-button-background-color-hover;
 }
 
 ToggleButton.aria-toggle:selected {
-    -fx-background-color: -webfx-aria-toggle-button-background-focused;
+    -fx-background-color: -webfx-aria-toggle-button-background-color-focused;
 }
 
 ToggleButton.aria-toggle.fired {
-    -fx-background-color: -webfx-aria-toggle-button-background-fired;
+    -fx-background-color: -webfx-aria-toggle-button-background-color-fired;
     -fx-text-fill: -webfx-aria-toggle-button-text-fill-fired;
 }
 /*===== webfx-extras-time-pickers-javafx@main.css from webfx-extras-time-pickers =====*/
 
-* {
+.root {
     -webfx-time-pickers-blue1-color: #0096D6;
     -webfx-time-pickers-blue2-color: #afe7ff;
     -webfx-time-pickers-gray-color: #cccccc;
@@ -777,7 +793,7 @@ HtmlText, HtmlTextEditor {
 }
 /*===== webfx-stack-authn-login-ui-portal-javafx@main.css from webfx-stack-authn-login-ui-portal =====*/
 
-* {
+.root {
     -webfx-login-portal-background-image: none; /* Specify the path to your image */
     -webfx-login-portal-title-color: #0096D6;
 }
@@ -807,7 +823,7 @@ HtmlText, HtmlTextEditor {
 }
 /*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
 
-* {
+.root {
     -brand-orange-color: #F6782E;
     -brand-blue-color: #0096D6;
     -brand-main-color: -brand-orange-color;
@@ -821,7 +837,7 @@ HtmlText, HtmlTextEditor {
 
 /*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
 
-* {
+.root {
     -montserrat-font-family: "Montserrat";
     -roboto-font-family: "Roboto";
     -poppins-font-family: "Poppins";
@@ -861,33 +877,74 @@ Text, Label, Button, TextField {
 
 /*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
-CollapsePane.menu-bar.non-mobile {
+.main-frame {
     -fx-background-color: white;
-    -fx-border-width: 0 0 1px 0 ;
-    -fx-border-color: lightgray;
 }
 
-CollapsePane.menu-bar.lang-menu-bar {
-    -fx-border-width: 0;
+/* Actually not working in JavaFX
+.main-frame.keyboard-navigation-off {
+    -fx-border-style-focus: none;
+}
+so replaced by the following:
+*/
+
+.main-frame.keyboard-navigation-off :focused {
+    -fx-border-style: none;
+}
+
+/* Actually not working in JavaFX
+.main-frame.keyboard-navigation-on {
+    -fx-border-style-focus: dashed;
+}
+so replaced by the following:
+*/
+
+.main-frame.keyboard-navigation-on :focused {
+    -fx-border-style: dashed;
+    -fx-border-width: 1px;
+    -fx-border-color: -brand-blue-color;
+}
+
+.main-menu-bar ToggleButton, .user-menu-bar ToggleButton {
+    -fx-border-radius: 5px;
+}
+
+/* Actually not working in JavaFX
+.main-frame.keyboard-navigation-off .lang-menu-bar {
+    -fx-border-style-focus: solid;
+}
+so replaced by the following:
+*/
+
+.main-frame.keyboard-navigation-off .lang-menu-bar :focused {
+    -fx-border-style: solid;
 }
 
 .menu-bar {
     -fx-font-family: "Montserrat";
+    -webfx-aria-toggle-button-background-color-hover: transparent;
+    -webfx-aria-toggle-button-background-color-fired: transparent;
+    -webfx-aria-toggle-button-background-color-focused: transparent;
+    -webfx-aria-toggle-button-text-fill-fired: -brand-blue-color;
 }
 
-.lang-menu-bar .selected Text {
-    -fx-fill: white;
+.menu-bar ToggleButton {
+    -fx-background-color: transparent; /* removes old-style button gradient */
 }
 
-.menu-bar Button {
-    -fx-background-color: white; /* removes old-style button gradient */
-}
-
-.main-menu-bar Button {
+.main-menu-bar ToggleButton {
     -fx-text-fill: black;
 }
 
-.user-menu-bar Label, .user-menu-bar Button {
+.main-menu-bar ToggleButton.fired, .user-menu-bar ToggleButton.fired {
+    -fx-font-weight: bold;
+}
+
+.main-menu-bar ToggleButton.fired SVGPath, .user-menu-bar ToggleButton.fired SVGPath {
+    -fx-fill: -webfx-aria-toggle-button-text-fill-fired;
+}
+
+.user-menu-bar Label, .user-menu-bar ToggleButton {
     -fx-font-size: 12px;
     -fx-text-fill: #838788;
 }
@@ -902,20 +959,54 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-fill: -brand-blue-color;
 }
 
+.lang-menu-bar ToggleButton {
+    -fx-border-color: #0096D6;
+    -fx-border-width: 1px 1px 1px 0;
+}
+
+.lang-menu-bar ToggleButton.first-child {
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px 0px 0px 10px;
+    -fx-background-radius: 10px 0px 0px 10px;
+}
+
+.lang-menu-bar ToggleButton.last-child {
+    -fx-border-radius:  0px 10px 10px 0px;
+    -fx-background-radius:  0px 10px 10px 0px;
+}
+
+.lang-menu-bar ToggleButton:selected {
+    -fx-background-color: #F0F0F0;
+}
+
+.lang-menu-bar ToggleButton.fired {
+    -fx-background-color: #0096D6;
+    -fx-text-fill: white;
+}
+
+CollapsePane.menu-bar.non-mobile {
+    -fx-background-color: white;
+    -fx-border-width: 0 0 1px 0 ;
+    -fx-border-color: lightgray;
+}
+
+CollapsePane.menu-bar.lang-menu-bar {
+    -fx-border-width: 0;
+}
 /*===== modality-base-front-office-javafx@main.css from modality-base-frontoffice-application =====*/
 
-* {
+.root {
     /* We don't show the vertical grid lines in the front office (ex: AudioLibraryActivity or VideoStreamingActivity) */
     -webfx-visualgrid-col-border-color: transparent;
 
     /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
-    -webfx-aria-toggle-button-background-focused: -bootstrap-grey1;
-    -webfx-aria-toggle-button-background-fired: -brand-blue-color;
+    -webfx-aria-toggle-button-background-color-focused: -bootstrap-grey1;
+    -webfx-aria-toggle-button-background-color-fired: -brand-blue-color;
 }
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
-* {
+.root {
     -bootstrap-white: #fff ;
     
     -bootstrap-grey1: #e6e6e6 ;
@@ -1142,6 +1233,14 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-font-weight: bold;
 }
 
+.livestream .status .btn.danger:selected {
+    -fx-text-fill: black;
+}
+
+.livestream .status .btn.danger:selected SVGPath {
+    -fx-fill: black;
+}
+
 .livestream .program-box {
     -fx-background-color: #f4f4f4;
     -fx-background-radius: 30;
@@ -1149,7 +1248,7 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 /*===== modality-event-client-recurringevents-javafx@main.css from modality-event-client-recurringevents =====*/
 
-* {
+.root {
     -fx-event-description-text-color: #444;
 }
 
@@ -1250,7 +1349,7 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 /*===== kbs-frontoffice-home-javafx@main.css from kbs-frontoffice-activity-home-plugin =====*/
 
-* {
+.root {
     -spring-festival-color: #159428;
     -summer-festival-color: #FEBC21;
     -fall-festival-color: #FFA264;
@@ -1375,7 +1474,7 @@ CollapsePane.menu-bar.lang-menu-bar {
 /*===== kbs-frontoffice-login-javafx@main.css from kbs-frontoffice-activity-login-plugin =====*/
 
 /* JavaFX doesn't support url in variables for now, so we rewrite the CSS rule instead
-* {
+.root {
     -webfx-login-portal-background-image: url(...);
 }*/
 
@@ -1454,7 +1553,7 @@ CollapsePane.menu-bar.lang-menu-bar {
 /*===== override@modality-client-brand-javafx@main.css from kbs-frontoffice-application =====*/
 
 /*
-* {
+.root {
     -kadampa-org-orange-color: #F5761A;
     -brand-main-color: -kadampa-org-orange-color;
     -brand-main-background-color: -kadampa-org-orange-color;

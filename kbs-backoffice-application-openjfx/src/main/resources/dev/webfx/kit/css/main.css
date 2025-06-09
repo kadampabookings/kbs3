@@ -111,13 +111,29 @@
 }
 
 
+/*===== webfx-kit-javafxgraphics-javafx@main.css from webfx-kit-javafxgraphics-openjfx =====*/
+
+.root {
+    -fx-focus-color: #0096D6;
+    -fx-border-style-focus: dotted;
+    -fx-border-color-focus: -fx-focus-color;
+    -fx-border-width-focus: 1px;
+}
+
+/* General rule, commented for now as this interferes with WebFX extras material fields
+:focused {
+    -fx-border-style: dotted; !* -fx-border-style-focus not supported by JavaFX *!
+    -fx-border-color: -fx-border-color-focus;
+    -fx-border-width: 1px; !* -fx-border-width-focus not supported by JavaFX *!
+}*/
+
 /*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
 
 VisualGrid {
     -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
 }
 
-* {
+.root {
     -webfx-visualgrid-row-border-color: #D3D3D3;
     -webfx-visualgrid-col-border-color: #D3D3D3;
     -webfx-visualgrid-selection-color: #AED6F1;
@@ -173,7 +189,7 @@ VisualGrid {
 /*===== webfx-extras-bootstrap-javafx@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
-* {
+.root {
     -bootstrap-white: #fff ;
     
     -bootstrap-grey1: #e6e6e6 ;
@@ -570,7 +586,7 @@ VisualGrid {
 
 /*===== webfx-extras-material-javafx@main.css from webfx-extras-styles-materialdesign =====*/
 
-* {
+.root {
      /* Colors shared by different Material components */
      -webfx-material-input-text-fill: #1e1e1e;
      -webfx-material-idle-text-fill: #6d6d6d;
@@ -634,7 +650,7 @@ VisualGrid {
 
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
 
-* {
+.root {
     -webfx-switch-unselected-background-color: lightgray;
     -webfx-switch-selected-background-color: #23EA00;
     -webfx-switch-knob-background-color: white;
@@ -654,7 +670,7 @@ Switch.webfx-switch Circle.knob {
 }
 /*===== webfx-extras-time-pickers-javafx@main.css from webfx-extras-time-pickers =====*/
 
-* {
+.root {
     -webfx-time-pickers-blue1-color: #0096D6;
     -webfx-time-pickers-blue2-color: #afe7ff;
     -webfx-time-pickers-gray-color: #cccccc;
@@ -728,7 +744,7 @@ HtmlText, HtmlTextEditor {
 }
 /*===== webfx-stack-authn-login-ui-portal-javafx@main.css from webfx-stack-authn-login-ui-portal =====*/
 
-* {
+.root {
     -webfx-login-portal-background-image: none; /* Specify the path to your image */
     -webfx-login-portal-title-color: #0096D6;
 }
@@ -758,7 +774,7 @@ HtmlText, HtmlTextEditor {
 }
 /*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
 
-* {
+.root {
     -brand-orange-color: #F6782E;
     -brand-blue-color: #0096D6;
     -brand-main-color: -brand-orange-color;
@@ -781,7 +797,7 @@ HtmlText, HtmlTextEditor {
 
 /*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
 
-* {
+.root {
     -montserrat-font-family: "Montserrat";
     -roboto-font-family: "Roboto";
     -poppins-font-family: "Poppins";
@@ -819,7 +835,7 @@ Text, Label, Button, TextField {
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
-* {
+.root {
     -bootstrap-white: #fff ;
     
     -bootstrap-grey1: #e6e6e6 ;
@@ -908,7 +924,7 @@ Text, Label, Button, TextField {
 }
 /*===== modality-event-client-recurringevents-javafx@main.css from modality-event-client-recurringevents =====*/
 
-* {
+.root {
     -fx-event-description-text-color: #444;
 }
 
@@ -993,7 +1009,7 @@ Text, Label, Button, TextField {
 /*===== modality-backoffice-bookings-javafx@main.css from modality-ecommerce-backoffice-activity-bookings-plugin =====*/
 
 /* Declaring color variables with default values */
-* {
+.root {
    -color-base: white;
    -stay-color: transparent;
    -selection-color: #8AAAD380;
@@ -1121,7 +1137,7 @@ Text, Label, Button, TextField {
 
 /*===== kbs-backoffice-festivalcreator-javafx@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
 
-* {
+.root {
     -kbs-spring-color: #41BA4D;
     -kbs-summer-color: #F7931E;
     -kbs-fall-color: #8264A0;
