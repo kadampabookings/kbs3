@@ -67,12 +67,18 @@ fx-text {
 :root {
     --fx-border-color-focus: #0096D6;
     --fx-textfield-background: white;
+    --fx-button-text-color: inherited;
     --fx-button-background: linear-gradient(180deg, white, #e0e0e0);
-    --fx-togglebutton-selected-background: linear-gradient(180deg, #f0f0f0, #d0d0d0);
+    --fx-button-background-selected: linear-gradient(180deg, #f0f0f0, #d0d0d0);
 }
 
 ::placeholder {
     color: #888;
+}
+
+fx-button, fx-togglebutton {
+    color: var(--fx-button-text-color);
+    --fx-svg-path-fill: var(--fx-button-text-color);
 }
 
 fx-button > fx-background, fx-togglebutton > fx-background {
@@ -81,7 +87,7 @@ fx-button > fx-background, fx-togglebutton > fx-background {
 }
 
 fx-togglebutton.selected > fx-background {
-    background: var(--fx-togglebutton-selected-background);
+    background: var(--fx-button-background-selected);
 }
 
 fx-button > fx-border, fx-togglebutton > fx-border, fx-textfield > fx-border, textarea {
@@ -354,242 +360,131 @@ tr.selected, .grid-row.selected {
 /* Buttons */
 
 .btn {
-    cursor: pointer;
+    --fx-button-background: unset; /* to unset linear gradient */
+    --fx-button-border: 1px solid transparent;
+    --fx-button-border-radius: 4px;
+}
 
+.btn {
+    cursor: pointer;
     font-weight: normal;
     text-align: center;
-    /*cursor: default;*/
-    /*background-insets: 0, 0, -1, 0;*/
-    /*padding: 6px 12px 6px 12px;*/ /* hardcoded for web support */
     font-size: var(--bootstrap-font-size);
-    /*min-width: 80px;*/ /* hardcoded for web support */
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.btn > fx-background {
-    background: unset; /* to unset linear gradient */
-    border-radius: 4px;
-}
-
-.btn > fx-border {
-    border-color: transparent;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 4px;
+.btn {
+    --fx-background: var(--fx-button-background);
+    --fx-border-radius: var(--fx-button-border-radius);
 }
 
 .btn:hover:not(.disabled) {
-    color: var(--bootstrap-grey7);
-    --fx-svg-path-fill: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
 }
 
 .btn-default, .btn.default, .default .btn {
-    color: var(--bootstrap-grey7);
-    --fx-svg-path-fill: var(--bootstrap-grey7);
-}
-
-.btn-default > fx-background, .btn.default > fx-background, .default .btn > fx-background {
-    background-color: var(--bootstrap-white);
-}
-
-.btn-default > fx-border, .btn.default > fx-border, .default .btn > fx-border {
-    border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    --fx-button-background: var(--bootstrap-white);
+    --fx-border: var(--bootstrap-grey3);
 }
 
 .btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled) {
-    color: var(--bootstrap-grey7);
-    --fx-svg-path-fill: var(--bootstrap-grey7);
+    --fx-text-fill: var(--bootstrap-grey7);
 }
 
-.btn-default:hover > fx-background, .btn.default:hover > fx-background, .default .btn:hover > fx-background {
-    background-color: var(--bootstrap-grey1);
-}
-
-.btn-default:hover > fx-border, .btn.default:hover > fx-border, .default .btn:hover > fx-border {
-    border-color: var(--bootstrap-grey5);
+.btn-default:hover, .btn.default:hover, .default .btn:hover {
+    --fx-button-background: var(--bootstrap-grey1);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-primary, .btn.primary, .primary .btn {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-primary > fx-background, .btn.primary > fx-background, .primary .btn > fx-background {
-    background-color: var(--bootstrap-blue5);
-}
-
-.btn-primary > fx-border, .btn.primary > fx-border, .primary .btn > fx-border {
-    border-color: var(--bootstrap-blue6);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-blue5);
+    --fx-border: var(--bootstrap-blue6);
 }
 
 .btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-primary:hover:not(.disabled) > fx-background, .btn.primary:hover:not(.disabled) > fx-background, .primary .btn:hover:not(.disabled) > fx-background {
-    background-color: var(--bootstrap-blue8);
-}
-
-.btn-primary:hover:not(.disabled) > fx-border, .btn.primary:hover:not(.disabled) > fx-border, .primary .btn:hover:not(.disabled) > fx-border {
-    border-color: var(--bootstrap-blue9);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-blue8);
+    --fx-border: var(--bootstrap-blue9);
 }
 
 .btn-secondary, .btn.secondary, .secondary .btn {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-secondary > fx-background, .btn.secondary > fx-background, .secondary .btn > fx-background {
-    background-color: var(--bootstrap-grey4);
-}
-
-.btn-secondary > fx-border, .btn.secondary > fx-border, .secondary .btn > fx-border {
-    border-color: var(--bootstrap-grey5);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-grey4);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-secondary:hover:not(.disabled)> fx-background, .btn.secondary:hover:not(.disabled)> fx-background, .secondary .btn:hover:not(.disabled)> fx-background {
-    background-color: var(--bootstrap-grey5);
-}
-
-.btn-secondary:hover:not(.disabled)> fx-border, .btn.secondary:hover:not(.disabled)> fx-border, .secondary .btn:hover:not(.disabled)> fx-border {
-    border-color: var(--bootstrap-grey6);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-grey5);
+    --fx-border: var(--bootstrap-grey6);
 }
 
 .btn-success, .btn.success, .success .btn {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-success > fx-background, .btn.success > fx-background, .success .btn > fx-background {
-    background-color: var(--bootstrap-green1);
-}
-
-.btn-success > fx-border, .btn.success > fx-border, .success .btn > fx-border {
-    border-color: var(--bootstrap-green2);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-green1);
+    --fx-border: var(--bootstrap-green2);
 }
 
 .btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-success:hover:not(.disabled)> fx-background, .btn.success:hover:not(.disabled)> fx-background, .success .btn:hover:not(.disabled)> fx-background {
-    background-color: var(--bootstrap-green3);
-}
-
-.btn-success:hover:not(.disabled)> fx-border, .btn.success:hover:not(.disabled)> fx-border, .success .btn:hover:not(.disabled)> fx-border {
-    border-color: var(--bootstrap-green4);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-green3);
+    --fx-border: var(--bootstrap-green4);
 }
 
 .btn-info, .btn.info, .info .btn {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-info > fx-background, .btn.info > fx-background, .info .btn > fx-background {
-    background-color: var(--bootstrap-blue1);
-    border-color: var(--bootstrap-blue2);
-}
-
-.btn-info > fx-border, .btn.info > fx-border, .info .btn > fx-border {
-    border-color: var(--bootstrap-blue2);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-blue1);
+    --fx-border: var(--bootstrap-blue2);
 }
 
 .btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-info:hover:not(.disabled)> fx-background, .btn.info:hover:not(.disabled)> fx-background, .info .btn:hover:not(.disabled)> fx-background {
-    background-color: var(--bootstrap-blue3);
-}
-
-.btn-info:hover:not(.disabled)> fx-border, .btn.info:hover:not(.disabled)> fx-border, .info .btn:hover:not(.disabled)> fx-border {
-    border-color: var(--bootstrap-blue4);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-blue3);
+    --fx-border: var(--bootstrap-blue4);
 }
 
 .btn-warning, .btn.warning, .warning .btn {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-warning > fx-background, .btn.warning > fx-background, .warning .btn > fx-background {
-    background-color: var(--bootstrap-orange1);
-}
-
-.btn-warning > fx-border, .btn.warning > fx-border, .warning .btn > fx-border {
-    border-color: var(--bootstrap-orange2);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-orange1);
+    --fx-border: var(--bootstrap-orange2);
 }
 
 .btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-warning:hover:not(.disabled)> fx-background, .btn.warning:hover:not(.disabled)> fx-background, .warning .btn:hover:not(.disabled)> fx-background {
-    background-color: var(--bootstrap-orange3);
-}
-
-.btn-warning:hover:not(.disabled)> fx-border, .btn.warning:hover:not(.disabled)> fx-border, .warning .btn:hover:not(.disabled)> fx-border {
-    border-color: var(--bootstrap-orange4);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-orange3);
+    --fx-border: var(--bootstrap-orange4);
 }
 
 .btn-danger, .btn.danger, .danger .btn {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-danger > fx-background, .btn.danger > fx-background, .danger .btn > fx-background {
-    background: var(--bootstrap-red1);
-}
-
-.btn-danger > fx-border, .btn.danger > fx-border, .danger .btn > fx-border {
-    border-color: var(--bootstrap-red2);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-red1);
+    --fx-border: var(--bootstrap-red2);
 }
 
 .btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled) {
-    color: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--bootstrap-white);
-}
-
-.btn-danger:hover:not(.disabled)> fx-background, .btn.danger:hover:not(.disabled)> fx-background, .danger .btn:hover:not(.disabled)> fx-background {
-    background-color: var(--bootstrap-red3);
-}
-
-.btn-danger:hover:not(.disabled)> fx-border, .btn.danger:hover:not(.disabled)> fx-border, .danger .btn:hover:not(.disabled)> fx-border {
-    border-color: var(--bootstrap-red4);
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-button-background: var(--bootstrap-red3);
+    --fx-border: var(--bootstrap-red4);
 }
 
 .btn-lg, .btn.lg, .lg .btn {
     /*padding: 10px 16px 10px 16px;*/ /* hardcoded for web support */
     --bootstrap-font-size: 18px;
-}
-
-.btn-lg > fx-background, .btn-lg > fx-border, .btn.lg > fx-background, .btn.lg > fx-border, .lg .btn > fx-background, .lg .btn > fx-border {
-    border-radius: 6px;
+    --fx-border-radius: 6px;
 }
 
 .btn-sm, .btn.sm, .sm .btn {
     /*padding: 5px 10px 5px 10px;*/ /* hardcoded for web support */
     --bootstrap-font-size: 12px;
-}
-
-.btn-sm > fx-background, .btn-sm > fx-border, .btn.sm > fx-background, .btn.sm > fx-border, .sm .btn > fx-background, .sm .btn > fx-border {
-    border-radius: 3px;
+    --fx-border-radius: 3px;
 }
 
 .btn-xs, .btn.xs, .xs .btn {
     /*padding: 1px 5px 1px 5px;*/ /* hardcoded for web support */
     --bootstrap-font-size: 12px;
-}
-
-.btn-xs > fx-background, .btn-xs > fx-border, .btn.xs > fx-background, .btn.xs > fx-border, .xs .btn > fx-background, .xs .btn > fx-border {
-    border-radius: 3px;
+    --fx-border-radius: 3px;
 }
 
 .lg .btn {
@@ -699,38 +594,38 @@ tr.selected, .grid-row.selected {
 }
 
 .txt-muted {
-    color: var(--bootstrap-grey6);
-    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-primary, .txt.primary, .primary .txt {
-    color: var(--bootstrap-blue5);
-    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-secondary, .txt.secondary, .secondary .txt {
-    color: var(--bootstrap-grey5);
-    --fx-svg-path-fill: var(--bootstrap-grey5);
+    --fx-text-fill: var(--bootstrap-grey5);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-success, .txt.success, .success .txt {
-    color: var(--bootstrap-green6);
-    --fx-svg-path-fill: var(--bootstrap-green6);
+    --fx-text-fill: var(--bootstrap-green6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-info, .txt.info,  .info .txt {
-    color: var(--bootstrap-blue11);
-    --fx-svg-path-fill: var(--bootstrap-blue11);
+    --fx-text-fill: var(--bootstrap-blue11);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-warning, .txt.warning, .warning .txt {
-    color: var(--bootstrap-orange6);
-    --fx-svg-path-fill: var(--bootstrap-orange6);
+    --fx-text-fill: var(--bootstrap-orange6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 .txt-danger, .txt.danger, .danger .txt {
-    color: var(--bootstrap-red6);
-    --fx-svg-path-fill: var(--bootstrap-red6);
+    --fx-text-fill: var(--bootstrap-red6);
+    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
@@ -805,14 +700,14 @@ tr.selected, .grid-row.selected {
     --webfx-switch-knob-background-color: white;
 }
 
-fx-switch.webfx-switch > fx-background {
-    background-color: var(--webfx-switch-unselected-background-color);
-    border-radius: 10px;
+fx-switch.webfx-switch {
+    --fx-background: var(--webfx-switch-unselected-background-color);
+    --fx-border-radius: 10px;
     transition-duration: 200ms;
 }
 
-fx-switch.webfx-switch.selected > fx-background {
-    background-color: var(--webfx-switch-selected-background-color);
+fx-switch.webfx-switch.selected {
+    --fx-background: var(--webfx-switch-selected-background-color);
     transition-duration: 200ms;
 }
 
@@ -835,25 +730,21 @@ fx-switch.webfx-switch fx-circle.knob {
     --webfx-time-pickers-background-color: #FFFFFF;
 }
 
-.webfx-datepicker.border > fx-border {
-    border-color: var(--webfx-time-pickers-border-color);
-    border-style: solid;
-    border-radius: 10px;
+.webfx-datepicker {
+    --fx-border-color: 1px solid var(--webfx-time-pickers-border-color);
+    --fx-border-radius: 10px;
 }
 
-.webfx-datepicker .date-selected > fx-background {
-    background-color: var(--webfx-time-pickers-selected-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-selected {
+    --fx-background: var(--webfx-time-pickers-selected-date-background-color);
 }
 
-.webfx-datepicker .date-unselectable > fx-background {
-    background-color: var(--webfx-time-pickers-unselectable-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-unselectable {
+    --fx-background: var(--webfx-time-pickers-unselectable-date-background-color);
 }
 
-.webfx-datepicker .date-secondary > fx-background {
-    background-color: var(--webfx-time-pickers-date-background-color);
-    border-radius: 10px;
+.webfx-datepicker .date-secondary {
+    --fx-background-color: var(--webfx-time-pickers-date-background-color);
 }
 
 .webfx-datepicker .arrow svg path:not([fill]):not([stroke]) {
@@ -861,33 +752,28 @@ fx-switch.webfx-switch fx-circle.knob {
 }
 
 .webfx-datepicker .month {
-    color: var(--webfx-time-pickers-month-color);
+    --fx-text-fill: var(--webfx-time-pickers-month-color);
     font-size: 14px;
 }
 
-.webfx-datepicker.background, .webfx-datepicker .background {
-    background-color: var(--webfx-time-pickers-background-color);
-}
-
-.webfx-datepicker.background {
-    border-radius: 10px;
+.webfx-datepicker {
+    --fx-background: var(--webfx-time-pickers-background-color);
+    --fx-border-radius: 10px;
 }
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
 
 /* We dont want any background or border for the FilePicker button */
 
-.file-picker fx-button > fx-background {
-    background: none;
-}
-
-.file-picker fx-button > fx-border {
-    border: none;
+.file-picker fx-button {
+    --fx-background: none;
+    --fx-border: none;
 }
 
 /*===== webfx-extras-ckeditor-web@main.css from webfx-extras-webtext-peers-gwt-j2cl =====*/
 
 /* Applying same user-select setting as fx-text to fx-htmltext */
 fx-htmltext {
+    color: var(--fx-text-fill);
     -webkit-user-select: var(--text-user-select);
     -moz-user-select: var(--text-user-select);
     -ms-user-select: var(--text-user-select);

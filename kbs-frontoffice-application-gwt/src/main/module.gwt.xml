@@ -402,6 +402,10 @@
     <source path="dev/webfx/extras/player/video/web"/>
     <!--======================< webfx-extras-player-video-web-castr >=======================-->
     <source path="dev/webfx/extras/player/video/web/castr"/>
+    <!--=====================< webfx-extras-player-video-web-videojs >======================-->
+    <source path="dev/webfx/extras/player/video/web/videojs"/>
+    <resource path="dev/webfx/extras/player/video/web/videojs"/>
+    <public path="" includes="dev/webfx/extras/player/video/web/videojs/"/>
     <!--======================< webfx-extras-player-video-web-wistia >======================-->
     <source path="dev/webfx/extras/player/video/web/wistia"/>
     <!--=====================< webfx-extras-player-video-web-youtube >======================-->
@@ -531,6 +535,8 @@
     <!--=================================< webfx-kit-util >=================================-->
     <source path="dev/webfx/kit/util/properties"/>
     <source path="dev/webfx/kit/util/properties/conversion"/>
+    <!--==============================< webfx-kit-util-aria >===============================-->
+    <source path="dev/webfx/kit/util/aria"/>
     <!--==============================< webfx-kit-util-scene >==============================-->
     <source path="dev/webfx/kit/util/scene"/>
     <!--============================< webfx-lib-javacupruntime >============================-->
