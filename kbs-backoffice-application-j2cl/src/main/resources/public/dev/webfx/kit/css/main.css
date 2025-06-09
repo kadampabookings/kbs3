@@ -6,21 +6,14 @@
     --safe-area-inset-right:  env(safe-area-inset-right);
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
     --safe-area-inset-left:   env(safe-area-inset-left);
+    --fx-border-color: #c0c0c0;
+    --fx-border-radius: 5px;
+    --fx-border-style: solid;
+    --fx-border-width: 1px;
+    --fx-border-color-focus: #0096D6;
+    --fx-svg-path-fill: black;
     --body-user-select: none;
     --text-user-select: text;
-    --fx-border-style: none;
-    --fx-border-color: transparent;
-    --fx-border-radius: 0;
-    --fx-border-width: 0;
-    --fx-border-color-focus: #0096D6;
-    --fx-background-color: transparent;
-    --fx-background-radius: var(--fx-border-radius);
-    --fx-background-image: none;
-    --fx-background-position: none;
-    --fx-background-repeat: none;
-    --fx-background-size: none;
-    --fx-text-fill: black;
-    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -35,51 +28,19 @@ body {
     -webkit-touch-callout: none;
 }
 
-fx-scene { /* main stage scene or popup scenes */
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
-
-body > fx-scene { /* main stage scene only */
-    height: 100dvh;
-}
-
 /* Making disabled nodes semi-transparent */
 .disabled {
     opacity: 50%;
 }
 
-fx-background {
-    background-color: var(--fx-background-color);
-    border-radius: var(--fx-background-radius);
-    background-image: var(--fx-background-image);
-    background-position: var(--fx-background-position);
-    background-repeat: var(--fx-background-repeat);
-    background-size: var(--fx-background-size);
-}
-
-fx-border {
-    border-style: var(--fx-border-style);
+.fx-border > fx-border {
     border-color: var(--fx-border-color);
+    border-style: var(--fx-border-style);
     border-width: var(--fx-border-width);
     border-radius: var(--fx-border-radius);
 }
 
-fx-children { /* Stopping propagation of background and border CSS variables to children */
-    --fx-background-color: transparent;
-    --fx-background-radius: var(--fx-border-radius);
-    --fx-background-image: none;
-    --fx-background-position: none;
-    --fx-background-repeat: none;
-    --fx-background-size: none;
-    --fx-border-style: none;
-    --fx-border-color: none;
-    --fx-border-radius: 0;
-    --fx-border-width: 0;
-}
-
-/* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
+/* Applying the default JavaFX behaviour for SVGPath */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
     fill: var(--fx-svg-path-fill);  /* then the fill is black */
 }
@@ -92,7 +53,6 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
 /* The default JavaFX behaviour for Text wrapping is equivalent to HTML "break-word", which is not the default in HTML
    (the default in HTML being "normal"). So we apply "break-word". */
 fx-text {
-    color: var(--fx-text-fill);
     word-break: break-word;
     overflow-wrap: break-word; /* fallback for better browser support */
 /* Also enabling selection on text (as opposed to JavaFX, but it's expected by most web users) */
@@ -105,70 +65,55 @@ fx-text {
 
 /***** Global variables *****/
 :root {
-    --fx-border-focus: 1px dashed #0096D620;
+    --fx-border-color-focus: #0096D6;
     --fx-textfield-background: white;
-    --fx-textfield-border: 1px solid #c0c0c0;
-    --fx-textarea-border: var(--fx-textfield-border);
-    --fx-button-background-color: transparent;
-    --fx-button-background-radius: var(--fx-button-border-radius);
-    --fx-button-background-image: linear-gradient(180deg, white, #e0e0e0);
-    /* Necessary (probably never used)? */
-    --fx-button-background-position: none;
-    --fx-button-background-repeat: none;
-    --fx-button-background-size: none;
-
-    --fx-button-background-color-selected: transparent;
-    --fx-button-background-image-selected: linear-gradient(180deg, #f0f0f0, #d0d0d0);
-
-
-    --fx-button-border-style: solid;
-    --fx-button-border-color: #c0c0c0;
-    --fx-button-border-radius: 5px;
-    --fx-button-border-width: 1px;
-
-    --fx-placholder-color: #888;
+    --fx-button-text-color: inherited;
+    --fx-button-background: linear-gradient(180deg, white, #e0e0e0);
+    --fx-button-background-selected: linear-gradient(180deg, #f0f0f0, #d0d0d0);
 }
 
 ::placeholder {
-    color: var(--fx-placholder-color);
-}
-
-/* Applying text color to svg path as well by default */
-fx-label, fx-button, fx-togglebutton {
-    --fx-svg-path-fill: var(--fx-text-fill);
+    color: #888;
 }
 
 fx-button, fx-togglebutton {
-    --fx-border-style: var(--fx-button-border-style);
-    --fx-border-color: var(--fx-button-border-color);
-    --fx-border-radius: var(--fx-button-border-radius);
-    --fx-border-width: var(--fx-button-border-width);
-    --fx-background-color: var(--fx-button-background-color);
-    --fx-background-radius: var(--fx-button-background-radius);
-    --fx-background-image: var(--fx-button-background-image);
-    --fx-background-position: var(--fx-button-background-position);
-    --fx-background-repeat: var(--fx-button-background-repeat);
-    --fx-background-size: var(--fx-button-background-size);
+    color: var(--fx-button-text-color);
+    --fx-svg-path-fill: var(--fx-button-text-color);
 }
 
-fx-togglebutton.pseudo-selected {
-    --fx-background-color-color: var(--fx-button-background-color-selected);
-    --fx-background-color-image: var(--fx-button-background-image-selected);
+fx-button > fx-background, fx-togglebutton > fx-background {
+    background: var(--fx-button-background);
+    border-radius: var(--fx-border-radius);
+}
+
+fx-togglebutton.selected > fx-background {
+    background: var(--fx-button-background-selected);
+}
+
+fx-button > fx-border, fx-togglebutton > fx-border, fx-textfield > fx-border, textarea {
+    border-color: var(--fx-border-color);
+    border-style: var(--fx-border-style);
+    border-width: var(--fx-border-width);
+    border-radius: var(--fx-border-radius);
+}
+
+fx-textfield:focus-within > fx-border, textarea:focus {
+    border-color: var(--fx-border-color-focus);
+    outline: none !important;
+}
+
+textarea {
+    padding: 8px;
+    box-sizing: border-box;
 }
 
 fx-hyperlink fx-text:hover {
     text-decoration: underline;
 }
 
-fx-textfield {
-    --fx-background-color: var(--fx-textfield-background);
-    --fx-border-color: var(--fx-textfield-border);
-}
-
-fx-textfield:focus-within > fx-border, textarea:focus {
-    border: var(--fx-border-focus);
-    border-radius: 0;
-    outline: none !important;
+fx-textfield > fx-background {
+    background: var(--fx-textfield-background);
+    border-radius: var(--fx-border-radius);
 }
 
 /* Removing borders, outlines and background for input elements (to not interfere with the above) */
@@ -176,18 +121,6 @@ input, input[type="text"], input[type="password"] { /* is input rule not enough?
     border: none;
     outline: none;
     background-color: transparent;
-}
-
-textarea {
-    border: var(--fx-border);
-    border-radius: var(--fx-border-radius);
-    padding: 8px;
-    box-sizing: border-box;
-    --fx-border-color: var(--fx-textarea-border);
-}
-
-fx-titledpane textarea {
-    border-radius: 0 0 5px 5px;
 }
 
 /* Cross for the tab close button */
@@ -221,20 +154,14 @@ iframe {
     --safe-area-inset-right:  env(safe-area-inset-right);
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
     --safe-area-inset-left:   env(safe-area-inset-left);
+    --fx-border-color: #c0c0c0;
+    --fx-border-radius: 5px;
+    --fx-border-style: solid;
+    --fx-border-width: 1px;
+    --fx-border-color-focus: #0096D6;
+    --fx-svg-path-fill: black;
     --body-user-select: none;
     --text-user-select: text;
-    --fx-border-style: none;
-    --fx-border-color: none;
-    --fx-border-radius: 0;
-    --fx-border-width: 0;
-    --fx-border-color-focus: #0096D6;
-    --fx-background-color: none;
-    --fx-background-radius: none;
-    --fx-background-position: none;
-    --fx-background-repeat: none;
-    --fx-background-size: none;
-    --fx-text-fill: black;
-    --fx-svg-path-fill: var(--fx-text-fill);
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -249,49 +176,19 @@ body {
     -webkit-touch-callout: none;
 }
 
-fx-scene { /* main stage scene or popup scenes */
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
-
-body > fx-scene { /* main stage scene only */
-    height: 100dvh;
-}
-
 /* Making disabled nodes semi-transparent */
 .disabled {
     opacity: 50%;
 }
 
-fx-background {
-    background-color: var(--fx-background-color);
-    border-radius: var(--fx-background-radius);
-    background-position: var(--fx-background-position);
-    background-repeat: var(--fx-background-repeat);
-    background-size: var(--fx-background-size);
-}
-
-fx-border {
-    border-style: var(--fx-border-style);
+.fx-border > fx-border {
     border-color: var(--fx-border-color);
+    border-style: var(--fx-border-style);
     border-width: var(--fx-border-width);
     border-radius: var(--fx-border-radius);
 }
 
-fx-children { /* Stopping propagation of background and border CSS variables to children */
-    --fx-background-color: none;
-    --fx-background-radius: none;
-    --fx-background-position: none;
-    --fx-background-repeat: none;
-    --fx-background-size: none;
-    --fx-border-style: none;
-    --fx-border-color: none;
-    --fx-border-radius: 0;
-    --fx-border-width: 0;
-}
-
-/* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
+/* Applying the default JavaFX behaviour for SVGPath */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
     fill: var(--fx-svg-path-fill);  /* then the fill is black */
 }
@@ -304,7 +201,6 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
 /* The default JavaFX behaviour for Text wrapping is equivalent to HTML "break-word", which is not the default in HTML
    (the default in HTML being "normal"). So we apply "break-word". */
 fx-text {
-    color: var(--fx-text-fill);
     word-break: break-word;
     overflow-wrap: break-word; /* fallback for better browser support */
 /* Also enabling selection on text (as opposed to JavaFX, but it's expected by most web users) */
@@ -464,27 +360,12 @@ tr.selected, .grid-row.selected {
 /* Buttons */
 
 .btn {
-
-    --fx-border-style: var(--fx-button-border-style);
-    --fx-border-color: var(--fx-button-border-color);
-    --fx-border-radius: var(--fx-button-border-radius);
-    --fx-border-width: var(--fx-button-border-width);
-    --fx-background-color: var(--fx-button-background-color);
-    --fx-background-radius: var(--fx-button-background-radius);
-    --fx-background-image: var(--fx-button-background-image);
-    --fx-background-position: var(--fx-button-background-position);
-    --fx-background-repeat: var(--fx-button-background-repeat);
-    --fx-background-size: var(--fx-button-background-size);
-
-    /* to unset linear gradient */
-    --fx-button-background-image: none;
-    --fx-button-background-image-selected: none;
-    --fx-button-background-radius: var(--fx-button-border-radius);
-    --fx-button-style: solid;
-    --fx-button-border-color: transparent;
-    --fx-button-border-width: 1px;
+    --fx-button-background: unset; /* to unset linear gradient */
+    --fx-button-border: 1px solid transparent;
     --fx-button-border-radius: 4px;
+}
 
+.btn {
     cursor: pointer;
     font-weight: normal;
     text-align: center;
@@ -492,14 +373,19 @@ tr.selected, .grid-row.selected {
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-/*.btn:hover:not(.disabled) {
+.btn {
+    --fx-background: var(--fx-button-background);
+    --fx-border-radius: var(--fx-button-border-radius);
+}
+
+.btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-grey7);
-}*/
+}
 
 .btn-default, .btn.default, .default .btn {
     --fx-text-fill: var(--bootstrap-grey7);
-    --fx-button-background-color: var(--bootstrap-white);
-    --fx-border-color: var(--bootstrap-grey3);
+    --fx-button-background: var(--bootstrap-white);
+    --fx-border: var(--bootstrap-grey3);
 }
 
 .btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled) {
@@ -507,80 +393,80 @@ tr.selected, .grid-row.selected {
 }
 
 .btn-default:hover, .btn.default:hover, .default .btn:hover {
-    --fx-button-background-color: var(--bootstrap-grey1);
-    --fx-border-color: var(--bootstrap-grey5);
+    --fx-button-background: var(--bootstrap-grey1);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-primary, .btn.primary, .primary .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue5);
-    --fx-border-color: var(--bootstrap-blue6);
+    --fx-button-background: var(--bootstrap-blue5);
+    --fx-border: var(--bootstrap-blue6);
 }
 
 .btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue8);
-    --fx-border-color: var(--bootstrap-blue9);
+    --fx-button-background: var(--bootstrap-blue8);
+    --fx-border: var(--bootstrap-blue9);
 }
 
 .btn-secondary, .btn.secondary, .secondary .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-grey4);
-    --fx-border-color: var(--bootstrap-grey5);
+    --fx-button-background: var(--bootstrap-grey4);
+    --fx-border: var(--bootstrap-grey5);
 }
 
 .btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-grey5);
-    --fx-border-color: var(--bootstrap-grey6);
+    --fx-button-background: var(--bootstrap-grey5);
+    --fx-border: var(--bootstrap-grey6);
 }
 
 .btn-success, .btn.success, .success .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-green1);
-    --fx-border-color: var(--bootstrap-green2);
+    --fx-button-background: var(--bootstrap-green1);
+    --fx-border: var(--bootstrap-green2);
 }
 
 .btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-green3);
-    --fx-border-color: var(--bootstrap-green4);
+    --fx-button-background: var(--bootstrap-green3);
+    --fx-border: var(--bootstrap-green4);
 }
 
 .btn-info, .btn.info, .info .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue1);
-    --fx-border-color: var(--bootstrap-blue2);
+    --fx-button-background: var(--bootstrap-blue1);
+    --fx-border: var(--bootstrap-blue2);
 }
 
 .btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue3);
-    --fx-border-color: var(--bootstrap-blue4);
+    --fx-button-background: var(--bootstrap-blue3);
+    --fx-border: var(--bootstrap-blue4);
 }
 
 .btn-warning, .btn.warning, .warning .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-orange1);
-    --fx-border-color: var(--bootstrap-orange2);
+    --fx-button-background: var(--bootstrap-orange1);
+    --fx-border: var(--bootstrap-orange2);
 }
 
 .btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-orange3);
-    --fx-border-color: var(--bootstrap-orange4);
+    --fx-button-background: var(--bootstrap-orange3);
+    --fx-border: var(--bootstrap-orange4);
 }
 
 .btn-danger, .btn.danger, .danger .btn {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-red1);
-    --fx-border-color: var(--bootstrap-red2);
+    --fx-button-background: var(--bootstrap-red1);
+    --fx-border: var(--bootstrap-red2);
 }
 
 .btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled) {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-red3);
-    --fx-border-color: var(--bootstrap-red4);
+    --fx-button-background: var(--bootstrap-red3);
+    --fx-border: var(--bootstrap-red4);
 }
 
 .btn-lg, .btn.lg, .lg .btn {
@@ -815,13 +701,13 @@ tr.selected, .grid-row.selected {
 }
 
 fx-switch.webfx-switch {
-    --fx-background-color: var(--webfx-switch-unselected-background-color);
-    --fx-background-radius: 10px;
+    --fx-background: var(--webfx-switch-unselected-background-color);
+    --fx-border-radius: 10px;
     transition-duration: 200ms;
 }
 
 fx-switch.webfx-switch.selected {
-    --fx-background-color: var(--webfx-switch-selected-background-color);
+    --fx-background: var(--webfx-switch-selected-background-color);
     transition-duration: 200ms;
 }
 
@@ -850,11 +736,11 @@ fx-switch.webfx-switch fx-circle.knob {
 }
 
 .webfx-datepicker .date-selected {
-    --fx-background-color: var(--webfx-time-pickers-selected-date-background-color);
+    --fx-background: var(--webfx-time-pickers-selected-date-background-color);
 }
 
 .webfx-datepicker .date-unselectable {
-    --fx-background-color: var(--webfx-time-pickers-unselectable-date-background-color);
+    --fx-background: var(--webfx-time-pickers-unselectable-date-background-color);
 }
 
 .webfx-datepicker .date-secondary {
@@ -871,7 +757,7 @@ fx-switch.webfx-switch fx-circle.knob {
 }
 
 .webfx-datepicker {
-    --fx-background-color: var(--webfx-time-pickers-background-color);
+    --fx-background: var(--webfx-time-pickers-background-color);
     --fx-border-radius: 10px;
 }
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
@@ -879,8 +765,8 @@ fx-switch.webfx-switch fx-circle.knob {
 /* We dont want any background or border for the FilePicker button */
 
 .file-picker fx-button {
-    --fx-background-color: transparent;
-    --fx-border-style: none;
+    --fx-background: none;
+    --fx-border: none;
 }
 
 /*===== webfx-extras-ckeditor-web@main.css from webfx-extras-webtext-peers-gwt-j2cl =====*/
@@ -906,12 +792,6 @@ fx-htmltext {
 }
 /*===== webfx-stack-authn-login-ui-portal-web@main.css from webfx-stack-authn-login-ui-portal =====*/
 
-@font-face {
-    font-family: "Password";
-    src: url("./fonts/password/password.woff") format("woff");
-    font-weight: 100 900;
-}
-
 :root {
     --webfx-login-portal-background-image: none;
     --webfx-login-portal-title-color: #0096D6;
@@ -926,11 +806,17 @@ input[type="password"]:not([value=""]) {
     letter-spacing: 0.15em;
 }
 
+@font-face {
+    font-family: "Password";
+    src: url("./fonts/password/password.woff") format("woff");
+    font-weight: 100 900;
+}
+
 .login {
-    --fx-background-image: var(--webfx-login-portal-background-image);
-    --fx-background-position: center;
-    --fx-background-size: cover;
-    --fx-background-repeat: no-repeat;
+    background-image: var(--webfx-login-portal-background-image); /* Specify the path to your image */
+    background-repeat: no-repeat;               /* Prevents the image from repeating */
+    background-size: cover;                     /* Scales the image to cover the area */
+    background-position: center;                /* Centers the image */
     --fx-border-radius: 21px;
 }
 
@@ -939,8 +825,8 @@ input[type="password"]:not([value=""]) {
 }
 
 .login-child {
-    --fx-background-color: rgba(255, 255, 255, 0.8);
-    --fx-border-radius: 21px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 21px;
    /* border: 1px solid lightgray;*/
    /* box-shadow: 0px 0px 10px lightgray;*/
     width: 586px; /* Sets the fixed width */
@@ -954,20 +840,23 @@ input[type="password"]:not([value=""]) {
     font-family: 'Poppins', sans-serif; /* Sets the font to Poppins, with a fallback to sans-serif */
     font-weight: bold;
     line-height: 0.5;
-    --fx-text-fill: var(--webfx-login-portal-title-color);
+    color: var(--webfx-login-portal-title-color);
 }
 
 .login .or {
-    --fx-text-fill: #888;
+    color: #888;
 }
 
 .login .line {
-    --fx-background-color: lightgray;
+    background-color: lightgray;
 }
 
-.transparent-input {
-    --fx-background-color: transparent;
-    --fx-border-style: none;
+.transparent-input > fx-background {
+    background-color: transparent;
+}
+
+.transparent-input > fx-border {
+    border-style: none;
 }
 
 
@@ -1015,12 +904,15 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /* Not sure if it's the right place for this CSS rules */
 .event-button {
+    border-radius: 4px;
     height: 35px;
     max-height: 35px;
     text-align: center;
     font-weight: normal;
-    --fx-border-style: none;
-    --fx-border-radius: 4px;
+}
+
+.event-button > fx-border {
+    border: none;
 }
 
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
@@ -1071,37 +963,58 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --bootstrap-red6: #FF0404;
 }
 
-.h2 {
-    font-size: 40px;
-    font-weight: bold;
-}
-
 .disabled:hover {
     cursor: not-allowed;
 }
 
 .btn-black {
-    --fx-text-fill: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--fx-text-fill);
-    --fx-background-color: black;
-    --fx-border-color: black;
+    color: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--bootstrap-white);
+}
+
+.btn-black > fx-background {
+    background: black;
+}
+
+.btn-black > fx-border {
+    border-color: black;
 }
 
 .btn-black:hover:not(.disabled) {
-    --fx-background-color: var(--bootstrap-grey7);
-    --fx-border-color: var(--bootstrap-grey7);
+    color: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--bootstrap-white);
+}
+
+.btn-black:hover:not(.disabled) > fx-background {
+    background-color: var(--bootstrap-grey7);
+}
+
+.btn-black:hover:not(.disabled) > fx-border {
+    border-color: var(--bootstrap-grey7);
 }
 
 .btn-white {
     --fx-svg-path-fill: var(--bootstrap-white);
-    --fx-background-color: white;
-    --fx-border-color: black;
+}
+
+.btn-white > fx-background {
+    background: white;
+}
+
+.btn-white > fx-border {
+    border-color: black;
 }
 
 .btn-white:hover:not(.disabled) {
-    --fx-text-fill: black;
-    --fx-background-color: var(--bootstrap-grey1);
+    color: black;
+    --fx-svg-path-fill: black;
 }
+
+.btn-white:hover:not(.disabled) > fx-background {
+    background-color: var(--bootstrap-grey1);
+}
+
+
 
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
 
@@ -1110,7 +1023,8 @@ body, textarea /* because textarea has explicit default monospace font */ {
 }
 
 .event-title {
-    --fx-text-fill: white;
+    color: white;
+    --fx-svg-path-fill: white;
 }
 
 /* .text-justified */
@@ -1122,64 +1036,64 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /* Date cells for recurring events */
 
-.event-date-cell {
-    --fx-border-style: solid;
-    --fx-border-color: #cccccc;
-    --fx-border-width: 1px;
+.event-date-cell > fx-border {
+    border: 1px solid #cccccc;
 }
 
 .event-date-cell.date-unselected {
-    --fx-text-fill: #444;
+    color: #444;
 }
 
 .event-date-cell .event-time {
-    --fx-text-fill: #838788;
+    color: #838788;
 }
 
-.event-date-cell.date-unselected {
-    --fx-background-color: transparent;
+.event-date-cell.date-unselected > fx-background {
+    background: none;
 }
 
-.event-date-cell.date-non-selectable {
-    --fx-background-color: #dddddd;
+.event-date-cell.date-non-selectable > fx-background {
+    background-color: #dddddd;
 }
 
-.event-date-cell.date-non-selectable {
-    --fx-border-style: solid;
-    --fx-border-color: #cccccc;
-    --fx-border-width: 1px;
+.event-date-cell.date-non-selectable > fx-border {
+    border-color: #cccccc;
 }
 
 .event-date-cell.date-non-selectable,
 .event-date-cell.date-non-selectable .event-time {
-    --fx-text-fill: #aaaaaa;
+    color: #aaaaaa;
 }
 
-.event-date-cell.date-selected,
-.event-date-cell.date-already-booked {
-    --fx-background-color: var(--brand-main-color);
-    --fx-border-style: none;
+.event-date-cell.date-selected > fx-background,
+.event-date-cell.date-already-booked > fx-background {
+    background-color: var(--brand-main-color);
+}
+
+.event-date-cell.date-selected > fx-border,
+.event-date-cell.date-already-booked > fx-border {
+    border: none;
 }
 
 .event-date-cell.date-selected,
 .event-date-cell.date-selected .event-time {
-    --fx-text-fill: white;
+    color: white;
 }
 
 .event-date-cell.date-already-booked,
 .event-date-cell.date-already-booked .event-time {
-    --fx-text-fill: #eeeeee;
+    color: #eeeeee;
 }
 
 
 /* .subtitle-grey */
 .subtitle-grey {
-    --fx-text-fill: grey;
+    color: grey;
     font-size: 14px;
 }
 
-.line-total {
-    --fx-background-color: #CCCCCC;
+.line-total > fx-background {
+    background-color: #CCCCCC;
 }
 
 .line-total span {
@@ -1325,13 +1239,12 @@ tr.branch, .grid-row.branch {
     background-color: transparent;
 }
 
-/*===== kbs-backoffice-festivalcreator-web@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
+/*===== modality-backoffice-festivalcreator-web@main.css from kbs-backoffice-header-festivalcreator-plugin =====*/
 
 :root {
     --kbs-spring-color: #41BA4D;
     --kbs-summer-color: #F7931E;
     --kbs-fall-color: #8264A0;
-    --kbs-festival-color: unset;
 }
 
 .event-creator-dialog, .event-creator-dialog input {
@@ -1347,24 +1260,29 @@ tr.branch, .grid-row.branch {
     cursor: pointer;
     filter: drop-shadow(4px 4px 5px lightgray);
     --fx-border-style: none;
+    --fx-button-background: white;
     --fx-border-radius: 0;
-    --fx-button-background-color: white;
-    --fx-button-background-color-selected: var(--kbs-festival-color);
-    --fx-text-fill: var(--kbs-festival-color);
 }
 
 .event-creator-dialog fx-togglebutton.spring-festival {
-    --kbs-festival-color: var(--kbs-spring-color);
+    color: var(--kbs-spring-color);
+    --fx-svg-path-fill: var(--kbs-spring-color);
+    --fx-togglebutton-selected-background: var(--kbs-spring-color);
 }
 
 .event-creator-dialog fx-togglebutton.summer-festival {
-    --kbs-festival-color: var(--kbs-summer-color);
+    color: var(--kbs-summer-color);
+    --fx-svg-path-fill: var(--kbs-summer-color);
+    --fx-togglebutton-selected-background: var(--kbs-summer-color);
 }
 
 .event-creator-dialog fx-togglebutton.fall-festival {
-    --kbs-festival-color: var(--kbs-fall-color);
+    color: var(--kbs-fall-color);
+    --fx-svg-path-fill: var(--kbs-fall-color);
+    --fx-togglebutton-selected-background: var(--kbs-fall-color);
 }
 
-.event-creator-dialog fx-togglebutton.pseudo-selected {
-    --fx-text-fill: white;
+.event-creator-dialog fx-togglebutton.selected {
+    color: white;
+    --fx-svg-path-fill: white;
 }
