@@ -1067,7 +1067,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
 }
 
 .menu-bar {
-    font-family: var(--montserrat-font-family), sans-serif;
+    font-family: var(--poppins-font-family), sans-serif;
     --fx-button-background-color: transparent;
     --fx-border-style: none;
     --fx-text-fill: black;
