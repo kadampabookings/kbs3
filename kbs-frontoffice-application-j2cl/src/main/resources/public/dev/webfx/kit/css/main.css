@@ -214,6 +214,7 @@ fx-togglebutton.pseudo-selected {
 }
 
 fx-hyperlink fx-text:hover {
+    --fx-text-fill: #0096c9ff;
     text-decoration: underline;
 }
 
