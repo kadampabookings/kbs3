@@ -1381,11 +1381,10 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 /*===== modality-front-office-userprofile-web@main.css from modality-crm-frontoffice-activity-userprofile-plugin =====*/
 
 .user-profile-modal-window {
-    background-image: none;
-    background-color: rgba(255, 255, 255, 1); /* Add alpha for transparency */
-    border: 1px solid lightgray; /* Combine border-color and border width */
+    background-color: white;
+    border: 1px solid lightgray;
     border-radius: 20px;
-    box-shadow: 0px 0px 10px lightgray; /* Corrected drop shadow syntax */
+    box-shadow: 0 0 10px lightgray;
 }
 
 /*===== modality-event-frontoffice-activities-audiorecordings-web@main.css from modality-event-frontoffice-activity-audiolibrary-plugin =====*/
