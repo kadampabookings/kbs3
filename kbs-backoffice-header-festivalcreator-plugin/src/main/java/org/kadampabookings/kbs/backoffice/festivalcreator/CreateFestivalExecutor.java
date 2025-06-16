@@ -107,7 +107,7 @@ final class CreateFestivalExecutor {
         dialogCallback.addCloseHook(() -> promise.tryFail(new UserCancellationException())); // do nothing if the promise is already completed
         ValidationSupport validationSupport = new ValidationSupport();
         validationSupport.addRequiredInput(toggleGroup.selectedToggleProperty(), eventTypeBar);
-        //validationSupport.addRequiredInput(eventNameTextField);
+        //validationSupport.addRequiredInput(ev entNameTextField);
         cancelButton.setOnAction(e -> dialogCallback.closeDialog());
         createButton.setOnAction(e -> {
             if (validationSupport.isValid()) {
@@ -116,40 +116,40 @@ final class CreateFestivalExecutor {
                 int year = startDateField.getDate().getYear();
                 // Creating the festival event
                 UpdateStore updateStore = UpdateStore.create(DataSourceModelService.getDefaultDataSourceModel());
-                Event event = updateStore.insertEntity(Event.class);
+                Event event = updateStore.createEntity(Event.class,1645);
                 // For now (2025) we do only Online Festivals with KBS3 (in 2026 the same event will be for both in-person & online)
-                event.setName(I18n.getI18nText("[{0}] Festival {1} Online", festivalType.getShortI18nKey(), year));
-                event.setOrganization(1);
-                event.setCorporation(1); // TODO: remove this from database
-                event.setType(festivalType.getTypeId());
+//                event.setName(I18n.getI18nText("[{0}] Festival {1} Online", festivalType.getShortI18nKey(), year));
+//                event.setOrganization(1);
+//                event.setCorporation(1); // TODO: remove this from database
+//                event.setType(festivalType.getTypeId());
                 event.setStartDate(startDateField.getDate());
                 event.setEndDate(endDateField.getDate());
                 event.setKbs3(true);
                 event.setTeachingsDayTicket(true);
                 event.setAudioRecordingsDayTicket(true);
-                // Main site
-                Site site = updateStore.insertEntity(Site.class);
-                site.setName("Online");
-                site.setEvent(event);
-                site.setOrganization(1);
-                site.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
-                site.setMain(true);
-                site.setOrd(10);
-                //event.setVenue(site); // cyclic reference issue => postponed below
-                // Creating SiteItemFamily for teachings & audio recordings (so we can see the rates in KBS2
-                // back-office, but probably not necessary for KBS3).
-                SiteItemFamily sif = updateStore.insertEntity(SiteItemFamily.class);
-                sif.setSite(site);
-                sif.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
-                sif = updateStore.insertEntity(SiteItemFamily.class);
-                sif.setSite(site);
-                sif.setItemFamily(KnownItemFamily.AUDIO_RECORDING.getPrimaryKey());
+//                // Main site
+//                Site site = updateStore.insertEntity(Site.class);
+//                site.setName("Online");
+//                site.setEvent(event);
+//                site.setOrganization(1);
+//                site.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
+//                site.setMain(true);
+//                site.setOrd(10);
+//                //event.setVenue(site); // cyclic reference issue => postponed below
+//                // Creating SiteItemFamily for teachings & audio recordings (so we can see the rates in KBS2
+//                // back-office, but probably not necessary for KBS3).
+//                SiteItemFamily sif = updateStore.insertEntity(SiteItemFamily.class);
+//                sif.setSite(site);
+//                sif.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
+//                sif = updateStore.insertEntity(SiteItemFamily.class);
+//                sif.setSite(site);
+//                sif.setItemFamily(KnownItemFamily.AUDIO_RECORDING.getPrimaryKey());
                 // Bookable scheduled items
                 int festivalItemPrimaryKey = FestivalType.getFestivalItemPrimaryKey();
                 for (LocalDate date = event.getStartDate(); !date.isAfter(event.getEndDate()) ; date = date.plusDays(1)) {
                     ScheduledItem si = updateStore.insertEntity(ScheduledItem.class);
                     si.setEvent(event);
-                    si.setSite(site);
+                    si.setSite(2342);
                     si.setItem(festivalItemPrimaryKey);
                     si.setDate(date);
                 }
@@ -157,7 +157,7 @@ final class CreateFestivalExecutor {
                     updateStore.submitChanges()
                         // Setting venue afterwards TODO: Improve EntityChangesToSubmitBatchGenerator to solve cyclic references
                         .compose(ignored -> {
-                            event.setVenue(site);
+                            event.setVenue(2342);
                             return updateStore.submitChanges();
                         })
                         .onFailure(Console::log)
