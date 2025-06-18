@@ -820,16 +820,19 @@ fx-switch.webfx-switch fx-circle.knob {
 }
 
 .webfx-datepicker {
-    --fx-border-color: 1px solid var(--webfx-time-pickers-border-color);
-    --fx-border-radius: 10px;
+    --fx-background-color: var(--webfx-time-pickers-background-color);
+    --fx-border-color: var(--webfx-time-pickers-border-color);
+    --fx-background-radius: 10px;
 }
 
 .webfx-datepicker .date-selected {
     --fx-background-color: var(--webfx-time-pickers-selected-date-background-color);
+    --fx-background-radius: 10px;
 }
 
 .webfx-datepicker .date-unselectable {
     --fx-background-color: var(--webfx-time-pickers-unselectable-date-background-color);
+    --fx-background-radius: 10px;
 }
 
 .webfx-datepicker .date-secondary {
@@ -845,10 +848,6 @@ fx-switch.webfx-switch fx-circle.knob {
     font-size: 14px;
 }
 
-.webfx-datepicker {
-    --fx-background-color: var(--webfx-time-pickers-background-color);
-    --fx-border-radius: 10px;
-}
 /*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
 
 /* We dont want any background or border for the FilePicker button */
