@@ -1,13 +1,14 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
+import dev.webfx.extras.aria.AriaToggleGroup;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.stack.i18n.controls.I18nControls;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import one.modality.base.client.i18n.BaseI18nKeys;
 
@@ -17,22 +18,26 @@ import one.modality.base.client.i18n.BaseI18nKeys;
 final class NavigationBar {
 
     private final BorderPane container = new BorderPane();
+    private final AriaToggleGroup<Object> barToggleGroup = new AriaToggleGroup<>();
+    private final ToggleButton backButton = createNavigationButton(BaseI18nKeys.Back);
+    private final ToggleButton nextButton = createNavigationButton(BaseI18nKeys.Next);
+    private final Label titleLabel = Bootstrap.strong(Bootstrap.textPrimary(new Label()));
     private final ObjectProperty<Object> titleI18nKeyProperty = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            Label titleLabel = Bootstrap.strong(Bootstrap.textPrimary(I18nControls.newLabel(get())));
-            titleLabel.setAlignment(Pos.CENTER);
-            titleLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            titleLabel.getStyleClass().add("title");
-            container.setCenter(titleLabel);
+            I18nControls.bindI18nProperties(titleLabel, get());
         }
     };
 
     public NavigationBar() {
-        container.getStyleClass().add("top-bar");
-        container.setLeft(createNavigationButton(BaseI18nKeys.Back));
-        container.setRight(createNavigationButton(BaseI18nKeys.Next));
+        titleLabel.setAlignment(Pos.CENTER);
+        titleLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        titleLabel.getStyleClass().add("title");
+        container.setCenter(titleLabel);
+        container.setLeft(backButton);
+        container.setRight(nextButton);
         container.setMinHeight(51);
+        container.getStyleClass().add("top-bar");
     }
 
     public void setLabelI18nKey(Object labelI18nKey) {
@@ -43,8 +48,16 @@ final class NavigationBar {
         return container;
     }
 
-    private static Node createNavigationButton(Object i18nKey) {
-        Label button = Bootstrap.textSecondary(I18nControls.newLabel(i18nKey));
+    public ToggleButton getBackButton() {
+        return backButton;
+    }
+
+    public ToggleButton getNextButton() {
+        return nextButton;
+    }
+
+    private ToggleButton createNavigationButton(Object i18nKey) {
+        ToggleButton button = Bootstrap.textSecondary(I18nControls.bindI18nProperties(barToggleGroup.createItemButton(i18nKey), i18nKey));
         button.setAlignment(Pos.CENTER);
         button.setMinWidth(170);
         button.setMaxHeight(Double.MAX_VALUE);

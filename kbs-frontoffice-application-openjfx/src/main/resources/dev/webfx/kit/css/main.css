@@ -1512,6 +1512,11 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-background-radius: 8px;
 }
 
+.online-festival-booking-form .top-bar ToggleButton {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
 .online-festival-booking-form .price-bar {
     -fx-background-color: #F4F4F4;
     -fx-font-weight: bold;

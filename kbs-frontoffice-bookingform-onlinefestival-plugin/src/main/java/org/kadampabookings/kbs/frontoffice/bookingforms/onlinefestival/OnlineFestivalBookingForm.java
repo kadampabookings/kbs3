@@ -31,6 +31,10 @@ final class OnlineFestivalBookingForm extends AbstractBookingForm {
         container.setBottom(new PriceBar(workingBookingProperties).getView());
         container.getStyleClass().add("online-festival-booking-form");
         container.setMaxWidth(MAX_WIDTH);
+        navigationBar.getBackButton().setDisable(true);
+        navigationBar.getNextButton().setOnMouseClicked(e -> {
+            activity.displayCheckoutSlide();
+        });
         return container;
     }
 
