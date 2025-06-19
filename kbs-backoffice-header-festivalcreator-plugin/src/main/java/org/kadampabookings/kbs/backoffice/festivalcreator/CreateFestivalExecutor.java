@@ -1,5 +1,6 @@
 package org.kadampabookings.kbs.backoffice.festivalcreator;
 
+import dev.webfx.extras.aria.AriaToggleGroup;
 import dev.webfx.extras.panes.ColumnsPane;
 import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
@@ -44,11 +45,11 @@ import java.time.LocalDate;
  */
 final class CreateFestivalExecutor {
 
-    private ToggleGroup toggleGroup; // Not final because renewing it on each dialog, so old listeners are not triggered anymore
+    private final AriaToggleGroup<FestivalType> toggleGroup = new AriaToggleGroup<>();
 
     Future<Void> openNKTFestivalCreatorDialog() {
         Promise<Void> promise = Promise.promise();
-        toggleGroup = new ToggleGroup();
+        toggleGroup.clear();
         ToggleButton springButton = createEventTypeButton(FestivalCreatorI18nKeys.SpringCard, FestivalType.SPRING_FESTIVAL);
         ToggleButton summerButton = createEventTypeButton(FestivalCreatorI18nKeys.SummerCard, FestivalType.SUMMER_FESTIVAL);
         ToggleButton fallButton = createEventTypeButton(FestivalCreatorI18nKeys.FallCard, FestivalType.FALL_FESTIVAL);
@@ -92,7 +93,7 @@ final class CreateFestivalExecutor {
                 int year = nextFestivalYear(festivalType);
                 startDateField.setDate(festivalType.evaluateStartDate(year));
             }
-        }, toggleGroup.selectedToggleProperty());
+        }, toggleGroup.firedItemProperty());
 
         // Pre-computing the most probable Festival end date from the Festival start date
         FXProperties.runOnPropertyChange(startDate -> {
@@ -106,7 +107,7 @@ final class CreateFestivalExecutor {
         // Adding a close hook to the dialog callback to fail the promise when the user cancels the dialog
         dialogCallback.addCloseHook(() -> promise.tryFail(new UserCancellationException())); // do nothing if the promise is already completed
         ValidationSupport validationSupport = new ValidationSupport();
-        validationSupport.addRequiredInput(toggleGroup.selectedToggleProperty(), eventTypeBar);
+        validationSupport.addRequiredInput(toggleGroup.firedToggleButtonProperty(), eventTypeBar);
         //validationSupport.addRequiredInput(eventNameTextField);
         cancelButton.setOnAction(e -> dialogCallback.closeDialog());
         createButton.setOnAction(e -> {
@@ -181,21 +182,18 @@ final class CreateFestivalExecutor {
     }
 
     private FestivalType getSelectedFestivalType() {
-        Toggle selectedToggle = toggleGroup.getSelectedToggle();
-        return selectedToggle == null ? null : (FestivalType) selectedToggle.getUserData();
+        return toggleGroup.getFiredItem();
     }
 
     private ToggleButton createEventTypeButton(String cardI18nKey, FestivalType festivalType) {
         // card18nKey has a graphic and a text such as "[Spring] {0}" where {0} is supposed to be the year of the next festival to create
         ObservableValue<Integer> nextYearProperty = FXProperties.compute(FXFestivals.lastFestivalProperty(festivalType, false),
             CreateFestivalExecutor::nextFestivalYear);
-        ToggleButton button = I18nControls.newToggleButton(cardI18nKey, nextYearProperty);
+        ToggleButton button = I18nControls.bindI18nProperties(toggleGroup.createItemButton(festivalType), cardI18nKey, nextYearProperty);
         button.setContentDisplay(ContentDisplay.TOP);
         button.setGraphicTextGap(20);
         button.setMinSize(277, 173);
-        button.setToggleGroup(toggleGroup);
         button.getStyleClass().add(festivalType.getStyleClass());
-        button.setUserData(festivalType);
         return button;
     }
 

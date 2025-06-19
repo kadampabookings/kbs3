@@ -711,6 +711,10 @@ ToggleButton.aria-toggle.fired {
     -fx-background-color: -webfx-aria-toggle-button-background-color-fired;
     -fx-text-fill: -webfx-aria-toggle-button-text-fill-fired;
 }
+
+ToggleButton.aria-toggle SVGPath { /* TODO: check if it's the best place */
+    -fx-fill: -fx-text-fill;
+}
 /*===== webfx-extras-time-pickers-javafx@main.css from webfx-extras-time-pickers =====*/
 
 .root {

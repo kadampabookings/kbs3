@@ -18,6 +18,7 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires modality.crm.backoffice.organization.fx;
     requires modality.event.backoffice.activity.pricing.plugin;
     requires modality.event.client.event.fx;
+    requires webfx.extras.aria;
     requires webfx.extras.panes;
     requires webfx.extras.styles.bootstrap;
     requires webfx.extras.styles.materialdesign;

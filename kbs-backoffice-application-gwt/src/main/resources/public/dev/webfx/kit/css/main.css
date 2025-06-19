@@ -294,6 +294,26 @@ iframe {
     border: none;
 }
 
+/*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
+
+:root {
+    --webfx-aria-toggle-button-background-color-focused: lightgray;
+    --webfx-aria-toggle-button-background-color-hover: var(--webfx-aria-toggle-button-background-color-focused);
+    --webfx-aria-toggle-button-background-color-fired: #0096D6;
+    --webfx-aria-toggle-button-text-fill-fired: white;
+}
+
+
+fx-togglebutton.aria-toggle {
+    --fx-togglebutton-background-color-selected: var(--webfx-aria-toggle-button-background-color-focused);
+    --fx-togglebutton-background-color-hover: var(--webfx-aria-toggle-button-background-color-hover);
+}
+
+fx-togglebutton.aria-toggle.fired {
+    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
+    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
+    --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
+}
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
 
 :root {
@@ -1326,7 +1346,7 @@ tr.branch, .grid-row.branch {
     --fx-border-style: none;
     --fx-border-radius: 0;
     --fx-button-background-color: white;
-    --fx-button-background-color-selected: var(--kbs-festival-color);
+    --webfx-aria-toggle-button-background-color-fired: var(--kbs-festival-color);
     --fx-text-fill: var(--kbs-festival-color);
 }
 
@@ -1342,6 +1362,3 @@ tr.branch, .grid-row.branch {
     --kbs-festival-color: var(--kbs-fall-color);
 }
 
-.event-creator-dialog fx-togglebutton.pseudo-selected {
-    --fx-text-fill: white;
-}
