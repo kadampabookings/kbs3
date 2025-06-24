@@ -409,6 +409,10 @@
     <source path="dev/webfx/extras/player/video/web"/>
     <!--======================< webfx-extras-player-video-web-castr >=======================-->
     <source path="dev/webfx/extras/player/video/web/castr"/>
+    <!--=====================< webfx-extras-player-video-web-videojs >======================-->
+    <source path="dev/webfx/extras/player/video/web/videojs"/>
+    <resource path="dev/webfx/extras/player/video/web/videojs"/>
+    <public path="" includes="dev/webfx/extras/player/video/web/videojs/"/>
     <!--======================< webfx-extras-player-video-web-wistia >======================-->
     <source path="dev/webfx/extras/player/video/web/wistia"/>
     <!--=====================< webfx-extras-player-video-web-youtube >======================-->
