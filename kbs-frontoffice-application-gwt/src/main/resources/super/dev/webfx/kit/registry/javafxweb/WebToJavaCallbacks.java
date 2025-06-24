@@ -31,6 +31,7 @@ public class WebToJavaCallbacks {
             registerClearFn(pm, "onGatewayCardVerificationFailure", (JsVoidFn1Arg<java.lang.String>) castedInstance::onGatewayCardVerificationFailure);
             registerClearFn(pm, "onGatewayBuyerVerificationFailure", (JsVoidFn1Arg<java.lang.String>) castedInstance::onGatewayBuyerVerificationFailure);
             registerClearFn(pm, "onGatewayPaymentVerificationSuccess", (JsVoidFn1Arg<java.lang.String>) castedInstance::onGatewayPaymentVerificationSuccess);
+            registerClearFn(pm, "pay", (JsVoidFn0Arg) castedInstance::pay);
         }
     }
 
