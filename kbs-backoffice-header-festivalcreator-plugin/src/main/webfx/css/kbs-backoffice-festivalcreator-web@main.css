@@ -20,7 +20,7 @@
     --fx-border-style: none;
     --fx-border-radius: 0;
     --fx-button-background-color: white;
-    --fx-button-background-color-selected: var(--kbs-festival-color);
+    --webfx-aria-toggle-button-background-color-fired: var(--kbs-festival-color);
     --fx-text-fill: var(--kbs-festival-color);
 }
 
@@ -36,6 +36,3 @@
     --kbs-festival-color: var(--kbs-fall-color);
 }
 
-.event-creator-dialog fx-togglebutton.pseudo-selected {
-    --fx-text-fill: white;
-}

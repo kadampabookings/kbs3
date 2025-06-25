@@ -15,34 +15,27 @@
 }
 
 .event-creator-dialog ToggleButton {
-    -fx-background-color: white;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, lightgray, 11, 0, 4, 4);
+    -webfx-aria-toggle-button-background-color-fired: -kbs-festival-color;
+    -webfx-aria-toggle-button-text-fill-fired: white;
     -fx-text-fill: -kbs-festival-color;
+    -fx-effect: dropshadow(three-pass-box, lightgray, 11, 0, 4, 4);
+    -fx-background-color: white;
 }
 
-.event-creator-dialog ToggleButton SVGPath {
-    -fx-fill: -kbs-festival-color;
+.event-creator-dialog ToggleButton:hover { /* Otherwise another CSS rule sets it to transparent somewhere and this prevents the effect */
+    -fx-background-color: white;
 }
 
-.event-creator-dialog ToggleButton:selected {
-    -fx-background-color: -kbs-festival-color;
-    -fx-text-fill: white;
-}
-
-.event-creator-dialog ToggleButton:selected SVGPath {
-    -fx-fill: white;
-}
-
-.event-creator-dialog .spring-festival, .event-creator-dialog .spring-festival SVGPath {
+.event-creator-dialog .spring-festival {
     -kbs-festival-color: -kbs-spring-color;
 }
 
-.event-creator-dialog .summer-festival, .event-creator-dialog .summer-festival SVGPath {
+.event-creator-dialog .summer-festival {
     -kbs-festival-color: -kbs-summer-color;
 }
 
-.event-creator-dialog .fall-festival, .event-creator-dialog .fall-festival SVGPath {
+.event-creator-dialog .fall-festival {
     -kbs-festival-color: -kbs-fall-color;
 }
 
