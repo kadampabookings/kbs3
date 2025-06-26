@@ -24,12 +24,12 @@ public final class FXFestivals {
     // Last in-person Festivals
     private static final ObjectProperty<Event> LAST_SPRING_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
     private static final ObjectProperty<Event> LAST_SUMMER_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
-    private static final ObjectProperty<Event> LAST_FALL_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
+    private static final ObjectProperty<Event> LAST_FALL_FESTIVAL_PROPERTY   = new SimpleObjectProperty<>();
 
     // Last online Festivals
     private static final ObjectProperty<Event> LAST_ONLINE_SPRING_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
     private static final ObjectProperty<Event> LAST_ONLINE_SUMMER_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
-    private static final ObjectProperty<Event> LAST_ONLINE_FALL_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
+    private static final ObjectProperty<Event> LAST_ONLINE_FALL_FESTIVAL_PROPERTY   = new SimpleObjectProperty<>();
 
     public static ObservableList<Event> lastFestivals() {
         return LAST_FESTIVALS;
@@ -88,7 +88,7 @@ public final class FXFestivals {
             switch (festivalType) {
                 case SPRING_FESTIVAL: return online ? lastOnlineSpringFestivalProperty() : lastSpringFestivalProperty();
                 case SUMMER_FESTIVAL: return online ? lastOnlineSummerFestivalProperty() : lastSummerFestivalProperty();
-                case FALL_FESTIVAL:   return online ? lastOnlineFallFestivalProperty() : lastFallFestivalProperty();
+                case FALL_FESTIVAL  : return online ? lastOnlineFallFestivalProperty()   : lastFallFestivalProperty();
             }
         }
         return null;
@@ -96,7 +96,7 @@ public final class FXFestivals {
 
     private static void loadLastFestivals() {
         EntityStore entityStore = EntityStore.create(DataSourceModelService.getDefaultDataSourceModel());
-        String select = "select name,type.name,startDate,endDate,kbs3,state,live,openingDate from Event where type in (?) order by startDate desc, name like '%Online%' ? 1 : 0 limit 2";
+        String select = "select name,type.name,startDate,endDate,kbs3,state,live,openingDate,bookingFormUrl from Event where type in (?) order by startDate desc, name like '%Online%' ? 1 : 0 limit 2";
         entityStore.executeQueryBatch(
                 new EntityStoreQuery(select, new Object[] { FestivalType.SPRING_FESTIVAL.getTypeId() }),
                 new EntityStoreQuery(select, new Object[] { FestivalType.SUMMER_FESTIVAL.getTypeId() }),
