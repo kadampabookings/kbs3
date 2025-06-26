@@ -26,10 +26,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
-import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.shared.entities.Event;
 import one.modality.event.client.lifecycle.EventLifeCycle;
 import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
+import one.modality.event.frontoffice.activities.booking.process.BookingStarter;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
@@ -115,17 +115,18 @@ final class FestivalThumbnail {
         dialogArea.setOnMouseClicked(e2 -> callback.closeDialog());
 
         bookInPersonLink.setOnAction(e2 -> {
-            BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(festival));
+            BookingStarter.startEventBooking(festival);
             callback.closeDialog();
         });
 
         if (bookOnline instanceof Hyperlink) {
             ((Hyperlink) bookOnline).setOnAction(e2 -> {
-                BrowserUtil.openExternalBrowser(EventLifeCycle.getKbs2BookingFormUrl(onlineFestival));
+                BookingStarter.startEventBooking(onlineFestival);
                 callback.closeDialog();
             });
         }
 
         Animations.fadeIn(bookNowDialog);
     }
+
 }
