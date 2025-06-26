@@ -1,5 +1,7 @@
 .kbs-main-login {
     --webfx-login-portal-background-image: url("./frontoffice/images/Manjushri.jpg");
+    --webfx-login-portal-opacity: 0.8;
+    --webfx-login-portal-filter: none;
 }
 
 /* Maybe this should be managed by the WebFX Kit, but without this rule, the browser takes the original element size
