@@ -1347,7 +1347,7 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-font-family: "Poppins"; /*-poppins-font-family;*/
     -fx-font-weight: 400;
     -fx-font-size: 12px;
-    -fx-background-radius: 8px, 8px;
+    -fx-background-radius: 8px, 8px; /* but OpenJFX doesn't clip the background image unfortunately */
     -fx-background-repeat: no-repeat, no-repeat;
     -fx-background-size: cover, cover;
     -fx-background-position: center, center;
@@ -1372,7 +1372,6 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 .festival-thumbnail.spring-festival {
     -fx-background-image: url("webfx-css:home/spring-background.png"), url("webfx-css:home/pixel-white-80.png");
-    -fx-background-radius: 8px, 8px;
 }
 
 .festival-thumbnail.summer-festival {
