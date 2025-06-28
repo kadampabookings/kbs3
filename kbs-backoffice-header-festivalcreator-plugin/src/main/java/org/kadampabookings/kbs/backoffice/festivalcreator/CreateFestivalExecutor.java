@@ -79,7 +79,7 @@ final class CreateFestivalExecutor {
             new ScalePane(buttonBar)
         );
         //container.spacingProperty().bind(container.heightProperty().multiply(0.1)); // multiply not yet supported by webfx
-        container.spacingProperty().bind(FXProperties.compute(container.heightProperty(), height -> height.doubleValue() * 0.1));
+        container.spacingProperty().bind(container.heightProperty().map(height -> height.doubleValue() * 0.1));
         /*MaterialTextField materialTextField = MaterialUtil.getMaterialTextField(eventNameTextField);
         I18n.bindI18nTextProperty(materialTextField.labelTextProperty(), EventCreatorI18nKeys.NameEventTextField);
         materialTextField.setAnimateLabel(false);*/
@@ -187,8 +187,7 @@ final class CreateFestivalExecutor {
 
     private ToggleButton createEventTypeButton(Object cardI18nKey, FestivalType festivalType) {
         // card18nKey has a graphic and a text such as "[Spring] {0}" where {0} is supposed to be the year of the next festival to create
-        ObservableValue<Integer> nextYearProperty = FXProperties.compute(FXFestivals.lastFestivalProperty(festivalType, false),
-            CreateFestivalExecutor::nextFestivalYear);
+        ObservableValue<Integer> nextYearProperty = FXFestivals.lastFestivalProperty(festivalType, false).map(CreateFestivalExecutor::nextFestivalYear);
         ToggleButton button = I18nControls.bindI18nProperties(toggleGroup.createItemButton(festivalType), cardI18nKey, nextYearProperty);
         button.setContentDisplay(ContentDisplay.TOP);
         button.setGraphicTextGap(20);
