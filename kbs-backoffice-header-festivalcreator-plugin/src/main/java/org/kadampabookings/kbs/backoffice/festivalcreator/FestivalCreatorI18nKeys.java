@@ -3,12 +3,12 @@ package org.kadampabookings.kbs.backoffice.festivalcreator;
 
 public interface FestivalCreatorI18nKeys {
 
-    String SpringCard = "SpringCard";
-    String SummerCard = "SummerCard";
-    String FallCard = "FallCard";
-    String StartDate = "StartDate";
-    String CreateFestival = "CreateFestival";
-    String SelectFestivalType = "SelectFestivalType";
-    String EndDate = "EndDate";
+    Object SpringCard = "SpringCard";
+    Object SummerCard = "SummerCard";
+    Object FallCard = "FallCard";
+    Object StartDate = "StartDate";
+    Object CreateFestival = "CreateFestival";
+    Object SelectFestivalType = "SelectFestivalType";
+    Object EndDate = "EndDate";
 
 }

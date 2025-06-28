@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
  */
 final class PodcastsCard {
 
-    public static Node createCard(String titleI18nKey, String contentI18nKey) {
+    public static Node createCard(Object titleI18nKey, Object contentI18nKey) {
         Label titleLabel = I18nControls.newLabel(titleI18nKey);
         titleLabel.setGraphicTextGap(15);
         titleLabel.getStyleClass().setAll("card-title");

@@ -23,14 +23,14 @@ public enum FestivalType {
     private static final int FESTIVAL_ITEM_PRIMARY_KEY = 37;
 
     private final int typeId;
-    private final String longI18nKey;
-    private final String shortI18nKey;
+    private final Object longI18nKey;
+    private final Object shortI18nKey;
     private final String styleClass;
     private final Month usualStartMonth;
     private final int earliestMonthDay;
     private final int usualDuration;
 
-    FestivalType(int typeId, String longI18nKey, String shortI18nKey, String styleClass, Month usualStartMonth, int earliestMonthDay, int usualDuration) {
+    FestivalType(int typeId, Object longI18nKey, Object shortI18nKey, String styleClass, Month usualStartMonth, int earliestMonthDay, int usualDuration) {
         this.typeId = typeId;
         this.longI18nKey = longI18nKey;
         this.shortI18nKey = shortI18nKey;
@@ -44,11 +44,11 @@ public enum FestivalType {
         return typeId;
     }
 
-    public String getLongI18nKey() {
+    public Object getLongI18nKey() {
         return longI18nKey;
     }
 
-    public String getShortI18nKey() {
+    public Object getShortI18nKey() {
         return shortI18nKey;
     }
 

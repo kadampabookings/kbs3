@@ -185,7 +185,7 @@ final class CreateFestivalExecutor {
         return toggleGroup.getFiredItem();
     }
 
-    private ToggleButton createEventTypeButton(String cardI18nKey, FestivalType festivalType) {
+    private ToggleButton createEventTypeButton(Object cardI18nKey, FestivalType festivalType) {
         // card18nKey has a graphic and a text such as "[Spring] {0}" where {0} is supposed to be the year of the next festival to create
         ObservableValue<Integer> nextYearProperty = FXProperties.compute(FXFestivals.lastFestivalProperty(festivalType, false),
             CreateFestivalExecutor::nextFestivalYear);

@@ -56,6 +56,9 @@ import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDate;
 
+/**
+ * @author Bruno Salmon
+ */
 final class PodcastsActivity extends ViewDomainActivityBase implements ModalityButtonFactoryMixin {
 
     private static final int INITIAL_LIMIT = 5;
@@ -338,7 +341,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
         setScrollPaneBackground(Background.fill(backgroundColorProperty.get()));
     }
 
-    private Label createPodcastsChannelButton(String i18nKey, String url) {
+    private Label createPodcastsChannelButton(Object i18nKey, String url) {
         Label button = GeneralUtility.createLabel(i18nKey, Color.BLACK);
         button.setMinSize(200, 45);
         button.setPrefSize(240, 45);
@@ -359,8 +362,8 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
         return button;
     }
 
-    private static Tab createTopicTab(TabsBar<Boolean> tabsBar, String text, boolean virtuous) {
-        Tab tab = tabsBar.createTab(text, virtuous);
+    private static Tab createTopicTab(TabsBar<Boolean> tabsBar, Object i18nKey, boolean virtuous) {
+        Tab tab = tabsBar.createTab(i18nKey, virtuous);
         tab.setPadding(new Insets(5));
         tab.setTextFill(Color.GRAY);
         return tab;

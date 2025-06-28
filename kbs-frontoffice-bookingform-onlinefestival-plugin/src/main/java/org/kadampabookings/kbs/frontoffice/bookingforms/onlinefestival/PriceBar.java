@@ -29,7 +29,7 @@ final class PriceBar {
         return container;
     }
 
-    private static Node createPriceBox(String i18nKey, StringProperty formattedPriceProperty) {
+    private static Node createPriceBox(Object i18nKey, StringProperty formattedPriceProperty) {
         Label promptLabel = Bootstrap.strong(I18nControls.newLabel(I18nKeys.appendColons(i18nKey)));
         Label priceLabel = new Label();
         priceLabel.getStyleClass().add("price");

@@ -3,18 +3,18 @@ package org.kadampabookings.kbs.frontoffice.activities.podcasts;
 
 public interface PodcastsI18nKeys {
 
-    String Podcasts = "Podcasts";
-    String podcastsLabel = "podcastsLabel";
-    String alsoAvailableOn = "alsoAvailableOn";
-    String Spotify = "Spotify";
-    String ApplePodcasts = "ApplePodcasts";
-    String AmazonMusic = "AmazonMusic";
-    String PocketCasts = "PocketCasts";
-    String videos = "videos";
-    String teacher = "teacher";
-    String topic = "topic";
-    String all = "all";
-    String nonVirtuousTopic = "nonVirtuousTopic";
-    String virtuousTopic = "virtuousTopic";
+    Object Podcasts = "Podcasts";
+    Object podcastsLabel = "podcastsLabel";
+    Object alsoAvailableOn = "alsoAvailableOn";
+    Object Spotify = "Spotify";
+    Object ApplePodcasts = "ApplePodcasts";
+    Object AmazonMusic = "AmazonMusic";
+    Object PocketCasts = "PocketCasts";
+    Object videos = "videos";
+    Object teacher = "teacher";
+    Object topic = "topic";
+    Object all = "all";
+    Object nonVirtuousTopic = "nonVirtuousTopic";
+    Object virtuousTopic = "virtuousTopic";
 
 }

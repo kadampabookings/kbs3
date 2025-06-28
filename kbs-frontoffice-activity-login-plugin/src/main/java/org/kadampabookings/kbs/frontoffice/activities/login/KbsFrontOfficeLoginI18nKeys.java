@@ -3,6 +3,6 @@ package org.kadampabookings.kbs.frontoffice.activities.login;
 
 public interface KbsFrontOfficeLoginI18nKeys {
 
-    String KbsLoginHelp = "KbsLoginHelp";
+    Object KbsLoginHelp = "KbsLoginHelp";
 
 }
