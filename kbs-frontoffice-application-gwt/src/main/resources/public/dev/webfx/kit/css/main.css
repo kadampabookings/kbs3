@@ -1053,6 +1053,17 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-radius: 4px;
 }
 
+/*===== modality-event-backoffice-activity-medias-plugin-web@main.css from modality-base-client-i18n =====*/
+
+.translation-button {
+
+}
+
+.translation-pane {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+}
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 

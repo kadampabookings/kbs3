@@ -860,6 +860,19 @@ Text, Label, Button, TextField {
 
 /*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
 
+/*===== modality-event-backoffice-activity-medias-plugin-javafx@main.css from modality-base-client-i18n =====*/
+
+.translation-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3;
+    -fx-padding: 2 6 2 6;
+}
+
+.translation-pane {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 5;
+}
 /*===== modality-frontoffice-booking-javafx@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 
