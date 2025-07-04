@@ -275,6 +275,8 @@
     <source path="one/modality/crm/client/i18n"/>
     <!--=============< modality-crm-frontoffice-activity-createaccount-plugin >=============-->
     <source path="one/modality/crm/frontoffice/activities/createaccount"/>
+    <!--================< modality-crm-frontoffice-activity-orders-plugin >=================-->
+    <source path="one/modality/crm/frontoffice/activities/orders"/>
     <!--==============< modality-crm-frontoffice-activity-userprofile-plugin >==============-->
     <source path="one/modality/crm/frontoffice/activities/userprofile"/>
     <!--=========================< modality-crm-frontoffice-help >==========================-->
