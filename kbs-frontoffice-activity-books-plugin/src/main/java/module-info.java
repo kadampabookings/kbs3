@@ -14,7 +14,10 @@ module kbs.frontoffice.activity.books.plugin {
     requires modality.base.shared.entities;
     requires modality.event.client.mediaview;
     requires webfx.extras.carousel;
+    requires webfx.extras.i18n;
     requires webfx.extras.imagestore;
+    requires webfx.extras.operation;
+    requires webfx.extras.operation.action;
     requires webfx.extras.panes;
     requires webfx.extras.player;
     requires webfx.kit.util;
@@ -22,15 +25,12 @@ module kbs.frontoffice.activity.books.plugin {
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
     requires webfx.stack.cache.client;
-    requires webfx.stack.i18n;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
     requires webfx.stack.orm.entity;
     requires webfx.stack.orm.reactive.entities;
     requires webfx.stack.routing.router.client;
     requires webfx.stack.routing.uirouter;
-    requires webfx.stack.ui.operation;
-    requires webfx.stack.ui.operation.action;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.books;

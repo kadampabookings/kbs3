@@ -14,12 +14,12 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires modality.ecommerce.document.service;
     requires modality.event.frontoffice.activity.booking.plugin;
     requires webfx.extras.aria;
+    requires webfx.extras.i18n;
+    requires webfx.extras.i18n.controls;
     requires webfx.extras.styles.bootstrap;
     requires webfx.kit.util;
     requires webfx.platform.util;
     requires webfx.platform.util.time;
-    requires webfx.stack.i18n;
-    requires webfx.stack.i18n.controls;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;

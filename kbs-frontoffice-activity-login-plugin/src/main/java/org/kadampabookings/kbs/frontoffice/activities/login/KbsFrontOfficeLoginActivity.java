@@ -19,7 +19,7 @@ import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.platform.util.Strings;
 import dev.webfx.platform.windowlocation.WindowLocation;
 import dev.webfx.stack.authn.login.ui.LoginUiService;
-import dev.webfx.stack.i18n.I18n;
+import dev.webfx.extras.i18n.I18n;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

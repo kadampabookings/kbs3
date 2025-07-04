@@ -360,104 +360,70 @@ fx-switch.webfx-switch.selected {
 fx-switch.webfx-switch fx-circle.knob {
     background-color: var(--webfx-switch-knob-background-color);
 }
-/*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
+/*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
 
 :root {
-    --webfx-visualgrid-row-border-color: #D3D3D3;
-    --webfx-visualgrid-col-border-color: #D3D3D3;
-    --webfx-visualgrid-row-height: 28px;
-    --webfx-visualgrid-selection-color: #AED6F1;
+    /* Colors shared by different Material components */
+    --webfx-material-input-text-fill: #1e1e1e;
+    --webfx-material-idle-text-fill: #6d6d6d;
+    --webfx-material-disabled-fill: #8a8a8a;
+    --webfx-material-invalid-fill: #ff1744;
+    --webfx-material-focused-fill: #0596FF;
+
+    /* CSS variables applied to specific material components with default values (will be redefined on focus, disabled & invalid) */
+    --webfx-material-background-color: white;
+    --webfx-material-label-fill: var(--webfx-material-idle-text-fill);
+    --webfx-material-line-fill: var(--webfx-material-idle-text-fill);
+    --webfx-material-line-border-style: solid;
+    --webfx-material-focused-line-fill: var(--webfx-material-focused-fill);
 }
 
-th, td {
-    border: 1px solid var(--webfx-visualgrid-row-border-color);
-    border-top-width: 0;
-}
+/* Applying CSS variables to material components */
 
-table {
-    width: 100%;
+.material > fx-border {
     border: none;
-    border-collapse: collapse;
-    cursor: pointer;
 }
 
-thead {
-    border: none;
-    height: var(--webfx-visualgrid-row-height);
-    position: sticky;
-    top: 1px;
-    z-index: 2; /* header must be above body when scrolling */
+.material > fx-background {
+    background-color: var(--webfx-material-background-color);
+    border-radius: 0;
 }
 
-thead th {
-    border-right-width: thin;
-    border-right-style: solid;
-    border-right-color: var(--webfx-visualgrid-col-border-color);
-    height: var(--webfx-visualgrid-row-height);
-    font-weight: bold;
-    text-align: center;
-    overflow: hidden;
+.material-label {
+    color: var(--webfx-material-label-fill);
 }
 
-tbody td {
-    border-bottom-color: var(--webfx-visualgrid-row-border-color);
+.material-line > fx-border { /* is actually a JavaFX Region */
+    /* Using a border (not background) because there is a dotted style for the disabled state */
+    border-color: var(--webfx-material-line-fill);
+    border-style: var(--webfx-material-line-border-style);
+    border-width: 0;
+    border-bottom-width: 1px;
 }
 
-tbody tr {
-    height: var(--webfx-visualgrid-row-height);
+.material-focused-line > fx-background { /* is actually a JavaFX Region */
+    /* Using a background is enough (no need for a border) */
+    background-color: var(--webfx-material-focused-line-fill);
 }
 
-thead th, tbody td {
-    padding: 0 5px 0 5px;
-    max-width: 0;
-    overflow: hidden;
+/* Changing CSS variables values in dependence of material state */
+
+.material-focused * {
+    --webfx-material-label-fill: var(--webfx-material-focused-fill);
 }
 
-th:before { /* this rule is to prevent body appearing in 1px line above header when scrolling */
-    content: '';
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: -1px;
-    border-top: 1px solid var(--webfx-visualgrid-row-border-color);
+.material-disabled * {
+    --webfx-material-label-fill: var(--webfx-material-disabled-fill);
+    --webfx-material-line-fill: var(--webfx-material-disabled-fill);
+    --webfx-material-line-border-style: dotted;
+    --webfx-material-focused-line-fill: var(--webfx-material-disabled-fill);
 }
 
-
-/***********************************
- *** Table header and row colors ***
- ***********************************/
-
-/*** Table header gray gradient ***/
-
-thead tr {
-    background: linear-gradient( 180deg, white, lightgray 100%);
+.material-invalid * {
+    --webfx-material-label-fill: var(--webfx-material-invalid-fill);
+    --webfx-material-line-fill: var(--webfx-material-invalid-fill);
+    --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
 }
-
-th, tbody, td {
-    background-color: transparent;
-}
-
-
-/**************************
-*** VisualGridTableSkin ***
-**************************/
-
-.grid, .grid-col, .grid-row {
-    overflow: hidden;
-}
-
-.grid-head, .grid-row {
-    border-bottom: 1px solid var(--webfx-visualgrid-row-border-color);
-}
-
-.grid-col {
-    border-right: 1px solid var(--webfx-visualgrid-col-border-color);
-}
-
-tr.selected, .grid-row.selected {
-    background: var(--webfx-visualgrid-selection-color)
-}
-
 /*===== webfx-extras-bootstrap-web@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
@@ -783,70 +749,104 @@ tr.selected, .grid-row.selected {
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-/*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
+/*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
 
 :root {
-    /* Colors shared by different Material components */
-    --webfx-material-input-text-fill: #1e1e1e;
-    --webfx-material-idle-text-fill: #6d6d6d;
-    --webfx-material-disabled-fill: #8a8a8a;
-    --webfx-material-invalid-fill: #ff1744;
-    --webfx-material-focused-fill: #0596FF;
-
-    /* CSS variables applied to specific material components with default values (will be redefined on focus, disabled & invalid) */
-    --webfx-material-background-color: white;
-    --webfx-material-label-fill: var(--webfx-material-idle-text-fill);
-    --webfx-material-line-fill: var(--webfx-material-idle-text-fill);
-    --webfx-material-line-border-style: solid;
-    --webfx-material-focused-line-fill: var(--webfx-material-focused-fill);
+    --webfx-visualgrid-row-border-color: #D3D3D3;
+    --webfx-visualgrid-col-border-color: #D3D3D3;
+    --webfx-visualgrid-row-height: 28px;
+    --webfx-visualgrid-selection-color: #AED6F1;
 }
 
-/* Applying CSS variables to material components */
+th, td {
+    border: 1px solid var(--webfx-visualgrid-row-border-color);
+    border-top-width: 0;
+}
 
-.material > fx-border {
+table {
+    width: 100%;
     border: none;
+    border-collapse: collapse;
+    cursor: pointer;
 }
 
-.material > fx-background {
-    background-color: var(--webfx-material-background-color);
-    border-radius: 0;
+thead {
+    border: none;
+    height: var(--webfx-visualgrid-row-height);
+    position: sticky;
+    top: 1px;
+    z-index: 2; /* header must be above body when scrolling */
 }
 
-.material-label {
-    color: var(--webfx-material-label-fill);
+thead th {
+    border-right-width: thin;
+    border-right-style: solid;
+    border-right-color: var(--webfx-visualgrid-col-border-color);
+    height: var(--webfx-visualgrid-row-height);
+    font-weight: bold;
+    text-align: center;
+    overflow: hidden;
 }
 
-.material-line > fx-border { /* is actually a JavaFX Region */
-    /* Using a border (not background) because there is a dotted style for the disabled state */
-    border-color: var(--webfx-material-line-fill);
-    border-style: var(--webfx-material-line-border-style);
-    border-width: 0;
-    border-bottom-width: 1px;
+tbody td {
+    border-bottom-color: var(--webfx-visualgrid-row-border-color);
 }
 
-.material-focused-line > fx-background { /* is actually a JavaFX Region */
-    /* Using a background is enough (no need for a border) */
-    background-color: var(--webfx-material-focused-line-fill);
+tbody tr {
+    height: var(--webfx-visualgrid-row-height);
 }
 
-/* Changing CSS variables values in dependence of material state */
-
-.material-focused * {
-    --webfx-material-label-fill: var(--webfx-material-focused-fill);
+thead th, tbody td {
+    padding: 0 5px 0 5px;
+    max-width: 0;
+    overflow: hidden;
 }
 
-.material-disabled * {
-    --webfx-material-label-fill: var(--webfx-material-disabled-fill);
-    --webfx-material-line-fill: var(--webfx-material-disabled-fill);
-    --webfx-material-line-border-style: dotted;
-    --webfx-material-focused-line-fill: var(--webfx-material-disabled-fill);
+th:before { /* this rule is to prevent body appearing in 1px line above header when scrolling */
+    content: '';
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: -1px;
+    border-top: 1px solid var(--webfx-visualgrid-row-border-color);
 }
 
-.material-invalid * {
-    --webfx-material-label-fill: var(--webfx-material-invalid-fill);
-    --webfx-material-line-fill: var(--webfx-material-invalid-fill);
-    --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
+
+/***********************************
+ *** Table header and row colors ***
+ ***********************************/
+
+/*** Table header gray gradient ***/
+
+thead tr {
+    background: linear-gradient( 180deg, white, lightgray 100%);
 }
+
+th, tbody, td {
+    background-color: transparent;
+}
+
+
+/**************************
+*** VisualGridTableSkin ***
+**************************/
+
+.grid, .grid-col, .grid-row {
+    overflow: hidden;
+}
+
+.grid-head, .grid-row {
+    border-bottom: 1px solid var(--webfx-visualgrid-row-border-color);
+}
+
+.grid-col {
+    border-right: 1px solid var(--webfx-visualgrid-col-border-color);
+}
+
+tr.selected, .grid-row.selected {
+    background: var(--webfx-visualgrid-selection-color)
+}
+
 /*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
 
 :root {

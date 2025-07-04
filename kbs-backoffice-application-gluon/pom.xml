@@ -82,6 +82,12 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
+            <artifactId>webfx-extras-fxraiser-json</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
             <artifactId>webfx-extras-visual-charts-peers-openjfx</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
@@ -353,12 +359,6 @@
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-stack-ui-fxraiser-json</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -374,6 +374,8 @@
                         <list>util</list>
                     </attachList>
                     <resourcesList>
+                        <list>dev/webfx/extras/i18n/[^/]+$</list>
+                        <list>dev/webfx/extras/validation/controlsfx/images/[^/]+$</list>
                         <list>dev/webfx/kit/css/fonts/montserrat/[^/]+$</list>
                         <list>dev/webfx/kit/css/fonts/password/[^/]+$</list>
                         <list>dev/webfx/kit/css/fonts/poppins/[^/]+$</list>
@@ -381,8 +383,6 @@
                         <list>dev/webfx/kit/css/fonts/vollkornsc/[^/]+$</list>
                         <list>dev/webfx/platform/conf/[^/]+$</list>
                         <list>dev/webfx/platform/meta/exe/[^/]+$</list>
-                        <list>dev/webfx/stack/i18n/[^/]+$</list>
-                        <list>dev/webfx/stack/ui/validation/controlsfx/images/[^/]+$</list>
                         <list>images/buddhas/[^/]+$</list>
                         <list>images/large/[^/]+$</list>
                         <list>images/s16/[^/]+$</list>

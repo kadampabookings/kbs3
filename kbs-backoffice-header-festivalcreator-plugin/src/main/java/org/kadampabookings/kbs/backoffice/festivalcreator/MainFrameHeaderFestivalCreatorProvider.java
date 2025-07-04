@@ -1,10 +1,10 @@
 package org.kadampabookings.kbs.backoffice.festivalcreator;
 
 import dev.webfx.stack.orm.domainmodel.DataSourceModel;
-import dev.webfx.stack.ui.action.Action;
-import dev.webfx.stack.ui.action.ActionBinder;
-import dev.webfx.stack.ui.controls.button.ButtonFactoryMixin;
-import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
+import dev.webfx.extras.action.Action;
+import dev.webfx.extras.action.ActionBinder;
+import dev.webfx.extras.controlfactory.button.ButtonFactoryMixin;
+import dev.webfx.extras.operation.action.OperationActionFactoryMixin;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import one.modality.base.backoffice.mainframe.headernode.MainFrameHeaderNodeProvider;

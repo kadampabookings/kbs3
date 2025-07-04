@@ -19,6 +19,9 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires modality.base.shared.entities;
     requires modality.event.client.mediaview;
     requires webfx.extras.carousel;
+    requires webfx.extras.i18n;
+    requires webfx.extras.i18n.controls;
+    requires webfx.extras.operation;
     requires webfx.extras.panes;
     requires webfx.extras.switches;
     requires webfx.extras.util.animation;
@@ -31,8 +34,6 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.platform.storage;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
-    requires webfx.stack.i18n;
-    requires webfx.stack.i18n.controls;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
     requires webfx.stack.orm.entity;
@@ -40,7 +41,6 @@ module kbs.frontoffice.activity.podcasts.plugin {
     requires webfx.stack.orm.reactive.entities;
     requires webfx.stack.routing.router.client;
     requires webfx.stack.routing.uirouter;
-    requires webfx.stack.ui.operation;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.activities.podcasts;

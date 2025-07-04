@@ -143,63 +143,68 @@ ToggleButton.aria-toggle.fired {
 ToggleButton.aria-toggle SVGPath { /* TODO: check if it's the best place */
     -fx-fill: -fx-text-fill;
 }
-/*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
-
-VisualGrid {
-    -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
-}
+/*===== webfx-extras-material-javafx@main.css from webfx-extras-styles-materialdesign =====*/
 
 .root {
-    -webfx-visualgrid-row-border-color: #D3D3D3;
-    -webfx-visualgrid-col-border-color: #D3D3D3;
-    -webfx-visualgrid-selection-color: #AED6F1;
+     /* Colors shared by different Material components */
+     -webfx-material-input-text-fill: #1e1e1e;
+     -webfx-material-idle-text-fill: #6d6d6d;
+     -webfx-material-disabled-fill: #8a8a8a;
+     -webfx-material-invalid-fill: #ff1744;
+     -webfx-material-focused-fill: #0596FF;
+
+     /* CSS variables applied to specific material components with default values (will be redefined on focus, disabled & invalid) */
+     -webfx-material-background-color: white;
+     -webfx-material-label-fill: -webfx-material-idle-text-fill;
+     -webfx-material-line-fill: -webfx-material-idle-text-fill;
+     -webfx-material-line-border-style: solid;
+     -webfx-material-focused-line-fill: -webfx-material-focused-fill;
 }
 
-.table-view {
-    -fx-table-cell-border-color: #bbbbbb; /* same color as java 7 caspian, java 8 one is too light on colored rows */
-    -fx-cursor: hand;
+/* Applying CSS variables to material components */
+.material {
+     /* Material background */
+     -fx-background-color: -webfx-material-background-color , -webfx-material-background-color , -webfx-material-background-color;
+     -fx-background-insets: 0, 0, 0;
 }
 
-.table-view.noHeader .column-header-background {
-    -fx-max-height: 0;
-    -fx-pref-height: 0;
-    -fx-min-height: 0;
+.material-label { /* is actually a JavaFX Text */
+     -fx-fill: -webfx-material-label-fill;
 }
 
-.table-view.fullHeight *.scroll-bar:vertical {
-    -fx-max-width: 0;
-    -fx-pref-width: 0;
-    -fx-min-width: 0;
+.material-line { /* is actually a JavaFX Region */
+     /* Using a border (not background) because there is a dotted style for the disabled state */
+     -fx-border-color: -webfx-material-line-fill;
+     -fx-border-style: solid; /* -webfx-material-line-border-style; not working with OpenJFX) */
+     -fx-border-width: 1px;
 }
 
-.table-row-cell:empty {
-    -fx-opacity: 0.0;
+.material-focused-line { /* is actually a JavaFX Region */
+     /* Using a background is enough (no need for a border) */
+     -fx-background-color: -webfx-material-focused-line-fill;
 }
 
-.table-row-cell .table-cell {
-    -fx-padding: 1.4mm 1.4mm 0.6mm 1.4mm;
+/* Changing CSS variables values in dependence of material state */
+
+.material-focused * {
+     -webfx-material-label-fill: -webfx-material-focused-fill;
 }
 
-.grid .scroll-pane {
-    -fx-padding: 0;
+.material-disabled * {
+     -webfx-material-label-fill: -webfx-material-disabled-fill;
+     -webfx-material-line-fill: -webfx-material-disabled-fill;
+     -webfx-material-line-border-style: dotted;
+     -webfx-material-focused-line-fill: -webfx-material-disabled-fill;
 }
 
-.grid-head, .grid-row {
-    -fx-border-color: -webfx-visualgrid-row-border-color;
-    -fx-border-width: 0 0 1px 0;
+.material-disabled .material-line { /* workaround because -webfx-material-line-border-style is not working with OpenJFX */
+     -fx-border-style: dotted;
 }
 
-.grid-col {
-    -fx-border-color: -webfx-visualgrid-col-border-color;
-    -fx-border-width: 0 1px 0 0;
-}
-
-.table-row-cell:selected {
-    -fx-background: -webfx-visualgrid-selection-color;
-}
-
-.table-row-cell:selected .table-cell {
-   -fx-text-fill: -fx-text-inner-color;
+.material-invalid * {
+     -webfx-material-label-fill: -webfx-material-invalid-fill;
+     -webfx-material-line-fill: -webfx-material-invalid-fill;
+     -webfx-material-focused-line-fill: -webfx-material-invalid-fill;
 }
 
 /*===== webfx-extras-bootstrap-javafx@main.css from webfx-extras-styles-bootstrap =====*/
@@ -600,68 +605,63 @@ VisualGrid {
     -fx-fill: -bootstrap-red6;
 }
 
-/*===== webfx-extras-material-javafx@main.css from webfx-extras-styles-materialdesign =====*/
+/*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
+
+VisualGrid {
+    -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
+}
 
 .root {
-     /* Colors shared by different Material components */
-     -webfx-material-input-text-fill: #1e1e1e;
-     -webfx-material-idle-text-fill: #6d6d6d;
-     -webfx-material-disabled-fill: #8a8a8a;
-     -webfx-material-invalid-fill: #ff1744;
-     -webfx-material-focused-fill: #0596FF;
-
-     /* CSS variables applied to specific material components with default values (will be redefined on focus, disabled & invalid) */
-     -webfx-material-background-color: white;
-     -webfx-material-label-fill: -webfx-material-idle-text-fill;
-     -webfx-material-line-fill: -webfx-material-idle-text-fill;
-     -webfx-material-line-border-style: solid;
-     -webfx-material-focused-line-fill: -webfx-material-focused-fill;
+    -webfx-visualgrid-row-border-color: #D3D3D3;
+    -webfx-visualgrid-col-border-color: #D3D3D3;
+    -webfx-visualgrid-selection-color: #AED6F1;
 }
 
-/* Applying CSS variables to material components */
-.material {
-     /* Material background */
-     -fx-background-color: -webfx-material-background-color , -webfx-material-background-color , -webfx-material-background-color;
-     -fx-background-insets: 0, 0, 0;
+.table-view {
+    -fx-table-cell-border-color: #bbbbbb; /* same color as java 7 caspian, java 8 one is too light on colored rows */
+    -fx-cursor: hand;
 }
 
-.material-label { /* is actually a JavaFX Text */
-     -fx-fill: -webfx-material-label-fill;
+.table-view.noHeader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
 }
 
-.material-line { /* is actually a JavaFX Region */
-     /* Using a border (not background) because there is a dotted style for the disabled state */
-     -fx-border-color: -webfx-material-line-fill;
-     -fx-border-style: solid; /* -webfx-material-line-border-style; not working with OpenJFX) */
-     -fx-border-width: 1px;
+.table-view.fullHeight *.scroll-bar:vertical {
+    -fx-max-width: 0;
+    -fx-pref-width: 0;
+    -fx-min-width: 0;
 }
 
-.material-focused-line { /* is actually a JavaFX Region */
-     /* Using a background is enough (no need for a border) */
-     -fx-background-color: -webfx-material-focused-line-fill;
+.table-row-cell:empty {
+    -fx-opacity: 0.0;
 }
 
-/* Changing CSS variables values in dependence of material state */
-
-.material-focused * {
-     -webfx-material-label-fill: -webfx-material-focused-fill;
+.table-row-cell .table-cell {
+    -fx-padding: 1.4mm 1.4mm 0.6mm 1.4mm;
 }
 
-.material-disabled * {
-     -webfx-material-label-fill: -webfx-material-disabled-fill;
-     -webfx-material-line-fill: -webfx-material-disabled-fill;
-     -webfx-material-line-border-style: dotted;
-     -webfx-material-focused-line-fill: -webfx-material-disabled-fill;
+.grid .scroll-pane {
+    -fx-padding: 0;
 }
 
-.material-disabled .material-line { /* workaround because -webfx-material-line-border-style is not working with OpenJFX */
-     -fx-border-style: dotted;
+.grid-head, .grid-row {
+    -fx-border-color: -webfx-visualgrid-row-border-color;
+    -fx-border-width: 0 0 1px 0;
 }
 
-.material-invalid * {
-     -webfx-material-label-fill: -webfx-material-invalid-fill;
-     -webfx-material-line-fill: -webfx-material-invalid-fill;
-     -webfx-material-focused-line-fill: -webfx-material-invalid-fill;
+.grid-col {
+    -fx-border-color: -webfx-visualgrid-col-border-color;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.table-row-cell:selected {
+    -fx-background: -webfx-visualgrid-selection-color;
+}
+
+.table-row-cell:selected .table-cell {
+   -fx-text-fill: -fx-text-inner-color;
 }
 
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/

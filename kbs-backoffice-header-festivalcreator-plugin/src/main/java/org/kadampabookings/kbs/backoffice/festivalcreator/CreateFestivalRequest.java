@@ -1,12 +1,12 @@
 package org.kadampabookings.kbs.backoffice.festivalcreator;
 
 import dev.webfx.platform.async.AsyncFunction;
-import dev.webfx.stack.i18n.HasI18nKey;
+import dev.webfx.extras.i18n.HasI18nKey;
 import dev.webfx.stack.orm.entity.Entities;
-import dev.webfx.stack.ui.action.Action;
-import dev.webfx.stack.ui.action.tuner.ActionTuner;
-import dev.webfx.stack.ui.operation.HasOperationCode;
-import dev.webfx.stack.ui.operation.HasOperationExecutor;
+import dev.webfx.extras.action.Action;
+import dev.webfx.extras.action.ActionTuner;
+import dev.webfx.extras.operation.HasOperationCode;
+import dev.webfx.extras.operation.HasOperationExecutor;
 import javafx.beans.binding.BooleanBinding;
 import one.modality.base.backoffice.mainframe.fx.FXEventSelector;
 import one.modality.crm.backoffice.organization.fx.FXOrganizationId;

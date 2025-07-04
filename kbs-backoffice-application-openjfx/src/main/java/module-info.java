@@ -15,6 +15,7 @@ module kbs.backoffice.application.openjfx {
     requires modality.ecommerce.payment.remote;
     requires webfx.extras.canvas.blob.openjfx;
     requires webfx.extras.filepicker.openjfx;
+    requires webfx.extras.fxraiser.json;
     requires webfx.extras.visual.charts.peers.openjfx;
     requires webfx.extras.visual.grid.peers.openjfx;
     requires webfx.extras.webtext.peers.openjfx;
@@ -51,6 +52,5 @@ module kbs.backoffice.application.openjfx {
     requires webfx.stack.orm.dql.submit.interceptor;
     requires webfx.stack.push.client.simple;
     requires webfx.stack.session.client;
-    requires webfx.stack.ui.fxraiser.json;
 
 }

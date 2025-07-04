@@ -1,8 +1,8 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
-import dev.webfx.stack.i18n.I18nKeys;
-import dev.webfx.stack.i18n.controls.I18nControls;
+import dev.webfx.extras.i18n.I18nKeys;
+import dev.webfx.extras.i18n.controls.I18nControls;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;

@@ -7,6 +7,7 @@ module kbs.frontoffice.activity.login.plugin {
     requires javafx.graphics;
     requires modality.base.client.icons;
     requires modality.crm.client.activity.login.plugin;
+    requires webfx.extras.i18n;
     requires webfx.extras.panes;
     requires webfx.extras.player;
     requires webfx.extras.player.video.web.wistia;
@@ -21,7 +22,6 @@ module kbs.frontoffice.activity.login.plugin {
     requires webfx.platform.util;
     requires webfx.platform.windowlocation;
     requires webfx.stack.authn.login.ui;
-    requires webfx.stack.i18n;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.routing.activity;
 

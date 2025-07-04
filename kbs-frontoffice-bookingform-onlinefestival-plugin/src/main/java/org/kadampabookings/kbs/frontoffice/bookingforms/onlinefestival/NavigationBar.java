@@ -2,7 +2,7 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
 import dev.webfx.extras.aria.AriaToggleGroup;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
-import dev.webfx.stack.i18n.controls.I18nControls;
+import dev.webfx.extras.i18n.controls.I18nControls;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;

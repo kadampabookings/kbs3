@@ -1,6 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
-import dev.webfx.stack.i18n.controls.I18nControls;
+import dev.webfx.extras.i18n.controls.I18nControls;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;

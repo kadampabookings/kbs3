@@ -2,7 +2,7 @@ package org.kadampabookings.kbs.frontoffice.activities.news;
 
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
-import dev.webfx.stack.ui.operation.action.OperationActionFactoryMixin;
+import dev.webfx.extras.operation.action.OperationActionFactoryMixin;
 import javafx.scene.Node;
 import javafx.scene.web.WebView;
 import one.modality.base.frontoffice.mainframe.fx.FXBackgroundNode;

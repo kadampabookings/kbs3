@@ -18,29 +18,28 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires modality.crm.backoffice.organization.fx;
     requires modality.event.backoffice.activity.pricing.plugin;
     requires modality.event.client.event.fx;
+    requires webfx.extras.action;
     requires webfx.extras.aria;
+    requires webfx.extras.controlfactory;
+    requires webfx.extras.exceptions;
+    requires webfx.extras.i18n;
+    requires webfx.extras.i18n.controls;
+    requires webfx.extras.operation;
+    requires webfx.extras.operation.action;
     requires webfx.extras.panes;
     requires webfx.extras.styles.bootstrap;
     requires webfx.extras.styles.materialdesign;
     requires webfx.extras.time.pickers;
+    requires webfx.extras.util.dialog;
     requires webfx.extras.util.layout;
+    requires webfx.extras.validation;
     requires webfx.kit.util;
     requires webfx.platform.async;
     requires webfx.platform.console;
     requires webfx.platform.windowhistory;
-    requires webfx.stack.i18n;
-    requires webfx.stack.i18n.controls;
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
-    requires webfx.stack.ui.action;
-    requires webfx.stack.ui.action.tuner;
-    requires webfx.stack.ui.controls;
-    requires webfx.stack.ui.dialog;
-    requires webfx.stack.ui.exceptions;
-    requires webfx.stack.ui.operation;
-    requires webfx.stack.ui.operation.action;
-    requires webfx.stack.ui.validation;
 
     // Exported packages
     exports org.kadampabookings.kbs.backoffice.festivalcreator;
