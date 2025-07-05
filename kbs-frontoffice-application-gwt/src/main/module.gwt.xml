@@ -353,6 +353,8 @@
     <source path="one/modality/event/frontoffice/activities/videostreaming"/>
     <!--==========< modality-event-frontoffice-bookingform-recurringevent-plugin >==========-->
     <source path="one/modality/event/frontoffice/bookingforms/recurringevent"/>
+    <!--=====================< modality-event-frontoffice-eventheader >=====================-->
+    <source path="one/modality/event/frontoffice/eventheader"/>
     <!--=======================< modality-event-frontoffice-medias >========================-->
     <source path="one/modality/event/frontoffice/medias"/>
     <!--==============================< webfx-extras-action >===============================-->
