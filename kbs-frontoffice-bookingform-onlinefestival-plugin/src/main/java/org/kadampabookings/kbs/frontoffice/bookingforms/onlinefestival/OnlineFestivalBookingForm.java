@@ -6,6 +6,7 @@ import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.event.frontoffice.activities.booking.process.event.AbstractBookingForm;
 import one.modality.event.frontoffice.activities.booking.process.event.BookEventActivity;
+import one.modality.event.frontoffice.activities.booking.process.event.BookingFormSettings;
 
 /**
  * @author Bruno Salmon
@@ -16,8 +17,8 @@ final class OnlineFestivalBookingForm extends AbstractBookingForm {
 
     private final NavigationBar navigationBar = new NavigationBar();
 
-    public OnlineFestivalBookingForm(BookEventActivity activity) {
-        super(activity, false, false);
+    public OnlineFestivalBookingForm(BookEventActivity activity, BookingFormSettings settings) {
+        super(activity, settings);
     }
 
     @Override

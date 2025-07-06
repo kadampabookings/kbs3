@@ -5,6 +5,7 @@ module kbs.frontoffice.bookingform.sttp.plugin {
     // Direct dependencies modules
     requires modality.base.shared.entities;
     requires modality.event.frontoffice.activity.booking.plugin;
+    requires modality.event.frontoffice.eventheader;
     requires webfx.stack.orm.entity;
 
     // Exported packages

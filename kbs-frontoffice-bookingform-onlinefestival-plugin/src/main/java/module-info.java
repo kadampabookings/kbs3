@@ -13,6 +13,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires modality.ecommerce.client.workingbooking;
     requires modality.ecommerce.document.service;
     requires modality.event.frontoffice.activity.booking.plugin;
+    requires modality.event.frontoffice.eventheader;
     requires webfx.extras.aria;
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;
