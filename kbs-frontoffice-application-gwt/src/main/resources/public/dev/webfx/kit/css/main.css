@@ -1165,6 +1165,19 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     --webfx-aria-toggle-button-background-color-focused: var(--bootstrap-grey1);
     --webfx-aria-toggle-button-background-color-fired: var(--brand-blue-color);
 }
+/*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
+
+/* We don't want the default white background for WebFX Extras material text fields in the login window */
+.user-account * {
+    --webfx-material-background-color: transparent;
+    --webfx-material-idle-text-fill: black;
+}
+
+.user-account .material-label {
+     font-weight: bold;
+     font-size: 14px;
+}
+
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
@@ -1243,19 +1256,6 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 .btn-white:hover:not(.disabled) {
     --fx-text-fill: black;
     --fx-background-color: var(--bootstrap-grey1);
-}
-
-/*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
-
-/* We don't want the default white background for WebFX Extras material text fields in the login window */
-.user-account * {
-    --webfx-material-background-color: transparent;
-    --webfx-material-idle-text-fill: black;
-}
-
-.user-account .material-label {
-     font-weight: bold;
-     font-size: 14px;
 }
 
 /*===== modality-front-office-userprofile-web@main.css from modality-crm-frontoffice-activity-userprofile-plugin =====*/
