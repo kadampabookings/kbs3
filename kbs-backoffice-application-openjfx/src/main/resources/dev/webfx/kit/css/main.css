@@ -801,6 +801,10 @@ HtmlText, HtmlTextEditor {
     -fx-background-color: #f0f0f0;
     -fx-background-radius: 5;
 }
+
+.strikethrough LabeledText {
+    -fx-strikethrough: true;
+}
 /*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
 
 .root {
