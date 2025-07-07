@@ -1064,6 +1064,10 @@ body, textarea /* because textarea has explicit default monospace font */ {
     border-radius: 5px;
     padding: 10px;
 }
+
+.strikethrough fx-text {
+    text-decoration: line-through;
+}
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 

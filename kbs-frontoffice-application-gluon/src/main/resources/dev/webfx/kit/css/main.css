@@ -873,6 +873,10 @@ Text, Label, Button, TextField {
     -fx-background-color: #f0f0f0;
     -fx-background-radius: 5;
 }
+
+.strikethrough LabeledText {
+    -fx-strikethrough: true;
+}
 /*===== modality-frontoffice-booking-javafx@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
 

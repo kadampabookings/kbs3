@@ -1034,6 +1034,10 @@ body, textarea /* because textarea has explicit default monospace font */ {
     border-radius: 5px;
     padding: 10px;
 }
+
+.strikethrough fx-text {
+    text-decoration: line-through;
+}
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
