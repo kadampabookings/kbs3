@@ -322,6 +322,8 @@
     <source path="one/modality/base/shared/entities/impl"/>
     <source path="one/modality/base/shared/entities/markers"/>
     <source path="one/modality/base/shared/entities/triggers"/>
+    <!--========================< modality-base-shared-knownitems >=========================-->
+    <source path="one/modality/base/shared/knownitems"/>
     <!--==============< modality-catering-backoffice-activity-kitchen-plugin >==============-->
     <source path="one/modality/catering/backoffice/activities/kitchen"/>
     <!--=========================< modality-catering-client-i18n >==========================-->
@@ -517,6 +519,7 @@
     <source path="dev/webfx/extras/panes/transitions"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
+    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->

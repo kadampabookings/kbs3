@@ -122,6 +122,8 @@
     <public path="" includes="org/kadampabookings/kbs/frontoffice/booking/"/>
     <!--===============< kbs-frontoffice-bookingform-onlinefestival-plugin >================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/audiorecording"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/teaching"/>
     <!--====================< kbs-frontoffice-bookingform-sttp-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/sttp"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
@@ -267,6 +269,8 @@
     <source path="one/modality/base/shared/entities/impl"/>
     <source path="one/modality/base/shared/entities/markers"/>
     <source path="one/modality/base/shared/entities/triggers"/>
+    <!--========================< modality-base-shared-knownitems >=========================-->
+    <source path="one/modality/base/shared/knownitems"/>
     <!--====================< modality-crm-backoffice-organization-fx >=====================-->
     <source path="one/modality/crm/backoffice/organization/fx"/>
     <source path="one/modality/crm/backoffice/organization/fx/impl"/>
@@ -466,6 +470,7 @@
     <source path="dev/webfx/extras/player/video/web/youtube"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
+    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->
