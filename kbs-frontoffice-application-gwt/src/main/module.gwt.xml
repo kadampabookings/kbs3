@@ -126,6 +126,10 @@
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/teaching"/>
     <!--====================< kbs-frontoffice-bookingform-sttp-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/sttp"/>
+    <!--=========================< kbs-frontoffice-footer-nktikbu >=========================-->
+    <source path="org/kadampabookings/kbs/frontoffice/footer/nktikbu"/>
+    <resource path="org/kadampabookings/kbs/frontoffice/footer/nktikbu"/>
+    <public path="" includes="org/kadampabookings/kbs/frontoffice/footer/nktikbu/"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->
@@ -243,6 +247,8 @@
     <source path="one/modality/base/frontoffice/application"/>
     <!--==================< modality-base-frontoffice-mainframe-activity >==================-->
     <source path="one/modality/base/frontoffice/activities/mainframe"/>
+    <!--=================< modality-base-frontoffice-mainframe-footernode >=================-->
+    <source path="one/modality/base/frontoffice/mainframe/footernode"/>
     <!--=====================< modality-base-frontoffice-mainframe-fx >=====================-->
     <source path="one/modality/base/frontoffice/mainframe/fx"/>
     <!--=======================< modality-base-frontoffice-utility >========================-->
