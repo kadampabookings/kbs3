@@ -40,7 +40,7 @@ final class NavigationBar {
         container.getStyleClass().add("top-bar");
     }
 
-    public void setLabelI18nKey(Object labelI18nKey) {
+    public void setTitleI18nKey(Object labelI18nKey) {
         titleI18nKeyProperty.set(labelI18nKey);
     }
 

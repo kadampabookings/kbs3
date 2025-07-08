@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
+package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching;
 
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.util.collection.Collections;
@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * @author Bruno Salmon
  */
-final class TeachingOptionView {
+final class TeachingPeriodOptionView {
 
     private final RadioButton radioButton = new RadioButton();
     private final Label periodLabel = new Label();
     private final Label priceLabel = new Label();
 
-    TeachingOptionView(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
+    TeachingPeriodOptionView(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
         PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
         LocalDate startDate = bookablePeriod.getStartScheduledItem().getDate();
         LocalDate endDate = bookablePeriod.getEndScheduledItem().getDate();
