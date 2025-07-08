@@ -1070,6 +1070,27 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
+.book-event-activity .navigation-bar {
+    font-weight: bold;
+    --fx-background-color: #E7E7E7;
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
+    --fx-border-radius: 8px;
+    --fx-button-background-color: transparent;
+    --fx-button-border-color: transparent;
+    --fx-togglebutton-border-color-hover: transparent;
+}
+
+.book-event-activity .navigation-bar .title {
+    --fx-background-color: white;
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
+    --fx-border-radius: 8px;
+}
 
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
@@ -1658,28 +1679,6 @@ fx-aspectratiopane {
 
 .online-festival-booking-form {
     font-family: "Poppins", sans-serif;
-}
-
-.online-festival-booking-form .top-bar {
-    font-weight: bold;
-    --fx-background-color: #E7E7E7;
-    --fx-background-radius: 8px;
-    --fx-border-style: solid;
-    --fx-border-color: #E7E7E7;
-    --fx-border-width: 1px;
-    --fx-border-radius: 8px;
-    --fx-button-background-color: transparent;
-    --fx-button-border-color: transparent;
-    --fx-togglebutton-border-color-hover: transparent;
-}
-
-.online-festival-booking-form .top-bar .title {
-    --fx-background-color: white;
-    --fx-background-radius: 8px;
-    --fx-border-style: solid;
-    --fx-border-color: #E7E7E7;
-    --fx-border-width: 1px;
-    --fx-border-radius: 8px;
 }
 
 .online-festival-booking-form .price-bar {

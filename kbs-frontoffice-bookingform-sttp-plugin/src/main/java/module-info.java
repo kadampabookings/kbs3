@@ -12,6 +12,6 @@ module kbs.frontoffice.bookingform.sttp.plugin {
     exports org.kadampabookings.kbs.frontoffice.bookingforms.sttp;
 
     // Provided services
-    provides one.modality.event.frontoffice.activities.booking.process.event.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingforms.sttp.SttpBookingFormProvider;
+    provides one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingforms.sttp.SttpBookingFormProvider;
 
 }

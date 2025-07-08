@@ -10,14 +10,14 @@ import one.modality.base.shared.entities.BookablePeriod;
 import one.modality.base.shared.knownitems.KnownItemI18nKeys;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
-import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.FamilyOptionsView;
+import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 
 import java.util.List;
 
 /**
  * @author Bruno Salmon
  */
-public final class TeachingOptionsView implements FamilyOptionsView {
+public final class TeachingOptionsView implements BookingFormPage {
 
     private final GridPane gridPane = new GridPane(20, 20);
 
@@ -54,11 +54,6 @@ public final class TeachingOptionsView implements FamilyOptionsView {
             if (n == 1)
                 radioButton.setSelected(true);
         }
-    }
-
-    @Override
-    public boolean isValid() {
-        return true;
     }
 
 }

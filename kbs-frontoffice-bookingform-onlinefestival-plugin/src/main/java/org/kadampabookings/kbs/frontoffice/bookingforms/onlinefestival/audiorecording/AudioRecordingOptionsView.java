@@ -12,7 +12,7 @@ import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.base.shared.entities.markers.EntityHasItem;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
-import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.FamilyOptionsView;
+import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * @author Bruno Salmon
  */
-public final class AudioRecordingOptionsView implements FamilyOptionsView {
+public final class AudioRecordingOptionsView implements BookingFormPage {
 
     private final GridPane gridPane = new GridPane(20, 20);
 
@@ -62,8 +62,4 @@ public final class AudioRecordingOptionsView implements FamilyOptionsView {
         }
     }
 
-    @Override
-    public boolean isValid() {
-        return true;
-    }
 }
