@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 /**
  * @author Bruno Salmon
  */
-public final class AudioRecordingOptionsView implements BookingFormPage {
+public final class AudioRecordingPage implements BookingFormPage {
 
     private final GridPane gridPane = new GridPane(20, 20);
 
-    public AudioRecordingOptionsView() {
+    public AudioRecordingPage() {
         gridPane.setAlignment(Pos.CENTER);
         gridPane.getStyleClass().addAll("booking-options", "recording-options");
         gridPane.setPadding(new Insets(48, 0, 48, 0));
@@ -53,7 +53,7 @@ public final class AudioRecordingOptionsView implements BookingFormPage {
                 () -> new TreeMap<>(Comparator.comparing(Item::getOrd)),
                 Collectors.toList()));
         for (Map.Entry<Item, List<ScheduledItem>> entry : audioRecordingScheduledItemMap.entrySet()) {
-            AudioRecordingItemOptionView teachingPeriodOptionView = new AudioRecordingItemOptionView(entry.getKey(), entry.getValue(), workingBooking);
+            AudioRecordingLanguagePeriodOption teachingPeriodOptionView = new AudioRecordingLanguagePeriodOption(entry.getKey(), entry.getValue(), workingBooking);
             ButtonBase bookButton = teachingPeriodOptionView.getBookButton();
             int rowIndex = gridPane.getRowCount();
             gridPane.add(bookButton, 0, rowIndex);

@@ -14,6 +14,8 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires modality.ecommerce.document.service;
     requires modality.event.frontoffice.activity.booking.plugin;
     requires modality.event.frontoffice.eventheader;
+    requires webfx.extras.panes;
+    requires webfx.extras.styles.bootstrap;
     requires webfx.kit.util;
     requires webfx.platform.util;
     requires webfx.platform.util.time;
@@ -21,6 +23,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording;
+    exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary;
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching;
 
     // Provided services

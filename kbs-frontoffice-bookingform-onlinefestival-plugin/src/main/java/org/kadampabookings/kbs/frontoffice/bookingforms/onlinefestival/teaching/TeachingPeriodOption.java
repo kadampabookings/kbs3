@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * @author Bruno Salmon
  */
-final class TeachingPeriodOptionView {
+final class TeachingPeriodOption {
 
     private final RadioButton radioButton = new RadioButton();
     private final Label periodLabel = new Label();
     private final Label priceLabel = new Label();
 
-    TeachingPeriodOptionView(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
+    TeachingPeriodOption(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
         PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
         LocalDate startDate = bookablePeriod.getStartScheduledItem().getDate();
         LocalDate endDate = bookablePeriod.getEndScheduledItem().getDate();

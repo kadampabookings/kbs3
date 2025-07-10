@@ -4,8 +4,9 @@ import one.modality.event.frontoffice.activities.booking.process.event.BookEvent
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormSettings;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.MultiPageBookingForm;
-import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording.AudioRecordingOptionsView;
-import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching.TeachingOptionsView;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording.AudioRecordingPage;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary.FestivalSummaryPage;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching.TeachingPage;
 
 /**
  * @author Bruno Salmon
@@ -13,8 +14,9 @@ import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching.
 final class OnlineFestivalBookingForm extends MultiPageBookingForm {
 
     private final BookingFormPage[] pages = {
-        new TeachingOptionsView(),
-        new AudioRecordingOptionsView(),
+        new TeachingPage(),
+        new AudioRecordingPage(),
+        new FestivalSummaryPage()
     };
 
     public OnlineFestivalBookingForm(BookEventActivity activity, BookingFormSettings settings) {

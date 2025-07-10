@@ -2,11 +2,11 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.sttp;
 
 import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.Event;
-import one.modality.event.frontoffice.activities.booking.process.event.*;
+import one.modality.event.frontoffice.activities.booking.process.event.BookEventActivity;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingForm;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormProvider;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormSettingsBuilder;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.NoBookingForm;
+import one.modality.event.frontoffice.bookingforms.recurringevent.RecurringEventBookingForm;
 import one.modality.event.frontoffice.eventheader.MediaEventHeader;
 
 /**
@@ -28,7 +28,7 @@ public class SttpBookingFormProvider implements BookingFormProvider {
 
     @Override
     public BookingForm createBookingForm(Event event, BookEventActivity activity) {
-        return new NoBookingForm(activity, new BookingFormSettingsBuilder()
+        return new RecurringEventBookingForm(event, activity, new BookingFormSettingsBuilder()
             .setEventHeader(new MediaEventHeader(false))
             .build()
         );

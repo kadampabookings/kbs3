@@ -17,11 +17,11 @@ import java.util.List;
 /**
  * @author Bruno Salmon
  */
-public final class TeachingOptionsView implements BookingFormPage {
+public final class TeachingPage implements BookingFormPage {
 
     private final GridPane gridPane = new GridPane(20, 20);
 
-    public TeachingOptionsView() {
+    public TeachingPage() {
         gridPane.setAlignment(Pos.CENTER);
         gridPane.getStyleClass().addAll("booking-options", "teaching-options");
         gridPane.setPadding(new Insets(48, 0, 48, 0));
@@ -45,7 +45,7 @@ public final class TeachingOptionsView implements BookingFormPage {
         ToggleGroup teachingOptionsToggleGroup = new ToggleGroup();
         for (int i = 0, n = bookablePeriods.size(); i < n; i++) {
             BookablePeriod bookablePeriod = bookablePeriods.get(i);
-            TeachingPeriodOptionView teachingPeriodOptionView = new TeachingPeriodOptionView(bookablePeriod, workingBooking);
+            TeachingPeriodOption teachingPeriodOptionView = new TeachingPeriodOption(bookablePeriod, workingBooking);
             RadioButton radioButton = teachingPeriodOptionView.getRadioButton();
             radioButton.setToggleGroup(teachingOptionsToggleGroup);
             gridPane.add(radioButton, 0, i);

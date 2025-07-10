@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * @author Bruno Salmon
  */
-final class AudioRecordingItemOptionView {
+final class AudioRecordingLanguagePeriodOption {
 
     private final CheckBox bookButton = new CheckBox();
     private final Label periodLabel = new Label();
     private final Label priceLabel = new Label();
 
-    AudioRecordingItemOptionView(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
+    AudioRecordingLanguagePeriodOption(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
         PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
         FXProperties.runOnPropertyChange(selected -> {
             if (selected)
