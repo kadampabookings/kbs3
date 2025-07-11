@@ -15,6 +15,7 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires modality.base.client.i18n;
     requires modality.base.client.mainframe.fx;
     requires modality.base.shared.entities;
+    requires modality.base.shared.knownitems;
     requires modality.crm.backoffice.organization.fx;
     requires modality.event.backoffice.activity.pricing.plugin;
     requires modality.event.client.event.fx;

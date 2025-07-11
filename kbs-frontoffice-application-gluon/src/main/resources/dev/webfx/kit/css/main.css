@@ -809,6 +809,23 @@ HtmlText, HtmlTextEditor {
     -fx-line-spacing: 0;
     -fx-text-fill: -webfx-login-portal-title-color;
 }
+/*===== modality-event-backoffice-activity-medias-plugin-javafx@main.css from modality-base-client-i18n =====*/
+
+.translation-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3;
+    -fx-padding: 2 6 2 6;
+}
+
+.translation-pane {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 5;
+}
+
+.strikethrough LabeledText {
+    -fx-strikethrough: true;
+}
 /*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
 
 .root {
@@ -860,25 +877,34 @@ Text, Label, Button, TextField {
 
 /*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
 
-/*===== modality-event-backoffice-activity-medias-plugin-javafx@main.css from modality-base-client-i18n =====*/
-
-.translation-button {
-    -fx-background-color: transparent;
-    -fx-border-color: #ccc;
-    -fx-border-radius: 3;
-    -fx-padding: 2 6 2 6;
-}
-
-.translation-pane {
-    -fx-background-color: #f0f0f0;
-    -fx-background-radius: 5;
-}
-
-.strikethrough LabeledText {
-    -fx-strikethrough: true;
-}
 /*===== modality-frontoffice-booking-javafx@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
+.book-event-activity .navigation-bar {
+    -fx-font-weight: bold;
+    -fx-background-color: #E7E7E7;
+    -fx-background-radius: 5px;
+    -fx-border-color: #E7E7E7;
+    -fx-border-radius: 8px;
+}
+
+.book-event-activity .navigation-bar .title {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+}
+
+.book-event-activity .navigation-bar ToggleButton {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.book-event-activity .price-bar {
+    -fx-background-color: #F4F4F4;
+    -fx-font-weight: bold;
+}
+
+.book-event-activity .price-bar Label.price {
+    -fx-text-fill: #838788;
+}
 
 /*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
@@ -1517,33 +1543,6 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 .online-festival-booking-form {
     -fx-font-family: "Poppins";
-}
-
-.online-festival-booking-form .top-bar {
-    -fx-font-weight: bold;
-    -fx-background-color: #E7E7E7;
-    -fx-background-radius: 5px;
-    -fx-border-color: #E7E7E7;
-    -fx-border-radius: 8px;
-}
-
-.online-festival-booking-form .top-bar .title {
-    -fx-background-color: white;
-    -fx-background-radius: 8px;
-}
-
-.online-festival-booking-form .top-bar ToggleButton {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.online-festival-booking-form .price-bar {
-    -fx-background-color: #F4F4F4;
-    -fx-font-weight: bold;
-}
-
-.online-festival-booking-form .price-bar Label.price {
-    -fx-text-fill: #838788;
 }
 
 .teaching-option-radio-button {

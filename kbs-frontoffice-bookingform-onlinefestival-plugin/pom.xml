@@ -41,7 +41,19 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-base-client-bootstrap</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-base-client-i18n</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-base-client-time</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -53,7 +65,7 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-ecommerce-client-i18n</artifactId>
+            <artifactId>modality-base-shared-knownitems</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -76,20 +88,20 @@
         </dependency>
 
         <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-extras-aria</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-extras-i18n</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-event-frontoffice-eventheader</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>dev.webfx</groupId>
             <artifactId>webfx-extras-i18n-controls</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-extras-panes</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 

@@ -122,8 +122,16 @@
     <public path="" includes="org/kadampabookings/kbs/frontoffice/booking/"/>
     <!--===============< kbs-frontoffice-bookingform-onlinefestival-plugin >================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/audiorecording"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/payment"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/summary"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/teaching"/>
     <!--====================< kbs-frontoffice-bookingform-sttp-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/sttp"/>
+    <!--=========================< kbs-frontoffice-footer-nktikbu >=========================-->
+    <source path="org/kadampabookings/kbs/frontoffice/footer/nktikbu"/>
+    <resource path="org/kadampabookings/kbs/frontoffice/footer/nktikbu"/>
+    <public path="" includes="org/kadampabookings/kbs/frontoffice/footer/nktikbu/"/>
     <!--=================< modality-base-backoffice-mainframe-headernode >==================-->
     <source path="one/modality/base/backoffice/mainframe/headernode"/>
     <!--=========================< modality-base-client-activity >==========================-->
@@ -241,6 +249,8 @@
     <source path="one/modality/base/frontoffice/application"/>
     <!--==================< modality-base-frontoffice-mainframe-activity >==================-->
     <source path="one/modality/base/frontoffice/activities/mainframe"/>
+    <!--=================< modality-base-frontoffice-mainframe-footernode >=================-->
+    <source path="one/modality/base/frontoffice/mainframe/footernode"/>
     <!--=====================< modality-base-frontoffice-mainframe-fx >=====================-->
     <source path="one/modality/base/frontoffice/mainframe/fx"/>
     <!--=======================< modality-base-frontoffice-utility >========================-->
@@ -267,6 +277,8 @@
     <source path="one/modality/base/shared/entities/impl"/>
     <source path="one/modality/base/shared/entities/markers"/>
     <source path="one/modality/base/shared/entities/triggers"/>
+    <!--========================< modality-base-shared-knownitems >=========================-->
+    <source path="one/modality/base/shared/knownitems"/>
     <!--====================< modality-crm-backoffice-organization-fx >=====================-->
     <source path="one/modality/crm/backoffice/organization/fx"/>
     <source path="one/modality/crm/backoffice/organization/fx/impl"/>
@@ -356,6 +368,8 @@
     <source path="one/modality/event/frontoffice/activities/booking/process"/>
     <source path="one/modality/event/frontoffice/activities/booking/process/account"/>
     <source path="one/modality/event/frontoffice/activities/booking/process/event"/>
+    <source path="one/modality/event/frontoffice/activities/booking/process/event/bookingform"/>
+    <source path="one/modality/event/frontoffice/activities/booking/process/event/bookingform/multipages"/>
     <source path="one/modality/event/frontoffice/activities/booking/process/event/slides"/>
     <source path="one/modality/event/frontoffice/activities/booking/views"/>
     <resource path="one/modality/event/frontoffice/activities/booking/map"/>
@@ -466,6 +480,7 @@
     <source path="dev/webfx/extras/player/video/web/youtube"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
+    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->

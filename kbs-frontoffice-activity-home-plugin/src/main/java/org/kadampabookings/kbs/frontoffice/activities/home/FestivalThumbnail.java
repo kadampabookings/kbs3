@@ -1,17 +1,15 @@
 package org.kadampabookings.kbs.frontoffice.activities.home;
 
+import dev.webfx.extras.i18n.I18nKeys;
+import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.panes.GoldenRatioPane;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.extras.util.animation.Animations;
-import dev.webfx.platform.util.Numbers;
-import dev.webfx.extras.i18n.I18n;
-import dev.webfx.extras.i18n.I18nKeys;
-import dev.webfx.extras.i18n.controls.I18nControls;
-import dev.webfx.extras.i18n.spi.impl.I18nSubKey;
-import dev.webfx.stack.orm.entity.Entities;
 import dev.webfx.extras.util.dialog.DialogCallback;
 import dev.webfx.extras.util.dialog.DialogUtil;
+import dev.webfx.platform.util.Numbers;
+import dev.webfx.stack.orm.entity.Entities;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -25,6 +23,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
+import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.shared.entities.Event;
 import one.modality.event.client.lifecycle.EventLifeCycle;
@@ -77,7 +76,7 @@ final class FestivalThumbnail {
 
         VBox container = new VBox(48,
             festivalNamePane,
-            I18n.newText(new I18nSubKey("expression: dateIntervalFormat(startDate, endDate)", festival)),
+            I18nEntities.newExpressionText(festival, "dateIntervalFormat(startDate, endDate)"),
             button
         );
         container.setPrefSize(360, 400);

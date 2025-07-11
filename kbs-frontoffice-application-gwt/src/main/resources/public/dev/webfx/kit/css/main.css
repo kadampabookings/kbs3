@@ -1015,6 +1015,21 @@ input[type="password"]:not([value=""]) {
 }
 
 
+/*===== modality-event-backoffice-activity-medias-plugin-web@main.css from modality-base-client-i18n =====*/
+
+.translation-button {
+
+}
+
+.translation-pane {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.strikethrough fx-text {
+    text-decoration: line-through;
+}
 /*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
 
 :root {
@@ -1053,23 +1068,38 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-radius: 4px;
 }
 
-/*===== modality-event-backoffice-activity-medias-plugin-web@main.css from modality-base-client-i18n =====*/
-
-.translation-button {
-
-}
-
-.translation-pane {
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.strikethrough fx-text {
-    text-decoration: line-through;
-}
 /*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
+.book-event-activity .navigation-bar {
+    font-weight: bold;
+    --fx-background-color: #E7E7E7;
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
+    --fx-border-radius: 8px;
+    --fx-button-background-color: transparent;
+    --fx-button-border-color: transparent;
+    --fx-togglebutton-border-color-hover: transparent;
+}
+
+.book-event-activity .navigation-bar .title {
+    --fx-background-color: white;
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
+    --fx-border-radius: 8px;
+}
+
+.book-event-activity .price-bar {
+    font-weight: bold;
+    --fx-background-color: #F4F4F4;
+}
+
+.book-event-activity .price-bar fx-label.price {
+    --fx-text-fill: #838788;
+}
 
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
@@ -1658,37 +1688,6 @@ fx-aspectratiopane {
 
 .online-festival-booking-form {
     font-family: "Poppins", sans-serif;
-}
-
-.online-festival-booking-form .top-bar {
-    font-weight: bold;
-    --fx-background-color: #E7E7E7;
-    --fx-background-radius: 8px;
-    --fx-border-style: solid;
-    --fx-border-color: #E7E7E7;
-    --fx-border-width: 1px;
-    --fx-border-radius: 8px;
-    --fx-button-background-color: transparent;
-    --fx-button-border-color: transparent;
-    --fx-togglebutton-border-color-hover: transparent;
-}
-
-.online-festival-booking-form .top-bar .title {
-    --fx-background-color: white;
-    --fx-background-radius: 8px;
-    --fx-border-style: solid;
-    --fx-border-color: #E7E7E7;
-    --fx-border-width: 1px;
-    --fx-border-radius: 8px;
-}
-
-.online-festival-booking-form .price-bar {
-    font-weight: bold;
-    --fx-background-color: #F4F4F4;
-}
-
-.online-festival-booking-form .price-bar fx-label.price {
-    --fx-text-fill: #838788;
 }
 
 .teaching-option-radio-button {
