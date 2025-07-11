@@ -897,6 +897,15 @@ Text, Label, Button, TextField {
     -fx-border-color: transparent;
 }
 
+.book-event-activity .price-bar {
+    -fx-background-color: #F4F4F4;
+    -fx-font-weight: bold;
+}
+
+.book-event-activity .price-bar Label.price {
+    -fx-text-fill: #838788;
+}
+
 /*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
 .main-frame {
@@ -1534,15 +1543,6 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 .online-festival-booking-form {
     -fx-font-family: "Poppins";
-}
-
-.online-festival-booking-form .price-bar {
-    -fx-background-color: #F4F4F4;
-    -fx-font-weight: bold;
-}
-
-.online-festival-booking-form .price-bar Label.price {
-    -fx-text-fill: #838788;
 }
 
 .teaching-option-radio-button {

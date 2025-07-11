@@ -5,6 +5,7 @@ import one.modality.event.frontoffice.activities.booking.process.event.bookingfo
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.MultiPageBookingForm;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording.AudioRecordingPage;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment.PaymentAmountPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary.FestivalSummaryPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching.TeachingPage;
 
@@ -16,7 +17,8 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
     private final BookingFormPage[] pages = {
         new TeachingPage(),
         new AudioRecordingPage(),
-        new FestivalSummaryPage()
+        new FestivalSummaryPage(),
+        new PaymentAmountPage(this)
     };
 
     public OnlineFestivalBookingForm(BookEventActivity activity, BookingFormSettings settings) {
@@ -27,4 +29,11 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
     protected BookingFormPage[] getPages() {
         return pages;
     }
+
+    @Override
+    protected void updateShowSubmitButton() {
+        // We don't display the generic submitButton on the last page (PaymentAmountPage) because it has its own
+        setShowSubmitButton(false);
+    }
+
 }

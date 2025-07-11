@@ -14,10 +14,11 @@ import one.modality.event.frontoffice.activities.booking.process.event.bookingfo
  */
 public class FestivalSummaryPage implements BookingFormPage {
 
-    MonoPane monoPane = new MonoPane(Bootstrap.strong(new Text("TODO")));
+    MonoPane container = new MonoPane(Bootstrap.strong(new Text("TODO")));
 
     public FestivalSummaryPage() {
-        monoPane.setPadding(new Insets(48, 0, 48, 0));
+        container.setPadding(new Insets(48, 0, 48, 0));
+        container.setMaxWidth(Double.MAX_VALUE);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class FestivalSummaryPage implements BookingFormPage {
 
     @Override
     public Node getView() {
-        return monoPane;
+        return container;
     }
 
     @Override

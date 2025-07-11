@@ -14,4 +14,6 @@
         <provider interface="one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalBookingFormProvider</provider>
     </providers>
 
+    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys"/>
+
 </project>
