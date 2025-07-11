@@ -10,8 +10,7 @@ module kbs.frontoffice.activity.login.plugin {
     requires webfx.extras.i18n;
     requires webfx.extras.panes;
     requires webfx.extras.player;
-    requires webfx.extras.player.video.web.wistia;
-    requires webfx.extras.player.video.web.youtube;
+    requires webfx.extras.player.video.web.videojs;
     requires webfx.extras.util.animation;
     requires webfx.extras.util.layout;
     requires webfx.extras.webtext;
