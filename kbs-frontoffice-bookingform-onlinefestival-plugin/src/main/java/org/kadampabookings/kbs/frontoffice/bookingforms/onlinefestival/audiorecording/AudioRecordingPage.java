@@ -6,11 +6,11 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.layout.GridPane;
 import one.modality.base.shared.entities.Item;
-import one.modality.base.shared.knownitems.KnownItemI18nKeys;
-import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.base.shared.entities.markers.EntityHasItem;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
+import one.modality.base.shared.knownitems.KnownItemFamily;
+import one.modality.base.shared.knownitems.KnownItemI18nKeys;
+import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 
@@ -45,15 +45,15 @@ public final class AudioRecordingPage implements BookingFormPage {
     }
 
     @Override
-    public void setWorkingBooking(WorkingBooking workingBooking) {
+    public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
         gridPane.getChildren().clear();
-        PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
+        PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         Map<Item, List<ScheduledItem>> audioRecordingScheduledItemMap = policyAggregate.getFamilyScheduledItemsStream(KnownItemFamily.AUDIO_RECORDING)
             .collect(Collectors.groupingBy(EntityHasItem::getItem,
                 () -> new TreeMap<>(Comparator.comparing(Item::getOrd)),
                 Collectors.toList()));
         for (Map.Entry<Item, List<ScheduledItem>> entry : audioRecordingScheduledItemMap.entrySet()) {
-            AudioRecordingLanguagePeriodOption teachingPeriodOptionView = new AudioRecordingLanguagePeriodOption(entry.getKey(), entry.getValue(), workingBooking);
+            AudioRecordingLanguagePeriodOption teachingPeriodOptionView = new AudioRecordingLanguagePeriodOption(entry.getKey(), entry.getValue(), workingBookingProperties.getWorkingBooking());
             ButtonBase bookButton = teachingPeriodOptionView.getBookButton();
             int rowIndex = gridPane.getRowCount();
             gridPane.add(bookButton, 0, rowIndex);

@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import one.modality.base.client.bootstrap.ModalityStyle;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
+import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingForm;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormActivityCallback;
@@ -55,11 +55,12 @@ public final class PaymentAmountPage implements BookingFormPage {
     }
 
     @Override
-    public void setWorkingBooking(WorkingBooking workingBooking) {
+    public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         BooleanBinding disableSubmit = FXProperties.not(activityCallback.readyToSubmitBookingProperty());
         saveButton.disableProperty().bind(disableSubmit);
+        saveButton.setOnAction(e -> activityCallback.submitBooking(0));
         payButton.disableProperty().bind(disableSubmit);
-        payButton.setOnAction(e -> activityCallback.submitBooking());
+        payButton.setOnAction(e -> activityCallback.submitBooking(workingBookingProperties.getBalance()));
     }
 }

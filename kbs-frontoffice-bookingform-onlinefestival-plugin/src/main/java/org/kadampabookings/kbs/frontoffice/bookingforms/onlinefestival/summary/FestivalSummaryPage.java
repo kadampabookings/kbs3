@@ -5,7 +5,7 @@ import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
+import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 
@@ -32,7 +32,7 @@ public class FestivalSummaryPage implements BookingFormPage {
     }
 
     @Override
-    public void setWorkingBooking(WorkingBooking workingBooking) {
+    public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
 
     }
 }

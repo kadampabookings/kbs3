@@ -8,7 +8,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import one.modality.base.shared.entities.BookablePeriod;
 import one.modality.base.shared.knownitems.KnownItemI18nKeys;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
+import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 
@@ -38,14 +38,14 @@ public final class TeachingPage implements BookingFormPage {
     }
 
     @Override
-    public void setWorkingBooking(WorkingBooking workingBooking) {
+    public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
         gridPane.getChildren().clear();
-        PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
+        PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         List<BookablePeriod> bookablePeriods = policyAggregate.getBookablePeriods();
         ToggleGroup teachingOptionsToggleGroup = new ToggleGroup();
         for (int i = 0, n = bookablePeriods.size(); i < n; i++) {
             BookablePeriod bookablePeriod = bookablePeriods.get(i);
-            TeachingPeriodOption teachingPeriodOptionView = new TeachingPeriodOption(bookablePeriod, workingBooking);
+            TeachingPeriodOption teachingPeriodOptionView = new TeachingPeriodOption(bookablePeriod, workingBookingProperties.getWorkingBooking());
             RadioButton radioButton = teachingPeriodOptionView.getRadioButton();
             radioButton.setToggleGroup(teachingOptionsToggleGroup);
             gridPane.add(radioButton, 0, i);
