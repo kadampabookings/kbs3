@@ -1,6 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment;
 
 import dev.webfx.extras.i18n.controls.I18nControls;
+import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.kit.util.properties.FXProperties;
 import javafx.beans.binding.BooleanBinding;
@@ -25,18 +26,22 @@ import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFes
 public final class PaymentAmountPage implements BookingFormPage {
 
     private final BookingForm bookingForm;
+    private final MonoPane embeddedLoginContainer = new MonoPane();
     private final Button saveButton = Bootstrap.largeButton(Bootstrap.primaryButton(I18nControls.newButton(OnlineFestivalI18nKeys.SaveBooking)));
     private final Button payButton = Bootstrap.largeButton(ModalityStyle.blackButton(I18nControls.newButton(OnlineFestivalI18nKeys.PayNow)));
-    private final VBox container = new VBox();
+    private final VBox container;
 
     public PaymentAmountPage(BookingForm bookingForm) {
         this.bookingForm = bookingForm;
+        HBox buttonBar = new HBox(20, saveButton, payButton);
+        buttonBar.setMaxWidth(Region.USE_PREF_SIZE);
+        container = new VBox(50,
+            embeddedLoginContainer,
+            buttonBar
+        );
         container.setAlignment(Pos.TOP_CENTER);
         container.setPadding(new Insets(48, 0, 48, 0));
         container.setMaxWidth(Double.MAX_VALUE);
-        HBox buttonBar = new HBox(20, saveButton, payButton);
-        buttonBar.setMaxWidth(Region.USE_PREF_SIZE);
-        container.getChildren().addAll(buttonBar);
     }
 
     @Override
@@ -47,6 +52,11 @@ public final class PaymentAmountPage implements BookingFormPage {
     @Override
     public Node getView() {
         return container;
+    }
+
+    @Override
+    public MonoPane getEmbeddedLoginContainer() {
+        return embeddedLoginContainer;
     }
 
     @Override

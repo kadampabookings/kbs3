@@ -30,9 +30,4 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
         return pages;
     }
 
-    @Override
-    protected void updatePersonToBookRequired() {
-        setPersonToBookRequired(bookingFormPage instanceof FestivalSummaryPage || bookingFormPage instanceof PaymentAmountPage);
-    }
-
 }
