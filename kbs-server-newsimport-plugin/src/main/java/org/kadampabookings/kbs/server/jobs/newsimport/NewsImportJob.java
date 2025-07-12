@@ -11,6 +11,7 @@ import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.Fetch;
 import dev.webfx.platform.fetch.Response;
 import dev.webfx.platform.fetch.json.JsonFetch;
+import dev.webfx.platform.meta.Meta;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Arrays;
@@ -48,6 +49,9 @@ public class NewsImportJob implements ApplicationJob {
 
     @Override
     public void onStart() {
+        // No need to import news on development machines at the moment
+        if (Meta.isDevelopment())
+            return;
         importNews();
         importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importNews);
     }
