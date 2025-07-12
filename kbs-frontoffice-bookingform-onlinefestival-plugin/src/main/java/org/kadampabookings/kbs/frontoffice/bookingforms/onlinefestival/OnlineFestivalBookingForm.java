@@ -31,9 +31,8 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
     }
 
     @Override
-    protected void updateShowSubmitButton() {
-        // We don't display the generic submitButton on the last page (PaymentAmountPage) because it has its own
-        setShowSubmitButton(false);
+    protected void updatePersonToBookRequired() {
+        setPersonToBookRequired(bookingFormPage instanceof FestivalSummaryPage || bookingFormPage instanceof PaymentAmountPage);
     }
 
 }

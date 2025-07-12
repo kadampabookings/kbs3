@@ -50,6 +50,11 @@ public final class PaymentAmountPage implements BookingFormPage {
     }
 
     @Override
+    public boolean isShowingOwnSubmitButton() {
+        return true;
+    }
+
+    @Override
     public void setWorkingBooking(WorkingBooking workingBooking) {
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         BooleanBinding disableSubmit = FXProperties.not(activityCallback.readyToSubmitBookingProperty());
