@@ -11,6 +11,7 @@ import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.base.shared.knownitems.KnownItemI18nKeys;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.document.service.PolicyAggregate;
+import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
@@ -29,7 +30,7 @@ public final class AudioRecordingPage implements BookingFormPage {
     private final GridPane gridPane = BookingFormUtil.createOptionsGridPane(false);
     private final VBox container = BookingFormUtil.createPageVBox("recording-options", true,
         BookingFormUtil.createStrongLabel(OnlineFestivalI18nKeys.AudioRecordingTopMessage),
-        BookingFormUtil.createSecondaryLabel(OnlineFestivalI18nKeys.BookingOptions),
+        BookingFormUtil.createSecondaryLabel(BookingI18nKeys.BookingOptions),
         gridPane
     );
 

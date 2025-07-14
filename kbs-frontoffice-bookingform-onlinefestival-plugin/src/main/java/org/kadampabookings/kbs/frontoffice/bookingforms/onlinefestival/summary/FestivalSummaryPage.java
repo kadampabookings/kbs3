@@ -10,7 +10,6 @@ import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
-import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 /**
  * @author Bruno Salmon
@@ -20,12 +19,12 @@ public class FestivalSummaryPage implements BookingFormPage {
     private final MonoPane embeddedLoginContainer = new MonoPane();
     private final TextArea requestTextArea = BookingFormUtil.createTextArea();
     private final VBox container = BookingFormUtil.createPageVBox("summary", false,
-        BookingFormUtil.createStrongLabel(OnlineFestivalI18nKeys.SummaryTopMessage),
-        BookingFormUtil.createSecondaryLabel(OnlineFestivalI18nKeys.SummarySubTopMessage),
+        BookingFormUtil.createStrongLabel(BookingI18nKeys.SummaryTopMessage),
+        BookingFormUtil.createSecondaryLabel(BookingI18nKeys.SummarySubTopMessage),
         Bootstrap.strong(new Text("TODO")),
         BookingFormUtil.twoLabels(
-            BookingFormUtil.createStrongLabel(OnlineFestivalI18nKeys.AnyRequest),
-            BookingFormUtil.createSecondaryLabel(OnlineFestivalI18nKeys.writeRequest)),
+            BookingFormUtil.createStrongLabel(BookingI18nKeys.AnyRequest),
+            BookingFormUtil.createSecondaryLabel(BookingI18nKeys.writeRequest)),
         requestTextArea,
         embeddedLoginContainer
     );

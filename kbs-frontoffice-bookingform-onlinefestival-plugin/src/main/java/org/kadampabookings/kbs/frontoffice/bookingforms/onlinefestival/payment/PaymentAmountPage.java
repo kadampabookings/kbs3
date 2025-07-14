@@ -15,7 +15,6 @@ import one.modality.event.frontoffice.activities.booking.process.event.bookingfo
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormActivityCallback;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
-import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 /**
  * @author Bruno Salmon
@@ -25,15 +24,15 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final BookingForm bookingForm;
     private final GridPane gridPane = BookingFormUtil.createOptionsGridPane(false);
     private final MonoPane embeddedLoginContainer = new MonoPane();
-    private final Button saveButton = BookingFormUtil.createPrimaryButton(OnlineFestivalI18nKeys.SaveBooking);
-    private final Button payButton = BookingFormUtil.createBlackButton(OnlineFestivalI18nKeys.PayNow1);
+    private final Button saveButton = BookingFormUtil.createPrimaryButton(BookingI18nKeys.SaveBooking);
+    private final Button payButton = BookingFormUtil.createBlackButton(BookingI18nKeys.PayNow1);
     private final VBox container = BookingFormUtil.createPageVBox("payment", true,
-        BookingFormUtil.createStrongLabel(OnlineFestivalI18nKeys.PaymentTopMessage),
+        BookingFormUtil.createStrongLabel(BookingI18nKeys.PaymentTopMessage),
         gridPane,
-        BookingFormUtil.createStrongLabel(OnlineFestivalI18nKeys.SelectPaymentAmount),
+        BookingFormUtil.createStrongLabel(BookingI18nKeys.SelectPaymentAmount),
         embeddedLoginContainer,
         BookingFormUtil.buttonBar(saveButton, payButton),
-        BookingFormUtil.createSecondaryLabel(OnlineFestivalI18nKeys.PaymentBottomMessage)
+        BookingFormUtil.createSecondaryLabel(BookingI18nKeys.PaymentBottomMessage)
     );
 
     public PaymentAmountPage(BookingForm bookingForm) {
@@ -72,7 +71,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         BooleanBinding disableSubmit = FXProperties.not(activityCallback.readyToSubmitBookingProperty());
         saveButton.disableProperty().bind(disableSubmit);
         saveButton.setOnAction(e -> activityCallback.submitBooking(0));
-        I18nControls.bindI18nProperties(payButton, OnlineFestivalI18nKeys.PayNow1, workingBookingProperties.getFormattedBalance());
+        I18nControls.bindI18nProperties(payButton, BookingI18nKeys.PayNow1, workingBookingProperties.getFormattedBalance());
         payButton.disableProperty().bind(disableSubmit);
         payButton.setOnAction(e -> activityCallback.submitBooking(workingBookingProperties.getBalance()));
     }
