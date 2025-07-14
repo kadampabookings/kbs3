@@ -4,6 +4,8 @@ import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.kit.util.properties.FXProperties;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -26,6 +28,7 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final MonoPane embeddedLoginContainer = new MonoPane();
     private final Button saveButton = BookingFormUtil.createPrimaryButton(BookingFormI18nKeys.SaveBooking);
     private final Button payButton = BookingFormUtil.createBlackButton(BookingFormI18nKeys.PayNow1);
+    private final IntegerProperty selectedAmountProperty = new SimpleIntegerProperty();
     private final VBox container = BookingFormUtil.createPageVBox("payment", true,
         BookingFormUtil.createStrongLabel(BookingFormI18nKeys.PaymentTopMessage),
         gridPane,
@@ -71,8 +74,9 @@ public final class PaymentAmountPage implements BookingFormPage {
         BooleanBinding disableSubmit = FXProperties.not(activityCallback.readyToSubmitBookingProperty());
         saveButton.disableProperty().bind(disableSubmit);
         saveButton.setOnAction(e -> activityCallback.submitBooking(0));
+        selectedAmountProperty.bind(workingBookingProperties.balanceProperty());
         I18nControls.bindI18nProperties(payButton, BookingFormI18nKeys.PayNow1, workingBookingProperties.getFormattedBalance());
-        payButton.disableProperty().bind(disableSubmit);
+        payButton.disableProperty().bind(disableSubmit.or(selectedAmountProperty.lessThanOrEqualTo(0)));
         payButton.setOnAction(e -> activityCallback.submitBooking(workingBookingProperties.getBalance()));
     }
 }
