@@ -10,11 +10,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import one.modality.ecommerce.client.i18n.EcommerceI18nKeys;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
-import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingForm;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormActivityCallback;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingform.BookingForm;
+import one.modality.ecommerce.frontoffice.bookingform.BookingFormActivityCallback;
+import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
 
 /**
  * @author Bruno Salmon
@@ -24,15 +24,15 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final BookingForm bookingForm;
     private final GridPane gridPane = BookingFormUtil.createOptionsGridPane(false);
     private final MonoPane embeddedLoginContainer = new MonoPane();
-    private final Button saveButton = BookingFormUtil.createPrimaryButton(BookingI18nKeys.SaveBooking);
-    private final Button payButton = BookingFormUtil.createBlackButton(BookingI18nKeys.PayNow1);
+    private final Button saveButton = BookingFormUtil.createPrimaryButton(BookingFormI18nKeys.SaveBooking);
+    private final Button payButton = BookingFormUtil.createBlackButton(BookingFormI18nKeys.PayNow1);
     private final VBox container = BookingFormUtil.createPageVBox("payment", true,
-        BookingFormUtil.createStrongLabel(BookingI18nKeys.PaymentTopMessage),
+        BookingFormUtil.createStrongLabel(BookingFormI18nKeys.PaymentTopMessage),
         gridPane,
-        BookingFormUtil.createStrongLabel(BookingI18nKeys.SelectPaymentAmount),
+        BookingFormUtil.createStrongLabel(BookingFormI18nKeys.SelectPaymentAmount),
         embeddedLoginContainer,
         BookingFormUtil.buttonBar(saveButton, payButton),
-        BookingFormUtil.createSecondaryLabel(BookingI18nKeys.PaymentBottomMessage)
+        BookingFormUtil.createSecondaryLabel(BookingFormI18nKeys.PaymentBottomMessage)
     );
 
     public PaymentAmountPage(BookingForm bookingForm) {
@@ -45,7 +45,7 @@ public final class PaymentAmountPage implements BookingFormPage {
 
     @Override
     public Object getTitleI18nKey() {
-        return BookingI18nKeys.Payment;
+        return BookingFormI18nKeys.Payment;
     }
 
     @Override
@@ -71,7 +71,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         BooleanBinding disableSubmit = FXProperties.not(activityCallback.readyToSubmitBookingProperty());
         saveButton.disableProperty().bind(disableSubmit);
         saveButton.setOnAction(e -> activityCallback.submitBooking(0));
-        I18nControls.bindI18nProperties(payButton, BookingI18nKeys.PayNow1, workingBookingProperties.getFormattedBalance());
+        I18nControls.bindI18nProperties(payButton, BookingFormI18nKeys.PayNow1, workingBookingProperties.getFormattedBalance());
         payButton.disableProperty().bind(disableSubmit);
         payButton.setOnAction(e -> activityCallback.submitBooking(workingBookingProperties.getBalance()));
     }

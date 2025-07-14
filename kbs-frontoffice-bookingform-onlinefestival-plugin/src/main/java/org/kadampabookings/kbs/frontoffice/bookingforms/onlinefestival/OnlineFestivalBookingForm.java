@@ -1,10 +1,10 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
 import one.modality.base.shared.entities.Event;
-import one.modality.event.frontoffice.activities.booking.process.event.BookEventActivity;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormSettings;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.MultiPageBookingForm;
+import one.modality.ecommerce.client.workingbooking.HasWorkingBookingProperties;
+import one.modality.event.frontoffice.activities.booking.process.event.EventBookingFormSettings;
+import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.ecommerce.frontoffice.bookingform.multipages.MultiPageBookingForm;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording.AudioRecordingPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment.PaymentAmountPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary.FestivalSummaryPage;
@@ -22,7 +22,7 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
         new PaymentAmountPage(this)
     };
 
-    public OnlineFestivalBookingForm(BookEventActivity activity, BookingFormSettings settings) {
+    public OnlineFestivalBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
         super(activity, settings);
     }
 

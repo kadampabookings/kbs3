@@ -13,7 +13,7 @@ import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.ecommerce.client.workingbooking.PriceCalculator;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
 
 import java.util.List;
 

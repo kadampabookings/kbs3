@@ -6,9 +6,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import one.modality.crm.frontoffice.activities.orders.BookingSummaryView;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
-import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
 
 /**
  * @author Bruno Salmon
@@ -17,20 +17,21 @@ public class FestivalSummaryPage implements BookingFormPage {
 
     private final MonoPane embeddedLoginContainer = new MonoPane();
     private final TextArea requestTextArea = BookingFormUtil.createTextArea();
+    private final MonoPane summaryContainer = new MonoPane();
     private final VBox container = BookingFormUtil.createPageVBox("summary", false,
-        BookingFormUtil.createStrongLabel(BookingI18nKeys.SummaryTopMessage),
-        BookingFormUtil.createSecondaryLabel(BookingI18nKeys.SummarySubTopMessage),
+        BookingFormUtil.createStrongLabel(BookingFormI18nKeys.SummaryTopMessage),
+        BookingFormUtil.createSecondaryLabel(BookingFormI18nKeys.SummarySubTopMessage),
+        summaryContainer,
         BookingFormUtil.twoLabels(
-            BookingFormUtil.createStrongLabel(BookingI18nKeys.AnyRequest),
-            BookingFormUtil.createSecondaryLabel(BookingI18nKeys.writeRequest)),
+            BookingFormUtil.createStrongLabel(BookingFormI18nKeys.AnyRequest),
+            BookingFormUtil.createSecondaryLabel(BookingFormI18nKeys.writeRequest)),
         requestTextArea,
         embeddedLoginContainer
     );
-    private BookingSummaryView bookingSummaryView;
 
     @Override
     public Object getTitleI18nKey() {
-        return BookingI18nKeys.Summary;
+        return BookingFormI18nKeys.Summary;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class FestivalSummaryPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-        bookingSummaryView = new BookingSummaryView(workingBookingProperties.getWorkingBooking());
-        container.getChildren().set(2, bookingSummaryView.getView());
+        BookingSummaryView bookingSummaryView = new BookingSummaryView(workingBookingProperties.getWorkingBooking());
+        summaryContainer.setContent(bookingSummaryView.getView());
     }
 }

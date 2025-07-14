@@ -11,7 +11,7 @@
     </dependencies>
 
     <providers>
-        <provider interface="one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingforms.sttp.SttpBookingFormProvider</provider>
+        <provider interface="one.modality.ecommerce.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingforms.sttp.SttpBookingFormProvider</provider>
     </providers>
 
 </project>

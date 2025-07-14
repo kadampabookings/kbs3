@@ -9,11 +9,12 @@ import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.base.shared.entities.markers.EntityHasItem;
 import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.base.shared.knownitems.KnownItemI18nKeys;
+import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.document.service.PolicyAggregate;
-import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
-import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 import java.util.Comparator;
@@ -30,9 +31,10 @@ public final class AudioRecordingPage implements BookingFormPage {
     private final GridPane gridPane = BookingFormUtil.createOptionsGridPane(false);
     private final VBox container = BookingFormUtil.createPageVBox("recording-options", true,
         BookingFormUtil.createStrongLabel(OnlineFestivalI18nKeys.AudioRecordingTopMessage),
-        BookingFormUtil.createSecondaryLabel(BookingI18nKeys.BookingOptions),
+        BookingFormUtil.createSecondaryLabel(BookingFormI18nKeys.BookingOptions),
         gridPane
     );
+    private WorkingBooking lastWorkingBooking;
 
     @Override
     public Object getTitleI18nKey() {
@@ -46,6 +48,10 @@ public final class AudioRecordingPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
+        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
+        if (workingBooking == lastWorkingBooking)
+            return;
+        lastWorkingBooking = workingBooking;
         PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         Map<Item, List<ScheduledItem>> audioRecordingScheduledItemMap = policyAggregate.getFamilyScheduledItemsStream(KnownItemFamily.AUDIO_RECORDING)
             .collect(Collectors.groupingBy(EntityHasItem::getItem,
@@ -53,7 +59,7 @@ public final class AudioRecordingPage implements BookingFormPage {
                 Collectors.toList()));
         gridPane.getChildren().clear();
         for (Map.Entry<Item, List<ScheduledItem>> entry : audioRecordingScheduledItemMap.entrySet()) {
-            AudioRecordingLanguagePeriodOption teachingPeriodOptionView = new AudioRecordingLanguagePeriodOption(entry.getKey(), entry.getValue(), workingBookingProperties.getWorkingBooking());
+            AudioRecordingLanguagePeriodOption teachingPeriodOptionView = new AudioRecordingLanguagePeriodOption(entry.getKey(), entry.getValue(), workingBooking);
             ButtonBase bookButton = teachingPeriodOptionView.getBookButton();
             int rowIndex = gridPane.getRowCount();
             gridPane.add(bookButton, 0, rowIndex);
