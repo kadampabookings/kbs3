@@ -27,6 +27,7 @@ public final class OnlineFestivalBookingFormProvider implements BookingFormProvi
     public BookingForm createBookingForm(Event event, BookEventActivity activity) {
         return new OnlineFestivalBookingForm(activity, new BookingFormSettingsBuilder()
             .setEventHeader(new EventTitleHeader())
+            .setHeaderMaxTopBottomPadding(62)
             .setShowNavigationBar(true)
             .setShowPriceBar(true)
             .build()
