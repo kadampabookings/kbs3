@@ -1,5 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
+import one.modality.base.shared.entities.Event;
 import one.modality.event.frontoffice.activities.booking.process.event.BookEventActivity;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormSettings;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
@@ -23,6 +24,11 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
 
     public OnlineFestivalBookingForm(BookEventActivity activity, BookingFormSettings settings) {
         super(activity, settings);
+    }
+
+    @Override
+    public String getEventFieldsToLoad() {
+        return Event.vodExpirationDate;
     }
 
     @Override

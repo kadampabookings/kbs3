@@ -1,5 +1,8 @@
 .online-festival-booking-form {
     font-family: "Poppins", sans-serif;
+    --fx-line-height: 1.6;
+    --fx-textarea-border-color: black;
+    --fx-textarea-border-radius: 19px;
 }
 
 .teaching-option-radio-button {

@@ -14,3 +14,14 @@
     -fx-font-weight: bold;
     -fx-text-fill: #838788;
 }
+
+.online-festival-booking-form LabeledText {
+    -fx-font-size: 14px;
+    -fx-line-spacing: 5px;
+}
+
+.online-festival-booking-form .text-area {
+    -fx-border-color: black;
+    -fx-border-radius: 19px;
+    -fx-background-radius: 19px;
+}
