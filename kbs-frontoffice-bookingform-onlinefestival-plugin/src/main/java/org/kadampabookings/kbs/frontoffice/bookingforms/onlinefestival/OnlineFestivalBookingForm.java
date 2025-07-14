@@ -1,5 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
+import one.modality.base.shared.entities.Event;
 import one.modality.event.frontoffice.activities.booking.process.event.BookEventActivity;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.BookingFormSettings;
 import one.modality.event.frontoffice.activities.booking.process.event.bookingform.multipages.BookingFormPage;
@@ -26,14 +27,13 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
     }
 
     @Override
-    protected BookingFormPage[] getPages() {
-        return pages;
+    public String getEventFieldsToLoad() {
+        return Event.vodExpirationDate;
     }
 
     @Override
-    protected void updateShowSubmitButton() {
-        // We don't display the generic submitButton on the last page (PaymentAmountPage) because it has its own
-        setShowSubmitButton(false);
+    protected BookingFormPage[] getPages() {
+        return pages;
     }
 
 }

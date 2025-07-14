@@ -7,6 +7,7 @@ import dev.webfx.platform.ast.ReadOnlyAstObject;
 import dev.webfx.platform.boot.spi.ApplicationJob;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.json.JsonFetch;
+import dev.webfx.platform.meta.Meta;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.time.Times;
@@ -45,6 +46,10 @@ public class PodcastsImportJob implements ApplicationJob {
 
     @Override
     public void onStart() {
+        // No need to import podcasts on development machines at the moment
+        if (Meta.isDevelopment())
+            return;
+
         importPodcasts();
         importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importPodcasts);
     }

@@ -13,6 +13,7 @@ import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.ecommerce.client.workingbooking.PriceCalculator;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
+import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ import java.util.List;
 final class AudioRecordingLanguagePeriodOption {
 
     private final CheckBox bookButton = new CheckBox();
-    private final Label periodLabel = new Label();
-    private final Label priceLabel = new Label();
+    private final Label periodLabel = BookingFormUtil.createPeriodLabel();
+    private final Label priceLabel = BookingFormUtil.createPriceAmountLabel();
 
     AudioRecordingLanguagePeriodOption(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
         PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
@@ -41,9 +42,6 @@ final class AudioRecordingLanguagePeriodOption {
         int totalPriceAfter = new PriceCalculator(periodWorkingBooking.getLastestDocumentAggregate()).calculateTotalPrice();
         int optionPrice = totalPriceAfter - totalPriceBefore;
         priceLabel.setText(EventPriceFormatter.formatWithCurrency(optionPrice, policyAggregate.getEvent()));
-        bookButton.getStyleClass().add("teaching-option-radio-button");
-        periodLabel.getStyleClass().add("teaching-option-period-label");
-        priceLabel.getStyleClass().add("teaching-option-price-label");
     }
 
     ButtonBase getBookButton() {

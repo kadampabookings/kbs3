@@ -12,6 +12,7 @@ import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.ecommerce.client.workingbooking.PriceCalculator;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
+import one.modality.event.frontoffice.activities.booking.process.event.bookingform.util.BookingFormUtil;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,8 +23,8 @@ import java.util.List;
 final class TeachingPeriodOption {
 
     private final RadioButton radioButton = new RadioButton();
-    private final Label periodLabel = new Label();
-    private final Label priceLabel = new Label();
+    private final Label periodLabel = BookingFormUtil.createPeriodLabel();
+    private final Label priceLabel = BookingFormUtil.createPriceAmountLabel();
 
     TeachingPeriodOption(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
         PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
@@ -41,9 +42,6 @@ final class TeachingPeriodOption {
         periodWorkingBooking.bookScheduledItems(bookableScheduledItem, false);
         int price = new PriceCalculator(periodWorkingBooking.getLastestDocumentAggregate()).calculateTotalPrice();
         priceLabel.setText(EventPriceFormatter.formatWithCurrency(price, policyAggregate.getEvent()));
-        radioButton.getStyleClass().add("teaching-option-radio-button");
-        periodLabel.getStyleClass().add("teaching-option-period-label");
-        priceLabel.getStyleClass().add("teaching-option-price-label");
     }
 
     RadioButton getRadioButton() {
