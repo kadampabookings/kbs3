@@ -9,7 +9,7 @@ import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.shared.entities.BookablePeriod;
 import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.base.shared.entities.formatters.EventPriceFormatter;
-import one.modality.ecommerce.client.workingbooking.PriceCalculator;
+import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;

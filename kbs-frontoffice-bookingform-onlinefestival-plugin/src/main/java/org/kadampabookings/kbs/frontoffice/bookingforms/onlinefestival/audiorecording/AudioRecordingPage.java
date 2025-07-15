@@ -59,7 +59,7 @@ public final class AudioRecordingPage implements BookingFormPage {
                 Collectors.toList()));
         gridPane.getChildren().clear();
         for (Map.Entry<Item, List<ScheduledItem>> entry : audioRecordingScheduledItemMap.entrySet()) {
-            AudioRecordingLanguagePeriodOption teachingPeriodOptionView = new AudioRecordingLanguagePeriodOption(entry.getKey(), entry.getValue(), workingBooking);
+            AudioRecordingLanguageAndPeriodOption teachingPeriodOptionView = new AudioRecordingLanguageAndPeriodOption(entry.getKey(), entry.getValue(), workingBooking);
             ButtonBase bookButton = teachingPeriodOptionView.getBookButton();
             int rowIndex = gridPane.getRowCount();
             gridPane.add(bookButton, 0, rowIndex);

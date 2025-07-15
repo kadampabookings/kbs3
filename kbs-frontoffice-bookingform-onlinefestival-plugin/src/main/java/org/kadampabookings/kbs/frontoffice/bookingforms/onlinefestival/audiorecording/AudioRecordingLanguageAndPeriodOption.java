@@ -10,7 +10,7 @@ import one.modality.base.client.time.ModalityDates;
 import one.modality.base.shared.entities.Item;
 import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.base.shared.entities.formatters.EventPriceFormatter;
-import one.modality.ecommerce.client.workingbooking.PriceCalculator;
+import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
@@ -20,13 +20,13 @@ import java.util.List;
 /**
  * @author Bruno Salmon
  */
-final class AudioRecordingLanguagePeriodOption {
+final class AudioRecordingLanguageAndPeriodOption {
 
     private final CheckBox bookButton = new CheckBox();
     private final Label periodLabel = BookingFormUtil.createPeriodLabel();
     private final Label priceLabel = BookingFormUtil.createPriceAmountLabel();
 
-    AudioRecordingLanguagePeriodOption(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
+    AudioRecordingLanguageAndPeriodOption(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
         PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
         FXProperties.runOnPropertyChange(selected -> {
             if (selected)
