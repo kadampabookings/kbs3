@@ -73,10 +73,10 @@ public final class PaymentAmountPage implements BookingFormPage {
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         BooleanBinding disableSubmit = FXProperties.not(activityCallback.readyToSubmitBookingProperty());
         saveButton.disableProperty().bind(disableSubmit);
-        saveButton.setOnAction(e -> activityCallback.submitBooking(0));
+        saveButton.setOnAction(e -> activityCallback.submitBooking(0, saveButton, payButton));
         selectedAmountProperty.bind(workingBookingProperties.balanceProperty());
         I18nControls.bindI18nProperties(payButton, BookingFormI18nKeys.PayNow1, workingBookingProperties.getFormattedBalance());
         payButton.disableProperty().bind(disableSubmit.or(selectedAmountProperty.lessThanOrEqualTo(0)));
-        payButton.setOnAction(e -> activityCallback.submitBooking(workingBookingProperties.getBalance()));
+        payButton.setOnAction(e -> activityCallback.submitBooking(workingBookingProperties.getBalance(), payButton, saveButton));
     }
 }
