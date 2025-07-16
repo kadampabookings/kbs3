@@ -51,12 +51,12 @@ public final class TeachingPage implements BookingFormPage {
         ToggleGroup teachingOptionsToggleGroup = new ToggleGroup();
         for (int i = 0, n = bookablePeriods.size(); i < n; i++) {
             BookablePeriod bookablePeriod = bookablePeriods.get(i);
-            TeachingPeriodOption teachingPeriodOptionView = new TeachingPeriodOption(bookablePeriod, workingBookingProperties.getWorkingBooking());
-            RadioButton radioButton = teachingPeriodOptionView.getRadioButton();
+            TeachingPeriodOption teachingPeriodOption = new TeachingPeriodOption(bookablePeriod, workingBookingProperties.getWorkingBooking());
+            RadioButton radioButton = teachingPeriodOption.getRadioButton();
             radioButton.setToggleGroup(teachingOptionsToggleGroup);
             gridPane.add(radioButton, 0, i);
-            gridPane.add(teachingPeriodOptionView.getPeriodLabel(), 1, i);
-            gridPane.add(teachingPeriodOptionView.getPriceLabel(), 2, i);
+            gridPane.add(teachingPeriodOption.getPeriodLabel(), 1, i);
+            gridPane.add(teachingPeriodOption.getPriceLabel(), 2, i);
             if (n == 1)
                 radioButton.setSelected(true);
         }
