@@ -9,7 +9,7 @@ import one.modality.base.shared.entities.BookablePeriod;
 import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.document.service.PolicyAggregate;
-import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,8 +20,8 @@ import java.util.List;
 final class TeachingPeriodOption {
 
     private final RadioButton radioButton = new RadioButton();
-    private final Label periodLabel = BookingFormUtil.createPeriodLabel();
-    private final Label priceLabel = BookingFormUtil.createPriceAmountLabel();
+    private final Label periodLabel = BookingElements.createPeriodLabel();
+    private final Label priceLabel = BookingElements.createPriceAmountLabel();
 
     TeachingPeriodOption(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
         I18nEntities.bindExpressionProperties(radioButton, bookablePeriod, "i18n(this)");
@@ -31,7 +31,7 @@ final class TeachingPeriodOption {
         LocalDate endDate = bookablePeriod.getEndScheduledItem().getDate();
         List<ScheduledItem> bookableScheduledItems = Collections.filter(policyAggregate.getTeachingScheduledItems(),
             si -> Times.isBetween(si.getDate(), startDate, endDate));
-        BookingFormUtil.setupPeriodOption(bookableScheduledItems, priceLabel, radioButton.selectedProperty(), workingBooking);
+        BookingElements.setupPeriodOption(bookableScheduledItems, priceLabel, radioButton.selectedProperty(), workingBooking);
     }
 
     RadioButton getRadioButton() {

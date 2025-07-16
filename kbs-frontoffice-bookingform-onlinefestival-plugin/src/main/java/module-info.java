@@ -15,8 +15,8 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires modality.ecommerce.client.i18n;
     requires modality.ecommerce.client.workingbooking;
     requires modality.ecommerce.document.service;
+    requires modality.ecommerce.frontoffice.bookingelements;
     requires modality.ecommerce.frontoffice.bookingform;
-    requires modality.ecommerce.shared.pricecalculator;
     requires modality.event.frontoffice.activity.booking.plugin;
     requires modality.event.frontoffice.eventheader;
     requires webfx.extras.i18n.controls;

@@ -14,7 +14,7 @@ import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
-import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 import java.util.Comparator;
@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
  */
 public final class AudioRecordingPage implements BookingFormPage {
 
-    private final GridPane gridPane = BookingFormUtil.createOptionsGridPane(false);
-    private final VBox container = BookingFormUtil.createPageVBox("recording-options", true,
-        BookingFormUtil.createStrongLabel(OnlineFestivalI18nKeys.AudioRecordingTopMessage),
-        BookingFormUtil.createSecondaryLabel(BookingFormI18nKeys.BookingOptions),
+    private final GridPane gridPane = BookingElements.createOptionsGridPane(false);
+    private final VBox container = BookingElements.createPageVBox("recording-options", true,
+        BookingElements.createStrongLabel(OnlineFestivalI18nKeys.AudioRecordingTopMessage),
+        BookingElements.createSecondaryLabel(BookingFormI18nKeys.BookingOptions),
         gridPane
     );
     private WorkingBooking lastWorkingBooking;

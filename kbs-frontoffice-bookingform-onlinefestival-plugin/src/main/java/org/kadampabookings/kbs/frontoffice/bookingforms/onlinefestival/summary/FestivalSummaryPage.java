@@ -8,7 +8,7 @@ import one.modality.crm.frontoffice.activities.orders.BookingSummaryView;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
-import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 
 /**
  * @author Bruno Salmon
@@ -16,15 +16,15 @@ import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
 public class FestivalSummaryPage implements BookingFormPage {
 
     private final MonoPane embeddedLoginContainer = new MonoPane();
-    private final TextArea requestTextArea = BookingFormUtil.createTextArea();
+    private final TextArea requestTextArea = BookingElements.createTextArea();
     private final MonoPane summaryContainer = new MonoPane();
-    private final VBox container = BookingFormUtil.createPageVBox("summary", false,
-        BookingFormUtil.createStrongLabel(BookingFormI18nKeys.SummaryTopMessage),
-        BookingFormUtil.createSecondaryLabel(BookingFormI18nKeys.SummarySubTopMessage),
+    private final VBox container = BookingElements.createPageVBox("summary", false,
+        BookingElements.createStrongLabel(BookingFormI18nKeys.SummaryTopMessage),
+        BookingElements.createSecondaryLabel(BookingFormI18nKeys.SummarySubTopMessage),
         summaryContainer,
-        BookingFormUtil.twoLabels(
-            BookingFormUtil.createStrongLabel(BookingFormI18nKeys.AnyRequest),
-            BookingFormUtil.createSecondaryLabel(BookingFormI18nKeys.writeRequest)),
+        BookingElements.twoLabels(
+            BookingElements.createStrongLabel(BookingFormI18nKeys.AnyRequest),
+            BookingElements.createSecondaryLabel(BookingFormI18nKeys.writeRequest)),
         requestTextArea,
         embeddedLoginContainer
     );

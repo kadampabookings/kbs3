@@ -8,7 +8,7 @@ import one.modality.base.client.time.ModalityDates;
 import one.modality.base.shared.entities.Item;
 import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
-import one.modality.ecommerce.frontoffice.bookingform.util.BookingFormUtil;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 
 import java.util.List;
 
@@ -18,14 +18,13 @@ import java.util.List;
 final class AudioRecordingLanguageAndPeriodOption {
 
     private final CheckBox bookButton = new CheckBox();
-    private final Label periodLabel = BookingFormUtil.createPeriodLabel();
-    private final Label priceLabel = BookingFormUtil.createPriceAmountLabel();
+    private final Label periodLabel = BookingElements.createPeriodLabel();
+    private final Label priceLabel = BookingElements.createPriceAmountLabel();
 
     AudioRecordingLanguageAndPeriodOption(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
         I18nEntities.bindExpressionTextProperty(bookButton, item, "i18n(this)");
         periodLabel.setText(ModalityDates.formatHasDateSeries(scheduledItems));
-        bookButton.setSelected(workingBooking.areScheduledItemsBooked(scheduledItems));
-        BookingFormUtil.setupPeriodOption(scheduledItems, priceLabel, bookButton.selectedProperty(), workingBooking);
+        BookingElements.setupPeriodOption(scheduledItems, priceLabel, bookButton.selectedProperty(), workingBooking);
     }
 
     ButtonBase getBookButton() {
