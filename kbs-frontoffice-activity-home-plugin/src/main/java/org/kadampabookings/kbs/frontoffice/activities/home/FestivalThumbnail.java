@@ -28,7 +28,7 @@ import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.shared.entities.Event;
 import one.modality.event.client.lifecycle.EventLifeCycle;
 import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
-import one.modality.event.frontoffice.activities.booking.process.BookingStarter;
+import one.modality.event.frontoffice.activities.book.BookStarter;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
@@ -114,13 +114,13 @@ final class FestivalThumbnail {
         dialogArea.setOnMouseClicked(e2 -> callback.closeDialog());
 
         bookInPersonLink.setOnAction(e2 -> {
-            BookingStarter.startEventBooking(festival);
+            BookStarter.startBookEvent(festival);
             callback.closeDialog();
         });
 
         if (bookOnline instanceof Hyperlink) {
             ((Hyperlink) bookOnline).setOnAction(e2 -> {
-                BookingStarter.startEventBooking(onlineFestival);
+                BookStarter.startBookEvent(onlineFestival);
                 callback.closeDialog();
             });
         }

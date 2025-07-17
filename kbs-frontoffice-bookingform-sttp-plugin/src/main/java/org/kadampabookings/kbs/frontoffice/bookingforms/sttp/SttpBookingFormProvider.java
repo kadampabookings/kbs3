@@ -3,11 +3,11 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.sttp;
 import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.Event;
 import one.modality.ecommerce.client.workingbooking.HasWorkingBookingProperties;
-import one.modality.event.frontoffice.activities.booking.process.event.BookEventActivity;
 import one.modality.ecommerce.frontoffice.bookingform.BookingForm;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormProvider;
-import one.modality.event.frontoffice.activities.booking.process.event.EventBookingFormSettingsBuilder;
-import one.modality.event.frontoffice.bookingforms.recurringevent.RecurringEventBookingForm;
+import one.modality.event.frontoffice.activities.book.event.BookEventActivity;
+import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
+import one.modality.event.frontoffice.bookingform.recurringevent.RecurringEventBookingForm;
 import one.modality.event.frontoffice.eventheader.MediaEventHeader;
 
 /**
