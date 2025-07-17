@@ -29,6 +29,7 @@ import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage
 
 /**
  * @author Bruno Salmon
+ * @author David Hello
  */
 public final class PersonalDetailsPage implements BookingFormPage {
 
@@ -42,7 +43,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         embeddedLoginContainer,
         personalDetailsVBox
     );
-    private UserProfileView userProfileView;
+    private final UserProfileView userProfileView;
     private UpdateStore updateStore;
     private Person currentPerson;
     private final ValidationSupport validationSupport = new ValidationSupport();
@@ -63,7 +64,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
                 userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
                 syncUIFromModel(person);
             }
-        }, one.modality.ecommerce.client.workingbooking.FXPersonToBook.personToBookProperty());
+        }, FXPersonToBook.personToBookProperty());
 
         // Bind event handlers
 //        userProfileView.layNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setLayName(newValue));
@@ -80,7 +81,18 @@ public final class PersonalDetailsPage implements BookingFormPage {
 //                userProfileView.organizationSelector.setSelectedItem(null);
 //            }
 //        });
+    }
 
+    private void syncUIFromModel(Person person) {
+        updateStore = UpdateStore.createAbove(person.getStore());
+        currentPerson = updateStore.updateEntity(person);
+        userProfileView.emailTextField.setText(person.getEmail());
+        userProfileView.postCodeTextField.setText(person.getPostCode());
+        userProfileView.cityNameTextField.setText(person.getCityName());
+        EntityButtonSelector<Country> countrySelector = userProfileView.countrySelector;
+        countrySelector.setSelectedItem(person.getCountry());
+        userProfileView.organizationSelector.setSelectedItem(person.getOrganization());
+        userProfileView.noOrganizationRadioButton.setSelected(person.getOrganization() == null);
 
         userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
         userProfileView.saveButton.setOnAction(e -> {
@@ -103,18 +115,6 @@ public final class PersonalDetailsPage implements BookingFormPage {
                     });
         });
         userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
-    }
-
-    private void syncUIFromModel(Person person) {
-        updateStore = UpdateStore.createAbove(person.getStore());
-        currentPerson = updateStore.updateEntity(person);
-        userProfileView.emailTextField.setText(person.getEmail());
-        userProfileView.postCodeTextField.setText(person.getPostCode());
-        userProfileView.cityNameTextField.setText(person.getCityName());
-        EntityButtonSelector<Country> countrySelector = userProfileView.countrySelector;
-        countrySelector.setSelectedItem(person.getCountry());
-        userProfileView.organizationSelector.setSelectedItem(person.getOrganization());
-        userProfileView.noOrganizationRadioButton.setSelected(person.getOrganization() == null);
     }
 
     @Override
