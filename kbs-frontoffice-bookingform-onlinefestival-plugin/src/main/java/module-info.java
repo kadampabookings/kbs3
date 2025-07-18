@@ -24,6 +24,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires modality.event.frontoffice.eventheader;
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;
+    requires webfx.extras.operation;
     requires webfx.extras.panes;
     requires webfx.extras.styles.bootstrap;
     requires webfx.extras.time.format;
@@ -31,8 +32,10 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires webfx.extras.validation;
     requires webfx.kit.util;
     requires webfx.platform.console;
+    requires webfx.platform.uischeduler;
     requires webfx.platform.util;
     requires webfx.platform.util.time;
+    requires webfx.stack.authn.login.ui.gateway.password.plugin;
     requires webfx.stack.orm.entity;
     requires webfx.stack.orm.entity.binding;
     requires webfx.stack.orm.entity.controls;

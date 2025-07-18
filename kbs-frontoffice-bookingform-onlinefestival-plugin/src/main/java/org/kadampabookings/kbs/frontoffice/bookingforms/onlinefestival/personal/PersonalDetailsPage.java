@@ -2,17 +2,22 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal
 
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
+import dev.webfx.extras.operation.OperationUtil;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.extras.util.layout.Layouts;
 import dev.webfx.extras.validation.ValidationSupport;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.console.Console;
+import dev.webfx.platform.uischeduler.UiScheduler;
+import dev.webfx.stack.authn.login.ui.spi.impl.gateway.password.PasswordI18nKeys;
 import dev.webfx.stack.orm.entity.Entities;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import dev.webfx.stack.orm.entity.binding.EntityBindings;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -39,13 +44,14 @@ public final class PersonalDetailsPage implements BookingFormPage {
         Bootstrap.strong(I18n.newText(CrmI18nKeys.PersonToBook)),
         personToBookButton
     );
-    private final VBox container = BookingElements.createPageVBox("personal-details", true,
+    private final VBox container = BookingElements.createPageVBox("personal-details", false,
         embeddedLoginContainer,
         personalDetailsVBox
     );
     private final UserProfileView userProfileView;
     private UpdateStore updateStore;
     private Person currentPerson;
+    private Button cancelButton;
     private final ValidationSupport validationSupport = new ValidationSupport();
 
 
@@ -54,11 +60,19 @@ public final class PersonalDetailsPage implements BookingFormPage {
         // personalDetailsVBox is not visible when login is showing, and vice versa
         Layouts.bindManagedAndVisiblePropertiesTo(embeddedLoginContainer.visibleProperty().not(), personalDetailsVBox);
         // We want to show only the email, address and kadampa center info
-        userProfileView = new UserProfileView(null, false, false, true, false, false, true, true, true, false);
+        userProfileView = new UserProfileView(null, false, false, true, false, false, true, true, true);
         Node viewNode = userProfileView.buildView();
         userProfileView.setChangeEmailLinkVisible(false);
         userProfileView.setEmailFieldDisabled(false);
-        personalDetailsVBox.getChildren().add(viewNode);
+        userProfileView.infoMessage.setVisible(false);
+        cancelButton = Bootstrap.largeSecondaryButton(I18nControls.newButton(UserProfileI18nKeys.Cancel));
+        cancelButton.setOnAction(e-> {
+            updateStore.cancelChanges();
+            syncUIFromModel(currentPerson);
+        });
+        cancelButton.disableProperty().bind(userProfileView.saveButton.disableProperty());
+        personalDetailsVBox.setAlignment(Pos.TOP_CENTER);
+        personalDetailsVBox.getChildren().addAll(viewNode,cancelButton);
         FXProperties.runNowAndOnPropertyChange(person -> {
             if (person != null) {
                 userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
@@ -66,21 +80,23 @@ public final class PersonalDetailsPage implements BookingFormPage {
             }
         }, FXPersonToBook.personToBookProperty());
 
-        // Bind event handlers
-//        userProfileView.layNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setLayName(newValue));
-//        userProfileView.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setPhone(newValue));
-//        userProfileView.postCodeTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setPostCode(newValue));
-//        userProfileView.cityNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setCityName(newValue));
-//        userProfileView.countrySelector.selectedItemProperty().addListener((observable, oldValue, newValue) -> currentPerson.setCountry(newValue));
-//        userProfileView.organizationSelector.selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            currentPerson.setOrganization(newValue);
-//            if (newValue != null) userProfileView.noOrganizationRadioButton.setSelected(false);
-//        });
-//        userProfileView.noOrganizationRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue) {
-//                userProfileView.organizationSelector.setSelectedItem(null);
-//            }
-//        });
+        userProfileView.emailTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setEmail(newValue));
+        userProfileView.layNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setLayName(newValue));
+        userProfileView.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setPhone(newValue));
+        userProfileView.postCodeTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setPostCode(newValue));
+        userProfileView.cityNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setCityName(newValue));
+        userProfileView.countrySelector.selectedItemProperty().addListener((observable, oldValue, newValue) -> currentPerson.setCountry(newValue));
+        userProfileView.organizationSelector.selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            currentPerson.setOrganization(newValue);
+            if (newValue != null) userProfileView.noOrganizationRadioButton.setSelected(false);
+        });
+        userProfileView.noOrganizationRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                userProfileView.organizationSelector.setSelectedItem(null);
+            }
+        });
+        //If there are some changes, we forbid to switch to another user
+        personToBookButton.disableProperty().bind(userProfileView.saveButton.disableProperty().not());
     }
 
     private void syncUIFromModel(Person person) {
@@ -95,25 +111,32 @@ public final class PersonalDetailsPage implements BookingFormPage {
         userProfileView.noOrganizationRadioButton.setSelected(person.getOrganization() == null);
 
         userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
+
         userProfileView.saveButton.setOnAction(e -> {
-            if (validateForm())
-                updateStore.submitChanges().
-                    onFailure(failure -> {
-                        Console.log("Error while updating account:" + failure);
-                        Platform.runLater(() -> {
-                            userProfileView.infoMessage.setVisible(true);
-                            I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.ErrorWhileUpdatingPersonalInformation);
-                        });
-                    })
-                    .onSuccess(success -> {
-                        Console.log("Account updated with success");
-                        Platform.runLater(() -> {
-                            userProfileView.infoMessage.setVisible(true);
-                            I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.PersonalInformationUpdated);
-                            FXUserPerson.reloadUserPerson();
-                        });
-                    });
+            if (validationSupport.isValid()) {
+                OperationUtil.turnOnButtonsWaitModeDuringExecution(
+                    updateStore.submitChanges().
+                        onFailure(failure -> {
+                            Console.log("Error while updating account:" + failure);
+                            Platform.runLater(() -> {
+                                userProfileView.infoMessage.setVisible(true);
+                                Bootstrap.textDanger(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.ErrorWhileUpdatingPersonalInformation));
+                            });
+                        })
+                        .onSuccess(success -> {
+                            Console.log("Account updated with success");
+                            Platform.runLater(() -> {
+                                userProfileView.infoMessage.setVisible(true);
+                                Bootstrap.textSuccess(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.PersonalInformationUpdated));
+                                UiScheduler.scheduleDelay(5000,()-> {
+                                    userProfileView.infoMessage.setVisible(false);
+                                });
+                            });
+                        })
+                    ,  userProfileView.saveButton);
+            }
         });
+
         userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
     }
 
@@ -134,6 +157,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
 
     private void initFormValidation() {
         if (validationSupport.isEmpty()) {
+            validationSupport.addEmailValidation(userProfileView.emailTextField, userProfileView.emailTextField, I18n.i18nTextProperty(PasswordI18nKeys.InvalidEmail));
         }
     }
 
@@ -145,5 +169,10 @@ public final class PersonalDetailsPage implements BookingFormPage {
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
         //personalDetailsVBox.setDisable(!workingBookingProperties.getWorkingBooking().isNewBooking());
+    }
+
+    @Override
+    public ObservableBooleanValue validProperty() {
+        return userProfileView.saveButton.disableProperty();
     }
 }
