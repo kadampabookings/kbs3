@@ -39,7 +39,8 @@ import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage
 public final class PersonalDetailsPage implements BookingFormPage {
 
     private final MonoPane embeddedLoginContainer = new MonoPane();
-    private final Button personToBookButton = BookingElements.createPersonToBookButton(false);
+    private final EntityButtonSelector<Person> personToBookSelector = BookingElements.createPersonToBookSelector(false);
+    private final Button personToBookButton = personToBookSelector.getButton();
     private final VBox personalDetailsVBox = new VBox(10,
         Bootstrap.strong(I18n.newText(CrmI18nKeys.PersonToBook)),
         personToBookButton
