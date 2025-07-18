@@ -16,6 +16,8 @@ import dev.webfx.stack.orm.entity.UpdateStore;
 import dev.webfx.stack.orm.entity.binding.EntityBindings;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -52,8 +54,11 @@ public final class PersonalDetailsPage implements BookingFormPage {
     private final UserProfileView userProfileView;
     private UpdateStore updateStore;
     private Person currentPerson;
+    private Person currentUser;
+
     private Button cancelButton;
     private final ValidationSupport validationSupport = new ValidationSupport();
+    private BooleanProperty isItANewPersonProperty = new SimpleBooleanProperty();
 
 
     public PersonalDetailsPage() {
@@ -61,14 +66,22 @@ public final class PersonalDetailsPage implements BookingFormPage {
         // personalDetailsVBox is not visible when login is showing, and vice versa
         Layouts.bindManagedAndVisiblePropertiesTo(embeddedLoginContainer.visibleProperty().not(), personalDetailsVBox);
         // We want to show only the email, address and kadampa center info
-        userProfileView = new UserProfileView(null, false, false, true, false, false, true, true, true);
+        userProfileView = new UserProfileView(null, false, false, true,true, false, false, true, true, true);
         Node viewNode = userProfileView.buildView();
         userProfileView.setChangeEmailLinkVisible(false);
         userProfileView.setEmailFieldDisabled(false);
         userProfileView.infoMessage.setVisible(false);
+        userProfileView.firstNameTextField.visibleProperty().bind(isItANewPersonProperty);
+        userProfileView.lastNameTextField.visibleProperty().bind(isItANewPersonProperty);
+        userProfileView.firstNameTextField.managedProperty().bind(isItANewPersonProperty);
+        userProfileView.lastNameTextField.managedProperty().bind(isItANewPersonProperty);
+        FXProperties.runOnPropertiesChange(()->{Console.log("new Person: " + isItANewPersonProperty.get());},isItANewPersonProperty);
         cancelButton = Bootstrap.largeSecondaryButton(I18nControls.newButton(UserProfileI18nKeys.Cancel));
         cancelButton.setOnAction(e-> {
             updateStore.cancelChanges();
+            if(isItANewPersonProperty.get()) {
+                FXPersonToBook.personToBookProperty().set(FXUserPerson.getUserPerson());
+            }
             syncUIFromModel(currentPerson);
         });
         cancelButton.disableProperty().bind(userProfileView.saveButton.disableProperty());
@@ -79,8 +92,14 @@ public final class PersonalDetailsPage implements BookingFormPage {
                 userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
                 syncUIFromModel(person);
             }
+            if(currentPerson!=null && person == null) {
+                Console.log("someone else selected");
+                syncUIFromModel(null);
+            }
         }, FXPersonToBook.personToBookProperty());
 
+        userProfileView.firstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setFirstName(newValue));
+        userProfileView.lastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setLastName(newValue));
         userProfileView.emailTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setEmail(newValue));
         userProfileView.layNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setLayName(newValue));
         userProfileView.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setPhone(newValue));
@@ -101,8 +120,17 @@ public final class PersonalDetailsPage implements BookingFormPage {
     }
 
     private void syncUIFromModel(Person person) {
-        updateStore = UpdateStore.createAbove(person.getStore());
-        currentPerson = updateStore.updateEntity(person);
+        if(person!=null) {
+            updateStore = UpdateStore.createAbove(person.getStore());
+            currentPerson = updateStore.updateEntity(person);
+            isItANewPersonProperty.setValue(false);
+        } else {
+            //Here the update store should have already been initialised
+            currentPerson = updateStore.insertEntity(Person.class);
+            currentPerson.setFrontendAccount(FXUserPerson.getUserPerson().getFrontendAccount());
+            person = currentPerson;
+            isItANewPersonProperty.setValue(true);
+        }
         userProfileView.emailTextField.setText(person.getEmail());
         userProfileView.postCodeTextField.setText(person.getPostCode());
         userProfileView.cityNameTextField.setText(person.getCityName());
@@ -114,7 +142,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
 
         userProfileView.saveButton.setOnAction(e -> {
-            if (validationSupport.isValid()) {
+            if (validateForm()) {
                 OperationUtil.turnOnButtonsWaitModeDuringExecution(
                     updateStore.submitChanges().
                         onFailure(failure -> {
@@ -129,6 +157,10 @@ public final class PersonalDetailsPage implements BookingFormPage {
                             Platform.runLater(() -> {
                                 userProfileView.infoMessage.setVisible(true);
                                 Bootstrap.textSuccess(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.PersonalInformationUpdated));
+                                if(isItANewPersonProperty.get()) {
+                                    personToBookSelector.refreshWhenActive();
+                                    FXPersonToBook.setPersonToBook(currentPerson);
+                                }
                                 UiScheduler.scheduleDelay(5000,()-> {
                                     userProfileView.infoMessage.setVisible(false);
                                 });
@@ -159,6 +191,8 @@ public final class PersonalDetailsPage implements BookingFormPage {
     private void initFormValidation() {
         if (validationSupport.isEmpty()) {
             validationSupport.addEmailValidation(userProfileView.emailTextField, userProfileView.emailTextField, I18n.i18nTextProperty(PasswordI18nKeys.InvalidEmail));
+            validationSupport.addRequiredInput(userProfileView.firstNameTextField);
+            validationSupport.addRequiredInput(userProfileView.lastNameTextField);
         }
     }
 
