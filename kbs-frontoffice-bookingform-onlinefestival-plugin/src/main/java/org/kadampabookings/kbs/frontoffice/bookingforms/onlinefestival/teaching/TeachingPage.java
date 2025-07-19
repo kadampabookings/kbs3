@@ -11,11 +11,11 @@ import javafx.scene.layout.VBox;
 import one.modality.base.client.time.FrontOfficeTimeFormats;
 import one.modality.base.shared.entities.BookablePeriod;
 import one.modality.base.shared.knownitems.KnownItemI18nKeys;
+import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
-import one.modality.ecommerce.document.service.PolicyAggregate;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
-import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 import java.util.List;
@@ -44,14 +44,19 @@ public final class TeachingPage implements BookingFormPage {
     }
 
     @Override
+    public boolean isApplicableToBooking(WorkingBooking workingBooking) {
+        return workingBooking.isNewBooking() || workingBooking.getPolicyAggregate().getBookablePeriods().size() > 1;
+    }
+
+    @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-        gridPane.getChildren().clear();
-        PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
-        List<BookablePeriod> bookablePeriods = policyAggregate.getBookablePeriods();
+        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
+        List<BookablePeriod> bookablePeriods = workingBooking.getPolicyAggregate().getBookablePeriods();
         ToggleGroup teachingOptionsToggleGroup = new ToggleGroup();
+        gridPane.getChildren().clear();
         for (int i = 0, n = bookablePeriods.size(); i < n; i++) {
             BookablePeriod bookablePeriod = bookablePeriods.get(i);
-            TeachingPeriodOption teachingPeriodOption = new TeachingPeriodOption(bookablePeriod, workingBookingProperties.getWorkingBooking());
+            TeachingPeriodOption teachingPeriodOption = new TeachingPeriodOption(bookablePeriod, workingBooking);
             RadioButton radioButton = teachingPeriodOption.getRadioButton();
             radioButton.setToggleGroup(teachingOptionsToggleGroup);
             gridPane.add(radioButton, 0, i);
@@ -60,7 +65,7 @@ public final class TeachingPage implements BookingFormPage {
             if (n == 1)
                 radioButton.setSelected(true);
         }
-        I18nControls.bindI18nProperties(bottomLabel, OnlineFestivalI18nKeys.OnlineFestivalTeachingBottomMessage1, LocalizedTime.formatLocalDateTimeProperty(policyAggregate.getEvent().getVodExpirationDate(), FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
+        I18nControls.bindI18nProperties(bottomLabel, OnlineFestivalI18nKeys.OnlineFestivalTeachingBottomMessage1, LocalizedTime.formatLocalDateTimeProperty(workingBooking.getPolicyAggregate().getEvent().getVodExpirationDate(), FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
     }
 
 }
