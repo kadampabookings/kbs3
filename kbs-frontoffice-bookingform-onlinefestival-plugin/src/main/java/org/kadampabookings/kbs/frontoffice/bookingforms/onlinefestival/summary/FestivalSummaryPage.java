@@ -1,14 +1,17 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary;
 
 import dev.webfx.extras.panes.MonoPane;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import one.modality.crm.frontoffice.activities.orders.BookingSummaryView;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
-import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 
 /**
  * @author Bruno Salmon
@@ -28,6 +31,7 @@ public class FestivalSummaryPage implements BookingFormPage {
         requestTextArea,
         embeddedLoginContainer
     );
+    private final BooleanProperty validProperty = new SimpleBooleanProperty();
 
     @Override
     public Object getTitleI18nKey() {
@@ -48,5 +52,11 @@ public class FestivalSummaryPage implements BookingFormPage {
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
         BookingSummaryView bookingSummaryView = new BookingSummaryView(workingBookingProperties.getWorkingBooking());
         summaryContainer.setContent(bookingSummaryView.getView());
+        validProperty.bind(workingBookingProperties.hasChangesProperty());
+    }
+
+    @Override
+    public ObservableBooleanValue validProperty() {
+        return validProperty;
     }
 }
