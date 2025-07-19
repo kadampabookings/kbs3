@@ -30,6 +30,7 @@ import one.modality.crm.frontoffice.activities.userprofile.UserProfileI18nKeys;
 import one.modality.crm.frontoffice.activities.userprofile.UserProfileView;
 import one.modality.crm.shared.services.authn.fx.FXUserPerson;
 import one.modality.ecommerce.client.workingbooking.FXPersonToBook;
+import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
@@ -181,6 +182,11 @@ public final class PersonalDetailsPage implements BookingFormPage {
     @Override
     public Node getView() {
         return container;
+    }
+
+    @Override
+    public boolean isApplicableToBooking(WorkingBooking workingBooking) {
+        return workingBooking.isNewBooking();
     }
 
     public boolean validateForm() {
