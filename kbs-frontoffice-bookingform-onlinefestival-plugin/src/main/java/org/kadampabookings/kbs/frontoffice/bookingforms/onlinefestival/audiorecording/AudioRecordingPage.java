@@ -12,9 +12,9 @@ import one.modality.base.shared.knownitems.KnownItemI18nKeys;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.document.service.PolicyAggregate;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
-import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 import java.util.Comparator;
@@ -68,4 +68,8 @@ public final class AudioRecordingPage implements BookingFormPage {
         }
     }
 
+    @Override
+    public boolean isApplicableToBooking(WorkingBooking workingBooking) {
+        return !workingBooking.isPaymentRequestedByUser();
+    }
 }

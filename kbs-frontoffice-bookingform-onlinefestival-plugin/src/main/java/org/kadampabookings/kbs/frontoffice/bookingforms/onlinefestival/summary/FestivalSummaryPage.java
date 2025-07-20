@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import one.modality.crm.frontoffice.order.OrderDetailsView;
+import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
@@ -50,9 +51,10 @@ public class FestivalSummaryPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-        OrderDetailsView orderDetailsView = new OrderDetailsView(workingBookingProperties.getWorkingBooking());
+        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
+        OrderDetailsView orderDetailsView = new OrderDetailsView(workingBooking);
         summaryContainer.setContent(orderDetailsView.getView());
-        validProperty.bind(workingBookingProperties.hasChangesProperty());
+        validProperty.bind(workingBookingProperties.hasChangesProperty().or(workingBookingProperties.balanceProperty().greaterThan(0)));
     }
 
     @Override
