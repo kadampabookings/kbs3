@@ -19,7 +19,7 @@ final class AudioRecordingLanguageAndPeriodOption {
 
     private final CheckBox bookButton = new CheckBox();
     private final Label periodLabel = BookingElements.createPeriodLabel();
-    private final Label priceLabel = BookingElements.createPriceAmountLabel();
+    private final Label priceLabel = BookingElements.createPriceLabel();
 
     AudioRecordingLanguageAndPeriodOption(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
         I18nEntities.bindExpressionTextProperty(bookButton, item, "i18n(this)");

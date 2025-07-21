@@ -23,12 +23,12 @@ public class FestivalSummaryPage implements BookingFormPage {
     private final TextArea requestTextArea = BookingElements.createTextArea();
     private final MonoPane summaryContainer = new MonoPane();
     private final VBox container = BookingElements.createPageVBox("summary", false,
-        BookingElements.createStrongLabel(BookingFormI18nKeys.SummaryTopMessage),
-        BookingElements.createSecondaryLabel(BookingFormI18nKeys.SummarySubTopMessage),
+        BookingElements.createWordingLabel(BookingFormI18nKeys.SummaryTopMessage),
+        BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.SummarySubTopMessage),
         summaryContainer,
         BookingElements.twoLabels(
-            BookingElements.createStrongLabel(BookingFormI18nKeys.AnyRequest),
-            BookingElements.createSecondaryLabel(BookingFormI18nKeys.writeRequest)),
+            BookingElements.createWordingLabel(BookingFormI18nKeys.AnyRequest),
+            BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.writeRequest)),
         requestTextArea,
         embeddedLoginContainer
     );

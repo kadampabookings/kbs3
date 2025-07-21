@@ -30,8 +30,8 @@ public final class AudioRecordingPage implements BookingFormPage {
 
     private final GridPane gridPane = BookingElements.createOptionsGridPane(false);
     private final VBox container = BookingElements.createPageVBox("recording-options", true,
-        BookingElements.createStrongLabel(OnlineFestivalI18nKeys.AudioRecordingTopMessage),
-        BookingElements.createSecondaryLabel(BookingFormI18nKeys.BookingOptions),
+        BookingElements.createWordingLabel(OnlineFestivalI18nKeys.AudioRecordingTopMessage),
+        BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.BookingOptions),
         gridPane
     );
     private WorkingBooking lastWorkingBooking;

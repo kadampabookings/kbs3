@@ -26,9 +26,9 @@ import java.util.List;
 public final class TeachingPage implements BookingFormPage {
 
     private final GridPane gridPane = BookingElements.createOptionsGridPane(true);
-    private final Label bottomLabel = BookingElements.createStrongLabel();
+    private final Label bottomLabel = BookingElements.createWordingLabel();
     private final VBox container = BookingElements.createPageVBox("teaching-options", true,
-        BookingElements.createSecondaryLabel(BookingFormI18nKeys.BookingOptions),
+        BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.BookingOptions),
         gridPane,
         bottomLabel
     );

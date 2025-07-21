@@ -30,11 +30,11 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final Button saveButton = BookingElements.createPrimaryButton(BookingFormI18nKeys.SaveBooking);
     private final Button payButton = BookingElements.createBlackButton(BookingFormI18nKeys.PayNow1);
     private final IntegerProperty selectedAmountProperty = new SimpleIntegerProperty();
-    private final Label paymentBottomLabel = BookingElements.createSecondaryLabel(BookingFormI18nKeys.PaymentBottomMessage);
+    private final Label paymentBottomLabel = BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.PaymentBottomMessage);
     private final VBox container = BookingElements.createPageVBox("payment", true,
-        BookingElements.createStrongLabel(BookingFormI18nKeys.PaymentTopMessage),
+        BookingElements.createWordingLabel(BookingFormI18nKeys.PaymentTopMessage),
         gridPane,
-        BookingElements.createStrongLabel(BookingFormI18nKeys.SelectPaymentAmount),
+        BookingElements.createWordingLabel(BookingFormI18nKeys.SelectPaymentAmount),
         embeddedLoginContainer,
         BookingElements.buttonBar(saveButton, payButton),
         paymentBottomLabel
@@ -70,8 +70,8 @@ public final class PaymentAmountPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-        gridPane.add(BookingElements.createPriceAmountLabel(workingBookingProperties.formattedTotalProperty()), 1, 0);
-        gridPane.add(BookingElements.createPriceAmountLabel(workingBookingProperties.formattedBalanceProperty()), 1, 1);
+        gridPane.add(BookingElements.createPriceLabel(workingBookingProperties.formattedTotalProperty()), 1, 0);
+        gridPane.add(BookingElements.createPriceLabel(workingBookingProperties.formattedBalanceProperty()), 1, 1);
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         // We hide the save button if there are no changes
         Layouts.setManagedAndVisibleProperties(saveButton, workingBookingProperties.hasChanges());

@@ -21,7 +21,7 @@ final class TeachingPeriodOption {
 
     private final RadioButton radioButton = new RadioButton();
     private final Label periodLabel = BookingElements.createPeriodLabel();
-    private final Label priceLabel = BookingElements.createPriceAmountLabel();
+    private final Label priceLabel = BookingElements.createPriceLabel();
 
     TeachingPeriodOption(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
         I18nEntities.bindExpressionProperties(radioButton, bookablePeriod, "i18n(this)");
