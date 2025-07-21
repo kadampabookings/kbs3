@@ -37,6 +37,13 @@
     --fx-border-color-focus: var(--fx-focus-color);
     --fx-border-width-focus: 1px;
     --fx-text-fill-focus: unset;
+
+    --fx-kit-line-height: 1; /* Default variable for text line height managed by the webfx kit. App CSS can't override
+    it (because it's set at the text element level), but can set --fx-line-height which precedes --fx-kit-line-height */
+}
+
+.unset-variables { /* Dummy selector used just to list unset CSS variables that can be overridden by App CSS */
+    --fx-line-height: 1;
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -122,6 +129,8 @@ fx-text {
     -moz-user-select: var(--text-user-select);
     -ms-user-select: var(--text-user-select);
     user-select: var(--text-user-select);
+
+    line-height: var(--fx-line-height, var(--fx-kit-line-height));
 }
 
 :focus fx-text, :focus-visible fx-text {
@@ -471,6 +480,21 @@ fx-switch.webfx-switch fx-circle.knob {
     --bootstrap-red5: #761c19 ;
     --bootstrap-red6: #a94442 ;
 
+    --badge-default-bg: var(--bootstrap-white);
+    --badge-default-txt: var(--bootstrap-grey7);
+    --badge-primary-bg: var(--bootstrap-blue5);
+    --badge-primary-txt: var(--bootstrap-white);
+    --badge-success-bg: var(--bootstrap-green1);
+    --badge-success-txt: var(--bootstrap-white);
+    --badge-info-bg: var(--bootstrap-blue1);
+    --badge-info-txt: var(--bootstrap-white);
+    --badge-warning-bg: var(--bootstrap-orange1);
+    --badge-warning-txt: var(--bootstrap-white);
+    --badge-danger-bg: var(--bootstrap-red1);
+    --badge-danger-txt: var(--bootstrap-white);
+    --badge-secondary-bg: var(--bootstrap-grey4);
+    --badge-secondary-txt: var(--bootstrap-white);
+
     --bootstrap-font-size: 14px; /* default value for buttons */
 }
 
@@ -749,6 +773,45 @@ fx-switch.webfx-switch fx-circle.knob {
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
+.badge {
+    border-radius: 14px;
+}
+
+.badge.danger{
+    --fx-text-fill: var(--badge-danger-txt);
+    background-color: var(--badge-danger-bg);
+}
+
+.badge.success{
+    --fx-text-fill: var(--badge-success-txt);
+    background-color: var(--badge-success-bg);
+}
+
+.badge.warning{
+    --fx-text-fill: var(--badge-warning-txt);
+    background-color: var(--badge-warning-bg);
+}
+
+.badge.info{
+    --fx-text-fill: var(--badge-info-txt);
+    background-color: var(--badge-info-bg);
+}
+
+.badge.secondary{
+    --fx-text-fill: var(--badge-secondary-txt);
+    background-color: var(--badge-secondary-bg);
+}
+
+.badge.primary{
+    --fx-text-fill: var(--badge-primary-txt);
+    background-color: var(--badge-primary-bg);
+}
+
+.badge.default{
+    --fx-text-fill: var(--badge-default-txt);
+    background-color: var(--badge-default-bg);
+}
+
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
 
 :root {
@@ -1015,6 +1078,21 @@ input[type="password"]:not([value=""]) {
 }
 
 
+/*===== modality-event-backoffice-activity-medias-plugin-web@main.css from modality-base-client-i18n =====*/
+
+.translation-button {
+
+}
+
+.translation-pane {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.strikethrough fx-text {
+    text-decoration: line-through;
+}
 /*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
 
 :root {
@@ -1053,20 +1131,188 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-radius: 4px;
 }
 
-/*===== modality-event-backoffice-activity-medias-plugin-web@main.css from modality-base-client-i18n =====*/
+/*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
-.translation-button {
+/* Bootstrap style */
+:root {
+    --bootstrap-white: #fff;
 
+    --bootstrap-grey1: #e6e6e6;
+    --bootstrap-grey2: #d4d4d4;
+    --bootstrap-grey3: #ccc;
+    --bootstrap-grey4: #adadad;
+    --bootstrap-grey5: #8c8c8c;
+    --bootstrap-grey6: #777777;
+    --bootstrap-grey7: #333;
+
+    --bootstrap-blue1: #5bc0de;
+    --bootstrap-blue2: #46b8da;
+    --bootstrap-blue3: #31b0d5;
+    --bootstrap-blue4: #269abc;
+    --bootstrap-blue5: #0096D6; /* New base blue */
+    --bootstrap-blue6: #0478e6;
+    --bootstrap-blue7: #1b6d85;
+    --bootstrap-blue8: #0088d6;
+    --bootstrap-blue9: #204d74;
+    --bootstrap-blue10: #122b40;
+    --bootstrap-blue11: #31708f;
+
+    --bootstrap-green1: #5cb85c;
+    --bootstrap-green2: #4cae4c;
+    --bootstrap-green3: #449d44;
+    --bootstrap-green4: #398439;
+    --bootstrap-green5: #255625;
+    --bootstrap-green6: #41BA4D;
+
+    --bootstrap-orange1: #f0ad4e;
+    --bootstrap-orange2: #eea236;
+    --bootstrap-orange3: #ec971f;
+    --bootstrap-orange4: #d58512;
+    --bootstrap-orange5: #985f0d;
+    --bootstrap-orange6: #8a6d3b;
+
+    --bootstrap-red1: #FF0404;
+    --bootstrap-red2: #d43f3a;
+    --bootstrap-red3: #c9302c;
+    --bootstrap-red4: #ac2925;
+    --bootstrap-red5: #761c19;
+    --bootstrap-red6: #FF0404;
+
+    --badge-default-bg: var(--bootstrap-white);
+    --badge-default-txt: var(--bootstrap-grey7);
+    --badge-primary-bg: #e3f2fd;
+    --badge-primary-txt: #1976d2;
+    --badge-success-bg: #e8f5e8;
+    --badge-success-txt: #2e7d32;
+    --badge-info-bg: var(--bootstrap-blue1);
+    --badge-info-txt: var(--bootstrap-white);
+    --badge-warning-bg: #eceff1;
+    --badge-warning-txt: #546e7a;
+    --badge-danger-bg: #ffebee;
+    --badge-danger-txt: #c62828;
+    --badge-secondary-bg: #fff3e0;
+    --badge-secondary-txt: #f57c00;
 }
 
-.translation-pane {
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    padding: 10px;
+.h2 {
+    font-size: 40px;
+    font-weight: bold;
 }
-/*===== modality-frontoffice-booking-web@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
+.disabled:hover {
+    cursor: not-allowed;
+}
 
+.btn-black {
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--fx-text-fill);
+    --fx-background-color: black;
+    --fx-border-color: black;
+}
+
+.btn-black:hover:not(.disabled) {
+    --fx-background-color: var(--bootstrap-grey7);
+    --fx-border-color: var(--bootstrap-grey7);
+}
+
+.btn-white {
+    --fx-svg-path-fill: var(--bootstrap-white);
+    --fx-background-color: white;
+    --fx-border-color: black;
+}
+
+.btn-white:hover:not(.disabled) {
+    --fx-text-fill: black;
+    --fx-background-color: var(--bootstrap-grey1);
+}
+
+/*===== modality-frontoffice-bookingelements-web@main.css from modality-ecommerce-frontoffice-bookingelements =====*/
+
+.booking-elements .navigation-bar {
+    font-weight: bold;
+    --fx-background-image: linear-gradient(to right, #E7E7E7, #E7E7E7 75%, #0096D6 78%, #0096D6);
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: transparent;
+    --fx-border-image: linear-gradient(to right, #E7E7E7, #E7E7E7 75%, #0096D6 78%, #0096D6);
+    --fx-border-width: 1px;
+    --fx-border-radius: 8px;
+    --fx-button-background-color: transparent;
+    --fx-button-border-color: transparent;
+    --fx-border-color-focus: transparent;
+    --fx-togglebutton-border-color-hover: transparent;
+    --fx-togglebutton-border-color-selected: transparent;
+    --webfx-aria-toggle-button-background-color: transparent;
+    --webfx-aria-toggle-button-background-color-hover: transparent;
+    --webfx-aria-toggle-button-background-color-fired: transparent;
+}
+
+.booking-elements .navigation-bar .title {
+    --fx-background-color: white;
+    --fx-background-radius: 8px;
+    --fx-border-style: solid;
+    --fx-border-color: #E7E7E7;
+    --fx-border-width: 1px;
+    --fx-border-radius: 8px;
+}
+
+.booking-elements .navigation-bar fx-togglebutton.disabled {
+    --fx-text-fill: transparent;
+}
+
+.booking-elements .next-button {
+    --fx-text-fill: white;
+}
+
+.booking-elements .back-button {
+    --fx-text-fill: var(--bootstrap-grey5);
+    --webfx-aria-toggle-button-text-fill-fired: var(--bootstrap-grey5);
+}
+
+.booking-elements .price-bar {
+    font-weight: bold;
+    --fx-background-color: #F4F4F4;
+}
+
+.booking-elements .price-label {
+    --fx-text-fill: #838788;
+    font-weight: bold;
+}
+
+.booking-elements {
+    font-family: "Poppins", sans-serif;
+    --fx-textarea-border-color: black;
+    --fx-textarea-border-radius: 19px;
+}
+
+.booking-elements .badge { /* badges don't look vertically centered with Poppins font */
+    font-family: "Montserrat", sans-serif;
+}
+
+.booking-elements .wording-label {
+    --fx-line-height: 1.6;
+}
+
+.booking-elements .option-label {
+    font-weight: bold;
+}
+
+.booking-elements .option-label-secondary {
+    font-weight: 600;
+}
+
+.booking-elements .period-label {
+    --fx-text-fill: #838788;
+}
+
+.booking-elements .price-label {
+    font-weight: bold;
+    --fx-text-fill: #838788;
+}
+
+.booking-elements .sub-price-label {
+    --fx-text-fill: #838788;
+}
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
 .main-frame {
@@ -1165,86 +1411,6 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     --webfx-aria-toggle-button-background-color-focused: var(--bootstrap-grey1);
     --webfx-aria-toggle-button-background-color-fired: var(--brand-blue-color);
 }
-/*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
-
-/* Bootstrap style */
-:root {
-    --bootstrap-white: #fff;
-
-    --bootstrap-grey1: #e6e6e6;
-    --bootstrap-grey2: #d4d4d4;
-    --bootstrap-grey3: #ccc;
-    --bootstrap-grey4: #adadad;
-    --bootstrap-grey5: #8c8c8c;
-    --bootstrap-grey6: #777777;
-    --bootstrap-grey7: #333;
-
-    --bootstrap-blue1: #5bc0de;
-    --bootstrap-blue2: #46b8da;
-    --bootstrap-blue3: #31b0d5;
-    --bootstrap-blue4: #269abc;
-    --bootstrap-blue5: #0096D6; /* New base blue */
-    --bootstrap-blue6: #0478e6;
-    --bootstrap-blue7: #1b6d85;
-    --bootstrap-blue8: #0088d6;
-    --bootstrap-blue9: #204d74;
-    --bootstrap-blue10: #122b40;
-    --bootstrap-blue11: #31708f;
-
-    --bootstrap-green1: #5cb85c;
-    --bootstrap-green2: #4cae4c;
-    --bootstrap-green3: #449d44;
-    --bootstrap-green4: #398439;
-    --bootstrap-green5: #255625;
-    --bootstrap-green6: #41BA4D;
-
-    --bootstrap-orange1: #f0ad4e;
-    --bootstrap-orange2: #eea236;
-    --bootstrap-orange3: #ec971f;
-    --bootstrap-orange4: #d58512;
-    --bootstrap-orange5: #985f0d;
-    --bootstrap-orange6: #8a6d3b;
-
-    --bootstrap-red1: #FF0404;
-    --bootstrap-red2: #d43f3a;
-    --bootstrap-red3: #c9302c;
-    --bootstrap-red4: #ac2925;
-    --bootstrap-red5: #761c19;
-    --bootstrap-red6: #FF0404;
-}
-
-.h2 {
-    font-size: 40px;
-    font-weight: bold;
-}
-
-.disabled:hover {
-    cursor: not-allowed;
-}
-
-.btn-black {
-    --fx-text-fill: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--fx-text-fill);
-    --fx-background-color: black;
-    --fx-border-color: black;
-}
-
-.btn-black:hover:not(.disabled) {
-    --fx-background-color: var(--bootstrap-grey7);
-    --fx-border-color: var(--bootstrap-grey7);
-}
-
-.btn-white {
-    --fx-svg-path-fill: var(--bootstrap-white);
-    --fx-background-color: white;
-    --fx-border-color: black;
-}
-
-.btn-white:hover:not(.disabled) {
-    --fx-text-fill: black;
-    --fx-background-color: var(--bootstrap-grey1);
-}
-
 /*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */
@@ -1256,6 +1422,118 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 .user-account .material-label {
      font-weight: bold;
      font-size: 14px;
+}
+
+/*===== modality-crm-frontoffice-activity-orders-plugin-web@main.css from modality-crm-frontoffice-activity-orders-plugin =====*/
+
+.order-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    border-bottom: 1px solid #eee;
+}
+
+.order-status {
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.status-incomplete {
+    background-color: #ffebee;
+    --fx-text-fill: #c62828;
+}
+
+.status-progress {
+    background-color: #e3f2fd;
+    --fx-text-fill: #1976d2;
+}
+
+.status-confirmed,
+.status-complete {
+    background-color: #e8f5e8;
+    --fx-text-fill: #2e7d32;
+}
+
+.status-cancelled {
+    background-color: #ffebee;
+    --fx-text-fill: #c62828;
+}
+
+.order-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.order-id {
+    font-size: 14px;
+    color: #666;
+}
+
+.booker-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.semi-bold {
+    font-weight: 700;
+}
+
+.order-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.order-dates {
+    font-size: 14px;
+    color: #666;
+}
+
+.detail-item {
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 700;
+}
+
+.detail-value {
+    font-size: 15px;
+}
+
+.detail-subitem {
+    font-size: 14px;
+}
+
+.detail-subitem-label {
+    color: #666;
+}
+
+.payment-row {
+    font-size: 14px;
+    color: black;
+}
+
+.payment-remaining {
+    font-weight: 700;
+    color: black;
+    font-size: 16px;
+    border-top: 1px solid #eee;
+}
+
+.thank-you-message {
+    font-size: 16px;
+    color: #666;
 }
 
 /*===== modality-front-office-userprofile-web@main.css from modality-crm-frontoffice-activity-userprofile-plugin =====*/
@@ -1650,55 +1928,6 @@ fx-aspectratiopane {
     --fx-border-style: none;
 }
 
-/*===== kbs-frontoffice-onlinefestival-web@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
-
-.online-festival-booking-form {
-    font-family: "Poppins", sans-serif;
-}
-
-.online-festival-booking-form .top-bar {
-    font-weight: bold;
-    --fx-background-color: #E7E7E7;
-    --fx-background-radius: 8px;
-    --fx-border-style: solid;
-    --fx-border-color: #E7E7E7;
-    --fx-border-width: 1px;
-    --fx-border-radius: 8px;
-    --fx-button-background-color: transparent;
-    --fx-button-border-color: transparent;
-    --fx-togglebutton-border-color-hover: transparent;
-}
-
-.online-festival-booking-form .top-bar .title {
-    --fx-background-color: white;
-    --fx-background-radius: 8px;
-    --fx-border-style: solid;
-    --fx-border-color: #E7E7E7;
-    --fx-border-width: 1px;
-    --fx-border-radius: 8px;
-}
-
-.online-festival-booking-form .price-bar {
-    font-weight: bold;
-    --fx-background-color: #F4F4F4;
-}
-
-.online-festival-booking-form .price-bar fx-label.price {
-    --fx-text-fill: #838788;
-}
-
-.teaching-option-radio-button {
-    font-weight: bold;
-}
-
-.teaching-option-period-label {
-    --fx-text-fill: #838788;
-}
-
-.teaching-option-price-label {
-    font-weight: bold;
-    --fx-text-fill: #838788;
-}
 /*===== override@modality-client-brand-web@main.css from kbs-frontoffice-application =====*/
 
 /*

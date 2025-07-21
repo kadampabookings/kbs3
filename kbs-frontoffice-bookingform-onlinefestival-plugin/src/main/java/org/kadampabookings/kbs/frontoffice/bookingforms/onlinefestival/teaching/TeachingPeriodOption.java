@@ -1,0 +1,49 @@
+package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching;
+
+import dev.webfx.platform.util.collection.Collections;
+import dev.webfx.platform.util.time.Times;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import one.modality.base.client.i18n.I18nEntities;
+import one.modality.base.shared.entities.BookablePeriod;
+import one.modality.base.shared.entities.ScheduledItem;
+import one.modality.ecommerce.client.workingbooking.WorkingBooking;
+import one.modality.ecommerce.document.service.PolicyAggregate;
+import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
+
+import java.time.LocalDate;
+import java.util.List;
+
+/**
+ * @author Bruno Salmon
+ */
+final class TeachingPeriodOption {
+
+    private final RadioButton radioButton = BookingElements.optionLabel(new RadioButton());
+    private final Label periodLabel = BookingElements.createPeriodLabel();
+    private final Label priceLabel = BookingElements.createPriceLabel();
+
+    TeachingPeriodOption(BookablePeriod bookablePeriod, WorkingBooking workingBooking) {
+        I18nEntities.bindExpressionProperties(radioButton, bookablePeriod, "i18n(this)");
+        I18nEntities.bindExpressionProperties(periodLabel, bookablePeriod, "dateIntervalFormat(startScheduledItem.date, endScheduledItem.date) + ' (' + (endScheduledItem.date - startScheduledItem.date + 1) + ' [days])'");
+        PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
+        LocalDate startDate = bookablePeriod.getStartScheduledItem().getDate();
+        LocalDate endDate = bookablePeriod.getEndScheduledItem().getDate();
+        List<ScheduledItem> bookableScheduledItems = Collections.filter(policyAggregate.getTeachingScheduledItems(),
+            si -> Times.isBetween(si.getDate(), startDate, endDate));
+        BookingElements.setupPeriodOption(bookableScheduledItems, priceLabel, radioButton.selectedProperty(), workingBooking);
+    }
+
+    RadioButton getRadioButton() {
+        return radioButton;
+    }
+
+    Label getPeriodLabel() {
+        return periodLabel;
+    }
+
+    Label getPriceLabel() {
+        return priceLabel;
+    }
+
+}

@@ -136,6 +136,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.kadampabookings</groupId>
+            <artifactId>kbs-frontoffice-footer-nktikbu</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-backoffice-mainframe-headernode</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -291,6 +298,13 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-base-frontoffice-mainframe-footernode</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-base-frontoffice-mainframe-fx</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -334,6 +348,13 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-shared-entities</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-base-shared-knownitems</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -445,6 +466,13 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-crm-frontoffice-order</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-crm-shared-authn</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -487,6 +515,20 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-ecommerce-frontoffice-bookingelements</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-ecommerce-frontoffice-bookingform</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-ecommerce-payment</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -509,6 +551,13 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-ecommerce-payment-remote</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-ecommerce-shared-pricecalculator</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -558,6 +607,13 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-event-frontoffice-activity-audiolibrary-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-event-frontoffice-activity-book</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>

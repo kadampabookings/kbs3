@@ -3,6 +3,7 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
 public interface OnlineFestivalI18nKeys {
 
-    Object TeachingsOnline = "TeachingsOnline";
+    Object OnlineFestivalTeachingBottomMessage1 = "OnlineFestivalTeachingBottomMessage1";
+    Object AudioRecordingTopMessage = "AudioRecordingTopMessage";
 
 }

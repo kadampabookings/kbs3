@@ -1,5 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.activities.login;
 
+import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.panes.AspectRatioPane;
 import dev.webfx.extras.panes.MonoClipPane;
 import dev.webfx.extras.panes.ScaleMode;
@@ -7,9 +8,7 @@ import dev.webfx.extras.player.Media;
 import dev.webfx.extras.player.Player;
 import dev.webfx.extras.player.StartOptionsBuilder;
 import dev.webfx.extras.player.Status;
-import dev.webfx.extras.player.multi.MultiPlayer;
-import dev.webfx.extras.player.video.web.wistia.WistiaVideoPlayer;
-import dev.webfx.extras.player.video.web.youtube.YoutubeVideoPlayer;
+import dev.webfx.extras.player.video.web.videojs.VideoJsPlayer;
 import dev.webfx.extras.util.animation.Animations;
 import dev.webfx.extras.util.layout.Layouts;
 import dev.webfx.extras.webtext.HtmlText;
@@ -19,7 +18,6 @@ import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.platform.util.Strings;
 import dev.webfx.platform.windowlocation.WindowLocation;
 import dev.webfx.stack.authn.login.ui.LoginUiService;
-import dev.webfx.extras.i18n.I18n;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -42,8 +40,8 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
     private final Node loginUI = LoginUiService.createLoginUI();
     private final MonoClipPane cornerButton = new MonoClipPane(true, SvgIcons.createSVGPath(DRONE_SVG_PATH));
     private final HtmlText helpText = new HtmlText();
-    private final Player player = new MultiPlayer(new YoutubeVideoPlayer(), new WistiaVideoPlayer());
-    private final Media droneMedia = player.acceptMedia("youtube:sYYuOC2Wxy8");
+    private final Player player = new VideoJsPlayer();
+    private final Media droneMedia = player.acceptMedia("bunny:videoId=daf545da-f62e-467f-8ef4-b1e7448a52a6&zoneId=vz-8808f1cf-3f6");
     private final AspectRatioPane aspectRatioPane = new AspectRatioPane(16d / 9);
     private Scheduled showingDroneScheduled;
 

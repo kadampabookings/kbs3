@@ -273,6 +273,21 @@ Switch.webfx-switch Circle.knob {
     -bootstrap-red5: #761c19 ;
     -bootstrap-red6: #a94442 ;
 
+    -badge-default-bg: -bootstrap-white;
+    -badge-default-txt: -bootstrap-grey7;
+    -badge-primary-bg: -bootstrap-blue5;
+    -badge-primary-txt: -bootstrap-white;
+    -badge-success-bg: -bootstrap-green1;
+    -badge-success-txt: -bootstrap-white;
+    -badge-info-bg: -bootstrap-blue1;
+    -badge-info-txt: -bootstrap-white;
+    -badge-warning-bg: -bootstrap-orange1;
+    -badge-warning-txt: -bootstrap-white;
+    -badge-danger-bg: -bootstrap-red1;
+    -badge-danger-txt: -bootstrap-white;
+    -badge-secondary-bg: -bootstrap-grey4;
+    -badge-secondary-txt: -bootstrap-white;
+
     /*-bootstrap-font-size: 14px;*/ /* default value for buttons */
 }
 
@@ -624,6 +639,54 @@ Switch.webfx-switch Circle.knob {
     -fx-fill: -bootstrap-red6;
 }
 
+.badge {
+    -fx-background-radius: 14px;
+}
+
+.badge.danger{
+     -fx-text-fill: -badge-danger-txt;
+     -fx-fill: -badge-danger-txt;
+     -fx-background-color: -badge-danger-bg;
+ }
+
+ .badge.success{
+      -fx-text-fill: -badge-success-txt;
+      -fx-fill: -badge-success-txt;
+      -fx-background-color: -badge-success-bg;
+  }
+
+  .badge.warning{
+        -fx-text-fill: -badge-warning-txt;
+        -fx-fill: -badge-warning-txt;
+        -fx-background-color: -badge-warning-bg;
+   }
+
+   .badge.info{
+           -fx-text-fill: -badge-info-txt;
+           -fx-fill: -badge-info-txt;
+           -fx-background-color: -badge-info-bg;
+      }
+
+   .badge.secondary{
+         -fx-text-fill: -badge-secondary-txt;
+         -fx-fill: -badge-secondary-txt;
+         -fx-background-color: -badge-secondary-bg;
+    }
+
+ .badge.primary{
+     -fx-text-fill: -badge-primary-txt;
+     -fx-fill: -badge-primary-txt;
+     -fx-background-color: -badge-primary-bg;
+ }
+
+ .badge.default{
+     -fx-text-fill: -badge-default-txt;
+     -fx-fill: -badge-default-txt;
+     -fx-background-color: -badge-default-bg;
+ }
+
+
+
 /*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
 
 VisualGrid {
@@ -809,6 +872,23 @@ HtmlText, HtmlTextEditor {
     -fx-line-spacing: 0;
     -fx-text-fill: -webfx-login-portal-title-color;
 }
+/*===== modality-event-backoffice-activity-medias-plugin-javafx@main.css from modality-base-client-i18n =====*/
+
+.translation-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3;
+    -fx-padding: 2 6 2 6;
+}
+
+.translation-pane {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 5;
+}
+
+.strikethrough LabeledText {
+    -fx-strikethrough: true;
+}
 /*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
 
 .root {
@@ -860,22 +940,183 @@ Text, Label, Button, TextField {
 
 /*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
 
-/*===== modality-event-backoffice-activity-medias-plugin-javafx@main.css from modality-base-client-i18n =====*/
+/*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
 
-.translation-button {
+/* Bootstrap style */
+.root {
+    -bootstrap-white: #fff ;
+    
+    -bootstrap-grey1: #e6e6e6 ;
+    -bootstrap-grey2: #d4d4d4 ;
+    -bootstrap-grey3: #ccc ;
+    -bootstrap-grey4: #adadad ;
+    -bootstrap-grey5: #8c8c8c ;
+    -bootstrap-grey6: #777777 ;
+    -bootstrap-grey7: #333 ;
+
+    -bootstrap-blue1: #88c9ff; /* Lightest shade */
+    -bootstrap-blue2: #70c0ff;
+    -bootstrap-blue3: #58b7ff;
+    -bootstrap-blue4: #40afff;
+    -bootstrap-blue5: #0096D6; /* New base blue */
+    -bootstrap-blue6: #0478e6; /* Darker shade */
+    -bootstrap-blue7: #0361cc;
+    -bootstrap-blue8: #0088d6;
+    -bootstrap-blue9: #204d74;
+    -bootstrap-blue10: #003682; /* Darkest shade */
+    -bootstrap-blue11: #00285b;
+
+    -bootstrap-green1: #5cb85c ;
+    -bootstrap-green2: #4cae4c ;
+    -bootstrap-green3: #449d44 ;
+    -bootstrap-green4: #398439 ;
+    -bootstrap-green5: #255625 ;
+    -bootstrap-green6: #41BA4D ;
+
+    -bootstrap-orange1: #f0ad4e ;
+    -bootstrap-orange2: #eea236 ;
+    -bootstrap-orange3: #ec971f ;
+    -bootstrap-orange4: #d58512 ;
+    -bootstrap-orange5: #985f0d ;
+    -bootstrap-orange6: #8a6d3b ;
+
+    -bootstrap-red1: #FF0404 ;
+    -bootstrap-red2: #d43f3a ;
+    -bootstrap-red3: #c9302c ;
+    -bootstrap-red4: #ac2925 ;
+    -bootstrap-red5: #761c19 ;
+    -bootstrap-red6: #FF0404 ;
+
+        -badge-default-bg: -bootstrap-white;
+        -badge-default-txt: -bootstrap-grey7;
+        -badge-primary-bg: #e3f2fd;
+        -badge-primary-txt: #2e7d32;
+        -badge-success-bg: #e8f5e8;
+        -badge-success-txt: #2e7d32;
+        -badge-info-bg: -bootstrap-blue1;
+        -badge-info-txt: -bootstrap-white;
+        -badge-warning-bg: #eceff1;
+        -badge-warning-txt: #546e7a;
+        -badge-danger-bg: #ffebee;
+        -badge-danger-txt: #c62828;
+        -badge-secondary-bg: #eceff1;
+        -badge-secondary-txt: #546e7a;
+}
+
+/*.h1 {
+    -fx-font-family: "Roboto"; !*-roboto-font-family *!
+    -fx-font-size: 34px;
+    -fx-font-weight: normal;
+    -fx-line-spacing: 6px; !* Line height in JavaFX is set through line-spacing *!
+    -fx-text-alignment: left;
+}*/
+
+.h2 {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    /*-fx-line-spacing: 20px;
+    -fx-text-alignment: center;*/
+    }
+
+.btn-black {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
+
+.btn-black:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-grey7;
+    -fx-border-color: -bootstrap-grey7;
+}
+
+.btn-white {
+    -fx-text-fill: black;
+    -fx-fill: black;
+    -fx-background-color: white;
+    -fx-border-color: black;
+}
+
+.btn-white:hover {
+    -fx-text-fill: black;
+    -fx-fill: black;
+    -fx-background-color: -bootstrap-grey1;
+    -fx-border-color: black;
+}
+/*===== modality-frontoffice-bookingelements-javafx@main.css from modality-ecommerce-frontoffice-bookingelements =====*/
+
+.booking-elements {
+    -fx-font-family: "Poppins";
+}
+
+.booking-elements .navigation-bar {
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to right, #E7E7E7, #E7E7E7 75%, #0096D6 78%, #0096D6);
+    -fx-background-radius: 8px;
+    -fx-border-color: linear-gradient(to right, #E7E7E7, #E7E7E7 75%, #0096D6 78%, #0096D6);
+    -fx-border-radius: 8px;
+}
+
+.booking-elements .navigation-bar .title {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+}
+
+.booking-elements .navigation-bar ToggleButton {
     -fx-background-color: transparent;
-    -fx-border-color: #ccc;
-    -fx-border-radius: 3;
-    -fx-padding: 2 6 2 6;
+    -fx-border-color: transparent;
 }
 
-.translation-pane {
-    -fx-background-color: #f0f0f0;
-    -fx-background-radius: 5;
+.booking-elements .navigation-bar ToggleButton:disabled {
+    -fx-text-fill: transparent;
 }
-/*===== modality-frontoffice-booking-javafx@main.css from modality-event-frontoffice-activity-booking-plugin =====*/
 
+.booking-elements .next-button {
+    -fx-text-fill: white;
+}
 
+.booking-elements .back-button {
+    -fx-text-fill: -bootstrap-grey5;
+}
+
+.booking-elements .price-bar {
+    -fx-background-color: #F4F4F4;
+    -fx-font-weight: bold;
+}
+
+.booking-elements .option-label {
+    -fx-font-weight: bold;
+}
+
+.booking-elements .option-label-secondary {
+    -fx-font-weight: 600;
+}
+
+.booking-elements .period-label {
+    -fx-text-fill: #838788;
+}
+
+.booking-elements .price-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #838788;
+}
+
+.booking-elements .sub-price-label {
+    -fx-text-fill: #838788;
+}
+
+.booking-elements LabeledText {
+    -fx-font-size: 14px;
+    -fx-line-spacing: 5px;
+}
+
+.booking-elements .text-area {
+    -fx-border-color: black;
+    -fx-border-radius: 19px;
+    -fx-background-radius: 19px;
+}
 /*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
 .main-frame {
@@ -1004,96 +1245,6 @@ CollapsePane.menu-bar.lang-menu-bar {
     -webfx-aria-toggle-button-background-color-focused: -bootstrap-grey1;
     -webfx-aria-toggle-button-background-color-fired: -brand-blue-color;
 }
-/*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
-
-/* Bootstrap style */
-.root {
-    -bootstrap-white: #fff ;
-    
-    -bootstrap-grey1: #e6e6e6 ;
-    -bootstrap-grey2: #d4d4d4 ;
-    -bootstrap-grey3: #ccc ;
-    -bootstrap-grey4: #adadad ;
-    -bootstrap-grey5: #8c8c8c ;
-    -bootstrap-grey6: #777777 ;
-    -bootstrap-grey7: #333 ;
-
-    -bootstrap-blue1: #88c9ff; /* Lightest shade */
-    -bootstrap-blue2: #70c0ff;
-    -bootstrap-blue3: #58b7ff;
-    -bootstrap-blue4: #40afff;
-    -bootstrap-blue5: #0096D6; /* New base blue */
-    -bootstrap-blue6: #0478e6; /* Darker shade */
-    -bootstrap-blue7: #0361cc;
-    -bootstrap-blue8: #0088d6;
-    -bootstrap-blue9: #204d74;
-    -bootstrap-blue10: #003682; /* Darkest shade */
-    -bootstrap-blue11: #00285b;
-
-    -bootstrap-green1: #5cb85c ;
-    -bootstrap-green2: #4cae4c ;
-    -bootstrap-green3: #449d44 ;
-    -bootstrap-green4: #398439 ;
-    -bootstrap-green5: #255625 ;
-    -bootstrap-green6: #41BA4D ;
-
-    -bootstrap-orange1: #f0ad4e ;
-    -bootstrap-orange2: #eea236 ;
-    -bootstrap-orange3: #ec971f ;
-    -bootstrap-orange4: #d58512 ;
-    -bootstrap-orange5: #985f0d ;
-    -bootstrap-orange6: #8a6d3b ;
-
-    -bootstrap-red1: #FF0404 ;
-    -bootstrap-red2: #d43f3a ;
-    -bootstrap-red3: #c9302c ;
-    -bootstrap-red4: #ac2925 ;
-    -bootstrap-red5: #761c19 ;
-    -bootstrap-red6: #FF0404 ;
-}
-
-/*.h1 {
-    -fx-font-family: "Roboto"; !*-roboto-font-family *!
-    -fx-font-size: 34px;
-    -fx-font-weight: normal;
-    -fx-line-spacing: 6px; !* Line height in JavaFX is set through line-spacing *!
-    -fx-text-alignment: left;
-}*/
-
-.h2 {
-    -fx-font-size: 40px;
-    -fx-font-weight: bold;
-    /*-fx-line-spacing: 20px;
-    -fx-text-alignment: center;*/
-    }
-
-.btn-black {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: black;
-    -fx-border-color: black;
-}
-
-.btn-black:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-grey7;
-    -fx-border-color: -bootstrap-grey7;
-}
-
-.btn-white {
-    -fx-text-fill: black;
-    -fx-fill: black;
-    -fx-background-color: white;
-    -fx-border-color: black;
-}
-
-.btn-white:hover {
-    -fx-text-fill: black;
-    -fx-fill: black;
-    -fx-background-color: -bootstrap-grey1;
-    -fx-border-color: black;
-}
 /*===== one-modality-crm-frontoffice-activities-createaccount-javafx@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */
@@ -1106,6 +1257,134 @@ CollapsePane.menu-bar.lang-menu-bar {
      -fx-font-weight: 900;
      -fx-font-size: 14px;
 }
+
+/*===== modality-crm-frontoffice-activity-orders-plugin-javafx@main.css from modality-crm-frontoffice-activity-orders-plugin =====*/
+
+
+.order-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+.order-header {
+    -fx-border-color: #eee;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.order-status {
+    -fx-background-radius: 18px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 800;
+}
+
+.status-incomplete {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #c62828;
+}
+
+.status-progress {
+    -fx-background-color: #e3f2fd;
+    -fx-text-fill: #1976d2;
+}
+
+.status-confirmed {
+    -fx-background-color: #e8f5e8;
+    -fx-text-fill: #2e7d32;
+}
+
+.status-complete {
+    -fx-background-color: #e8f5e8;
+    -fx-text-fill: #2e7d32;
+}
+
+.status-cancelled {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #c62828;
+}
+
+.order-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #333;
+    }
+
+
+.order-id {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666;
+}
+
+.booker-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+.semi-bold {
+    -fx-font-weight: 700
+}
+.order-price {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #333;
+}
+
+.order-dates {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666;
+}
+
+
+.detail-item {
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1px 0;
+    -fx-font-size: 14px;
+}
+
+.detail-item:last-child {
+    -fx-border-width: 0;
+}
+
+
+.detail-label {
+    -fx-font-weight: 700;
+}
+
+.detail-value {
+    -fx-font-size: 15px;
+}
+
+
+.detail-subitem {
+
+    -fx-font-size: 14px;
+}
+
+.detail-subitem-label {
+    -fx-text-fill: #666;
+}
+
+
+.payment-row {
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+}
+
+.payment-remaining {
+    -fx-font-weight: 700;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-border-color: #eee;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.thank-you-message {
+    -fx-font-size: 16px;
+    -fx-text-fill: #666;
+}
+
+
+
+
 
 /*===== modality-front-office-userprofile-javafx@main.css from modality-crm-frontoffice-activity-userprofile-plugin =====*/
 
@@ -1508,51 +1787,6 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-border: none;
     -fx-background-color: transparent;
     -fx-highlight-fill: transparent;
-}
-/*===== kbs-frontoffice-onlinefestival-javafx@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
-
-.online-festival-booking-form {
-    -fx-font-family: "Poppins";
-}
-
-.online-festival-booking-form .top-bar {
-    -fx-font-weight: bold;
-    -fx-background-color: #E7E7E7;
-    -fx-background-radius: 5px;
-    -fx-border-color: #E7E7E7;
-    -fx-border-radius: 8px;
-}
-
-.online-festival-booking-form .top-bar .title {
-    -fx-background-color: white;
-    -fx-background-radius: 8px;
-}
-
-.online-festival-booking-form .top-bar ToggleButton {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.online-festival-booking-form .price-bar {
-    -fx-background-color: #F4F4F4;
-    -fx-font-weight: bold;
-}
-
-.online-festival-booking-form .price-bar Label.price {
-    -fx-text-fill: #838788;
-}
-
-.teaching-option-radio-button {
-    -fx-font-weight: bold;
-}
-
-.teaching-option-period-label {
-    -fx-text-fill: #838788;
-}
-
-.teaching-option-price-label {
-    -fx-font-weight: bold;
-    -fx-text-fill: #838788;
 }
 /*===== override@modality-client-brand-javafx@main.css from kbs-frontoffice-application =====*/
 

@@ -37,6 +37,13 @@
     --fx-border-color-focus: var(--fx-focus-color);
     --fx-border-width-focus: 1px;
     --fx-text-fill-focus: unset;
+
+    --fx-kit-line-height: 1; /* Default variable for text line height managed by the webfx kit. App CSS can't override
+    it (because it's set at the text element level), but can set --fx-line-height which precedes --fx-kit-line-height */
+}
+
+.unset-variables { /* Dummy selector used just to list unset CSS variables that can be overridden by App CSS */
+    --fx-line-height: 1;
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -122,6 +129,8 @@ fx-text {
     -moz-user-select: var(--text-user-select);
     -ms-user-select: var(--text-user-select);
     user-select: var(--text-user-select);
+
+    line-height: var(--fx-line-height, var(--fx-kit-line-height));
 }
 
 :focus fx-text, :focus-visible fx-text {
@@ -425,6 +434,21 @@ fx-togglebutton.aria-toggle.fired {
     --bootstrap-red5: #761c19 ;
     --bootstrap-red6: #a94442 ;
 
+    --badge-default-bg: var(--bootstrap-white);
+    --badge-default-txt: var(--bootstrap-grey7);
+    --badge-primary-bg: var(--bootstrap-blue5);
+    --badge-primary-txt: var(--bootstrap-white);
+    --badge-success-bg: var(--bootstrap-green1);
+    --badge-success-txt: var(--bootstrap-white);
+    --badge-info-bg: var(--bootstrap-blue1);
+    --badge-info-txt: var(--bootstrap-white);
+    --badge-warning-bg: var(--bootstrap-orange1);
+    --badge-warning-txt: var(--bootstrap-white);
+    --badge-danger-bg: var(--bootstrap-red1);
+    --badge-danger-txt: var(--bootstrap-white);
+    --badge-secondary-bg: var(--bootstrap-grey4);
+    --badge-secondary-txt: var(--bootstrap-white);
+
     --bootstrap-font-size: 14px; /* default value for buttons */
 }
 
@@ -701,6 +725,45 @@ fx-togglebutton.aria-toggle.fired {
 .txt-danger, .txt.danger, .danger .txt {
     --fx-text-fill: var(--bootstrap-red6);
     --fx-svg-path-fill: var(--fx-text-fill);
+}
+
+.badge {
+    border-radius: 14px;
+}
+
+.badge.danger{
+    --fx-text-fill: var(--badge-danger-txt);
+    background-color: var(--badge-danger-bg);
+}
+
+.badge.success{
+    --fx-text-fill: var(--badge-success-txt);
+    background-color: var(--badge-success-bg);
+}
+
+.badge.warning{
+    --fx-text-fill: var(--badge-warning-txt);
+    background-color: var(--badge-warning-bg);
+}
+
+.badge.info{
+    --fx-text-fill: var(--badge-info-txt);
+    background-color: var(--badge-info-bg);
+}
+
+.badge.secondary{
+    --fx-text-fill: var(--badge-secondary-txt);
+    background-color: var(--badge-secondary-bg);
+}
+
+.badge.primary{
+    --fx-text-fill: var(--badge-primary-txt);
+    background-color: var(--badge-primary-bg);
+}
+
+.badge.default{
+    --fx-text-fill: var(--badge-default-txt);
+    background-color: var(--badge-default-bg);
 }
 
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
@@ -1034,6 +1097,10 @@ body, textarea /* because textarea has explicit default monospace font */ {
     border-radius: 5px;
     padding: 10px;
 }
+
+.strikethrough fx-text {
+    text-decoration: line-through;
+}
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
@@ -1080,6 +1147,21 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --bootstrap-red4: #ac2925;
     --bootstrap-red5: #761c19;
     --bootstrap-red6: #FF0404;
+
+    --badge-default-bg: var(--bootstrap-white);
+    --badge-default-txt: var(--bootstrap-grey7);
+    --badge-primary-bg: #e3f2fd;
+    --badge-primary-txt: #1976d2;
+    --badge-success-bg: #e8f5e8;
+    --badge-success-txt: #2e7d32;
+    --badge-info-bg: var(--bootstrap-blue1);
+    --badge-info-txt: var(--bootstrap-white);
+    --badge-warning-bg: #eceff1;
+    --badge-warning-txt: #546e7a;
+    --badge-danger-bg: #ffebee;
+    --badge-danger-txt: #c62828;
+    --badge-secondary-bg: #fff3e0;
+    --badge-secondary-txt: #f57c00;
 }
 
 .h2 {

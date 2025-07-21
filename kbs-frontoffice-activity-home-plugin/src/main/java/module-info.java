@@ -7,10 +7,12 @@ module kbs.frontoffice.activity.home.plugin {
     requires javafx.graphics;
     requires kbs.client.festivaltypes;
     requires kbs.frontoffice.activity.podcasts.plugin;
+    requires modality.base.client.i18n;
     requires modality.base.client.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
     requires modality.event.client.lifecycle;
+    requires modality.event.frontoffice.activity.book;
     requires modality.event.frontoffice.activity.booking.plugin;
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;

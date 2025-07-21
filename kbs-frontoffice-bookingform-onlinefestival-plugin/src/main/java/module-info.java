@@ -8,23 +8,47 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires javafx.graphics;
     requires kbs.client.festivaltypes;
     requires modality.base.client.i18n;
+    requires modality.base.client.time;
     requires modality.base.shared.entities;
+    requires modality.base.shared.knownitems;
+    requires modality.crm.client.authn.fx;
+    requires modality.crm.client.i18n;
+    requires modality.crm.frontoffice.activity.userprofile.plugin;
+    requires modality.crm.frontoffice.order;
     requires modality.ecommerce.client.i18n;
     requires modality.ecommerce.client.workingbooking;
     requires modality.ecommerce.document.service;
-    requires modality.event.frontoffice.activity.booking.plugin;
-    requires webfx.extras.aria;
+    requires modality.ecommerce.frontoffice.bookingelements;
+    requires modality.ecommerce.frontoffice.bookingform;
+    requires modality.event.frontoffice.activity.book;
+    requires modality.event.frontoffice.eventheader;
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;
+    requires webfx.extras.operation;
+    requires webfx.extras.panes;
     requires webfx.extras.styles.bootstrap;
+    requires webfx.extras.time.format;
+    requires webfx.extras.util.layout;
+    requires webfx.extras.validation;
     requires webfx.kit.util;
+    requires webfx.platform.console;
+    requires webfx.platform.uischeduler;
     requires webfx.platform.util;
     requires webfx.platform.util.time;
+    requires webfx.stack.authn.login.ui.gateway.password.plugin;
+    requires webfx.stack.orm.entity;
+    requires webfx.stack.orm.entity.binding;
+    requires webfx.stack.orm.entity.controls;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
+    exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording;
+    exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment;
+    exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal;
+    exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary;
+    exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching;
 
     // Provided services
-    provides one.modality.event.frontoffice.activities.booking.process.event.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalBookingFormProvider;
+    provides one.modality.ecommerce.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalBookingFormProvider;
 
 }

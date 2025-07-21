@@ -12,6 +12,7 @@ module kbs.server.podcastsimport.plugin {
     requires webfx.platform.boot;
     requires webfx.platform.console;
     requires webfx.platform.fetch.ast.json;
+    requires webfx.platform.meta;
     requires webfx.platform.scheduler;
     requires webfx.platform.util.time;
     requires webfx.stack.orm.datasourcemodel.service;
