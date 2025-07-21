@@ -9,8 +9,8 @@ public class WebToJavaCallbacks {
 
     public static void bindCallbackMethods(Object javaInstance) {
         JsPropertyMap<Object> pm = Js.asPropertyMap(javaInstance);
-        if (javaInstance instanceof dev.webfx.extras.player.video.web.SeamlessCapableWebVideoPlayer) {
-            dev.webfx.extras.player.video.web.SeamlessCapableWebVideoPlayer castedInstance = (dev.webfx.extras.player.video.web.SeamlessCapableWebVideoPlayer) javaInstance;
+        if (javaInstance instanceof dev.webfx.extras.player.video.web.WebVideoPlayerBase) {
+            dev.webfx.extras.player.video.web.WebVideoPlayerBase castedInstance = (dev.webfx.extras.player.video.web.WebVideoPlayerBase) javaInstance;
             registerClearFn(pm, "onReady", (JsVoidFn0Arg) castedInstance::onReady);
             registerClearFn(pm, "onPlay", (JsVoidFn0Arg) castedInstance::onPlay);
             registerClearFn(pm, "onPause", (JsVoidFn0Arg) castedInstance::onPause);
