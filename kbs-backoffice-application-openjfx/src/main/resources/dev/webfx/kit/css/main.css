@@ -254,6 +254,21 @@ ToggleButton.aria-toggle SVGPath { /* TODO: check if it's the best place */
     -bootstrap-red5: #761c19 ;
     -bootstrap-red6: #a94442 ;
 
+    -badge-default-bg: -bootstrap-white;
+    -badge-default-txt: -bootstrap-grey7;
+    -badge-primary-bg: -bootstrap-blue5;
+    -badge-primary-txt: -bootstrap-white;
+    -badge-success-bg: -bootstrap-green1;
+    -badge-success-txt: -bootstrap-white;
+    -badge-info-bg: -bootstrap-blue1;
+    -badge-info-txt: -bootstrap-white;
+    -badge-warning-bg: -bootstrap-orange1;
+    -badge-warning-txt: -bootstrap-white;
+    -badge-danger-bg: -bootstrap-red1;
+    -badge-danger-txt: -bootstrap-white;
+    -badge-secondary-bg: -bootstrap-grey4;
+    -badge-secondary-txt: -bootstrap-white;
+
     /*-bootstrap-font-size: 14px;*/ /* default value for buttons */
 }
 
@@ -605,6 +620,54 @@ ToggleButton.aria-toggle SVGPath { /* TODO: check if it's the best place */
     -fx-fill: -bootstrap-red6;
 }
 
+.badge {
+    -fx-background-radius: 14px;
+}
+
+.badge.danger{
+     -fx-text-fill: -badge-danger-txt;
+     -fx-fill: -badge-danger-txt;
+     -fx-background-color: -badge-danger-bg;
+ }
+
+ .badge.success{
+      -fx-text-fill: -badge-success-txt;
+      -fx-fill: -badge-success-txt;
+      -fx-background-color: -badge-success-bg;
+  }
+
+  .badge.warning{
+        -fx-text-fill: -badge-warning-txt;
+        -fx-fill: -badge-warning-txt;
+        -fx-background-color: -badge-warning-bg;
+   }
+
+   .badge.info{
+           -fx-text-fill: -badge-info-txt;
+           -fx-fill: -badge-info-txt;
+           -fx-background-color: -badge-info-bg;
+      }
+
+   .badge.secondary{
+         -fx-text-fill: -badge-secondary-txt;
+         -fx-fill: -badge-secondary-txt;
+         -fx-background-color: -badge-secondary-bg;
+    }
+
+ .badge.primary{
+     -fx-text-fill: -badge-primary-txt;
+     -fx-fill: -badge-primary-txt;
+     -fx-background-color: -badge-primary-bg;
+ }
+
+ .badge.default{
+     -fx-text-fill: -badge-default-txt;
+     -fx-fill: -badge-default-txt;
+     -fx-background-color: -badge-default-bg;
+ }
+
+
+
 /*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
 
 VisualGrid {
@@ -911,6 +974,21 @@ Text, Label, Button, TextField {
     -bootstrap-red4: #ac2925 ;
     -bootstrap-red5: #761c19 ;
     -bootstrap-red6: #FF0404 ;
+
+        -badge-default-bg: -bootstrap-white;
+        -badge-default-txt: -bootstrap-grey7;
+        -badge-primary-bg: #e3f2fd;
+        -badge-primary-txt: #2e7d32;
+        -badge-success-bg: #e8f5e8;
+        -badge-success-txt: #2e7d32;
+        -badge-info-bg: -bootstrap-blue1;
+        -badge-info-txt: -bootstrap-white;
+        -badge-warning-bg: #eceff1;
+        -badge-warning-txt: #546e7a;
+        -badge-danger-bg: #ffebee;
+        -badge-danger-txt: #c62828;
+        -badge-secondary-bg: #eceff1;
+        -badge-secondary-txt: #546e7a;
 }
 
 /*.h1 {

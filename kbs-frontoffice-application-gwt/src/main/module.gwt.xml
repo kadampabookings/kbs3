@@ -124,6 +124,7 @@
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/audiorecording"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/payment"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/personal"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/summary"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/teaching"/>
     <!--====================< kbs-frontoffice-bookingform-sttp-plugin >=====================-->
@@ -236,15 +237,6 @@
     <source path="one/modality/base/client/util/log"/>
     <source path="one/modality/base/client/util/masterslave"/>
     <source path="one/modality/base/client/util/routing"/>
-    <!--===============< modality-base-frontoffice-activity-account-plugin >================-->
-    <source path="one/modality/base/frontoffice/activities/account"/>
-    <source path="one/modality/base/frontoffice/activities/account/friendsfamily"/>
-    <source path="one/modality/base/frontoffice/activities/account/friendsfamily/edit"/>
-    <source path="one/modality/base/frontoffice/activities/account/personalinfo"/>
-    <source path="one/modality/base/frontoffice/activities/account/settings"/>
-    <source path="one/modality/base/frontoffice/operations/routes/account"/>
-    <resource path="one/modality/base/frontoffice/activities/account/images"/>
-    <public path="" includes="one/modality/base/frontoffice/activities/account/images/"/>
     <!--=====================< modality-base-frontoffice-application >======================-->
     <source path="one/modality/base/frontoffice/application"/>
     <!--==================< modality-base-frontoffice-mainframe-activity >==================-->
@@ -294,8 +286,6 @@
     <source path="one/modality/crm/client/services/authz"/>
     <!--============================< modality-crm-client-i18n >============================-->
     <source path="one/modality/crm/client/i18n"/>
-    <!--======================< modality-crm-client-personaldetails >=======================-->
-    <source path="one/modality/crm/client/controls/personaldetails"/>
     <!--=============< modality-crm-frontoffice-activity-createaccount-plugin >=============-->
     <source path="one/modality/crm/frontoffice/activities/createaccount"/>
     <!--================< modality-crm-frontoffice-activity-orders-plugin >=================-->
@@ -304,6 +294,8 @@
     <source path="one/modality/crm/frontoffice/activities/userprofile"/>
     <!--=========================< modality-crm-frontoffice-help >==========================-->
     <source path="one/modality/crm/frontoffice/help"/>
+    <!--=========================< modality-crm-frontoffice-order >=========================-->
+    <source path="one/modality/crm/frontoffice/order"/>
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
@@ -335,6 +327,11 @@
     <source path="one/modality/ecommerce/document/service/buscall/serial/security"/>
     <!--===================< modality-ecommerce-document-service-remote >===================-->
     <source path="one/modality/ecommerce/document/service/spi/impl/remote"/>
+    <!--=================< modality-ecommerce-frontoffice-bookingelements >=================-->
+    <source path="one/modality/ecommerce/frontoffice/bookingelements"/>
+    <!--===================< modality-ecommerce-frontoffice-bookingform >===================-->
+    <source path="one/modality/ecommerce/frontoffice/bookingform"/>
+    <source path="one/modality/ecommerce/frontoffice/bookingform/multipages"/>
     <!--===========================< modality-ecommerce-payment >===========================-->
     <source path="one/modality/ecommerce/payment"/>
     <source path="one/modality/ecommerce/payment/spi"/>
@@ -345,6 +342,8 @@
     <source path="one/modality/ecommerce/payment/client"/>
     <!--=======================< modality-ecommerce-payment-remote >========================-->
     <source path="one/modality/ecommerce/payment/spi/impl/remote"/>
+    <!--===================< modality-ecommerce-shared-pricecalculator >====================-->
+    <source path="one/modality/ecommerce/shared/pricecalculator"/>
     <!--=========================< modality-event-client-booking >==========================-->
     <source path="one/modality/event/client/booking"/>
     <!--=========================< modality-event-client-event-fx >=========================-->
@@ -361,23 +360,23 @@
     <source path="one/modality/event/frontoffice/activities/audiolibrary"/>
     <resource path="one/modality/event/frontoffice/activities/audiolibrary"/>
     <public path="" includes="one/modality/event/frontoffice/activities/audiolibrary/"/>
+    <!--====================< modality-event-frontoffice-activity-book >====================-->
+    <source path="one/modality/event/frontoffice/activities/book"/>
+    <source path="one/modality/event/frontoffice/activities/book/account"/>
+    <source path="one/modality/event/frontoffice/activities/book/event"/>
+    <source path="one/modality/event/frontoffice/activities/book/event/slides"/>
+    <source path="one/modality/event/frontoffice/activities/book/fx"/>
     <!--===============< modality-event-frontoffice-activity-booking-plugin >===============-->
     <source path="one/modality/event/frontoffice/activities/booking"/>
     <source path="one/modality/event/frontoffice/activities/booking/fx"/>
     <source path="one/modality/event/frontoffice/activities/booking/map"/>
-    <source path="one/modality/event/frontoffice/activities/booking/process"/>
-    <source path="one/modality/event/frontoffice/activities/booking/process/account"/>
-    <source path="one/modality/event/frontoffice/activities/booking/process/event"/>
-    <source path="one/modality/event/frontoffice/activities/booking/process/event/bookingform"/>
-    <source path="one/modality/event/frontoffice/activities/booking/process/event/bookingform/multipages"/>
-    <source path="one/modality/event/frontoffice/activities/booking/process/event/slides"/>
     <source path="one/modality/event/frontoffice/activities/booking/views"/>
     <resource path="one/modality/event/frontoffice/activities/booking/map"/>
     <public path="" includes="one/modality/event/frontoffice/activities/booking/map/"/>
     <!--===========< modality-event-frontoffice-activity-videostreaming-plugin >============-->
     <source path="one/modality/event/frontoffice/activities/videostreaming"/>
     <!--==========< modality-event-frontoffice-bookingform-recurringevent-plugin >==========-->
-    <source path="one/modality/event/frontoffice/bookingforms/recurringevent"/>
+    <source path="one/modality/event/frontoffice/bookingform/recurringevent"/>
     <!--=====================< modality-event-frontoffice-eventheader >=====================-->
     <source path="one/modality/event/frontoffice/eventheader"/>
     <!--=======================< modality-event-frontoffice-medias >========================-->
