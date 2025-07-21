@@ -31,7 +31,7 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final Button payButton = BookingElements.createBlackButton(BookingFormI18nKeys.PayNow1);
     private final IntegerProperty selectedAmountProperty = new SimpleIntegerProperty();
     private final Label paymentBottomLabel = BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.PaymentBottomMessage);
-    private final VBox container = BookingElements.createPageVBox("payment", true,
+    private final VBox container = BookingElements.createFormPageVBox(true,
         BookingElements.createWordingLabel(BookingFormI18nKeys.PaymentTopMessage),
         gridPane,
         BookingElements.createWordingLabel(BookingFormI18nKeys.SelectPaymentAmount),

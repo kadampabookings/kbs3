@@ -18,6 +18,7 @@ import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public final class TeachingPage implements BookingFormPage {
 
     private final GridPane gridPane = BookingElements.createOptionsGridPane(true);
     private final Label bottomLabel = BookingElements.createWordingLabel();
-    private final VBox container = BookingElements.createPageVBox("teaching-options", true,
+    private final VBox container = BookingElements.createFormPageVBox(true,
         BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.BookingOptions),
         gridPane,
         bottomLabel
@@ -65,7 +66,9 @@ public final class TeachingPage implements BookingFormPage {
             if (n == 1)
                 radioButton.setSelected(true);
         }
-        I18nControls.bindI18nProperties(bottomLabel, OnlineFestivalI18nKeys.OnlineFestivalTeachingBottomMessage1, LocalizedTime.formatLocalDateTimeProperty(workingBooking.getPolicyAggregate().getEvent().getVodExpirationDate(), FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
+        LocalDateTime vodExpirationDate = workingBooking.getPolicyAggregate().getEvent().getVodExpirationDate();
+        I18nControls.bindI18nProperties(bottomLabel, OnlineFestivalI18nKeys.OnlineFestivalTeachingBottomMessage1,
+            LocalizedTime.formatLocalDateTimeProperty(vodExpirationDate, FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
     }
 
 }

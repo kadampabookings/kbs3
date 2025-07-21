@@ -19,7 +19,7 @@ import java.util.List;
  */
 final class TeachingPeriodOption {
 
-    private final RadioButton radioButton = new RadioButton();
+    private final RadioButton radioButton = BookingElements.optionLabel(new RadioButton());
     private final Label periodLabel = BookingElements.createPeriodLabel();
     private final Label priceLabel = BookingElements.createPriceLabel();
 

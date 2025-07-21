@@ -22,7 +22,7 @@ public class FestivalSummaryPage implements BookingFormPage {
     private final MonoPane embeddedLoginContainer = new MonoPane();
     private final TextArea requestTextArea = BookingElements.createTextArea();
     private final MonoPane summaryContainer = new MonoPane();
-    private final VBox container = BookingElements.createPageVBox("summary", false,
+    private final VBox container = BookingElements.createFormPageVBox(false,
         BookingElements.createWordingLabel(BookingFormI18nKeys.SummaryTopMessage),
         BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.SummarySubTopMessage),
         summaryContainer,

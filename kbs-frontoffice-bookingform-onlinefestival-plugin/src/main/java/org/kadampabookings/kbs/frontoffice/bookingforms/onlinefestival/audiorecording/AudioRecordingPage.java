@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public final class AudioRecordingPage implements BookingFormPage {
 
     private final GridPane gridPane = BookingElements.createOptionsGridPane(false);
-    private final VBox container = BookingElements.createPageVBox("recording-options", true,
+    private final VBox container = BookingElements.createFormPageVBox(true,
         BookingElements.createWordingLabel(OnlineFestivalI18nKeys.AudioRecordingTopMessage),
         BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.BookingOptions),
         gridPane

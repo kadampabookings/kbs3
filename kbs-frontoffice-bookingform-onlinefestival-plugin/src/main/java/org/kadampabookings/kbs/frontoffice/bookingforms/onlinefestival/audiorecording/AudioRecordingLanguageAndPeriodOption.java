@@ -17,7 +17,7 @@ import java.util.List;
  */
 final class AudioRecordingLanguageAndPeriodOption {
 
-    private final CheckBox bookButton = new CheckBox();
+    private final CheckBox bookButton = BookingElements.optionLabel(new CheckBox());
     private final Label periodLabel = BookingElements.createPeriodLabel();
     private final Label priceLabel = BookingElements.createPriceLabel();
 

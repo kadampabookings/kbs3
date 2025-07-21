@@ -48,7 +48,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         Bootstrap.strong(I18n.newText(CrmI18nKeys.PersonToBook)),
         personToBookButton
     );
-    private final VBox container = BookingElements.createPageVBox("personal-details", false,
+    private final VBox container = BookingElements.createFormPageVBox(false,
         embeddedLoginContainer,
         personalDetailsVBox
     );
