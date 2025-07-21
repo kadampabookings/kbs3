@@ -101,7 +101,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             .always("{class: 'Book', fields: 'title, description, imageUrl, freeUrl, orderUrl', orderBy: 'id'}")
             .bindActivePropertyTo(showVideosProperty.not().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(() -> new BookView(this::showVideos), BookView::setBook, BookView::getView))
+            .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.factory(() -> new BookView(this::showVideos), BookView::setBook, BookView::getView))
             .storeMappedObjectsInto(booksContainer.getChildren())
             .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-books"))
             .start();
