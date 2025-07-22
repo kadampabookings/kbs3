@@ -14,12 +14,12 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires modality.crm.client.authn.fx;
     requires modality.crm.client.i18n;
     requires modality.crm.frontoffice.activity.userprofile.plugin;
-    requires modality.crm.frontoffice.order;
     requires modality.ecommerce.client.i18n;
     requires modality.ecommerce.client.workingbooking;
     requires modality.ecommerce.document.service;
     requires modality.ecommerce.frontoffice.bookingelements;
     requires modality.ecommerce.frontoffice.bookingform;
+    requires modality.ecommerce.frontoffice.order;
     requires modality.event.frontoffice.activity.book;
     requires modality.event.frontoffice.eventheader;
     requires webfx.extras.i18n;
