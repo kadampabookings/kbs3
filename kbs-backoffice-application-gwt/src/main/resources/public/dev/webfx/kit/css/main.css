@@ -44,6 +44,7 @@
 
 .unset-variables { /* Dummy selector used just to list unset CSS variables that can be overridden by App CSS */
     --fx-line-height: 1;
+    --fx-svg-path-stroke: transparent;
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -137,9 +138,13 @@ fx-text {
     color: var(--fx-text-fill-focus, var(--fx-text-fill));
 }
 
+fx-svgpath svg path:not([stroke]) {
+    stroke: var(--fx-svg-path-stroke); /* unset by default */
+}
+
 /* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
-    fill: var(--fx-svg-path-fill);  /* then the fill is black */
+    fill: var(--fx-svg-path-fill);
 }
 
 fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the stroke but not the fill */
@@ -184,6 +189,7 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
     --fx-togglebutton-border-color-hover: var(--fx-togglebutton-border-color-selected);
 
     --fx-placholder-color: #888;
+    --fx-progress-indicator-color: #0095cb;
 }
 
 ::placeholder {
@@ -293,6 +299,10 @@ fx-label.ellipsis fx-text {
     /* -webkit-line-clamp will be set in JS by HtmlTextPeer */
 }
 
+fx-progressindicator .spinner .segment {
+    background-color: var(--fx-progress-indicator-color);
+}
+
 /* Without this rule, the context menu is wrongly shifted up by the browser the first time it is displayed */
 fx-scene > * {
     overflow: hidden;
@@ -387,6 +397,17 @@ fx-togglebutton.aria-toggle.fired {
     --webfx-material-line-fill: var(--webfx-material-invalid-fill);
     --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
 }
+/*===== webfx-extras-dropdown-button-web@main.css from webfx-extras-controlfactory =====*/
+
+.drop-down-button {
+    --fx-button-border-color: lightgray;
+    --fx-button-border-width: 1px;
+    --fx-button-border-radius: 6px;
+    --fx-button-background-color: white;
+    --fx-svg-path-fill: transparent;
+    --fx-svg-path-stroke: lightgray;
+}
+
 /*===== webfx-extras-bootstrap-web@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
@@ -954,6 +975,11 @@ fx-htmltext {
 /* Hiding the warning message from CKEditor 4.22.1 */
 .cke_notifications_area {
     display: none;
+}
+/*===== webfx-stack-button-selection-web@main.css from webfx-stack-orm-entity-controls =====*/
+
+.webfx-button-selector-dialog {
+    --fx-background-color: white;
 }
 /*===== webfx-stack-password-web@main.css from webfx-stack-authn-login-ui-gateway-password-plugin =====*/
 

@@ -44,6 +44,7 @@
 
 .unset-variables { /* Dummy selector used just to list unset CSS variables that can be overridden by App CSS */
     --fx-line-height: 1;
+    --fx-svg-path-stroke: transparent;
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -137,9 +138,13 @@ fx-text {
     color: var(--fx-text-fill-focus, var(--fx-text-fill));
 }
 
+fx-svgpath svg path:not([stroke]) {
+    stroke: var(--fx-svg-path-stroke); /* unset by default */
+}
+
 /* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
-    fill: var(--fx-svg-path-fill);  /* then the fill is black */
+    fill: var(--fx-svg-path-fill);
 }
 
 fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the stroke but not the fill */
@@ -184,6 +189,7 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
     --fx-togglebutton-border-color-hover: var(--fx-togglebutton-border-color-selected);
 
     --fx-placholder-color: #888;
+    --fx-progress-indicator-color: #0095cb;
 }
 
 ::placeholder {
@@ -291,6 +297,10 @@ fx-label.ellipsis fx-text {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     /* -webkit-line-clamp will be set in JS by HtmlTextPeer */
+}
+
+fx-progressindicator .spinner .segment {
+    background-color: var(--fx-progress-indicator-color);
 }
 
 /* Without this rule, the context menu is wrongly shifted up by the browser the first time it is displayed */
@@ -433,6 +443,17 @@ fx-switch.webfx-switch fx-circle.knob {
     --webfx-material-line-fill: var(--webfx-material-invalid-fill);
     --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
 }
+/*===== webfx-extras-dropdown-button-web@main.css from webfx-extras-controlfactory =====*/
+
+.drop-down-button {
+    --fx-button-border-color: lightgray;
+    --fx-button-border-width: 1px;
+    --fx-button-border-radius: 6px;
+    --fx-button-background-color: white;
+    --fx-svg-path-fill: transparent;
+    --fx-svg-path-stroke: lightgray;
+}
+
 /*===== webfx-extras-bootstrap-web@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
@@ -999,6 +1020,11 @@ fx-htmltext {
 .cke_notifications_area {
     display: none;
 }
+/*===== webfx-stack-button-selection-web@main.css from webfx-stack-orm-entity-controls =====*/
+
+.webfx-button-selector-dialog {
+    --fx-background-color: white;
+}
 /*===== webfx-stack-password-web@main.css from webfx-stack-authn-login-ui-gateway-password-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */
@@ -1228,6 +1254,34 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /*===== modality-frontoffice-bookingelements-web@main.css from modality-ecommerce-frontoffice-bookingelements =====*/
 
+.booking-elements {
+    font-family: "Poppins", sans-serif;
+    --fx-textarea-border-color: black;
+    --fx-textarea-border-radius: 19px;
+}
+
+.booking-elements.booking-form {
+    font-size: 15px;
+}
+
+.personal-details-container, .personal-details-container input {
+    font-size: large;
+}
+
+.person-to-book-button, .person-to-book-dialog {
+    --fx-background-color: var(--brand-blue-color);
+    --fx-border-style:none;
+    --fx-text-fill: white;
+    --fx-svg-path-fill: transparent;
+    --fx-svg-path-stroke: white;
+}
+
+.person-to-book-dialog {
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    --webfx-visualgrid-selection-color: #6aabd5;
+}
+
 .booking-elements .navigation-bar {
     font-weight: bold;
     --fx-background-image: linear-gradient(to right, #E7E7E7, #E7E7E7 75%, #0096D6 78%, #0096D6);
@@ -1279,13 +1333,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
     font-weight: bold;
 }
 
-.booking-elements {
-    font-family: "Poppins", sans-serif;
-    --fx-textarea-border-color: black;
-    --fx-textarea-border-radius: 19px;
-}
-
-.booking-elements .badge { /* badges don't look vertically centered with Poppins font */
+.booking-elements .badge { /* badges don't look vertically centered with Poppins font on the web version */
     font-family: "Montserrat", sans-serif;
 }
 
@@ -1312,6 +1360,10 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 .booking-elements .sub-price-label {
     --fx-text-fill: #838788;
+}
+
+fx-button.primary { /* progress indicator blue color is not visible on primary button such as Save button */
+    --fx-progress-indicator-color: white;
 }
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
@@ -1424,7 +1476,7 @@ fx-collapsepane.menu-bar.lang-menu-bar {
      font-size: 14px;
 }
 
-/*===== modality-crm-frontoffice-activity-orders-plugin-web@main.css from modality-crm-frontoffice-activity-orders-plugin =====*/
+/*===== modality-frontoffice-order-web@main.css from modality-ecommerce-frontoffice-order =====*/
 
 .order-card {
     background-color: white;

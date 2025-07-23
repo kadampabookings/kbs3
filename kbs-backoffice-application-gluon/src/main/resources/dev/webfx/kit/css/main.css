@@ -207,6 +207,20 @@ ToggleButton.aria-toggle SVGPath { /* TODO: check if it's the best place */
      -webfx-material-focused-line-fill: -webfx-material-invalid-fill;
 }
 
+/*===== webfx-extras-dropdown-button-javafx@main.css from webfx-extras-controlfactory =====*/
+
+.drop-down-button {
+    -fx-border-color: lightgray;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-color: white;
+}
+
+.drop-down-button SVGPath {
+    -fx-fill: transparent;
+    -fx-stroke: lightgray;
+}
+
 /*===== webfx-extras-bootstrap-javafx@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
@@ -815,6 +829,11 @@ HtmlText, HtmlTextEditor {
     -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
 }
 
+/*===== webfx-stack-button-selection-javafx@main.css from webfx-stack-orm-entity-controls =====*/
+
+.webfx-button-selector-dialog {
+    -fx-background-color: white;
+}
 /*===== webfx-stack-password-javafx@main.css from webfx-stack-authn-login-ui-gateway-password-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */

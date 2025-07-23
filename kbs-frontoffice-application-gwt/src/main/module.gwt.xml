@@ -127,6 +127,7 @@
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/personal"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/summary"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/teaching"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/terms"/>
     <!--====================< kbs-frontoffice-bookingform-sttp-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/sttp"/>
     <!--=========================< kbs-frontoffice-footer-nktikbu >=========================-->
@@ -294,8 +295,6 @@
     <source path="one/modality/crm/frontoffice/activities/userprofile"/>
     <!--=========================< modality-crm-frontoffice-help >==========================-->
     <source path="one/modality/crm/frontoffice/help"/>
-    <!--=========================< modality-crm-frontoffice-order >=========================-->
-    <source path="one/modality/crm/frontoffice/order"/>
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
@@ -332,6 +331,8 @@
     <!--===================< modality-ecommerce-frontoffice-bookingform >===================-->
     <source path="one/modality/ecommerce/frontoffice/bookingform"/>
     <source path="one/modality/ecommerce/frontoffice/bookingform/multipages"/>
+    <!--======================< modality-ecommerce-frontoffice-order >======================-->
+    <source path="one/modality/ecommerce/frontoffice/order"/>
     <!--===========================< modality-ecommerce-payment >===========================-->
     <source path="one/modality/ecommerce/payment"/>
     <source path="one/modality/ecommerce/payment/spi"/>

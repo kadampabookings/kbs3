@@ -226,6 +226,20 @@ Switch.webfx-switch Circle.knob {
      -webfx-material-focused-line-fill: -webfx-material-invalid-fill;
 }
 
+/*===== webfx-extras-dropdown-button-javafx@main.css from webfx-extras-controlfactory =====*/
+
+.drop-down-button {
+    -fx-border-color: lightgray;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-color: white;
+}
+
+.drop-down-button SVGPath {
+    -fx-fill: transparent;
+    -fx-stroke: lightgray;
+}
+
 /*===== webfx-extras-bootstrap-javafx@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
@@ -836,6 +850,11 @@ HtmlText, HtmlTextEditor {
     -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
 }
 
+/*===== webfx-stack-button-selection-javafx@main.css from webfx-stack-orm-entity-controls =====*/
+
+.webfx-button-selector-dialog {
+    -fx-background-color: white;
+}
 /*===== webfx-stack-password-javafx@main.css from webfx-stack-authn-login-ui-gateway-password-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */
@@ -1051,6 +1070,35 @@ Text, Label, Button, TextField {
     -fx-font-family: "Poppins";
 }
 
+.booking-elements.booking-form {
+    -fx-font-size: 15px;
+}
+
+.personal-details-container {
+    -fx-font-size: 15px;
+}
+
+.person-to-book-button, .person-to-book-dialog {
+    -fx-background-color: -brand-blue-color;
+    -fx-border-style: none;
+    -fx-text-fill: white;
+}
+
+.person-to-book-button Text, .person-to-book-dialog Text {
+    -fx-fill: white;
+}
+
+.person-to-book-button SVGPath {
+    -fx-fill: transparent;
+    -fx-stroke: white;
+}
+
+.person-to-book-dialog {
+    -fx-font-family: "Poppins", sans-serif;
+    -fx-font-size: 18px; /* Same as .btn-lg which is the style applied to the person to book button */
+    -webfx-visualgrid-selection-color: #6aabd5;
+}
+
 .booking-elements .navigation-bar {
     -fx-font-weight: bold;
     -fx-background-color: linear-gradient(to right, #E7E7E7, #E7E7E7 75%, #0096D6 78%, #0096D6);
@@ -1086,6 +1134,14 @@ Text, Label, Button, TextField {
     -fx-font-weight: bold;
 }
 
+.booking-elements .badge { /* badges don't look vertically centered with Poppins font on the web version */
+    -fx-font-family: "Montserrat", sans-serif;
+}
+
+.booking-elements .wording-label {
+    -fx-line-spacing: 5px; // --fx-line-height: 1.6;
+}
+
 .booking-elements .option-label {
     -fx-font-weight: bold;
 }
@@ -1105,11 +1161,6 @@ Text, Label, Button, TextField {
 
 .booking-elements .sub-price-label {
     -fx-text-fill: #838788;
-}
-
-.booking-elements LabeledText {
-    -fx-font-size: 14px;
-    -fx-line-spacing: 5px;
 }
 
 .booking-elements .text-area {
@@ -1258,7 +1309,7 @@ CollapsePane.menu-bar.lang-menu-bar {
      -fx-font-size: 14px;
 }
 
-/*===== modality-crm-frontoffice-activity-orders-plugin-javafx@main.css from modality-crm-frontoffice-activity-orders-plugin =====*/
+/*===== modality-frontoffice-order-javafx@main.css from modality-ecommerce-frontoffice-order =====*/
 
 
 .order-card {
@@ -1319,9 +1370,11 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-font-size: 14px;
     -fx-font-weight: 700;
 }
+
 .semi-bold {
     -fx-font-weight: 700
 }
+
 .order-price {
     -fx-font-size: 18px;
     -fx-font-weight: 700;
@@ -1333,7 +1386,6 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-text-fill: #666;
 }
 
-
 .detail-item {
     -fx-border-color: #f0f0f0;
     -fx-border-width: 0 0 1px 0;
@@ -1344,7 +1396,6 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-border-width: 0;
 }
 
-
 .detail-label {
     -fx-font-weight: 700;
 }
@@ -1353,16 +1404,13 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-font-size: 15px;
 }
 
-
 .detail-subitem {
-
     -fx-font-size: 14px;
 }
 
 .detail-subitem-label {
     -fx-text-fill: #666;
 }
-
 
 .payment-row {
     -fx-font-size: 14px;
