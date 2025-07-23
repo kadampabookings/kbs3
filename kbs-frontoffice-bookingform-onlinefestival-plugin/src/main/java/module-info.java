@@ -28,6 +28,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires webfx.extras.panes;
     requires webfx.extras.styles.bootstrap;
     requires webfx.extras.time.format;
+    requires webfx.extras.util.border;
     requires webfx.extras.util.layout;
     requires webfx.extras.validation;
     requires webfx.kit.util;
