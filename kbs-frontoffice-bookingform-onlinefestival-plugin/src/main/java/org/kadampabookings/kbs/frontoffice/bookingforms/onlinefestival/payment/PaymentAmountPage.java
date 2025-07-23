@@ -96,7 +96,7 @@ public final class PaymentAmountPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-        String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(workingBookingProperties.getWorkingBooking().getEvent());
+        String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(workingBookingProperties.getEvent());
         gridPane.add(createPriceLabel(currencySymbol), 1, 0);
         gridPane.add(createPriceLabel(workingBookingProperties.formattedTotalWithoutCurrencyProperty()), 2, 0);
         gridPane.add(createPriceLabel(currencySymbol), 1, 1);

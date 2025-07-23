@@ -29,7 +29,7 @@ public class SttpBookingFormProvider implements BookingFormProvider {
 
     @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity) {
-        return new RecurringEventBookingForm(event, (BookEventActivity) activity, new EventBookingFormSettingsBuilder()
+        return new RecurringEventBookingForm(event, (BookEventActivity) activity, new EventBookingFormSettingsBuilder(event)
             .setEventHeader(new MediaEventHeader(false))
             .build()
         );
