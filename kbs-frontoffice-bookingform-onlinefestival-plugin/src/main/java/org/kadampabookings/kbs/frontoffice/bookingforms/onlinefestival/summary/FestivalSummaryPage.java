@@ -37,6 +37,7 @@ public class FestivalSummaryPage implements BookingFormPage {
     private WorkingBookingProperties workingBookingProperties;
 
     public FestivalSummaryPage() {
+        summaryContainer.setMaxWidth(450);
         FXProperties.runOnPropertyChange(request -> {
             if (workingBookingProperties != null) { // actually probably never null at this point
                 // Note: this will generate an AddRequestEvent on each keystroke, but it's ok because DocumentEvents
