@@ -13,6 +13,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import one.modality.base.shared.entities.Event;
 
+import java.time.LocalDate;
+import java.time.Year;
+
 
 /**
  * @author Bruno Salmon
@@ -95,12 +98,13 @@ public final class FXFestivals {
     }
 
     private static void loadLastFestivals() {
+        LocalDate nextYear = Year.of(LocalDate.now().getYear() + 1).atDay(1);
         EntityStore entityStore = EntityStore.create(DataSourceModelService.getDefaultDataSourceModel());
-        String select = "select name,type.name,startDate,endDate,kbs3,state,live,openingDate,bookingFormUrl from Event where type in (?) order by startDate desc, name like '%Online%' ? 1 : 0 limit 2";
+        String select = "select name,type.name,startDate,endDate,kbs3,state,live,openingDate,bookingFormUrl from Event where type in (?) and startDate < ? order by startDate desc, name like '%Online%' ? 1 : 0 limit 2";
         entityStore.executeQueryBatch(
-                new EntityStoreQuery(select, new Object[] { FestivalType.SPRING_FESTIVAL.getTypeId() }),
-                new EntityStoreQuery(select, new Object[] { FestivalType.SUMMER_FESTIVAL.getTypeId() }),
-                new EntityStoreQuery(select, new Object[] { FestivalType.FALL_FESTIVAL.getTypeId() }))
+                new EntityStoreQuery(select, new Object[] { FestivalType.SPRING_FESTIVAL.getTypeId(), nextYear }),
+                new EntityStoreQuery(select, new Object[] { FestivalType.SUMMER_FESTIVAL.getTypeId(), nextYear }),
+                new EntityStoreQuery(select, new Object[] { FestivalType.FALL_FESTIVAL.getTypeId(), nextYear }))
             .onFailure(Console::log)
             .onSuccess(festivalsLists -> UiScheduler.runInUiThread(() -> {
                 LAST_SPRING_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[0], 0)); // Spring Festival

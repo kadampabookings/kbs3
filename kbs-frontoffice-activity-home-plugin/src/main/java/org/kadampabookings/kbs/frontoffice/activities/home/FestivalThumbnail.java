@@ -49,20 +49,21 @@ final class FestivalThumbnail {
     Node getView() {
         int year = festival.getStartDate().getYear();
         // If the loaded festival is past, we rather display the next festival with estimated dates and coming soon button
+        /* Finally commented. We displayed "Closed" instead.
         boolean inferNextFestival = EventLifeCycle.isPastEvent(festival);
         if (inferNextFestival) {
             year++;
             // Note: a bit dirty, but we changed the festival dates with the estimated one for next year
             festival.setStartDate(festivalType.evaluateStartDate(year));
             festival.setEndDate(festivalType.evaluateEndDate(festival.getStartDate()));
-        }
+        }*/
         Label festivalName = I18nControls.newLabel(I18nKeys.embedInString("[0] {0}", festivalType.getLongI18nKey()), year);
         festivalName.setWrapText(true);
         festivalName.setTextAlignment(TextAlignment.CENTER);
         festivalName.getStyleClass().setAll("festival-name");
 
         boolean canBookNow = EventLifeCycle.canBookNow(festival);
-        Button button = Bootstrap.button(I18nControls.newButton(canBookNow ? BookingI18nKeys.bookNow : BookingI18nKeys.comingSoon));
+        Button button = Bootstrap.button(I18nControls.newButton(canBookNow ? BookingI18nKeys.bookNow : EventLifeCycle.isPastEvent(festival) ? BookingI18nKeys.closed : BookingI18nKeys.comingSoon));
         button.setPrefSize(240, 48);
         if (canBookNow) {
             button.setOnAction(e -> openBookNowDialog());
