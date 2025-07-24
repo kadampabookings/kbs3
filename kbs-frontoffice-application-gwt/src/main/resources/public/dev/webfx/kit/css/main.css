@@ -476,6 +476,8 @@ iframe {
     text-align: center;
     font-size: var(--bootstrap-font-size);
     --fx-svg-path-fill: var(--fx-text-fill);
+
+    --fx-progress-indicator-color: var(--fx-text-fill);
 }
 
 /*.btn:hover:not(.disabled) {
@@ -1360,11 +1362,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 .booking-elements .sub-price-label {
     --fx-text-fill: #838788;
-}
-
-/* TODO move this CSS rule to the right place */
-fx-button.primary, fx-button.danger { /* progress indicator blue color is not visible on primary button such as Save button */
-    --fx-progress-indicator-color: white;
 }
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 

@@ -496,6 +496,8 @@ fx-togglebutton.aria-toggle.fired {
     text-align: center;
     font-size: var(--bootstrap-font-size);
     --fx-svg-path-fill: var(--fx-text-fill);
+
+    --fx-progress-indicator-color: var(--fx-text-fill);
 }
 
 /*.btn:hover:not(.disabled) {
