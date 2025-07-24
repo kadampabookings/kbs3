@@ -6,7 +6,6 @@ module kbs.frontoffice.activity.home.plugin {
     requires javafx.controls;
     requires javafx.graphics;
     requires kbs.client.festivaltypes;
-    requires kbs.frontoffice.activity.podcasts.plugin;
     requires modality.base.client.i18n;
     requires modality.base.client.mainframe.fx;
     requires modality.base.frontoffice.utility;

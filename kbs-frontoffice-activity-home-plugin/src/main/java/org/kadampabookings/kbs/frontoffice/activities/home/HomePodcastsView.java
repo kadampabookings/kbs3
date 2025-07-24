@@ -12,7 +12,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
-import org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting;
+//import org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting;
 
 /**
  * @author Bruno Salmon
@@ -26,9 +26,9 @@ final class HomePodcastsView {
 
         Button seeAllButton = I18nControls.newButton("See all");
         seeAllButton.setPrefSize(240, 48);
-        seeAllButton.setOnAction(e -> {
+        /*seeAllButton.setOnAction(e -> {
             new PodcastsRouting.RouteToPodcastsRequest(browsingHistory).execute();
-        });
+        });*/
 
         ColumnsPane columnsPane = new ColumnsPane(16, 16,
             PodcastsCard.createCard(FrontOfficeHomeI18nKeys.PodcastsCard1Title, FrontOfficeHomeI18nKeys.PodcastsCard1Content),

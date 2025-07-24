@@ -313,72 +313,6 @@ iframe {
     border: none;
 }
 
-/*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
-
-.audio-player {
-    --fx-background-color: #838788;  /* Background color */
-    --fx-background-radius: 30px;
-    --fx-border-color-focus: transparent;
-}
-
-.audio-player .h4 {
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    text-align: left;
-    --fx-text-fill: white;
-}
-
-/* Customizing the progress bar for podcasts */
-.audio-player progress {
-    border: none;
-    background-color: lightgray;
-    border-radius: 10px; /* Adjust the value for more or less rounding */
-    overflow: hidden;/* For FireFox */
-}
-
-.audio-player progress::-webkit-progress-bar { /* For Chrome & Safari */
-    background-color: lightgray;
-    border-radius: 10px;
-}
-
-.audio-player progress::-webkit-progress-value { /* For Chrome & Safari */
-    background-color: #0096D6;
-    border-radius: 10px;
-}
-
-.audio-player progress::-moz-progress-bar { /* For FireFox */
-    background-color: #0096D6;
-    border-radius: 10px;
-}
-
-.audio-player .time {
-    font-family: "Poppins", sans-serif;
-    font-size: 13px;
-    --fx-text-fill: white;
-}
-/*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
-
-:root {
-    --webfx-switch-unselected-background-color: lightgray;
-    --webfx-switch-selected-background-color: #23EA00;
-    --webfx-switch-knob-background-color: white;
-}
-
-fx-switch.webfx-switch {
-    --fx-background-color: var(--webfx-switch-unselected-background-color);
-    --fx-background-radius: 10px;
-    transition-duration: 200ms;
-}
-
-fx-switch.webfx-switch.selected {
-    --fx-background-color: var(--webfx-switch-selected-background-color);
-    transition-duration: 200ms;
-}
-
-fx-switch.webfx-switch fx-circle.knob {
-    background-color: var(--webfx-switch-knob-background-color);
-}
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
 
 :root {
@@ -950,6 +884,72 @@ fx-togglebutton.aria-toggle.fired {
     --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
     --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
     --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
+}
+/*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
+
+:root {
+    --webfx-switch-unselected-background-color: lightgray;
+    --webfx-switch-selected-background-color: #23EA00;
+    --webfx-switch-knob-background-color: white;
+}
+
+fx-switch.webfx-switch {
+    --fx-background-color: var(--webfx-switch-unselected-background-color);
+    --fx-background-radius: 10px;
+    transition-duration: 200ms;
+}
+
+fx-switch.webfx-switch.selected {
+    --fx-background-color: var(--webfx-switch-selected-background-color);
+    transition-duration: 200ms;
+}
+
+fx-switch.webfx-switch fx-circle.knob {
+    background-color: var(--webfx-switch-knob-background-color);
+}
+/*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
+
+.audio-player {
+    --fx-background-color: #838788;  /* Background color */
+    --fx-background-radius: 30px;
+    --fx-border-color-focus: transparent;
+}
+
+.audio-player .h4 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    --fx-text-fill: white;
+}
+
+/* Customizing the progress bar for podcasts */
+.audio-player progress {
+    border: none;
+    background-color: lightgray;
+    border-radius: 10px; /* Adjust the value for more or less rounding */
+    overflow: hidden;/* For FireFox */
+}
+
+.audio-player progress::-webkit-progress-bar { /* For Chrome & Safari */
+    background-color: lightgray;
+    border-radius: 10px;
+}
+
+.audio-player progress::-webkit-progress-value { /* For Chrome & Safari */
+    background-color: #0096D6;
+    border-radius: 10px;
+}
+
+.audio-player progress::-moz-progress-bar { /* For FireFox */
+    background-color: #0096D6;
+    border-radius: 10px;
+}
+
+.audio-player .time {
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    --fx-text-fill: white;
 }
 /*===== webfx-extras-time-pickers-web@main.css from webfx-extras-time-pickers =====*/
 
@@ -1802,30 +1802,6 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 .line-total span {
     font-weight: bolder;
 }
-/*===== kbs3-frontoffice-podcasts-web@main.css from kbs-frontoffice-activity-podcasts-plugin =====*/
-
-.podcasts-activity .webfx-switch {
-    cursor: pointer;
-}
-
-/* Customizing the progress bar for podcasts */
-progress {
-    border: none;
-    background-color: lightgray; /* For FireFox */
-}
-
-progress::-webkit-progress-bar { /* For Chrome & Safari */
-    background-color: lightgray;
-}
-
-progress::-webkit-progress-value { /* For Chrome & Safari */
-    background-color: var(--brand-main-background-color);
-}
-
-progress::-moz-progress-bar { /* For FireFox */
-    background-color: var(--brand-main-background-color);
-}
-
 /*===== kbs-frontoffice-home-web@main.css from kbs-frontoffice-activity-home-plugin =====*/
 
 :root {
@@ -1961,25 +1937,6 @@ fx-aspectratiopane {
 .kbs-main-login .help-text a {
     color: white;
 }
-/*===== kbs3-frontoffice-news-web@main.css from kbs-frontoffice-activity-news-plugin =====*/
-
-.news-activity .webfx-switch {
-    cursor: pointer;
-}
-
-/* Adding round border on searchbar */
-.searchbar {
-    --fx-border-style: solid;
-    --fx-border-color: lightgray;
-    --fx-border-width: 1px;
-    --fx-border-radius: 50px;
-}
-
-/* Removing text field border in search bar */
-.searchbar fx-textfield {
-    --fx-border-style: none;
-}
-
 /*===== override@modality-client-brand-web@main.css from kbs-frontoffice-application =====*/
 
 /*

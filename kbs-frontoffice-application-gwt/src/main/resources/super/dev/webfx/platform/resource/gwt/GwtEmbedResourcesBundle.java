@@ -45,9 +45,6 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
     @Source("one/modality/base/shared/domainmodel/DomainModelSnapshot.json")
     TextResource r12();
 
-    @Source("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js")
-    TextResource r13();
-
 
 
     final class ProvidedGwtResourceBundle extends GwtResourceBundleBase {
@@ -64,7 +61,6 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
             registerResource("dev/webfx/platform/conf/src-root.properties", R.r10());
             registerResource("dev/webfx/platform/meta/exe/exe.properties", R.r11());
             registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", R.r12());
-            registerResource("one/modality/event/frontoffice/activities/booking/map/DynamicMapView.js", R.r13());
 
         }
     }

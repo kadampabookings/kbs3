@@ -97,10 +97,6 @@
     <inherits name="org.gwtproject.nio.GwtNioSupport"/>
     <!--============================< kbs-client-festivaltypes >============================-->
     <source path="org/kadampabookings/kbs/client/festivaltypes"/>
-    <!--=====================< kbs-frontoffice-activity-books-plugin >======================-->
-    <source path="org/kadampabookings/kbs/frontoffice/activities/books"/>
-    <resource path="org/kadampabookings/kbs/frontoffice/activities/books"/>
-    <public path="" includes="org/kadampabookings/kbs/frontoffice/activities/books/"/>
     <!--======================< kbs-frontoffice-activity-home-plugin >======================-->
     <source path="org/kadampabookings/kbs/frontoffice/activities/home"/>
     <resource path="dev/webfx/kit/css/home"/>
@@ -109,10 +105,6 @@
     <source path="org/kadampabookings/kbs/frontoffice/activities/login"/>
     <resource path="dev/webfx/kit/css/frontoffice/images"/>
     <public path="" includes="dev/webfx/kit/css/frontoffice/images/"/>
-    <!--======================< kbs-frontoffice-activity-news-plugin >======================-->
-    <source path="org/kadampabookings/kbs/frontoffice/activities/news"/>
-    <!--====================< kbs-frontoffice-activity-podcasts-plugin >====================-->
-    <source path="org/kadampabookings/kbs/frontoffice/activities/podcasts"/>
     <!--==========================< kbs-frontoffice-application >===========================-->
     <resource path="images/events"/>
     <public path="" includes="images/events/"/>
@@ -228,8 +220,6 @@
     <source path="one/modality/base/client/presentationmodel"/>
     <!--========================< modality-base-client-profile-fx >=========================-->
     <source path="one/modality/base/client/profile/fx"/>
-    <!--===========================< modality-base-client-tile >============================-->
-    <source path="one/modality/base/client/tile"/>
     <!--===========================< modality-base-client-time >============================-->
     <source path="one/modality/base/client/time"/>
     <!--===========================< modality-base-client-util >============================-->
@@ -367,13 +357,6 @@
     <source path="one/modality/event/frontoffice/activities/book/event"/>
     <source path="one/modality/event/frontoffice/activities/book/event/slides"/>
     <source path="one/modality/event/frontoffice/activities/book/fx"/>
-    <!--===============< modality-event-frontoffice-activity-booking-plugin >===============-->
-    <source path="one/modality/event/frontoffice/activities/booking"/>
-    <source path="one/modality/event/frontoffice/activities/booking/fx"/>
-    <source path="one/modality/event/frontoffice/activities/booking/map"/>
-    <source path="one/modality/event/frontoffice/activities/booking/views"/>
-    <resource path="one/modality/event/frontoffice/activities/booking/map"/>
-    <public path="" includes="one/modality/event/frontoffice/activities/booking/map/"/>
     <!--===========< modality-event-frontoffice-activity-videostreaming-plugin >============-->
     <source path="one/modality/event/frontoffice/activities/videostreaming"/>
     <!--==========< modality-event-frontoffice-bookingform-recurringevent-plugin >==========-->
@@ -400,8 +383,6 @@
     <source path="dev/webfx/extras/canvas/layer/interact"/>
     <!--============================< webfx-extras-canvas-pane >============================-->
     <source path="dev/webfx/extras/canvas/pane"/>
-    <!--=============================< webfx-extras-carousel >==============================-->
-    <source path="dev/webfx/extras/carousel"/>
     <!--===============================< webfx-extras-cell >================================-->
     <source path="dev/webfx/extras/cell/collator"/>
     <source path="dev/webfx/extras/cell/renderer"/>

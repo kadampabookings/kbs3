@@ -111,57 +111,6 @@
 }
 
 
-/*===== webfx-extra-player-audio-javafxmedia-javafx@main.css from webfx-extras-player-audio-javafxmedia =====*/
-
-.audio-player {
-    -fx-background-color: #838788; /* Background color */
-     -fx-background-radius: 30;
-}
-
-.audio-player h4 {
-    -fx-font-family: "Poppins";
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-text-alignment: left;
-     -fx-text-fill: white;
-}
-
-
-.audio-player .progress-bar {
-    -fx-accent: #0096D6; /* Progress fill color */
-    -fx-background-color: #E0E0E0; /* Background color */
-    -fx-background-radius: 15; /* Rounded background */
-    -fx-border-radius: 15; /* Rounded border */
-    -fx-padding: 2; /* Padding around progress */
-}
-
-.audio-player .time {
-    -fx-font-family: "Poppins";
-    -fx-text-fill: white;
-    -fx-font-size: 13px;
-}
-
-
-/*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
-
-.root {
-    -webfx-switch-unselected-background-color: lightgray;
-    -webfx-switch-selected-background-color: #23EA00;
-    -webfx-switch-knob-background-color: white;
-}
-
-Switch.webfx-switch {
-    -fx-background-color: -webfx-switch-unselected-background-color;
-    -fx-background-radius: 10px;
-}
-
-Switch.webfx-switch.selected {
-    -fx-background-color: -webfx-switch-selected-background-color;
-}
-
-Switch.webfx-switch Circle.knob {
-    -fx-fill: -webfx-switch-knob-background-color;
-}
 /*===== webfx-extras-material-javafx@main.css from webfx-extras-styles-materialdesign =====*/
 
 .root {
@@ -792,6 +741,57 @@ ToggleButton.aria-toggle.fired {
 ToggleButton.aria-toggle SVGPath { /* TODO: check if it's the best place */
     -fx-fill: -fx-text-fill;
 }
+/*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
+
+.root {
+    -webfx-switch-unselected-background-color: lightgray;
+    -webfx-switch-selected-background-color: #23EA00;
+    -webfx-switch-knob-background-color: white;
+}
+
+Switch.webfx-switch {
+    -fx-background-color: -webfx-switch-unselected-background-color;
+    -fx-background-radius: 10px;
+}
+
+Switch.webfx-switch.selected {
+    -fx-background-color: -webfx-switch-selected-background-color;
+}
+
+Switch.webfx-switch Circle.knob {
+    -fx-fill: -webfx-switch-knob-background-color;
+}
+/*===== webfx-extra-player-audio-javafxmedia-javafx@main.css from webfx-extras-player-audio-javafxmedia =====*/
+
+.audio-player {
+    -fx-background-color: #838788; /* Background color */
+     -fx-background-radius: 30;
+}
+
+.audio-player h4 {
+    -fx-font-family: "Poppins";
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-alignment: left;
+     -fx-text-fill: white;
+}
+
+
+.audio-player .progress-bar {
+    -fx-accent: #0096D6; /* Progress fill color */
+    -fx-background-color: #E0E0E0; /* Background color */
+    -fx-background-radius: 15; /* Rounded background */
+    -fx-border-radius: 15; /* Rounded border */
+    -fx-padding: 2; /* Padding around progress */
+}
+
+.audio-player .time {
+    -fx-font-family: "Poppins";
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+
 /*===== webfx-extras-time-pickers-javafx@main.css from webfx-extras-time-pickers =====*/
 
 .root {
@@ -1651,29 +1651,6 @@ CollapsePane.menu-bar.lang-menu-bar {
 .line-total Text {
     -fx-font-weight: bolder;
 }
-/*===== kbs3-frontoffice-podcasts-javafx@main.css from kbs-frontoffice-activity-podcasts-plugin =====*/
-
-.podcasts-activity .webfx-switch {
-    -fx-cursor: hand;
-}
-
-/* Customizing the progress bar for podcasts */
-.progress-bar {
-    -fx-progress-color: red;
-}
-
-.progress-bar .track {
-    -fx-background-color: lightgray;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-}
-
-.progress-bar .bar {
-    -fx-background-color: -brand-main-background-color;
-    -fx-background-insets: 0;
-    -fx-padding: 5px;
-}
-
 /*===== kbs-frontoffice-home-javafx@main.css from kbs-frontoffice-activity-home-plugin =====*/
 
 .root {
@@ -1809,33 +1786,6 @@ CollapsePane.menu-bar.lang-menu-bar {
 }
 
 
-/*===== kbs3-frontoffice-news-javafx@main.css from kbs-frontoffice-activity-news-plugin =====*/
-
-.news-activity .webfx-switch {
-    -fx-cursor: hand;
-}
-
-/* Removing hyperlink default padding (ex: News title) */
-.hyperlink {
-    -fx-padding: 0;
-}
-
-.searchbar {
-    -fx-border-color: lightgray;
-    -fx-border-width: 1px;
-    -fx-border-radius: 50px;
-}
-
-.searchbar TextField {
-    -fx-border: none;
-    -fx-background: none;
-}
-
-.searchbar TextField:focused {
-    -fx-border: none;
-    -fx-background-color: transparent;
-    -fx-highlight-fill: transparent;
-}
 /*===== override@modality-client-brand-javafx@main.css from kbs-frontoffice-application =====*/
 
 /*

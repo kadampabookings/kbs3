@@ -18,13 +18,19 @@
         <plugin-module>kbs-frontoffice-activity-home-plugin</plugin-module>
 
         <!-- Kadampa News -->
+        <!-- Unused in production for now
         <plugin-module>kbs-frontoffice-activity-news-plugin</plugin-module>
+        -->
 
         <!-- Kadampa Podcasts -->
+        <!-- Unused in production for now
         <plugin-module>kbs-frontoffice-activity-podcasts-plugin</plugin-module>
+        -->
 
         <!-- Kadampa Books -->
+        <!-- Unused in production for now
         <plugin-module>kbs-frontoffice-activity-books-plugin</plugin-module>
+        -->
 
         <!-- Customized Login -->
         <plugin-module>kbs-frontoffice-activity-login-plugin</plugin-module>
@@ -36,16 +42,10 @@
         <!-- CRM activities -->
         <plugin-module>modality-crm-frontoffice-max-plugin</plugin-module>
 
-        <!-- Hotel activities -->
-        <!-- None - this layer has only back-office activities so far -->
-
         <!-- Event activities (booking page) -->
         <plugin-module>modality-event-frontoffice-max-plugin</plugin-module>
         <plugin-module>kbs-frontoffice-bookingform-sttp-plugin</plugin-module>
         <plugin-module>kbs-frontoffice-bookingform-onlinefestival-plugin</plugin-module>
-
-        <!-- Catering activities -->
-        <!-- None - this layer has only back-office activities so far -->
 
     </dependencies>
 

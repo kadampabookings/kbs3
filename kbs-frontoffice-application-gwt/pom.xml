@@ -81,13 +81,6 @@
 
         <dependency>
             <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-frontoffice-activity-books-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.kadampabookings</groupId>
             <artifactId>kbs-frontoffice-activity-home-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -96,20 +89,6 @@
         <dependency>
             <groupId>org.kadampabookings</groupId>
             <artifactId>kbs-frontoffice-activity-login-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-frontoffice-activity-news-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.kadampabookings</groupId>
-            <artifactId>kbs-frontoffice-activity-podcasts-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -257,13 +236,6 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-client-profile-fx</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>one.modality</groupId>
-            <artifactId>modality-base-client-tile</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -620,13 +592,6 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-event-frontoffice-activity-booking-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>one.modality</groupId>
             <artifactId>modality-event-frontoffice-activity-videostreaming-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -722,13 +687,6 @@
         <dependency>
             <groupId>dev.webfx</groupId>
             <artifactId>webfx-extras-canvas-pane</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
-            <artifactId>webfx-extras-carousel</artifactId>
             <version>0.1.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
