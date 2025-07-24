@@ -11,9 +11,9 @@ module kbs.frontoffice.activity.home.plugin {
     requires modality.base.client.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
+    requires modality.ecommerce.frontoffice.bookingform;
     requires modality.event.client.lifecycle;
     requires modality.event.frontoffice.activity.book;
-    requires modality.event.frontoffice.activity.booking.plugin;
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;
     requires webfx.extras.operation;

@@ -26,8 +26,8 @@ import javafx.stage.Screen;
 import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.shared.entities.Event;
+import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.event.client.lifecycle.EventLifeCycle;
-import one.modality.event.frontoffice.activities.booking.BookingI18nKeys;
 import one.modality.event.frontoffice.activities.book.BookStarter;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
@@ -63,7 +63,7 @@ final class FestivalThumbnail {
         festivalName.getStyleClass().setAll("festival-name");
 
         boolean canBookNow = EventLifeCycle.canBookNow(festival);
-        Button button = Bootstrap.button(I18nControls.newButton(canBookNow ? BookingI18nKeys.bookNow : EventLifeCycle.isPastEvent(festival) ? BookingI18nKeys.closed : BookingI18nKeys.comingSoon));
+        Button button = Bootstrap.button(I18nControls.newButton(canBookNow ? BookingFormI18nKeys.bookNow : EventLifeCycle.isPastEvent(festival) ? BookingFormI18nKeys.closed : BookingFormI18nKeys.comingSoon));
         button.setPrefSize(240, 48);
         if (canBookNow) {
             button.setOnAction(e -> openBookNowDialog());
