@@ -1,6 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.terms;
 
 import dev.webfx.extras.i18n.controls.I18nControls;
+import dev.webfx.extras.panes.CollapsePane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.extras.util.control.Controls;
 import dev.webfx.extras.webtext.HtmlText;
@@ -32,9 +33,10 @@ public final class TermsAndConditionsPage implements BookingFormPage {
 
     private final ObjectProperty<Letter> termsLetterProperty = new SimpleObjectProperty<>();
     private final HtmlText termsHtmlText = new HtmlText();
+    private final CollapsePane termsCollapsePane = new CollapsePane(termsHtmlText);
     private final CheckBox agree = Bootstrap.strong(I18nControls.newCheckBox(BookingFormI18nKeys.AgreeTermsAndConditions));
     private final VBox container = BookingElements.createFormPageVBox(true,
-        termsHtmlText,
+        termsCollapsePane,
         agree
     );
 
@@ -52,6 +54,7 @@ public final class TermsAndConditionsPage implements BookingFormPage {
             }));
         container.setAlignment(Pos.TOP_LEFT);
         Controls.setupTextWrapping(agree, true, false);
+        termsCollapsePane.collapsedProperty().bind(agree.selectedProperty());
     }
 
     @Override
