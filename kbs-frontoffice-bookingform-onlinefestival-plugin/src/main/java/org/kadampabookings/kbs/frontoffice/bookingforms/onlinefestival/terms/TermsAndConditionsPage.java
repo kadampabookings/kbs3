@@ -12,6 +12,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
@@ -56,6 +57,7 @@ public final class TermsAndConditionsPage implements BookingFormPage {
         Controls.setupTextWrapping(agree, true, false);
         termsCollapsePane.collapsedProperty().bind(agree.selectedProperty());
         container.spacingProperty().bind(termsCollapsePane.collapsedProperty().map(selected -> selected ? 0 : 24));
+        agree.setCursor(Cursor.HAND);
     }
 
     @Override
