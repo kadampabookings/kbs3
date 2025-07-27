@@ -55,6 +55,7 @@ public final class TermsAndConditionsPage implements BookingFormPage {
         container.setAlignment(Pos.TOP_LEFT);
         Controls.setupTextWrapping(agree, true, false);
         termsCollapsePane.collapsedProperty().bind(agree.selectedProperty());
+        container.spacingProperty().bind(termsCollapsePane.collapsedProperty().map(selected -> selected ? 0 : 24));
     }
 
     @Override
