@@ -1,15 +1,19 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching;
 
+import dev.webfx.extras.i18n.I18nKeys;
 import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.time.format.LocalizedTime;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import one.modality.base.client.time.FrontOfficeTimeFormats;
 import one.modality.base.shared.entities.BookablePeriod;
+import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.base.shared.knownitems.KnownItemI18nKeys;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
@@ -46,15 +50,19 @@ public final class TeachingPage implements BookingFormPage {
 
     @Override
     public boolean isApplicableToBooking(WorkingBooking workingBooking) {
-        return workingBooking.isNewBooking() || workingBooking.getPolicyAggregate().getBookablePeriods().size() > 1;
+        return workingBooking.isNewBooking() || !workingBooking.getPolicyAggregate().getBookablePeriods(KnownItemFamily.TEACHING).isEmpty();
     }
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
         WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
-        List<BookablePeriod> bookablePeriods = workingBooking.getPolicyAggregate().getBookablePeriods();
+        List<BookablePeriod> bookablePeriods = workingBooking.getPolicyAggregate()
+            .getBookablePeriods(KnownItemFamily.TEACHING, I18nKeys.upperCaseFirstChar(BookingFormI18nKeys.wholeEvent));
         ToggleGroup teachingOptionsToggleGroup = new ToggleGroup();
         gridPane.getChildren().clear();
+        ColumnConstraints c1 = new ColumnConstraints();
+        c1.setHgrow(Priority.NEVER);
+        gridPane.getColumnConstraints().setAll(c1);
         for (int i = 0, n = bookablePeriods.size(); i < n; i++) {
             BookablePeriod bookablePeriod = bookablePeriods.get(i);
             TeachingPeriodOption teachingPeriodOption = new TeachingPeriodOption(bookablePeriod, workingBooking);
