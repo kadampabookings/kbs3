@@ -27,7 +27,7 @@ public class FestivalSummaryPage implements BookingFormPage {
         BookingElements.createWordingLabel(BookingFormI18nKeys.SummaryTopMessage),
         BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.SummarySubTopMessage),
         summaryContainer,
-        BookingElements.twoLabels(
+        BookingElements.twoLabels(5, false,
             BookingElements.createWordingLabel(BookingFormI18nKeys.AnyRequest),
             BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.writeRequest)),
         requestTextArea,

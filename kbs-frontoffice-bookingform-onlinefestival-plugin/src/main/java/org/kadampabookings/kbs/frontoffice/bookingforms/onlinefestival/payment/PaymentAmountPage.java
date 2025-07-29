@@ -48,7 +48,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         gridPane,
         selectAmountHBox,
         embeddedLoginContainer,
-        BookingElements.buttonBar(saveButton, payButton),
+        BookingElements.twoLabels(20, true, saveButton, payButton),
         paymentBottomLabel
     );
 
