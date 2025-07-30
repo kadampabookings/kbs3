@@ -1,10 +1,11 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.terms;
 
 import dev.webfx.extras.i18n.controls.I18nControls;
-import dev.webfx.extras.panes.CollapsePane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.extras.util.control.Controls;
+import dev.webfx.extras.util.scene.SceneUtil;
 import dev.webfx.extras.webtext.HtmlText;
+import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.platform.util.collection.Collections;
@@ -12,9 +13,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.shared.entities.Event;
@@ -34,10 +37,9 @@ public final class TermsAndConditionsPage implements BookingFormPage {
 
     private final ObjectProperty<Letter> termsLetterProperty = new SimpleObjectProperty<>();
     private final HtmlText termsHtmlText = new HtmlText();
-    private final CollapsePane termsCollapsePane = new CollapsePane(termsHtmlText);
     private final CheckBox agree = Bootstrap.strong(I18nControls.newCheckBox(BookingFormI18nKeys.AgreeTermsAndConditions));
     private final VBox container = BookingElements.createFormPageVBox(true,
-        termsCollapsePane,
+        termsHtmlText,
         agree
     );
 
@@ -55,9 +57,18 @@ public final class TermsAndConditionsPage implements BookingFormPage {
             }));
         container.setAlignment(Pos.TOP_LEFT);
         Controls.setupTextWrapping(agree, true, false);
-        termsCollapsePane.collapsedProperty().bind(agree.selectedProperty());
-        container.spacingProperty().bind(termsCollapsePane.collapsedProperty().map(selected -> selected ? 0 : 24));
         agree.setCursor(Cursor.HAND);
+        // Scrolling up when ticking the `agree` checkbox, so the user can easily find the Next button
+        FXProperties.runOnPropertyChange(selected -> {
+            if (selected) {
+                ScrollPane scrollPane = Controls.findScrollPaneAncestor(container);
+                if (scrollPane != null) {
+                    Node content = scrollPane.getContent();
+                    Controls.setVerticalScrollNodeWishedPosition(content, VPos.TOP);
+                    SceneUtil.scrollNodeToBeVerticallyVisibleOnScene(content, false, true);
+                }
+            }
+        }, agree.selectedProperty());
     }
 
     @Override
