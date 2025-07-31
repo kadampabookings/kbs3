@@ -33,8 +33,6 @@
     <source path="com/sun/javafx/scene/control/skin"/>
     <source path="javafx/scene/control"/>
     <source path="javafx/scene/control/skin"/>
-    <resource path="javafx/scene/control/skin/checkbox"/>
-    <public path="" includes="javafx/scene/control/skin/checkbox/"/>
     <!--================================< javafx-controls >=================================-->
     <source path="javafx/scene/chart"/>
     <!--=========================< webfx-kit-javafxgraphics-emul >==========================-->

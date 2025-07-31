@@ -152,17 +152,6 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
     fill: var(--fx-svg-path-fill);
 }
 
-/* CSS rules to make the radio button text second line (when wrapped) start under the text and not under the radio button */
-fx-radiobutton label {
-    display: flex;
-    align-items: flex-start;
-}
-
-fx-radiobutton label input {
-    margin-top: 5px;
-    margin-right: 5px;
-}
-
 /*===== webfx-kit-javafxcontrols-web@main.css from webfx-kit-javafxcontrols-peers-gwt-j2cl =====*/
 
 /***** Global variables *****/
@@ -200,12 +189,23 @@ fx-radiobutton label input {
     --fx-togglebutton-background-color-hover: var(--fx-togglebutton-background-color-selected);
     --fx-togglebutton-border-color-hover: var(--fx-togglebutton-border-color-selected);
 
+    --fx-theme-color: #0095cb;
     --fx-placholder-color: #888;
-    --fx-progress-indicator-color: #0095cb;
+    --fx-progress-indicator-color: var(--fx-theme-color);
+    --fx-hyperlink-text-fill: var(--fx-theme-color);
+    --fx-checkbox-background-color: var(--fx-theme-color);
+    --fx-checkbox-border-color: var(--fx-text-fill);
+    --fx-radiobutton-background-color: var(--fx-theme-color);
+    --fx-radiobutton-border-color: var(--fx-text-fill);
 }
 
 ::placeholder {
     color: var(--fx-placholder-color);
+}
+
+/* Without this rule, the context menu is wrongly shifted up by the browser the first time it is displayed */
+fx-scene > * {
+    overflow: hidden;
 }
 
 /* Applying text color to svg path as well by default */
@@ -242,7 +242,7 @@ fx-togglebutton.pseudo-selected {
 
 
 fx-hyperlink {
-    --fx-text-fill: #0096c9ff;
+    --fx-text-fill: var(--fx-hyperlink-text-fill);
 }
 
 fx-hyperlink fx-text:hover {
@@ -315,10 +315,30 @@ fx-progressindicator .spinner .segment {
     background-color: var(--fx-progress-indicator-color);
 }
 
-/* Without this rule, the context menu is wrongly shifted up by the browser the first time it is displayed */
-fx-scene > * {
-    overflow: hidden;
+fx-checkbox .box .mark {
+    --fx-border-style: solid;
+    --fx-border-color: var(--fx-checkbox-border-color);
+    --fx-border-width: 1px;
+    --fx-border-radius: 3px;
 }
+
+fx-checkbox.pseudo-selected .box .mark {
+    --fx-background-radius: 3px;
+    --fx-background-color: var(--fx-checkbox-background-color);
+}
+
+fx-radiobutton .radio .dot {
+    --fx-border-style: solid;
+    --fx-border-color: var(--fx-radiobutton-border-color);
+    --fx-border-width: 1px;
+    --fx-border-radius: 50%;
+}
+
+fx-radiobutton.pseudo-selected .radio .dot {
+    --fx-background-radius: 50%;
+    --fx-background-color: var(--fx-radiobutton-background-color);
+}
+
 /*===== webfx-kit-javafxweb-web@main.css from webfx-kit-javafxweb-peers-gwt-j2cl =====*/
 
 iframe {
