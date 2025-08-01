@@ -20,7 +20,7 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
     private final BookingFormPage[] pages = {
         new TeachingPage(),
         new AudioRecordingPage(),
-        new PersonalDetailsPage(),
+        new PersonalDetailsPage(this),
         new FestivalSummaryPage(),
         new TermsAndConditionsPage(this),
         new PaymentAmountPage(this)

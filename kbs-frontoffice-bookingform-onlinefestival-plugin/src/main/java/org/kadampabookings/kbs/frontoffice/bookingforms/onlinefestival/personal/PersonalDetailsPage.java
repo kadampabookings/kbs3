@@ -5,9 +5,11 @@ import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.operation.OperationUtil;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
+import dev.webfx.extras.util.control.Controls;
 import dev.webfx.extras.util.layout.Layouts;
 import dev.webfx.extras.validation.ValidationSupport;
 import dev.webfx.kit.util.properties.FXProperties;
+import dev.webfx.platform.async.Future;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.stack.authn.login.ui.spi.impl.gateway.password.PasswordI18nKeys;
@@ -17,13 +19,20 @@ import dev.webfx.stack.orm.entity.binding.EntityBindings;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableObjectValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import one.modality.base.shared.entities.Country;
+import one.modality.base.shared.entities.Event;
+import one.modality.base.shared.entities.Organization;
 import one.modality.base.shared.entities.Person;
 import one.modality.crm.client.i18n.CrmI18nKeys;
 import one.modality.crm.frontoffice.activities.userprofile.UserProfileI18nKeys;
@@ -32,8 +41,13 @@ import one.modality.crm.shared.services.authn.fx.FXUserPerson;
 import one.modality.ecommerce.client.workingbooking.FXPersonToBook;
 import one.modality.ecommerce.client.workingbooking.WorkingBooking;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
+import one.modality.ecommerce.document.service.DocumentService;
 import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
+import one.modality.ecommerce.frontoffice.bookingform.BookingForm;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.ecommerce.frontoffice.order.OrderActions;
+import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 /**
  * @author Bruno Salmon
@@ -41,12 +55,18 @@ import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage
  */
 public final class PersonalDetailsPage implements BookingFormPage {
 
+    private final Event event;
     private final MonoPane embeddedLoginContainer = new MonoPane();
     private final EntityButtonSelector<Person> personToBookSelector = BookingElements.createPersonToBookSelector(false);
     private final Button personToBookButton = personToBookSelector.getButton();
-    private final VBox personalDetailsVBox = new VBox(10,
+    private final Label alreadyBookedLabel = Bootstrap.textDanger(new Label());
+    private final Hyperlink modifyBookingLink = Bootstrap.textPrimary(new Hyperlink());
+    private final MonoPane modifyBookingPane = centerInVBoxWithMargin(modifyBookingLink, new Insets(30, 0, 50, 0));
+    private final VBox personalDetailsVBox = new VBox(
         Bootstrap.strong(I18n.newText(CrmI18nKeys.PersonToBook)),
-        personToBookButton
+        personToBookButton,
+        alreadyBookedLabel,
+        modifyBookingPane
     );
     private final VBox container = BookingElements.createFormPageVBox(false,
         embeddedLoginContainer,
@@ -54,13 +74,18 @@ public final class PersonalDetailsPage implements BookingFormPage {
     );
     private final UserProfileView userProfileView;
     private UpdateStore updateStore;
-    private Person currentPerson;
+    private Person personToBook;
+    private boolean isNewPerson;
+    private boolean syncing;
+    private final ObjectProperty<Future<?>> busyFutureProperty = new SimpleObjectProperty<>();
+    private final BooleanProperty alreadyBookedProperty = new SimpleBooleanProperty();
 
     private final ValidationSupport validationSupport = new ValidationSupport();
-    private final BooleanProperty isNewPersonToBookProperty = new SimpleBooleanProperty();
 
-    public PersonalDetailsPage() {
+    public PersonalDetailsPage(BookingForm bookingForm) {
+        event = ((EventBookingFormSettings) bookingForm.getSettings()).event();
         personalDetailsVBox.setMaxWidth(450);
+        personToBookButton.setMaxWidth(Double.MAX_VALUE);
         // personalDetailsVBox is not visible when login is showing, and vice versa
         Layouts.bindManagedAndVisiblePropertiesTo(embeddedLoginContainer.visibleProperty().not(), personalDetailsVBox);
         // We want to show only the email, address and kadampa center info
@@ -69,79 +94,49 @@ public final class PersonalDetailsPage implements BookingFormPage {
         userProfileView.setChangeEmailLinkVisible(false);
         userProfileView.setEmailFieldDisabled(false);
         userProfileView.infoMessage.setVisible(false);
-        userProfileView.firstNameTextField.visibleProperty().bind(isNewPersonToBookProperty);
-        userProfileView.lastNameTextField.visibleProperty().bind(isNewPersonToBookProperty);
-        userProfileView.firstNameTextField.managedProperty().bind(isNewPersonToBookProperty);
-        userProfileView.lastNameTextField.managedProperty().bind(isNewPersonToBookProperty);
         Button cancelButton = Bootstrap.largeSecondaryButton(I18nControls.newButton(UserProfileI18nKeys.Cancel));
-        cancelButton.setOnAction(e -> {
-            updateStore.cancelChanges();
-            if (isNewPersonToBookProperty.get()) {
-                FXPersonToBook.personToBookProperty().set(FXUserPerson.getUserPerson());
-            }
-            syncUIFromModel(currentPerson);
-        });
         cancelButton.disableProperty().bind(userProfileView.saveButton.disableProperty());
-        personalDetailsVBox.setAlignment(Pos.TOP_CENTER);
-        personalDetailsVBox.getChildren().addAll(viewNode, cancelButton);
+        personalDetailsVBox.setAlignment(Pos.TOP_LEFT);
+        personalDetailsVBox.getChildren().addAll(viewNode, centerInVBoxWithMargin(cancelButton, new Insets(10, 0, 0, 0)));
+        Controls.setupTextWrapping(alreadyBookedLabel, true, false);
+        Layouts.bindAllManagedAndVisiblePropertiesTo(alreadyBookedProperty, alreadyBookedLabel, modifyBookingPane);
+
         FXProperties.runNowAndOnPropertyChange(person -> {
             if (person != null) {
                 userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
-                syncUIFromModel(person);
+                setPersonToBook(person);
             }
-            if (currentPerson != null && person == null) {
-                syncUIFromModel(null);
+            if (personToBook != null && person == null) {
+                setPersonToBook(null);
             }
         }, FXPersonToBook.personToBookProperty());
 
-        userProfileView.firstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setFirstName(newValue));
-        userProfileView.lastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setLastName(newValue));
-        userProfileView.emailTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setEmail(newValue));
-        userProfileView.layNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setLayName(newValue));
-        userProfileView.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setPhone(newValue));
-        userProfileView.postCodeTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setPostCode(newValue));
-        userProfileView.cityNameTextField.textProperty().addListener((observable, oldValue, newValue) -> currentPerson.setCityName(newValue));
-        userProfileView.countrySelector.selectedItemProperty().addListener((observable, oldValue, newValue) -> currentPerson.setCountry(newValue));
-        userProfileView.organizationSelector.selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            currentPerson.setOrganization(newValue);
-            if (newValue != null) userProfileView.noOrganizationRadioButton.setSelected(false);
-        });
-        userProfileView.noOrganizationRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                userProfileView.organizationSelector.setSelectedItem(null);
-            }
-        });
-        //If there are some changes, we forbid to switch to another user
+        FXProperties.runOnPropertiesChange(this::syncModelFromUI,
+            userProfileView.firstNameTextField.textProperty(),
+            userProfileView.lastNameTextField.textProperty(),
+            userProfileView.emailTextField.textProperty(),
+            userProfileView.layNameTextField.textProperty(),
+            userProfileView.phoneTextField.textProperty(),
+            userProfileView.postCodeTextField.textProperty(),
+            userProfileView.cityNameTextField.textProperty(),
+            userProfileView.countrySelector.selectedItemProperty(),
+            userProfileView.organizationSelector.selectedItemProperty(),
+            userProfileView.noOrganizationRadioButton.selectedProperty()
+        );
+
+        // If there are some changes, we forbid to switch to another user
         personToBookButton.disableProperty().bind(userProfileView.saveButton.disableProperty().not());
-    }
 
-    private void syncUIFromModel(Person person) {
-        if (person != null) {
-            updateStore = UpdateStore.createAbove(person.getStore());
-            currentPerson = updateStore.updateEntity(person);
-            isNewPersonToBookProperty.setValue(false);
-        } else {
-            //Here the update store should have already been initialised
-            currentPerson = updateStore.insertEntity(Person.class);
-            currentPerson.setFrontendAccount(FXUserPerson.getUserPerson().getFrontendAccount());
-            person = currentPerson;
-            isNewPersonToBookProperty.setValue(true);
-        }
-        userProfileView.emailTextField.setText(person.getEmail());
-        userProfileView.postCodeTextField.setText(person.getPostCode());
-        userProfileView.cityNameTextField.setText(person.getCityName());
-        EntityButtonSelector<Country> countrySelector = userProfileView.countrySelector;
-        countrySelector.setSelectedItem(person.getCountry());
-        userProfileView.organizationSelector.setSelectedItem(person.getOrganization());
-        userProfileView.noOrganizationRadioButton.setSelected(person.getOrganization() == null);
-
-        userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
-
+        cancelButton.setOnAction(e -> {
+            if (isNewPerson)
+                FXPersonToBook.personToBookProperty().set(FXUserPerson.getUserPerson());
+            setPersonToBook(personToBook);
+        });
         userProfileView.saveButton.setOnAction(e -> {
             if (validateForm()) {
                 OperationUtil.turnOnButtonsWaitModeDuringExecution(
-                    updateStore.submitChanges().
-                        onFailure(failure -> {
+                    updateStore.submitChanges()
+                        .onFailure(failure -> {
                             Console.log("Error while updating account:" + failure);
                             Platform.runLater(() -> {
                                 userProfileView.infoMessage.setVisible(true);
@@ -153,9 +148,9 @@ public final class PersonalDetailsPage implements BookingFormPage {
                             Platform.runLater(() -> {
                                 userProfileView.infoMessage.setVisible(true);
                                 Bootstrap.textSuccess(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.PersonalInformationUpdated));
-                                if (isNewPersonToBookProperty.get()) {
+                                if (isNewPerson) {
                                     personToBookSelector.refreshWhenActive();
-                                    FXPersonToBook.setPersonToBook(currentPerson);
+                                    FXPersonToBook.setPersonToBook(personToBook);
                                 }
                                 UiScheduler.scheduleDelay(5000, () -> {
                                     userProfileView.infoMessage.setVisible(false);
@@ -165,8 +160,79 @@ public final class PersonalDetailsPage implements BookingFormPage {
                     , userProfileView.saveButton);
             }
         });
+    }
 
-        userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
+    private void setPersonToBook(Person person) {
+        if (updateStore != null)
+            updateStore.cancelChanges();
+        if (person != null) {
+            if (updateStore == null) {
+                updateStore = UpdateStore.createAbove(person.getStore());
+                userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
+            }
+            personToBook = updateStore.updateEntity(person);
+            isNewPerson = false;
+            busyFutureProperty.set(DocumentService.loadDocument(event, person)
+                .onSuccess(documentAggregate -> UiScheduler.runInUiThread(() -> {
+                    alreadyBookedProperty.set(documentAggregate != null);
+                    if (documentAggregate != null) {
+                        I18nControls.bindI18nProperties(alreadyBookedLabel, OnlineFestivalI18nKeys.PersonAlreadyBooked1, person.getFullName());
+                        I18nControls.bindI18nProperties(modifyBookingLink, OnlineFestivalI18nKeys.ModifyBooking1, documentAggregate.getDocumentRef());
+                        OrderActions.setupModifyOrderButton(modifyBookingLink, documentAggregate.getDocumentPrimaryKey());
+                    }
+                })));
+        } else if (updateStore != null) { // Should be always true because the account owner was always selected first
+            // Here the update store should have already been initialized
+            personToBook = updateStore.insertEntity(Person.class);
+            personToBook.setFrontendAccount(FXUserPerson.getUserPerson().getFrontendAccount());
+            isNewPerson = true;
+            alreadyBookedProperty.set(false);
+        }
+        syncUIFromModel();
+    }
+
+    private void syncModelFromUI() {
+        if (syncing)
+            return;
+        syncing = true;
+        personToBook.setFirstName(userProfileView.firstNameTextField.getText());
+        personToBook.setLastName(userProfileView.lastNameTextField.getText());
+        personToBook.setEmail(userProfileView.emailTextField.getText());
+        personToBook.setLayName(userProfileView.layNameTextField.getText());
+        personToBook.setPhone(userProfileView.phoneTextField.getText());
+        personToBook.setPostCode(userProfileView.postCodeTextField.getText());
+        personToBook.setCityName(userProfileView.cityNameTextField.getText());
+        personToBook.setCountry(userProfileView.countrySelector.getSelectedItem());
+        Organization organization = userProfileView.organizationSelector.getSelectedItem();
+        boolean noOrganization = userProfileView.noOrganizationRadioButton.isSelected()
+            && (organization == null || Entities.sameId(organization, personToBook.getOrganization()));
+        if (noOrganization) {
+            organization = null;
+        }
+        personToBook.setOrganization(organization);
+        userProfileView.organizationSelector.setSelectedItem(organization);
+        userProfileView.noOrganizationRadioButton.setSelected(organization == null);
+        syncing = false;
+    }
+
+    private void syncUIFromModel() {
+        if (syncing)
+            return;
+        syncing = true;
+        userProfileView.firstNameTextField.setText(personToBook.getFirstName());
+        userProfileView.lastNameTextField.setText(personToBook.getLastName());
+        userProfileView.emailTextField.setText(personToBook.getEmail());
+        userProfileView.layNameTextField.setText(personToBook.getLayName());
+        userProfileView.phoneTextField.setText(personToBook.getPhone());
+        userProfileView.postCodeTextField.setText(personToBook.getPostCode());
+        userProfileView.cityNameTextField.setText(personToBook.getCityName());
+        userProfileView.countrySelector.setSelectedItem(personToBook.getCountry());
+        userProfileView.organizationSelector.setSelectedItem(personToBook.getOrganization());
+        userProfileView.noOrganizationRadioButton.setSelected(personToBook.getOrganization() == null);
+
+        Layouts.setManagedAndVisibleProperties(userProfileView.firstNameTextField, isNewPerson);
+        Layouts.setManagedAndVisibleProperties(userProfileView.lastNameTextField, isNewPerson);
+        syncing = false;
     }
 
     @Override
@@ -204,11 +270,22 @@ public final class PersonalDetailsPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-        //personalDetailsVBox.setDisable(!workingBookingProperties.getWorkingBooking().isNewBooking());
     }
 
     @Override
     public ObservableBooleanValue validProperty() {
-        return userProfileView.saveButton.disableProperty();
+        return userProfileView.saveButton.disableProperty().and(alreadyBookedProperty.not());
+    }
+
+    @Override
+    public ObservableObjectValue<Future<?>> busyFutureProperty() {
+        return busyFutureProperty;
+    }
+
+    private static MonoPane centerInVBoxWithMargin(Node node, Insets margin) {
+        MonoPane monoPane = new MonoPane(node);
+        monoPane.setMaxWidth(Double.MAX_VALUE);
+        VBox.setMargin(monoPane, margin);
+        return monoPane;
     }
 }
