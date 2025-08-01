@@ -129,7 +129,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
 
         cancelButton.setOnAction(e -> {
             if (isNewPerson)
-                FXPersonToBook.personToBookProperty().set(FXUserPerson.getUserPerson());
+                FXPersonToBook.setPersonToBook(FXUserPerson.getUserPerson());
             setPersonToBook(personToBook);
         });
         userProfileView.saveButton.setOnAction(e -> {

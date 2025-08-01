@@ -59,7 +59,7 @@ public final class TermsAndConditionsPage implements BookingFormPage {
         Controls.setupTextWrapping(agree, true, false);
         agree.setCursor(Cursor.HAND);
         // Scrolling up when ticking the `agree` checkbox, so the user can easily find the Next button
-        FXProperties.runOnPropertyChange(selected -> {
+        FXProperties.runOnPropertyChange(selected -> UiScheduler.scheduleDelay(500, () -> {
             if (selected) {
                 ScrollPane scrollPane = Controls.findScrollPaneAncestor(container);
                 if (scrollPane != null) {
@@ -68,7 +68,7 @@ public final class TermsAndConditionsPage implements BookingFormPage {
                     SceneUtil.scrollNodeToBeVerticallyVisibleOnScene(content, false, true);
                 }
             }
-        }, agree.selectedProperty());
+        }), agree.selectedProperty());
     }
 
     @Override
