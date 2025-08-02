@@ -35,6 +35,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires webfx.extras.validation;
     requires webfx.extras.webtext;
     requires webfx.kit.util;
+    requires webfx.platform.async;
     requires webfx.platform.console;
     requires webfx.platform.uischeduler;
     requires webfx.platform.util;

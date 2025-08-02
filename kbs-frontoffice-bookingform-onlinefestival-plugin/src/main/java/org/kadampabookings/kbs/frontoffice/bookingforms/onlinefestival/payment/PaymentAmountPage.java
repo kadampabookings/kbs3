@@ -1,21 +1,25 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment;
 
+import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.util.border.BorderFactory;
 import dev.webfx.extras.util.layout.Layouts;
+import dev.webfx.extras.validation.ValidationSupport;
+import dev.webfx.kit.util.properties.FXProperties;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import one.modality.base.shared.entities.Event;
 import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.ecommerce.client.i18n.EcommerceI18nKeys;
 import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
@@ -24,6 +28,9 @@ import one.modality.ecommerce.frontoffice.bookingform.BookingForm;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormActivityCallback;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
+
+import java.util.function.Function;
 
 /**
  * @author Bruno Salmon
@@ -37,8 +44,8 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final Button payButton = BookingElements.createBlackButton(BookingFormI18nKeys.PayNow1);
     private final IntegerProperty selectedAmountProperty = new SimpleIntegerProperty();
     private final Label selectedAmountCurrencyLabel = new Label();
-    private final Label selectedAmountValueLabel = BookingElements.createPriceLabel();
-    private final HBox selectedAmountHBox = new HBox(10, selectedAmountCurrencyLabel, selectedAmountValueLabel);
+    private final TextField selectedAmountValueTextField = BookingElements.createPriceTextField();
+    private final HBox selectedAmountHBox = new HBox(10, selectedAmountCurrencyLabel, selectedAmountValueTextField);
     private final HBox selectAmountHBox = new HBox(20,
         BookingElements.createWordingLabel(BookingFormI18nKeys.SelectPaymentAmount),
         selectedAmountHBox);
@@ -51,6 +58,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         BookingElements.twoLabels(20, true, saveButton, payButton),
         paymentBottomLabel
     );
+    ValidationSupport validationSupport = new ValidationSupport();
 
     public PaymentAmountPage(BookingForm bookingForm) {
         this.bookingForm = bookingForm;
@@ -63,15 +71,10 @@ public final class PaymentAmountPage implements BookingFormPage {
         gridPane.setHgap(5);
         gridPane.setVgap(20);
         gridPane.setMaxWidth(450);
-        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.Total, false), 0, 0);
-        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.MinDeposit, false), 0, 1);
-        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.Deposit, false), 0, 2);
-        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.Balance, false), 0, 3);
         selectAmountHBox.setAlignment(Pos.CENTER);
+        selectedAmountHBox.setAlignment(Pos.CENTER);
         selectedAmountHBox.setPadding(new Insets(10, 20, 10, 20));
         selectedAmountHBox.setBorder(BorderFactory.newBorder(Color.BLACK, 10, 2));
-        selectedAmountValueLabel.setAlignment(Pos.CENTER_RIGHT);
-        selectedAmountValueLabel.setMinWidth(50);
     }
 
     @Override
@@ -96,17 +99,33 @@ public final class PaymentAmountPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-        String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(workingBookingProperties.getEvent());
+        Event event = workingBookingProperties.getEvent();
+        int total = workingBookingProperties.getTotal();
+        int minDeposit = workingBookingProperties.getMinDeposit();
+        int deposit = workingBookingProperties.getDeposit();
+        int balance = total - deposit;
+        int minAmount = Math.max(1, minDeposit - deposit);
+        int maxAmount = workingBookingProperties.getBalance();
+        String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(event);
+        Function<Number, String> priceWithCurrencyFormatter = amount -> EventPriceFormatter.formatWithCurrency(amount, event);
+        Function<Number, String> priceWithoutCurrencyFormatter = EventPriceFormatter::formatWithoutCurrency;
+        gridPane.getChildren().clear();
+        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.Total, false), 0, 0);
+        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.MinDeposit, false), 0, 1);
+        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.Deposit, false), 0, 2);
+        gridPane.add(BookingElements.createPricePromptLabel(EcommerceI18nKeys.Balance, false), 0, 3);
         gridPane.add(createPriceLabel(currencySymbol), 1, 0);
-        gridPane.add(createPriceLabel(workingBookingProperties.formattedTotalWithoutCurrencyProperty()), 2, 0);
+        gridPane.add(createPriceLabel(priceWithoutCurrencyFormatter.apply(total)), 2, 0);
         gridPane.add(createPriceLabel(currencySymbol), 1, 1);
-        gridPane.add(createPriceLabel(workingBookingProperties.formattedMinDepositWithoutCurrencyProperty()), 2, 1);
+        gridPane.add(createPriceLabel(priceWithoutCurrencyFormatter.apply(minDeposit)), 2, 1);
         gridPane.add(createPriceLabel(currencySymbol), 1, 2);
-        gridPane.add(createPriceLabel(workingBookingProperties.formattedDepositWithoutCurrencyProperty()), 2, 2);
+        gridPane.add(createPriceLabel(priceWithoutCurrencyFormatter.apply(deposit)), 2, 2);
         gridPane.add(createPriceLabel(currencySymbol), 1, 3);
-        gridPane.add(createPriceLabel(workingBookingProperties.formattedBalanceWithoutCurrencyProperty()), 2, 3);
+        gridPane.add(createPriceLabel(priceWithoutCurrencyFormatter.apply(balance)), 2, 3);
+        // For now because the context is only online Festivals so far, the amount to pay is necessarily the whole balance
+        selectedAmountProperty.set(minAmount);
         selectedAmountCurrencyLabel.setText(currencySymbol);
-        selectedAmountValueLabel.textProperty().bind(workingBookingProperties.formattedBalanceWithoutCurrencyProperty());
+        selectedAmountValueTextField.setText(priceWithoutCurrencyFormatter.apply(minAmount));
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         // We hide the save button if there are no changes
         Layouts.setManagedAndVisibleProperties(saveButton, workingBookingProperties.hasChanges());
@@ -117,14 +136,40 @@ public final class PaymentAmountPage implements BookingFormPage {
         saveButton.disableProperty().bind(disableSubmit);
         // When it's visible and enabled, the user can submit the changes but with no deposit to pay
         saveButton.setOnAction(e -> activityCallback.submitBooking(0, saveButton, payButton));
-        // For now because the context is only online Festivals so far, the amount to pay is necessarily the whole balance
-        selectedAmountProperty.bind(workingBookingProperties.balanceProperty());
         // We show the amount to pay in the button itself
-        I18nControls.bindI18nProperties(payButton, BookingFormI18nKeys.PayNow1, workingBookingProperties.getFormattedBalance());
+        I18nControls.bindI18nProperties(payButton, BookingFormI18nKeys.PayNow1, selectedAmountProperty.map(priceWithCurrencyFormatter));
         // But it is disabled if the booking is not ready to submit or if there is nothing to pay
         payButton.disableProperty().bind(disableSubmit.or(selectedAmountProperty.lessThanOrEqualTo(0)));
         // When it's enabled, the user can submit the changes and pay the selected amount
         payButton.setOnAction(e -> activityCallback.submitBooking(selectedAmountProperty.get(), payButton, saveButton));
+        //selectedAmountValueTextField.setDisable(maxAmount <= minAmount);
+        StringProperty errorMessageProperty = new SimpleStringProperty();
+        validationSupport.addValidationRule(
+            Bindings.createBooleanBinding(() -> {
+                try {
+                    int amount = (int) (100 * Double.parseDouble(selectedAmountValueTextField.getText().trim()));
+                    if (amount < minAmount || amount > maxAmount) {
+                        errorMessageProperty.bind(I18n.i18nTextProperty(OnlineFestivalI18nKeys.MustBeInRange2, priceWithCurrencyFormatter.apply(minAmount), priceWithCurrencyFormatter.apply(maxAmount)));
+                        return false;
+                    }
+                    selectedAmountProperty.set(amount);
+                    return true;
+                } catch (NumberFormatException e) {
+                    errorMessageProperty.bind(I18n.i18nTextProperty(OnlineFestivalI18nKeys.IncorrectPriceFormat));
+                    return false;
+                }
+            }, selectedAmountValueTextField.textProperty()),
+            selectedAmountValueTextField,
+            errorMessageProperty
+        );
+        FXProperties.runOnPropertyChange(() ->
+            validationSupport.isValid()
+        , selectedAmountValueTextField.textProperty());
+    }
+
+    @Override
+    public void onTransitionFinished() {
+        selectedAmountValueTextField.requestFocus();
     }
 
     private static Label createPriceLabel(String currencySymbol) {
