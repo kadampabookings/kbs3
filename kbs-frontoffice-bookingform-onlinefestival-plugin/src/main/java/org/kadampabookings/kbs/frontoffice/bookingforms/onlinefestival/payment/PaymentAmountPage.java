@@ -78,7 +78,8 @@ public final class PaymentAmountPage implements BookingFormPage {
         selectedAmountHBox.setAlignment(Pos.CENTER);
         selectedAmountHBox.setPadding(new Insets(10, 20, 10, 20));
         selectedAmountHBox.setBorder(BorderFactory.newBorder(Color.BLACK, 10, 2));
-        selectAmountHBox.setFillHeight(false);
+        selectedAmountHBox.setFillHeight(false); // This is to prevent `spinnerButtons` growing in height and keep it vertically centered
+        selectAmountHBox.setFillHeight(false); // This is to prevent `selectedAmountHBox` growing in height and keep
     }
 
     @Override
