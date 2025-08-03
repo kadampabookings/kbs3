@@ -8,6 +8,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires javafx.graphics;
     requires kbs.client.festivaltypes;
     requires modality.base.client.i18n;
+    requires modality.base.client.icons;
     requires modality.base.client.time;
     requires modality.base.shared.entities;
     requires modality.base.shared.knownitems;

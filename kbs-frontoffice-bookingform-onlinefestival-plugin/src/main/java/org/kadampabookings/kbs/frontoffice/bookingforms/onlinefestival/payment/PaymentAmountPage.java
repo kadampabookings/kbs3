@@ -19,6 +19,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
+import one.modality.base.client.icons.SvgIcons;
 import one.modality.base.shared.entities.Event;
 import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.ecommerce.client.i18n.EcommerceI18nKeys;
@@ -45,7 +47,8 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final IntegerProperty selectedAmountProperty = new SimpleIntegerProperty();
     private final Label selectedAmountCurrencyLabel = new Label();
     private final TextField selectedAmountValueTextField = BookingElements.createPriceTextField();
-    private final HBox selectedAmountHBox = new HBox(10, selectedAmountCurrencyLabel, selectedAmountValueTextField);
+    private final VBox spinnerButtons = new VBox(3, createAmountSpinner(true), createAmountSpinner(false));
+    private final HBox selectedAmountHBox = new HBox(10, selectedAmountCurrencyLabel, selectedAmountValueTextField, spinnerButtons);
     private final HBox selectAmountHBox = new HBox(20,
         BookingElements.createWordingLabel(BookingFormI18nKeys.SelectPaymentAmount),
         selectedAmountHBox);
@@ -75,6 +78,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         selectedAmountHBox.setAlignment(Pos.CENTER);
         selectedAmountHBox.setPadding(new Insets(10, 20, 10, 20));
         selectedAmountHBox.setBorder(BorderFactory.newBorder(Color.BLACK, 10, 2));
+        selectAmountHBox.setFillHeight(false);
     }
 
     @Override
@@ -147,7 +151,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         validationSupport.addValidationRule(
             Bindings.createBooleanBinding(() -> {
                 try {
-                    int amount = (int) (100 * Double.parseDouble(selectedAmountValueTextField.getText().trim()));
+                    int amount = parseSelectedAmountValue();
                     if (amount < minAmount || amount > maxAmount) {
                         errorMessageProperty.bind(I18n.i18nTextProperty(OnlineFestivalI18nKeys.MustBeInRange2, priceWithCurrencyFormatter.apply(minAmount), priceWithCurrencyFormatter.apply(maxAmount)));
                         return false;
@@ -178,9 +182,25 @@ public final class PaymentAmountPage implements BookingFormPage {
         return priceLabel;
     }
 
-    private static Label createPriceLabel(ReadOnlyStringProperty amountProperty) {
-        Label priceLabel = BookingElements.createPriceLabel(amountProperty);
-        GridPane.setHalignment(priceLabel, HPos.RIGHT);
-        return priceLabel;
+    private Node createAmountSpinner(boolean up) {
+        SVGPath svgPath = up ? SvgIcons.createRoundTriangleUp() : SvgIcons.createRoundTriangleDown();
+        svgPath.setFill(null);
+        SvgIcons.setSVGPathStroke(svgPath, Color.BLACK, 1);
+        return SvgIcons.armButton(SvgIcons.createButtonPane(svgPath), () -> spinAmount(up));
     }
+
+    private int parseSelectedAmountValue() {
+        return (int) (100 * Double.parseDouble(selectedAmountValueTextField.getText().trim()));
+    }
+
+    private void spinAmount(boolean up) {
+        try {
+            int amount = parseSelectedAmountValue();
+            amount = ((amount + 99) / 100) * 100; // Rounding the amount
+            amount += up ? 100 : -100; // Incrementing or decrementing the amount
+            selectedAmountValueTextField.setText(EventPriceFormatter.formatWithoutCurrency(amount));
+        } catch (NumberFormatException ignored) {
+        }
+    }
+
 }
