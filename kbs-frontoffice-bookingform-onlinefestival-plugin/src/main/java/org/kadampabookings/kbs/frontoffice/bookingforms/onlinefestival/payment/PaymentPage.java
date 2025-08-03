@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment;
 
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
+import dev.webfx.extras.panes.FlipPane;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.util.border.BorderFactory;
 import dev.webfx.extras.util.layout.Layouts;
@@ -32,6 +33,7 @@ import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
 import one.modality.ecommerce.frontoffice.bookingform.BookingForm;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormActivityCallback;
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.ecommerce.frontoffice.bookingform.GatewayPaymentForm;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
@@ -40,7 +42,7 @@ import java.util.function.Function;
 /**
  * @author Bruno Salmon
  */
-public final class PaymentAmountPage implements BookingFormPage {
+public final class PaymentPage implements BookingFormPage {
 
     private final BookingForm bookingForm;
     private final GridPane gridPane = BookingElements.createOptionsGridPane(false);
@@ -50,23 +52,11 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final IntegerProperty selectedAmountProperty = new SimpleIntegerProperty();
     private final Label selectedAmountCurrencyLabel = new Label();
     private final TextField selectedAmountValueTextField = BookingElements.createPriceTextField();
-    private final VBox spinnerButtons = new VBox(3, createAmountSpinner(true), createAmountSpinner(false));
-    private final HBox selectedAmountHBox = new HBox(selectedAmountCurrencyLabel, selectedAmountValueTextField, spinnerButtons);
-    private final HBox selectAmountHBox = new HBox(20,
-        BookingElements.createWordingLabel(BookingFormI18nKeys.SelectPaymentAmount),
-        selectedAmountHBox);
     private final Label paymentBottomLabel = BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.PaymentBottomMessage);
-    private final VBox container = BookingElements.createFormPageVBox(true,
-        BookingElements.createWordingLabel(BookingFormI18nKeys.PaymentTopMessage),
-        gridPane,
-        selectAmountHBox,
-        embeddedLoginContainer,
-        BookingElements.twoLabels(20, true, saveButton, payButton),
-        paymentBottomLabel
-    );
     ValidationSupport validationSupport = new ValidationSupport();
+    private final FlipPane flipPane = new FlipPane();
 
-    public PaymentAmountPage(BookingForm bookingForm) {
+    public PaymentPage(BookingForm bookingForm) {
         this.bookingForm = bookingForm;
         //gridPane.setGridLinesVisible(true);
         ColumnConstraints c1 = new ColumnConstraints();
@@ -77,12 +67,27 @@ public final class PaymentAmountPage implements BookingFormPage {
         gridPane.setHgap(5);
         gridPane.setVgap(20);
         gridPane.setMaxWidth(450);
+        VBox spinnerButtons = new VBox(3, createAmountSpinner(true), createAmountSpinner(false));
+        HBox selectedAmountHBox = new HBox(selectedAmountCurrencyLabel, selectedAmountValueTextField, spinnerButtons);
+        HBox selectAmountHBox = new HBox(20,
+            BookingElements.createWordingLabel(BookingFormI18nKeys.SelectPaymentAmount),
+            selectedAmountHBox);
         selectAmountHBox.setAlignment(Pos.CENTER);
         selectedAmountHBox.setAlignment(Pos.CENTER);
         selectedAmountHBox.setBorder(BorderFactory.newBorder(Color.BLACK, 10, 2));
         HBox.setMargin(selectedAmountCurrencyLabel, new Insets(10, 0, 10, 15));
         selectAmountHBox.setFillHeight(false); // This is to prevent `selectedAmountHBox` growing in height
-        selectedAmountValueTextField.setPadding(Insets.EMPTY);
+        selectedAmountValueTextField.setPadding(Insets.EMPTY); // This is to remove the default padding set by WebFX
+        // in the web version (see WebFX TextField implementation)
+        VBox selectedAmountForm = BookingElements.createFormPageVBox(true,
+            BookingElements.createWordingLabel(BookingFormI18nKeys.PaymentTopMessage),
+            gridPane,
+            selectAmountHBox,
+            embeddedLoginContainer,
+            BookingElements.twoLabels(20, true, saveButton, payButton),
+            paymentBottomLabel
+        );
+        flipPane.setFront(selectedAmountForm);
     }
 
     @Override
@@ -92,7 +97,7 @@ public final class PaymentAmountPage implements BookingFormPage {
 
     @Override
     public Node getView() {
-        return container;
+        return flipPane;
     }
 
     @Override
@@ -112,7 +117,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         int minDeposit = workingBookingProperties.getMinDeposit();
         int deposit = workingBookingProperties.getDeposit();
         int balance = total - deposit;
-        int minAmount = Math.max(1, minDeposit - deposit);
+        int minAmount = Math.max(100, minDeposit - deposit);
         int maxAmount = workingBookingProperties.getBalance();
         String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(event);
         Function<Number, String> priceWithCurrencyFormatter = amount -> EventPriceFormatter.formatWithCurrency(amount, event);
@@ -149,7 +154,7 @@ public final class PaymentAmountPage implements BookingFormPage {
         // But it is disabled if the booking is not ready to submit or if there is nothing to pay
         payButton.disableProperty().bind(disableSubmit.or(selectedAmountProperty.lessThanOrEqualTo(0)));
         // When it's enabled, the user can submit the changes and pay the selected amount
-        payButton.setOnAction(e -> activityCallback.submitBooking(selectedAmountProperty.get(), payButton, saveButton));
+        payButton.setOnAction(e -> activityCallback.submitBooking(selectedAmountProperty.get(), this::displayGatewayPaymentForm, payButton, saveButton));
         //selectedAmountValueTextField.setDisable(maxAmount <= minAmount);
         StringProperty errorMessageProperty = new SimpleStringProperty();
         validationSupport.addValidationRule(
@@ -207,6 +212,12 @@ public final class PaymentAmountPage implements BookingFormPage {
             selectedAmountValueTextField.setText(EventPriceFormatter.formatWithoutCurrency(amount));
         } catch (NumberFormatException ignored) {
         }
+    }
+
+    private void displayGatewayPaymentForm(GatewayPaymentForm gatewayPaymentForm) {
+        flipPane.setBack(gatewayPaymentForm.getView());
+        flipPane.setPadding(new Insets(30, 0, 0, 0));
+        flipPane.flipToBack();
     }
 
 }

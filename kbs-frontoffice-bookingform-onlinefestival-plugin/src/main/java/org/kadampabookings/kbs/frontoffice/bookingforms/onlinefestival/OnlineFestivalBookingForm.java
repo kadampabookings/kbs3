@@ -6,7 +6,7 @@ import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage
 import one.modality.ecommerce.frontoffice.bookingform.multipages.MultiPageBookingForm;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording.AudioRecordingPage;
-import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment.PaymentAmountPage;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment.PaymentPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal.PersonalDetailsPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary.FestivalSummaryPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching.TeachingPage;
@@ -23,7 +23,7 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
         new PersonalDetailsPage(this),
         new FestivalSummaryPage(),
         new TermsAndConditionsPage(this),
-        new PaymentAmountPage(this)
+        new PaymentPage(this)
     };
 
     public OnlineFestivalBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
