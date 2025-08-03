@@ -9,7 +9,10 @@ import dev.webfx.extras.validation.ValidationSupport;
 import dev.webfx.kit.util.properties.FXProperties;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -48,7 +51,7 @@ public final class PaymentAmountPage implements BookingFormPage {
     private final Label selectedAmountCurrencyLabel = new Label();
     private final TextField selectedAmountValueTextField = BookingElements.createPriceTextField();
     private final VBox spinnerButtons = new VBox(3, createAmountSpinner(true), createAmountSpinner(false));
-    private final HBox selectedAmountHBox = new HBox(10, selectedAmountCurrencyLabel, selectedAmountValueTextField, spinnerButtons);
+    private final HBox selectedAmountHBox = new HBox(selectedAmountCurrencyLabel, selectedAmountValueTextField, spinnerButtons);
     private final HBox selectAmountHBox = new HBox(20,
         BookingElements.createWordingLabel(BookingFormI18nKeys.SelectPaymentAmount),
         selectedAmountHBox);
@@ -76,10 +79,10 @@ public final class PaymentAmountPage implements BookingFormPage {
         gridPane.setMaxWidth(450);
         selectAmountHBox.setAlignment(Pos.CENTER);
         selectedAmountHBox.setAlignment(Pos.CENTER);
-        selectedAmountHBox.setPadding(new Insets(10, 20, 10, 20));
         selectedAmountHBox.setBorder(BorderFactory.newBorder(Color.BLACK, 10, 2));
-        selectedAmountHBox.setFillHeight(false); // This is to prevent `spinnerButtons` growing in height and keep it vertically centered
-        selectAmountHBox.setFillHeight(false); // This is to prevent `selectedAmountHBox` growing in height and keep
+        HBox.setMargin(selectedAmountCurrencyLabel, new Insets(10, 0, 10, 15));
+        selectAmountHBox.setFillHeight(false); // This is to prevent `selectedAmountHBox` growing in height
+        selectedAmountValueTextField.setPadding(Insets.EMPTY);
     }
 
     @Override
@@ -187,7 +190,9 @@ public final class PaymentAmountPage implements BookingFormPage {
         SVGPath svgPath = up ? SvgIcons.createRoundTriangleUp() : SvgIcons.createRoundTriangleDown();
         svgPath.setFill(null);
         SvgIcons.setSVGPathStroke(svgPath, Color.BLACK, 1);
-        return SvgIcons.armButton(SvgIcons.createButtonPane(svgPath), () -> spinAmount(up));
+        MonoPane buttonPane = SvgIcons.armButton(SvgIcons.createButtonPane(svgPath), () -> spinAmount(up));
+        buttonPane.setPadding(new Insets(up ? 10 : 0, 10, up ? 0 : 10, 10));
+        return buttonPane;
     }
 
     private int parseSelectedAmountValue() {
