@@ -10,10 +10,8 @@ import dev.webfx.extras.validation.ValidationSupport;
 import dev.webfx.kit.util.properties.FXProperties;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -53,8 +51,9 @@ public final class PaymentPage implements BookingFormPage {
     private final Label selectedAmountCurrencyLabel = new Label();
     private final TextField selectedAmountValueTextField = BookingElements.createPriceTextField();
     private final Label paymentBottomLabel = BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.PaymentBottomMessage);
-    ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private final FlipPane flipPane = new FlipPane();
+    private final BooleanProperty canGoBackProperty = new SimpleBooleanProperty(true);
 
     public PaymentPage(BookingForm bookingForm) {
         this.bookingForm = bookingForm;
@@ -176,14 +175,17 @@ public final class PaymentPage implements BookingFormPage {
             selectedAmountValueTextField,
             errorMessageProperty
         );
-        FXProperties.runOnPropertyChange(() ->
-            validationSupport.isValid()
-        , selectedAmountValueTextField.textProperty());
+        FXProperties.runOnPropertyChange(validationSupport::isValid, selectedAmountValueTextField.textProperty());
     }
 
     @Override
     public void onTransitionFinished() {
         selectedAmountValueTextField.requestFocus();
+    }
+
+    @Override
+    public ObservableBooleanValue canGoBackProperty() {
+        return canGoBackProperty;
     }
 
     private static Label createPriceLabel(String currencySymbol) {
@@ -219,6 +221,8 @@ public final class PaymentPage implements BookingFormPage {
         flipPane.setBack(gatewayPaymentForm.getView());
         flipPane.setPadding(new Insets(30, 0, 0, 0));
         flipPane.flipToBack();
+        // Preventing the user going back (will disable the back button)
+        canGoBackProperty.set(false);
     }
 
 }
