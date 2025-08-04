@@ -118,7 +118,8 @@ public final class PaymentPage implements BookingFormPage {
         int deposit = workingBookingProperties.getDeposit();
         int balance = total - deposit;
         int minAmount = Math.max(100, minDeposit - deposit);
-        int maxAmount = workingBookingProperties.getBalance();
+        int maxAmount = balance;
+        int initialAmount = deposit < minDeposit ? minAmount : maxAmount;
         String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(event);
         Function<Number, String> priceWithCurrencyFormatter = amount -> EventPriceFormatter.formatWithCurrency(amount, event);
         Function<Number, String> priceWithoutCurrencyFormatter = EventPriceFormatter::formatWithoutCurrency;
@@ -136,9 +137,9 @@ public final class PaymentPage implements BookingFormPage {
         gridPane.add(createPriceLabel(currencySymbol), 1, 3);
         gridPane.add(createPriceLabel(priceWithoutCurrencyFormatter.apply(balance)), 2, 3);
         // For now because the context is only online Festivals so far, the amount to pay is necessarily the whole balance
-        selectedAmountProperty.set(minAmount);
+        selectedAmountProperty.set(initialAmount);
         selectedAmountCurrencyLabel.setText(currencySymbol);
-        selectedAmountValueTextField.setText(priceWithoutCurrencyFormatter.apply(minAmount));
+        selectedAmountValueTextField.setText(priceWithoutCurrencyFormatter.apply(initialAmount));
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         // We hide the save button if there are no changes
         Layouts.setManagedAndVisibleProperties(saveButton, workingBookingProperties.hasChanges());
