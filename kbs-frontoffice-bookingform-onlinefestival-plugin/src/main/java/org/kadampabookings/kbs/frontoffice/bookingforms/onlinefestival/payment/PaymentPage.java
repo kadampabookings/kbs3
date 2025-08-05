@@ -4,6 +4,7 @@ import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.panes.FlipPane;
 import dev.webfx.extras.panes.GoldenRatioPane;
+import dev.webfx.extras.panes.GrowingPane;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.util.border.BorderFactory;
 import dev.webfx.extras.util.layout.Layouts;
@@ -222,6 +223,14 @@ public final class PaymentPage implements BookingFormPage {
     }
 
     private void displayGatewayPaymentForm(GatewayPaymentForm gatewayPaymentForm) {
+        // Embedding the payment form in a GrowingPane so when we unload it, that doesn't change the size of the flipPane
+        GrowingPane growingPane = new GrowingPane(gatewayPaymentForm.getView());
+        flipPane.setBack(growingPane);
+        flipPane.setPadding(new Insets(30, 0, 0, 0));
+        flipPane.flipToBack();
+        // Preventing the user going back (will disable the back button)
+        canGoBackProperty.set(false);
+        // Showing the cancellation message if the user cancelled the payment
         gatewayPaymentForm.setCancelPaymentResultHandler(ar -> {
             VBox vBox = new VBox(50,
                 BookingElements.createWordingLabel(OnlineFestivalI18nKeys.PaymentCancelledBookingSaved),
@@ -229,13 +238,9 @@ public final class PaymentPage implements BookingFormPage {
             );
             vBox.setAlignment(Pos.CENTER);
             flipPane.setFront(new GoldenRatioPane(vBox));
-            flipPane.flipToFront();
+            flipPane.flipToFront(() ->         // Flipping to the cancellation side
+                growingPane.setContent(null)); // Ensuring the payment form is unloaded
         });
-        flipPane.setBack(gatewayPaymentForm.getView());
-        flipPane.setPadding(new Insets(30, 0, 0, 0));
-        flipPane.flipToBack();
-        // Preventing the user going back (will disable the back button)
-        canGoBackProperty.set(false);
     }
 
 }
