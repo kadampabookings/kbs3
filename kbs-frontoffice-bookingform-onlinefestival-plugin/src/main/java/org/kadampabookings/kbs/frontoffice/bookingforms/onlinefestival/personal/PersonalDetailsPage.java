@@ -33,6 +33,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import one.modality.base.shared.entities.Event;
+import one.modality.base.shared.entities.FrontendAccount;
 import one.modality.base.shared.entities.Organization;
 import one.modality.base.shared.entities.Person;
 import one.modality.crm.client.i18n.CrmI18nKeys;
@@ -104,8 +105,9 @@ public final class PersonalDetailsPage implements BookingFormPage {
 
         FXProperties.runNowAndOnPropertyChange(person -> {
             if (person != null) {
-                // Forcing logout for security staff when it comes to booking
-                if (person.getFrontendAccount().isSecurity())
+                // Forcing logout for security staff if they try to book with that account
+                FrontendAccount userAccount = person.getFrontendAccount(); // Note: null (not loaded) for members
+                if (userAccount != null && userAccount.isSecurity())
                     OperationUtil.executeOperation(new LogoutRequest());
                 else {
                     userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
