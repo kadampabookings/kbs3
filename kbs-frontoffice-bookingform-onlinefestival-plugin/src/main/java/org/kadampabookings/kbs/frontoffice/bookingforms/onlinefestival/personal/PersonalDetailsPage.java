@@ -13,6 +13,7 @@ import dev.webfx.platform.async.Future;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.stack.authn.login.ui.spi.impl.gateway.password.PasswordI18nKeys;
+import dev.webfx.stack.authn.logout.client.operation.LogoutRequest;
 import dev.webfx.stack.orm.entity.Entities;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import dev.webfx.stack.orm.entity.binding.EntityBindings;
@@ -103,8 +104,13 @@ public final class PersonalDetailsPage implements BookingFormPage {
 
         FXProperties.runNowAndOnPropertyChange(person -> {
             if (person != null) {
-                userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
-                setPersonToBook(person);
+                // Forcing logout for security staff when it comes to booking
+                if (person.getFrontendAccount().isSecurity())
+                    OperationUtil.executeOperation(new LogoutRequest());
+                else {
+                    userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
+                    setPersonToBook(person);
+                }
             }
             if (personToBook != null && person == null) {
                 setPersonToBook(null);
