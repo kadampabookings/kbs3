@@ -58,6 +58,7 @@ public final class PaymentPage implements BookingFormPage {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private final FlipPane flipPane = new FlipPane();
     private final BooleanProperty canGoBackProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty endReachedProperty = new SimpleBooleanProperty(true);
     private WorkingBookingProperties workingBookingProperties;
 
     public PaymentPage(BookingForm bookingForm) {
@@ -240,7 +241,12 @@ public final class PaymentPage implements BookingFormPage {
             flipPane.setFront(new GoldenRatioPane(vBox));
             flipPane.flipToFront(() ->         // Flipping to the cancellation side
                 growingPane.setContent(null)); // Ensuring the payment form is unloaded
+            endReachedProperty.set(true);
         });
     }
 
+    @Override
+    public ObservableBooleanValue endReachedProperty() {
+        return endReachedProperty;
+    }
 }
