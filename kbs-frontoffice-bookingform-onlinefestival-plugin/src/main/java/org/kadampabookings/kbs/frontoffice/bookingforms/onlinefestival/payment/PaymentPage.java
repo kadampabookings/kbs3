@@ -3,11 +3,13 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment;
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.panes.FlipPane;
+import dev.webfx.extras.panes.GoldenRatioPane;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.util.border.BorderFactory;
 import dev.webfx.extras.util.layout.Layouts;
 import dev.webfx.extras.validation.ValidationSupport;
 import dev.webfx.kit.util.properties.FXProperties;
+import dev.webfx.platform.windowhistory.WindowHistory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
@@ -33,6 +35,7 @@ import one.modality.ecommerce.frontoffice.bookingform.BookingFormActivityCallbac
 import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.ecommerce.frontoffice.bookingform.GatewayPaymentForm;
 import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.event.frontoffice.activities.book.BookI18nKeys;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 import java.util.function.Function;
@@ -54,10 +57,10 @@ public final class PaymentPage implements BookingFormPage {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private final FlipPane flipPane = new FlipPane();
     private final BooleanProperty canGoBackProperty = new SimpleBooleanProperty(true);
+    private WorkingBookingProperties workingBookingProperties;
 
     public PaymentPage(BookingForm bookingForm) {
         this.bookingForm = bookingForm;
-        //gridPane.setGridLinesVisible(true);
         ColumnConstraints c1 = new ColumnConstraints();
         c1.setHgrow(Priority.ALWAYS);
         ColumnConstraints c2 = new ColumnConstraints();
@@ -111,6 +114,7 @@ public final class PaymentPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
+        this.workingBookingProperties = workingBookingProperties;
         Event event = workingBookingProperties.getEvent();
         int total = workingBookingProperties.getTotal();
         int minDeposit = workingBookingProperties.getMinDeposit();
@@ -218,6 +222,15 @@ public final class PaymentPage implements BookingFormPage {
     }
 
     private void displayGatewayPaymentForm(GatewayPaymentForm gatewayPaymentForm) {
+        gatewayPaymentForm.setCancelPaymentResultHandler(ar -> {
+            VBox vBox = new VBox(50,
+                BookingElements.createWordingLabel(OnlineFestivalI18nKeys.PaymentCancelledBookingSaved),
+                BookingElements.createOrderLink(BookI18nKeys.BookingNumber1, workingBookingProperties, WindowHistory.getProvider())
+            );
+            vBox.setAlignment(Pos.CENTER);
+            flipPane.setFront(new GoldenRatioPane(vBox));
+            flipPane.flipToFront();
+        });
         flipPane.setBack(gatewayPaymentForm.getView());
         flipPane.setPadding(new Insets(30, 0, 0, 0));
         flipPane.flipToBack();

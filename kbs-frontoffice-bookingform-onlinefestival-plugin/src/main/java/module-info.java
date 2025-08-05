@@ -41,6 +41,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires webfx.platform.uischeduler;
     requires webfx.platform.util;
     requires webfx.platform.util.time;
+    requires webfx.platform.windowhistory;
     requires webfx.stack.authn.login.ui.gateway.password.plugin;
     requires webfx.stack.authn.logout.client;
     requires webfx.stack.orm.entity;
