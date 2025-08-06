@@ -8,6 +8,7 @@ module kbs.client.festivaltypes {
     requires webfx.platform.console;
     requires webfx.platform.uischeduler;
     requires webfx.platform.util;
+    requires webfx.stack.cache.client;
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.entity;
 
