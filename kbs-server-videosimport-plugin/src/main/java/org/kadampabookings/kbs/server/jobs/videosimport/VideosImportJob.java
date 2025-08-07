@@ -10,6 +10,7 @@ import dev.webfx.platform.console.Console;
 import dev.webfx.platform.fetch.Fetch;
 import dev.webfx.platform.fetch.Response;
 import dev.webfx.platform.fetch.json.JsonFetch;
+import dev.webfx.platform.meta.Meta;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.collection.Collections;
@@ -40,7 +41,10 @@ public class VideosImportJob implements ApplicationJob {
 
     @Override
     public void onStart() {
-        // Waiting 2 mins before starting first import so that the news import job eventually imported some news
+        // No need to import videos on development machines at the moment
+        if (Meta.isDevelopment())
+            return;
+        // Waiting 2 mins before starting the first import so that the news import job eventually imported some news
         Scheduler.scheduleDelay(2 * 60 * 1000, () -> {
             importNewsVideos();
             importTimer = Scheduler.schedulePeriodic(IMPORT_PERIODICITY_MILLIS, this::importNewsVideos);
@@ -75,12 +79,12 @@ public class VideosImportJob implements ApplicationJob {
             .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
             .onSuccess(dbNews -> {
                 News latestNews = dbNews.get(dbNews.size() - 1);
-                // Fetching the news json info from WordPress
+                // Fetching the news JSON info from WordPress
                 new Batch<>(dbNews.toArray(new News[0])).executeParallel(ReadOnlyAstObject[]::new,
                             news -> JsonFetch.fetchJsonObject(NEWS_FETCH_URL + "/" + news.getChannelNewsId()))
                     .onFailure(Console::log)
                     .onSuccess(newsJsonBatch -> { // Note: same indexes as dbNews
-                        // Extracting the mediaIds and links of these news
+                        // Extracting the mediaIds and links of this news
                         List<String> mediaIds = new ArrayList<>(); // same indexes as dbNews
                         List<String> mediaLinks = new ArrayList<>(); // same index as dbNews
                         for (int i = 0; i < newsJsonBatch.length(); i++) {
