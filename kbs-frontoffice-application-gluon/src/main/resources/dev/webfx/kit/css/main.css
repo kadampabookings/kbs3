@@ -1584,6 +1584,13 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-background-radius: 30;
 }
 
+.livestream .video-comment {
+    -fx-text-fill: -bootstrap-blue5;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-spacing: 10px;
+}
+
 /*===== modality-event-client-recurringevents-javafx@main.css from modality-event-client-recurringevents =====*/
 
 .root {
