@@ -15,8 +15,6 @@ import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.collection.Collections;
 import dev.webfx.platform.util.collection.HashList;
-import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
-import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.Entities;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
@@ -35,7 +33,7 @@ public class VideosImportJob implements ApplicationJob {
     private static final String NEWS_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/posts";
     private static final String WISTIA_FETCH_URL = "https://fast.wistia.com/embed/medias";
     private static final long IMPORT_PERIODICITY_MILLIS = 3600 * 1000; // every 1h
-    private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
+
     private Scheduled importTimer;
     private News latestImportedNews;
 
@@ -61,7 +59,7 @@ public class VideosImportJob implements ApplicationJob {
         if (latestImportedNews != null) {
             importNewsVideosFromLatestNews();
         } else {
-            EntityStore.create(dataSourceModel).<Video>executeQuery("select id,news from Video order by news.id desc limit 1")
+            EntityStore.create().<Video>executeQuery("select id,news from Video order by news.id desc limit 1")
                 .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest video from database", error))
                 .onSuccess(dbVideos -> {
                     if (!dbVideos.isEmpty()) {
@@ -74,7 +72,7 @@ public class VideosImportJob implements ApplicationJob {
 
     public void importNewsVideosFromLatestNews() {
         // Reading the next 10 news from the database that needs to be checked for videos import
-        EntityStore entityStore = EntityStore.create(dataSourceModel);
+        EntityStore entityStore = EntityStore.create();
         entityStore.<News>executeQuery("select channelNewsId,title,excerpt,lang from News where id>=? order by id limit 10", latestImportedNews == null ? 0 : latestImportedNews.getPrimaryKey())
             .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
             .onSuccess(dbNews -> {

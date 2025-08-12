@@ -11,8 +11,6 @@ import dev.webfx.platform.meta.Meta;
 import dev.webfx.platform.scheduler.Scheduled;
 import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.time.Times;
-import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
-import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import one.modality.base.shared.entities.Podcast;
@@ -31,8 +29,8 @@ public class PodcastsImportJob implements ApplicationJob {
 
     private static final String PODCAST_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/podcast";
     private static final long IMPORT_PERIODICITY_MILLIS = 3600 * 1000; // 1h
+
     private Scheduled importTimer;
-    private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private LocalDateTime latestPodcastDateTime;
     private final Map<Integer, Integer> seriesToTeacher = Map.of(
             426, 2, // Gen-la Dekyong
@@ -64,7 +62,7 @@ public class PodcastsImportJob implements ApplicationJob {
         // When this job starts, there is no fetchAfterParameter, so we initialize it with the latest podcast date
         // imported so far in the database.
         if (latestPodcastDateTime == null) {
-            EntityStore.create(dataSourceModel).<Podcast>executeQuery("select date from Podcast order by date desc limit 1")
+            EntityStore.create().<Podcast>executeQuery("select date from Podcast order by date desc limit 1")
                     .onFailure(error -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while reading latest podcast", error))
                     .onSuccess(podcasts -> {
                         if (podcasts.isEmpty()) // Means that there is no podcast in the database
@@ -83,7 +81,7 @@ public class PodcastsImportJob implements ApplicationJob {
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while fetching " + fetchUrl, error))
                 // Fetching the latest podcasts from the database in order to determine those that are not yet imported
-                .onSuccess(webPodcastsJsonArray -> EntityStore.create(dataSourceModel).<Podcast>executeQuery(
+                .onSuccess(webPodcastsJsonArray -> EntityStore.create().<Podcast>executeQuery(
                                 "select channelPodcastId from Podcast where date >= ? order by date limit ?", latestPodcastDateTime, webPodcastsJsonArray.size()
                         )
                         .onFailure(e -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while reading podcasts from database", e))

@@ -3,7 +3,6 @@ package org.kadampabookings.kbs.frontoffice.activities.news;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.util.Numbers;
-import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.entity.Entities;
 import dev.webfx.stack.orm.entity.EntityStore;
 import javafx.beans.property.ObjectProperty;
@@ -28,7 +27,7 @@ public final class FXDisplayedArticle {
                 setDisplayedArticle(null);
             else {
                 // Otherwise, we request the server to load that organization from that id
-                EntityStore.create(DataSourceModelService.getDefaultDataSourceModel())
+                EntityStore.create()
                     .<News>executeQuery("select linkUrl from News where id=?", articleId)
                     .onFailure(Console::log)
                     .onSuccess(list -> // on successfully receiving the list (should be a singleton list)

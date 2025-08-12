@@ -18,8 +18,6 @@ module kbs.server.newsimport.plugin {
     requires webfx.platform.scheduler;
     requires webfx.platform.util;
     requires webfx.platform.util.time;
-    requires webfx.stack.orm.datasourcemodel.service;
-    requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
 
     // Exported packages

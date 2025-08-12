@@ -17,8 +17,6 @@ import dev.webfx.platform.scheduler.Scheduler;
 import dev.webfx.platform.util.Arrays;
 import dev.webfx.platform.util.collection.Collections;
 import dev.webfx.platform.util.time.Times;
-import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
-import dev.webfx.stack.orm.domainmodel.DataSourceModel;
 import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.EntityStore;
 import dev.webfx.stack.orm.entity.UpdateStore;
@@ -42,7 +40,6 @@ public class NewsImportJob implements ApplicationJob {
     private static final String NEWS_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/posts";
     private static final String MEDIA_FETCH_URL = "https://kadampa.org/wp-json/wp/v2/media";
 
-    private final DataSourceModel dataSourceModel = DataSourceModelService.getDefaultDataSourceModel();
     private Scheduled importTimer;
     private List<Topic> newsTopics;
     private LocalDateTime latestNewsDateTime;
@@ -67,7 +64,7 @@ public class NewsImportJob implements ApplicationJob {
             latestNewsDateTime = null;
             importLangNews(LANGUAGES[0]);
         } else {
-            EntityStore.create(dataSourceModel).<Topic>executeQuery("select id,channelTopicId from Topic where channelTopicId!=null")
+            EntityStore.create().<Topic>executeQuery("select id,channelTopicId from Topic where channelTopicId!=null")
                 .onFailure(error -> Console.log("[NEWS_IMPORT] Error while reading news topics", error))
                 .onSuccess(dbNewsTopics -> {
                     newsTopics = dbNewsTopics;
@@ -80,7 +77,7 @@ public class NewsImportJob implements ApplicationJob {
         // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
         if (latestNewsDateTime == null) {
-            EntityStore.create(dataSourceModel).<News>executeQuery("select date from News where lang=? order by date desc limit ?", lang, Math.max(RECHECK_LATEST_DB_NEWS_UPDATES_COUNT, 1))
+            EntityStore.create().<News>executeQuery("select date from News where lang=? order by date desc limit ?", lang, Math.max(RECHECK_LATEST_DB_NEWS_UPDATES_COUNT, 1))
                 .onFailure(error -> Console.log("[NEWS_IMPORT] ⛔️️ Error while reading latest news", error))
                 .onSuccess(news -> {
                     News lastestNews = Collections.last(news);
@@ -101,8 +98,8 @@ public class NewsImportJob implements ApplicationJob {
         //Console.log("[NEWS_IMPORT] Fetching " + fetchUrl);
         JsonFetch.fetchJsonArray(fetchUrl)
             .onFailure(error -> Console.log("[NEWS_IMPORT] ⛔️️ Error while fetching " + fetchUrl, error))
-            .onSuccess(webNewsJsonArray -> EntityStore.create(dataSourceModel).<News>executeQuery(
-                            "select channelNewsId from News where channelNewsId in (" + getIds(webNewsJsonArray) + ")")
+            .onSuccess(webNewsJsonArray -> EntityStore.create().<News>executeQuery(
+                    "select channelNewsId from News where channelNewsId in (" + getIds(webNewsJsonArray) + ")")
                 .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while reading news from database", e))
                 .onSuccess(dbNews -> {
 
@@ -133,7 +130,7 @@ public class NewsImportJob implements ApplicationJob {
                     Batch<String> mediaIdsInputBatch = new Batch<>(mediaIds.toArray(new String[0]));
                     // Executing all individual media fetches in parallel
                     mediaIdsInputBatch.executeParallel(ReadOnlyAstObject[]::new, mediaId ->
-                                    mediaId == null ? Future.succeededFuture(null) : JsonFetch.fetchJsonObject(MEDIA_FETCH_URL + "/" + mediaId))
+                            mediaId == null ? Future.succeededFuture(null) : JsonFetch.fetchJsonObject(MEDIA_FETCH_URL + "/" + mediaId))
                         .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while fetching news medias", e))
                         .onSuccess(webMediasJsonBatch -> {
 
@@ -173,9 +170,9 @@ public class NewsImportJob implements ApplicationJob {
                                     String channelTopicId = projectArray.getString(0);
                                     if (channelTopicId != null) {
                                         newsTopics.stream()
-                                                .filter(t -> Objects.equals(channelTopicId, t.getChannelTopicId()))
-                                                .findFirst()
-                                                .ifPresent(n::setTopic);
+                                            .filter(t -> Objects.equals(channelTopicId, t.getChannelTopicId()))
+                                            .findFirst()
+                                            .ifPresent(n::setTopic);
                                     }
                                 }
                                 mediaLinks.add(cleanUrl(newsJson.getString("link")));
@@ -191,19 +188,19 @@ public class NewsImportJob implements ApplicationJob {
                                     latestNewsDateTime = finalMaxNewsDateTime;
                                     Console.log(newNewsCount + " new news imported in database, latestNewsDateTime = " + latestNewsDateTime);
                                     new Batch<>(mediaLinks.toArray(new String[0])).executeParallel(String[]::new,
-                                                mediaLink ->Fetch.fetch(mediaLink).compose(Response::text)
+                                            mediaLink -> Fetch.fetch(mediaLink).compose(Response::text)
                                                 .onSuccess(text -> {
                                                     boolean withVideos = text != null && (text.contains("wistia") || text.contains("src=\"https://www.youtube.com/"));
                                                     News n = newsList.get(mediaLinks.indexOf(mediaLink));
                                                     Object newsPrimaryKey = n.getPrimaryKey();
                                                     //Console.log("News " + newsPrimaryKey + " has videos: " + withVideos);
                                                     if (withVideos) {
-                                                        UpdateStore updateStore2 = UpdateStore.create(dataSourceModel);
+                                                        UpdateStore updateStore2 = UpdateStore.create();
                                                         News news = updateStore2.updateEntity(EntityId.create(News.class, newsPrimaryKey));
                                                         news.setFieldValue("withVideos", true);
                                                         updateStore2.submitChanges()
-                                                                .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while updating news withVideo", e))
-                                                                .onSuccess(ignored -> Console.log("[NEWS_IMPORT] News " + newsPrimaryKey + " withVideos updated"));
+                                                            .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while updating news withVideo", e))
+                                                            .onSuccess(ignored -> Console.log("[NEWS_IMPORT] News " + newsPrimaryKey + " withVideos updated"));
                                                     }
                                                 }))
                                         .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while updating news withVideo", e))

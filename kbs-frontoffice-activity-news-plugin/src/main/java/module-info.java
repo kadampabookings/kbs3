@@ -37,7 +37,6 @@ module kbs.frontoffice.activity.news.plugin {
     requires webfx.platform.storage;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
-    requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
     requires webfx.stack.orm.entity;
