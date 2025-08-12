@@ -6,7 +6,6 @@ module kbs.client.festivaltypes {
     requires javafx.base;
     requires modality.base.shared.entities;
     requires webfx.platform.console;
-    requires webfx.platform.uischeduler;
     requires webfx.platform.util;
     requires webfx.stack.cache.client;
     requires webfx.stack.orm.entity;

@@ -18,7 +18,6 @@ import dev.webfx.stack.orm.entity.Entities;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import dev.webfx.stack.orm.entity.binding.EntityBindings;
 import dev.webfx.stack.orm.entity.controls.entity.selector.EntityButtonSelector;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -144,25 +143,22 @@ public final class PersonalDetailsPage implements BookingFormPage {
             if (validateForm()) {
                 OperationUtil.turnOnButtonsWaitModeDuringExecution(
                     updateStore.submitChanges()
+                        .inUiThread()
                         .onFailure(failure -> {
                             Console.log("Error while updating account:" + failure);
-                            Platform.runLater(() -> {
-                                userProfileView.infoMessage.setVisible(true);
-                                Bootstrap.textDanger(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.ErrorWhileUpdatingPersonalInformation));
-                            });
+                            userProfileView.infoMessage.setVisible(true);
+                            Bootstrap.textDanger(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.ErrorWhileUpdatingPersonalInformation));
                         })
                         .onSuccess(success -> {
                             Console.log("Account updated with success");
-                            Platform.runLater(() -> {
-                                userProfileView.infoMessage.setVisible(true);
-                                Bootstrap.textSuccess(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.PersonalInformationUpdated));
-                                if (isNewPerson) {
-                                    personToBookSelector.refreshWhenActive();
-                                    FXPersonToBook.setPersonToBook(personToBook);
-                                }
-                                UiScheduler.scheduleDelay(5000, () -> {
-                                    userProfileView.infoMessage.setVisible(false);
-                                });
+                            userProfileView.infoMessage.setVisible(true);
+                            Bootstrap.textSuccess(I18nControls.bindI18nProperties(userProfileView.infoMessage, UserProfileI18nKeys.PersonalInformationUpdated));
+                            if (isNewPerson) {
+                                personToBookSelector.refreshWhenActive();
+                                FXPersonToBook.setPersonToBook(personToBook);
+                            }
+                            UiScheduler.scheduleDelay(5000, () -> {
+                                userProfileView.infoMessage.setVisible(false);
                             });
                         })
                     , userProfileView.saveButton);
@@ -181,14 +177,15 @@ public final class PersonalDetailsPage implements BookingFormPage {
             personToBook = updateStore.updateEntity(person);
             isNewPerson = false;
             busyFutureProperty.set(DocumentService.loadDocument(event, person)
-                .onSuccess(documentAggregate -> UiScheduler.runInUiThread(() -> {
+                .inUiThread()
+                .onSuccess(documentAggregate -> {
                     alreadyBookedProperty.set(documentAggregate != null);
                     if (documentAggregate != null) {
                         I18nControls.bindI18nProperties(alreadyBookedLabel, OnlineFestivalI18nKeys.PersonAlreadyBooked1, person.getFullName());
                         I18nControls.bindI18nProperties(modifyBookingLink, OnlineFestivalI18nKeys.ModifyBooking1, documentAggregate.getDocumentRef());
                         OrderActions.setupModifyOrderButton(modifyBookingLink, documentAggregate.getDocumentPrimaryKey());
                     }
-                })));
+                }));
         } else if (updateStore != null) { // Should be always true because the account owner was always selected first
             // Here the update store should have already been initialized
             personToBook = updateStore.insertEntity(Person.class);
@@ -213,7 +210,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         personToBook.setCountry(userProfileView.countrySelector.getSelectedItem());
         Organization organization = userProfileView.organizationSelector.getSelectedItem();
         boolean noOrganization = userProfileView.noOrganizationRadioButton.isSelected()
-            && (organization == null || Entities.sameId(organization, personToBook.getOrganization()));
+                                 && (organization == null || Entities.sameId(organization, personToBook.getOrganization()));
         if (noOrganization) {
             organization = null;
         }

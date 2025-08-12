@@ -46,7 +46,8 @@ public final class TermsAndConditionsPage implements BookingFormPage {
     public TermsAndConditionsPage(BookingForm bookingForm) {
         Event event = ((EventBookingFormSettings) bookingForm.getSettings()).event();
         event.getStore().<Letter>executeQuery("select <frontend_loadEvent> from Letter where event=? and type.terms limit 1", event)
-            .onSuccess(letters -> UiScheduler.runInUiThread(() -> {
+            .inUiThread()
+            .onSuccess(letters -> {
                 Letter termsLetter = Collections.first(letters);
                 termsLetterProperty.set(termsLetter);
                 if (termsLetter == null) {
@@ -54,7 +55,7 @@ public final class TermsAndConditionsPage implements BookingFormPage {
                 } else {
                     I18nEntities.bindExpressionTextProperty(termsHtmlText.textProperty(), termsLetter, "i18n(this)");
                 }
-            }));
+            });
         container.setAlignment(Pos.TOP_LEFT);
         Controls.setupTextWrapping(agree, true, false);
         agree.setCursor(Cursor.HAND);

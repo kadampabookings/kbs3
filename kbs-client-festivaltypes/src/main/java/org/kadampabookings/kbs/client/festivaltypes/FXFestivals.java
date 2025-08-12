@@ -1,7 +1,6 @@
 package org.kadampabookings.kbs.client.festivaltypes;
 
 import dev.webfx.platform.console.Console;
-import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.platform.util.collection.Collections;
 import dev.webfx.stack.cache.client.LocalStorageCache;
 import dev.webfx.stack.orm.entity.EntityStore;
@@ -27,12 +26,12 @@ public final class FXFestivals {
     // Last in-person Festivals
     private static final ObjectProperty<Event> LAST_SPRING_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
     private static final ObjectProperty<Event> LAST_SUMMER_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
-    private static final ObjectProperty<Event> LAST_FALL_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
+    private static final ObjectProperty<Event> LAST_FALL_FESTIVAL_PROPERTY   = new SimpleObjectProperty<>();
 
     // Last online Festivals
     private static final ObjectProperty<Event> LAST_ONLINE_SPRING_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
     private static final ObjectProperty<Event> LAST_ONLINE_SUMMER_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
-    private static final ObjectProperty<Event> LAST_ONLINE_FALL_FESTIVAL_PROPERTY = new SimpleObjectProperty<>();
+    private static final ObjectProperty<Event> LAST_ONLINE_FALL_FESTIVAL_PROPERTY   = new SimpleObjectProperty<>();
 
     public static ObservableList<Event> lastFestivals() {
         return LAST_FESTIVALS;
@@ -106,7 +105,8 @@ public final class FXFestivals {
                 new EntityStoreQuery(select, new Object[]{FestivalType.SUMMER_FESTIVAL.getTypeId(), nextYear}),
                 new EntityStoreQuery(select, new Object[]{FestivalType.FALL_FESTIVAL.getTypeId(), nextYear}))
             .onFailure(Console::log)
-            .onSuccess(festivalsLists -> UiScheduler.runInUiThread(() -> {
+            .inUiThread()
+            .onSuccess(festivalsLists -> {
                 LAST_SPRING_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[0], 0)); // Spring Festival
                 LAST_SUMMER_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[1], 0)); // Summer Festival
                 LAST_FALL_FESTIVAL_PROPERTY  .set((Event) Collections.get(festivalsLists[2], 0)); // Fall Festival
@@ -115,7 +115,7 @@ public final class FXFestivals {
                 LAST_ONLINE_SUMMER_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[1], 1)); // Summer Festival
                 LAST_ONLINE_FALL_FESTIVAL_PROPERTY  .set((Event) Collections.get(festivalsLists[2], 1));  // Fall Festival
                 LAST_FESTIVALS.setAll(getLastSpringFestival(), getLastSummerFestival(), getLastFallFestival());
-            }));
+            });
     }
 
     public static void init() {
