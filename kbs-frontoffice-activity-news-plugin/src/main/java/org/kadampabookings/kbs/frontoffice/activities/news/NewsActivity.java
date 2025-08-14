@@ -94,7 +94,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
         headerScalePane.setBackground(Background.fill(Color.WHITE));
 
         Text topicPrefixText = TextUtility.createText("topic", Color.GRAY);
-        EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
+        EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>( // language=JSON5
             "{class: 'Topic', alias: 't', columns: 'name', where: 'exists(select News where topic = t)', orderBy: 'id'}",
             this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
@@ -242,7 +242,8 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
 
         // News loader
         ReactiveEntitiesMapper.<News>createReactiveChain(this)
-            .always("{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
+            .always( // language=JSON5
+                "{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .always(DqlStatement.limit("?", INITIAL_LIMIT))
@@ -258,7 +259,8 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
 
         // Videos loader
         ReactiveEntitiesMapper.<Video>createReactiveChain(this)
-            .always("{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
+            .always( // language=JSON5
+                "{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .always(DqlStatement.limit("?", INITIAL_LIMIT))

@@ -98,7 +98,8 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
 
         // Podcasts loader
         ReactiveObjectsMapper.<Book, Node>createReactiveChain(this)
-            .always("{class: 'Book', fields: 'title, description, imageUrl, freeUrl, orderUrl', orderBy: 'id'}")
+            .always( // language=JSON5
+                "{class: 'Book', fields: 'title, description, imageUrl, freeUrl, orderUrl', orderBy: 'id'}")
             .bindActivePropertyTo(showVideosProperty.not().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.factory(() -> new BookView(this::showVideos), BookView::setBook, BookView::getView))

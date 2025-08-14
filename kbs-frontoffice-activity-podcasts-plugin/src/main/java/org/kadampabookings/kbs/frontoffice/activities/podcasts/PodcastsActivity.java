@@ -118,7 +118,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
 
         Text teacherPrefixText = I18n.newText(PodcastsI18nKeys.teacher);
         teacherPrefixText.setFill(Color.GRAY);
-        EntityButtonSelector<Teacher> teacherButtonSelector = new EntityButtonSelector<Teacher>(
+        EntityButtonSelector<Teacher> teacherButtonSelector = new EntityButtonSelector<Teacher>( // language=JSON5
             "{class: 'Teacher', alias: 't', columns: 'name', orderBy: 'id'}",
             this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
@@ -170,7 +170,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
         allTopicPane.setCursor(Cursor.HAND);
         Text topicPrefixText = I18n.newText(PodcastsI18nKeys.topic);
         topicPrefixText.setFill(Color.GRAY);
-        EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>(
+        EntityButtonSelector<Topic> topicButtonSelector = new EntityButtonSelector<Topic>( // language=JSON5
             "{class: 'Topic', alias: 't', columns: 'name', where: 'teaching', orderBy: 'id'}",
             this, FXMainFrameDialogArea::getDialogArea, getDataSourceModel()
         ) { // Overriding the button content to add the "Teacher" prefix text
@@ -382,7 +382,8 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
 
         // Podcasts loader
         ReactiveEntitiesMapper.<Podcast>createReactiveChain(this)
-            .always("{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
+            .always( // language=JSON5
+                "{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
             //.always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .always(DqlStatement.limit("?", INITIAL_LIMIT))
@@ -400,7 +401,8 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
         // Videos loader
         ReactiveEntitiesMapper.<Video>createReactiveChain(this)
             // Note: note loading the excerpt causes the video to be displayed in wide width mode
-            .always("{class: 'Video', fields: 'date, title, imageUrl, wistiaVideoId, youtubeVideoId, durationMillis, width, height, ord', orderBy: 'ord nulls last, date desc'}")
+            .always( // language=JSON5
+                "{class: 'Video', fields: 'date, title, imageUrl, wistiaVideoId, youtubeVideoId, durationMillis, width, height, ord', orderBy: 'ord nulls last, date desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .always(DqlStatement.limit("?", INITIAL_LIMIT))
