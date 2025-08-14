@@ -97,11 +97,17 @@ public final class FXFestivals {
 
     private static void loadLastFestivals() {
         LocalDate nextYear = Year.of(LocalDate.now().getYear() + 1).atDay(1);
-        String select = "select name,type.name,startDate,endDate,kbs3,state,live,openingDate,bookingFormUrl from Event where type in (?) and startDate < ? order by startDate desc, name like '%Online%' ? 1 : 0 limit 2";
+        String select = """
+            select name,type.name,startDate,endDate,kbs3,state,live,openingDate,bookingFormUrl
+             from Event
+             where type in (?)
+                and startDate < ?
+             order by startDate desc, name like '%Online%' ? 1 : 0
+             limit 2""";
         EntityStore.create().executeQueryBatchWithCache("cache-last-festivals",
-                new EntityStoreQuery(select, new Object[]{FestivalType.SPRING_FESTIVAL.getTypeId(), nextYear}),
-                new EntityStoreQuery(select, new Object[]{FestivalType.SUMMER_FESTIVAL.getTypeId(), nextYear}),
-                new EntityStoreQuery(select, new Object[]{FestivalType.FALL_FESTIVAL.getTypeId(), nextYear}))
+                new EntityStoreQuery(select, FestivalType.SPRING_FESTIVAL.getTypeId(), nextYear),
+                new EntityStoreQuery(select, FestivalType.SUMMER_FESTIVAL.getTypeId(), nextYear),
+                new EntityStoreQuery(select, FestivalType.FALL_FESTIVAL.getTypeId(), nextYear))
             .onFailure(Console::log)
             .inUiThread()
             .onSuccess(festivalsLists -> {
