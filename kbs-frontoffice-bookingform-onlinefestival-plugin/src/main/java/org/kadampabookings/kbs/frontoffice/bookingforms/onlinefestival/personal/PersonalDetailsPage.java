@@ -112,9 +112,11 @@ public final class PersonalDetailsPage implements BookingFormPage {
                     userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
                     setPersonToBook(person);
                 }
-            }
-            if (personToBook != null && person == null) {
-                setPersonToBook(null);
+            } else {
+                userProfileView.setLoginDetailsVisible(true);
+                if (personToBook != null) {
+                    setPersonToBook(null);
+                }
             }
         }, FXPersonToBook.personToBookProperty());
 
