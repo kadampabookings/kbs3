@@ -98,26 +98,27 @@ public final class FXFestivals {
     private static void loadLastFestivals() {
         LocalDate nextYear = Year.of(LocalDate.now().getYear() + 1).atDay(1);
         String select = """
-            select name,type.name,startDate,endDate,kbs3,state,live,openingDate,bookingFormUrl
-             from Event
-             where type in (?)
-                and startDate < ?
-             order by startDate desc, name like '%Online%' ? 1 : 0
-             limit 2""";
+            select name, type.name, startDate, endDate, kbs3, state, live, openingDate, bookingFormUrl
+                from Event
+                where type in (?)
+                    and startDate < ?
+                order by startDate desc
+                    , name like '%Online%' ? 1 : 0
+                limit 2""";
         EntityStore.create().executeQueryBatchWithCache("cache-last-festivals",
                 new EntityStoreQuery(select, FestivalType.SPRING_FESTIVAL.getTypeId(), nextYear),
                 new EntityStoreQuery(select, FestivalType.SUMMER_FESTIVAL.getTypeId(), nextYear),
                 new EntityStoreQuery(select, FestivalType.FALL_FESTIVAL.getTypeId(), nextYear))
             .onFailure(Console::log)
             .inUiThread()
-            .onSuccess(festivalsLists -> {
+            .onCacheAndOrSuccess(festivalsLists -> {
                 LAST_SPRING_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[0], 0)); // Spring Festival
                 LAST_SUMMER_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[1], 0)); // Summer Festival
                 LAST_FALL_FESTIVAL_PROPERTY  .set((Event) Collections.get(festivalsLists[2], 0)); // Fall Festival
                 LAST_FESTIVALS.setAll(getLastSpringFestival(), getLastSummerFestival(), getLastFallFestival());
                 LAST_ONLINE_SPRING_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[0], 1)); // Spring Festival
                 LAST_ONLINE_SUMMER_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[1], 1)); // Summer Festival
-                LAST_ONLINE_FALL_FESTIVAL_PROPERTY  .set((Event) Collections.get(festivalsLists[2], 1));  // Fall Festival
+                LAST_ONLINE_FALL_FESTIVAL_PROPERTY  .set((Event) Collections.get(festivalsLists[2], 1)); // Fall Festival
                 LAST_FESTIVALS.setAll(getLastSpringFestival(), getLastSummerFestival(), getLastFallFestival());
             });
     }
