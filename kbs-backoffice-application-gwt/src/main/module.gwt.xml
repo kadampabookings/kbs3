@@ -785,10 +785,6 @@
     <source path="dev/webfx/stack/authz/client/spi/impl"/>
     <source path="dev/webfx/stack/authz/client/spi/impl/inmemory"/>
     <source path="dev/webfx/stack/authz/client/spi/impl/inmemory/parser"/>
-    <!--===============================< webfx-stack-cache >================================-->
-    <source path="dev/webfx/stack/cache"/>
-    <!--============================< webfx-stack-cache-client >============================-->
-    <source path="dev/webfx/stack/cache/client"/>
     <!--============================< webfx-stack-cloud-image >=============================-->
     <source path="dev/webfx/stack/cloud/image"/>
     <source path="dev/webfx/stack/cloud/image/impl/fetchbased"/>
@@ -991,6 +987,22 @@
     <!--======================< webfx-stack-session-state-client-fx >=======================-->
     <source path="dev/webfx/stack/session/state/client/fx"/>
     <source path="dev/webfx/stack/session/state/client/fx/actiontuner"/>
+    <!--=============================< webfx-stack-shareddata >=============================-->
+    <source path="dev/webfx/stack/shareddata"/>
+    <source path="dev/webfx/stack/shareddata/impl"/>
+    <!--===========================< webfx-stack-shareddata-ast >===========================-->
+    <source path="dev/webfx/stack/shareddata/ast"/>
+    <!--==========================< webfx-stack-shareddata-cache >==========================-->
+    <source path="dev/webfx/stack/shareddata/cache"/>
+    <source path="dev/webfx/stack/shareddata/cache/spi"/>
+    <!--===============< webfx-stack-shareddata-cache-cachestorage-gwt-j2cl >===============-->
+    <source path="dev/webfx/stack/shareddata/cache/cachestorage/gwtj2cl"/>
+    <!--================< webfx-stack-shareddata-cache-localstorage-plugin >================-->
+    <source path="dev/webfx/stack/shareddata/cache/localstorage"/>
+    <!--======================< webfx-stack-shareddata-cache-serial >=======================-->
+    <source path="dev/webfx/stack/shareddata/cache/serial"/>
+    <!--======================< webfx-stack-shareddata-cache-storage >======================-->
+    <source path="dev/webfx/stack/shareddata/storage"/>
 
     <!-- Speeding up GWT compilation and execution times -->
     <set-property name="user.agent" value="safari"/> <!-- Only one permutation to speed up GWT compilation - now workings in all modern browsers -->

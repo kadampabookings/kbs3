@@ -1,17 +1,16 @@
 package org.kadampabookings.kbs.frontoffice.activities.books;
 
 import dev.webfx.extras.carousel.Carousel;
+import dev.webfx.extras.i18n.I18n;
+import dev.webfx.extras.operation.action.OperationActionFactoryMixin;
 import dev.webfx.extras.player.FullscreenButton;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.resource.Resource;
-import dev.webfx.stack.cache.client.LocalStorageCache;
-import dev.webfx.extras.i18n.I18n;
 import dev.webfx.stack.orm.domainmodel.activity.viewdomain.impl.ViewDomainActivityBase;
 import dev.webfx.stack.orm.dql.DqlStatement;
 import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.IndividualEntityToObjectMapper;
 import dev.webfx.stack.orm.reactive.entities.entities_to_objects.ReactiveObjectsMapper;
-import dev.webfx.extras.operation.action.OperationActionFactoryMixin;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,8 +20,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseMenu;
-import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.frontoffice.utility.browser.BrowserUtil;
+import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.shared.entities.Book;
 import one.modality.base.shared.entities.Video;
 import one.modality.base.shared.entities.impl.VideoImpl;
@@ -104,7 +103,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.factory(() -> new BookView(this::showVideos), BookView::setBook, BookView::getView))
             .storeMappedObjectsInto(booksContainer.getChildren())
-            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-books"))
+            .setResultCacheEntry("cache-books")
             .start();
 
         // Videos loader

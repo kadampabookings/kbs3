@@ -24,7 +24,6 @@ module kbs.frontoffice.activity.books.plugin {
     requires webfx.platform.resource;
     requires webfx.platform.util;
     requires webfx.platform.windowhistory;
-    requires webfx.stack.cache.client;
     requires webfx.stack.orm.domainmodel.activity;
     requires webfx.stack.orm.dql;
     requires webfx.stack.orm.entity;
