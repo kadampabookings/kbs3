@@ -254,7 +254,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
             .ifNotNull(loadNewsBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
             .storeEntitiesInto(newsFeed)
-            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news"))
+            //.setResultCacheEntry("kbs/news/news")
             .start();
 
         // Videos loader
@@ -275,7 +275,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             })
             .ifNotNull(latestLoadedVideoProperty, video -> DqlStatement.where("date < ?", video.getDate()))
             .storeEntitiesInto(videosFeed)
-            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-news-videos"))
+            //.setResultCacheEntry("kbs/news/videos")
             .start();
     }
 }

@@ -103,7 +103,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
             .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.factory(() -> new BookView(this::showVideos), BookView::setBook, BookView::getView))
             .storeMappedObjectsInto(booksContainer.getChildren())
-            .setResultCacheEntry("cache-books")
+            .setResultCacheEntry("kbs/books/books")
             .start();
 
         // Videos loader
@@ -115,7 +115,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             .always(DqlStatement.where("playlist=2")) // Kadampa books playlist
             .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.createFactory(VideoView::new, VideoView::setMediaInfo, VideoView::getView))
             .storeMappedObjectsInto(videosContainer.getChildren())
-            .setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-books-videos"))
+            .setResultCacheEntry("kbs/books/videos")
             .start();
 */
     }

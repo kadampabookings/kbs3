@@ -395,7 +395,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
             .always(DqlStatement.where("audioUrl != null"))
             .ifNotNull(lastLoadedPodcastProperty, podcast -> DqlStatement.where("date < ?", podcast.getDate()))
             .storeEntitiesInto(podcastsFeed)
-            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts"))
+            //.setResultCacheEntry("kbs/podcasts/podcasts")
             .start();
 
         // Videos loader
@@ -414,7 +414,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
             })
             .ifNotNull(lastLoadedVideoProperty, video -> DqlStatement.where("ord!=null and ord > ? or ord=null and date < ?", video.getOrd(), video.getOrd() == null ? video.getDate() : LocalDate.now()))
             .storeEntitiesInto(videosFeed)
-            //.setResultCacheEntry(LocalStorageCache.get().getCacheEntry("cache-podcasts-videos"))
+            //.setResultCacheEntry("kbs/podcasts/videos"))
             .start();
     }
 

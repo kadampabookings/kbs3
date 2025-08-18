@@ -105,7 +105,7 @@ public final class FXFestivals {
                 order by startDate desc
                     , name like '%Online%' ? 1 : 0
                 limit 2""";
-        EntityStore.create().executeQueryBatchWithCache("cache-last-festivals",
+        EntityStore.create().executeQueryBatchWithCache("kbs/fx-festivals/last-events",
                 new EntityStoreQuery(select, FestivalType.SPRING_FESTIVAL.getTypeId(), nextYear),
                 new EntityStoreQuery(select, FestivalType.SUMMER_FESTIVAL.getTypeId(), nextYear),
                 new EntityStoreQuery(select, FestivalType.FALL_FESTIVAL.getTypeId(), nextYear))
