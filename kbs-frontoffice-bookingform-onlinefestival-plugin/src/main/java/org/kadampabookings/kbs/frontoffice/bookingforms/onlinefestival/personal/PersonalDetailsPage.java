@@ -126,6 +126,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
             userProfileView.emailTextField.textProperty(),
             userProfileView.layNameTextField.textProperty(),
             userProfileView.phoneTextField.textProperty(),
+            userProfileView.streetTextField.textProperty(),
             userProfileView.postCodeTextField.textProperty(),
             userProfileView.cityNameTextField.textProperty(),
             userProfileView.countrySelector.selectedItemProperty(),
@@ -191,9 +192,9 @@ public final class PersonalDetailsPage implements BookingFormPage {
         } else if (updateStore != null) { // Should be always true because the account owner was always selected first
             // Here the update store should have already been initialized
             personToBook = updateStore.insertEntity(Person.class);
-            personToBook.setFrontendAccount(FXUserPerson.getUserPerson().getFrontendAccount());
             isNewPerson = true;
             alreadyBookedProperty.set(false);
+            FXProperties.onPropertySet(FXUserPerson.userPersonProperty(), p -> personToBook.setFrontendAccount(p.getFrontendAccount()));
         }
         syncUIFromModel();
     }
@@ -207,6 +208,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         personToBook.setEmail(userProfileView.emailTextField.getText());
         personToBook.setLayName(userProfileView.layNameTextField.getText());
         personToBook.setPhone(userProfileView.phoneTextField.getText());
+        personToBook.setStreet(userProfileView.streetTextField.getText());
         personToBook.setPostCode(userProfileView.postCodeTextField.getText());
         personToBook.setCityName(userProfileView.cityNameTextField.getText());
         personToBook.setCountry(userProfileView.countrySelector.getSelectedItem());
@@ -231,6 +233,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         userProfileView.emailTextField.setText(personToBook.getEmail());
         userProfileView.layNameTextField.setText(personToBook.getLayName());
         userProfileView.phoneTextField.setText(personToBook.getPhone());
+        userProfileView.streetTextField.setText(personToBook.getStreet());
         userProfileView.postCodeTextField.setText(personToBook.getPostCode());
         userProfileView.cityNameTextField.setText(personToBook.getCityName());
         userProfileView.countrySelector.setSelectedItem(personToBook.getCountry());
@@ -267,6 +270,10 @@ public final class PersonalDetailsPage implements BookingFormPage {
             validationSupport.addEmailValidation(userProfileView.emailTextField, userProfileView.emailTextField, I18n.i18nTextProperty(PasswordI18nKeys.InvalidEmail));
             validationSupport.addRequiredInput(userProfileView.firstNameTextField);
             validationSupport.addRequiredInput(userProfileView.lastNameTextField);
+            validationSupport.addRequiredInput(userProfileView.streetTextField);
+            validationSupport.addRequiredInput(userProfileView.postCodeTextField);
+            validationSupport.addRequiredInput(userProfileView.cityNameTextField);
+            validationSupport.addRequiredInput(userProfileView.countrySelector.selectedItemProperty(), userProfileView.countrySelector.getButton());
         }
     }
 
@@ -277,6 +284,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
 
     @Override
     public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
+
     }
 
     @Override
