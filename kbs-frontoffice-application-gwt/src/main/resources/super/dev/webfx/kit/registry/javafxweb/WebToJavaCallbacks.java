@@ -11,6 +11,7 @@ public class WebToJavaCallbacks {
         JsPropertyMap<Object> pm = Js.asPropertyMap(javaInstance);
         if (javaInstance instanceof one.modality.ecommerce.payment.client.WebPaymentForm) {
             one.modality.ecommerce.payment.client.WebPaymentForm castedInstance = (one.modality.ecommerce.payment.client.WebPaymentForm) javaInstance;
+            registerClearFn(pm, "onGatewayInitStep", (JsVoidFn1Arg<java.lang.Integer>) castedInstance::onGatewayDebugStep);
             registerClearFn(pm, "onGatewayInitSuccess", (JsVoidFn0Arg) castedInstance::onGatewayInitSuccess);
             registerClearFn(pm, "onGatewayInitFailure", (JsVoidFn1Arg<java.lang.String>) castedInstance::onGatewayInitFailure);
             registerClearFn(pm, "onGatewayCardVerificationFailure", (JsVoidFn1Arg<java.lang.String>) castedInstance::onGatewayCardVerificationFailure);
