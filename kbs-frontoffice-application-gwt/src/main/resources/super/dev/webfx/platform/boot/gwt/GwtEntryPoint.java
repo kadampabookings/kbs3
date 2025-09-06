@@ -4,6 +4,10 @@ import com.google.gwt.core.client.EntryPoint;
 import dev.webfx.platform.boot.ApplicationBooter;
 import dev.webfx.platform.boot.spi.ApplicationBooterProvider;
 import dev.webfx.platform.reflect.RArray;
+import dev.webfx.platform.util.gwtj2cl.GwtJ2clUtil;
+
+import elemental2.dom.DomGlobal;
+import elemental2.dom.ServiceWorkerContainer;
 
 import static dev.webfx.platform.service.gwtj2cl.ServiceRegistry.*;
 
@@ -14,14 +18,15 @@ public final class GwtEntryPoint implements ApplicationBooterProvider, EntryPoin
         registerArrayConstructors();
         registerServiceProviders();
         ApplicationBooter.start(this, null);
+        GwtJ2clUtil.registerPwa();
     }
 
-    public static void registerArrayConstructors() {
+    private static void registerArrayConstructors() {
         RArray.register(dev.webfx.stack.db.query.QueryResult.class, dev.webfx.stack.db.query.QueryResult[]::new);
         RArray.register(dev.webfx.stack.db.submit.SubmitResult.class, dev.webfx.stack.db.submit.SubmitResult[]::new);
     }
 
-    public static void registerServiceProviders() {
+    private static void registerServiceProviders() {
         register(dev.webfx.extras.canvas.blob.spi.CanvasBlobProvider.class, dev.webfx.extras.canvas.blob.spi.impl.gwt.GwtCanvasBlobProvider::new);
         register(dev.webfx.extras.filepicker.spi.FilePickerProvider.class, dev.webfx.extras.filepicker.spi.impl.gwtj2cl.GwtJ2clFilePickerProvider::new);
         register(dev.webfx.extras.i18n.operations.ChangeLanguageRequestEmitter.class, one.modality.base.client.operations.i18n.ChangeLanguageToEnglishRequest.ProvidedEmitter::new, one.modality.base.client.operations.i18n.ChangeLanguageToFrenchRequest.ProvidedEmitter::new);
