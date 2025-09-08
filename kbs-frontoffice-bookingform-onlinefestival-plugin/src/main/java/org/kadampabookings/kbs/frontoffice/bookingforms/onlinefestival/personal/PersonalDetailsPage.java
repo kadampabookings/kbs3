@@ -97,6 +97,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         userProfileView.infoMessage.setVisible(false);
         Button cancelButton = Bootstrap.largeSecondaryButton(I18nControls.newButton(UserProfileI18nKeys.Cancel));
         cancelButton.disableProperty().bind(userProfileView.saveButton.disableProperty());
+        cancelButton.visibleProperty().bind(userProfileView.saveButton.visibleProperty());
         personalDetailsVBox.setAlignment(Pos.TOP_LEFT);
         personalDetailsVBox.getChildren().addAll(viewNode, centerInVBoxWithMargin(cancelButton, new Insets(10, 0, 0, 0)));
         Controls.setupTextWrapping(alreadyBookedLabel, true, false);
@@ -109,11 +110,38 @@ public final class PersonalDetailsPage implements BookingFormPage {
                 if (userAccount != null && userAccount.isSecurity())
                     OperationUtil.executeOperation(new LogoutRequest());
                 else {
-                    userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
+                    if(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()))
+                    {
+                        userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
+                        if(Entities.getPrimaryKey(FXPersonToBook.getPersonToBook().getAccountPersonId())!=null) {
+                            //Here, if the person we book for has an associated profile, we don't display any information for security purpose
+                            userProfileView.setLoginDetailsVisible(false);
+                            userProfileView.setAddressInfoVisible(false);
+                            userProfileView.setKadampaCenterVisible(false);
+                            userProfileView.saveButton.visibleProperty().setValue(false);
+                        }
+                        else {
+                            userProfileView.setLoginDetailsVisible(true);
+                            userProfileView.setEmailFieldDisabled(false);
+                            userProfileView.setAddressInfoVisible(true);
+                            userProfileView.setKadampaCenterVisible(true);
+                            userProfileView.saveButton.visibleProperty().setValue(true);
+                        }
+                    } else {
+                        userProfileView.setLoginDetailsVisible(true);
+                        userProfileView.setEmailFieldDisabled(true);
+                        userProfileView.setAddressInfoVisible(true);
+                        userProfileView.setKadampaCenterVisible(true);
+                        userProfileView.saveButton.visibleProperty().setValue(true);
+                    }
                     setPersonToBook(person);
                 }
             } else {
                 userProfileView.setLoginDetailsVisible(true);
+                userProfileView.setAddressInfoVisible(true);
+                userProfileView.setKadampaCenterVisible(true);
+                userProfileView.saveButton.visibleProperty().setValue(true);
+
                 if (personToBook != null) {
                     setPersonToBook(null);
                 }
@@ -160,9 +188,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
                                 personToBookSelector.refreshWhenActive();
                                 FXPersonToBook.setPersonToBook(personToBook);
                             }
-                            UiScheduler.scheduleDelay(5000, () -> {
-                                userProfileView.infoMessage.setVisible(false);
-                            });
+                            UiScheduler.scheduleDelay(5000, () -> userProfileView.infoMessage.setVisible(false));
                         })
                     , userProfileView.saveButton);
             }
