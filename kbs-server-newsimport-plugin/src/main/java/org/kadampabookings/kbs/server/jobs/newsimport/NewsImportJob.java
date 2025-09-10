@@ -183,8 +183,8 @@ public class NewsImportJob implements ApplicationJob {
 
                             updateStore.submitChanges()
                                 .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while inserting news in database", e))
-                                .onSuccess(insertBatch -> {
-                                    int newNewsCount = insertBatch.getArray()[0].getRowCount();
+                                .onSuccess(result -> {
+                                    int newNewsCount = result.getRowCount();
                                     latestNewsDateTime = finalMaxNewsDateTime;
                                     Console.log(newNewsCount + " new news imported in database, latestNewsDateTime = " + latestNewsDateTime);
                                     new Batch<>(mediaLinks.toArray(new String[0])).executeParallel(String[]::new,

@@ -162,8 +162,8 @@ public class VideosImportJob implements ApplicationJob {
                                         } else {
                                             updateStore.submitChanges()
                                                 .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while inserting video in database", error))
-                                                .onSuccess(insertBatch -> {
-                                                    int newVideosCount = insertBatch.getArray()[0].getRowCount();
+                                                .onSuccess(result -> {
+                                                    int newVideosCount = result.getRowCount();
                                                     Console.log("[VIDEOS_IMPORT] " + newVideosCount + " new videos imported in database");
                                                     continueImport(latestNews);
                                                 });

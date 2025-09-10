@@ -141,8 +141,8 @@ public class PodcastsImportJob implements ApplicationJob {
                             } else
                                 updateStore.submitChanges()
                                         .onFailure(e -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while inserting podcasts in database", e))
-                                        .onSuccess(insertBatch -> {
-                                            int newPodcastsCount = insertBatch.getArray()[0].getRowCount();
+                                        .onSuccess(result -> {
+                                            int newPodcastsCount = result.getRowCount();
                                             Console.log("[PODCASTS_IMPORT] " + newPodcastsCount + " new podcasts imported in database");
                                             latestPodcastDateTime = finalMaxPodcastDateTime;
                                             importPodcasts();
