@@ -60,13 +60,15 @@ public final class PersonalDetailsPage implements BookingFormPage {
     private final MonoPane embeddedLoginContainer = new MonoPane();
     private final EntityButtonSelector<Person> personToBookSelector = BookingElements.createPersonToBookSelector(false);
     private final Button personToBookButton = personToBookSelector.getButton();
-    private final Label alreadyBookedLabel = Bootstrap.textDanger(new Label());
+    private final Label alreadyBookedLabel = Controls.setupTextWrapping(Bootstrap.textDanger(new Label()), true, false);
+    private final Label linkedAccountMessageLabel = Controls.setupTextWrapping(I18nControls.newLabel(OnlineFestivalI18nKeys.LinkedAccountMessage), true, false);
     private final Hyperlink modifyBookingLink = Bootstrap.textPrimary(new Hyperlink());
     private final MonoPane modifyBookingPane = centerInVBoxWithMargin(modifyBookingLink, new Insets(30, 0, 50, 0));
     private final VBox personalDetailsVBox = new VBox(
         Bootstrap.strong(I18n.newText(CrmI18nKeys.PersonToBook)),
         personToBookButton,
         alreadyBookedLabel,
+        linkedAccountMessageLabel,
         modifyBookingPane
     );
     private final VBox container = BookingElements.createFormPageVBox(false,
@@ -92,16 +94,13 @@ public final class PersonalDetailsPage implements BookingFormPage {
         // We want to show only the email, address and kadampa center info
         userProfileView = new UserProfileView(null, false, false, true, true, false, false, true, true, true);
         Node viewNode = userProfileView.buildView();
-        userProfileView.setChangeEmailLinkVisible(false);
-        userProfileView.setEmailFieldDisabled(false);
-        userProfileView.infoMessage.setVisible(false);
         Button cancelButton = Bootstrap.largeSecondaryButton(I18nControls.newButton(UserProfileI18nKeys.Cancel));
-        cancelButton.disableProperty().bind(userProfileView.saveButton.disableProperty());
-        cancelButton.visibleProperty().bind(userProfileView.saveButton.visibleProperty());
+        Layouts.bindManagedAndVisiblePropertiesLike(cancelButton, userProfileView.saveButton);
         personalDetailsVBox.setAlignment(Pos.TOP_LEFT);
         personalDetailsVBox.getChildren().addAll(viewNode, centerInVBoxWithMargin(cancelButton, new Insets(10, 0, 0, 0)));
-        Controls.setupTextWrapping(alreadyBookedLabel, true, false);
         Layouts.bindAllManagedAndVisiblePropertiesTo(alreadyBookedProperty, alreadyBookedLabel, modifyBookingPane);
+        linkedAccountMessageLabel.getStyleClass().add("linked-account-message");
+        VBox.setMargin(linkedAccountMessageLabel, new Insets(40, 0, 0, 0));
 
         FXProperties.runNowAndOnPropertyChange(person -> {
             boolean isAccountOwner = Entities.samePrimaryKey(person, FXUserPerson.getUserPerson());
@@ -118,6 +117,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
             } else if (personToBook != null) {
                 setPersonToBook(null);
             }
+            Layouts.setManagedAndVisibleProperties(linkedAccountMessageLabel, isLinkedAccount);
             userProfileView.setLoginDetailsVisible(!isLinkedAccount);
             userProfileView.setEmailFieldDisabled(isAccountOwner);
             userProfileView.setAddressInfoVisible(!isLinkedAccount);
