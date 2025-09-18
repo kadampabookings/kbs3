@@ -82,6 +82,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
     private boolean syncing;
     private final ObjectProperty<Future<?>> busyFutureProperty = new SimpleObjectProperty<>();
     private final BooleanProperty alreadyBookedProperty = new SimpleBooleanProperty();
+    private final BooleanProperty isLinkedAccountProperty = new SimpleBooleanProperty();
 
     private final ValidationSupport validationSupport = new ValidationSupport();
 
@@ -99,6 +100,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         personalDetailsVBox.setAlignment(Pos.TOP_LEFT);
         personalDetailsVBox.getChildren().addAll(viewNode, centerInVBoxWithMargin(cancelButton, new Insets(10, 0, 0, 0)));
         Layouts.bindAllManagedAndVisiblePropertiesTo(alreadyBookedProperty, alreadyBookedLabel, modifyBookingPane);
+        Layouts.bindAllManagedAndVisiblePropertiesTo(isLinkedAccountProperty.and(alreadyBookedProperty.not()), linkedAccountMessageLabel);
         linkedAccountMessageLabel.getStyleClass().add("linked-account-message");
         VBox.setMargin(linkedAccountMessageLabel, new Insets(40, 0, 0, 0));
 
@@ -117,7 +119,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
             } else if (personToBook != null) {
                 setPersonToBook(null);
             }
-            Layouts.setManagedAndVisibleProperties(linkedAccountMessageLabel, isLinkedAccount);
+            isLinkedAccountProperty.set(isLinkedAccount);
             userProfileView.setLoginDetailsVisible(!isLinkedAccount);
             userProfileView.setEmailFieldDisabled(isAccountOwner);
             userProfileView.setAddressInfoVisible(!isLinkedAccount);
