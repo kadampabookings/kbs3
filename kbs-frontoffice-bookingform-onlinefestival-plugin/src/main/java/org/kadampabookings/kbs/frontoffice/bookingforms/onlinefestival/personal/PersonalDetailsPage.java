@@ -104,48 +104,25 @@ public final class PersonalDetailsPage implements BookingFormPage {
         Layouts.bindAllManagedAndVisiblePropertiesTo(alreadyBookedProperty, alreadyBookedLabel, modifyBookingPane);
 
         FXProperties.runNowAndOnPropertyChange(person -> {
+            boolean isAccountOwner = Entities.samePrimaryKey(person, FXUserPerson.getUserPerson());
+            boolean isLinkedAccount = false;
             if (person != null) {
                 // Forcing logout for security staff if they try to book with that account
                 FrontendAccount userAccount = person.getFrontendAccount(); // Note: null (not loaded) for members
                 if (userAccount != null && userAccount.isSecurity())
                     OperationUtil.executeOperation(new LogoutRequest());
                 else {
-                    if(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()))
-                    {
-                        userProfileView.setLoginDetailsVisible(!Entities.samePrimaryKey(FXPersonToBook.getPersonToBook(), FXUserPerson.getUserPerson()));
-                        if(Entities.getPrimaryKey(FXPersonToBook.getPersonToBook().getAccountPersonId())!=null) {
-                            //Here, if the person we book for has an associated profile, we don't display any information for security purpose
-                            userProfileView.setLoginDetailsVisible(false);
-                            userProfileView.setAddressInfoVisible(false);
-                            userProfileView.setKadampaCenterVisible(false);
-                            userProfileView.saveButton.visibleProperty().setValue(false);
-                        }
-                        else {
-                            userProfileView.setLoginDetailsVisible(true);
-                            userProfileView.setEmailFieldDisabled(false);
-                            userProfileView.setAddressInfoVisible(true);
-                            userProfileView.setKadampaCenterVisible(true);
-                            userProfileView.saveButton.visibleProperty().setValue(true);
-                        }
-                    } else {
-                        userProfileView.setLoginDetailsVisible(true);
-                        userProfileView.setEmailFieldDisabled(true);
-                        userProfileView.setAddressInfoVisible(true);
-                        userProfileView.setKadampaCenterVisible(true);
-                        userProfileView.saveButton.visibleProperty().setValue(true);
-                    }
+                    isLinkedAccount = Entities.getPrimaryKey(person.getAccountPersonId()) != null;
                     setPersonToBook(person);
                 }
-            } else {
-                userProfileView.setLoginDetailsVisible(true);
-                userProfileView.setAddressInfoVisible(true);
-                userProfileView.setKadampaCenterVisible(true);
-                userProfileView.saveButton.visibleProperty().setValue(true);
-
-                if (personToBook != null) {
-                    setPersonToBook(null);
-                }
+            } else if (personToBook != null) {
+                setPersonToBook(null);
             }
+            userProfileView.setLoginDetailsVisible(!isLinkedAccount);
+            userProfileView.setEmailFieldDisabled(isAccountOwner);
+            userProfileView.setAddressInfoVisible(!isLinkedAccount);
+            userProfileView.setKadampaCenterVisible(!isLinkedAccount);
+            userProfileView.saveButton.setVisible(!isLinkedAccount);
         }, FXPersonToBook.personToBookProperty());
 
         FXProperties.runOnPropertiesChange(this::syncModelFromUI,
