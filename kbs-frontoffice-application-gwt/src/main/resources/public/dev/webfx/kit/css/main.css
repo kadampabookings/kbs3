@@ -1089,32 +1089,37 @@ fx-htmltext {
 }
 /*===== webfx-stack-password-web@main.css from webfx-stack-authn-login-ui-gateway-password-plugin =====*/
 
-/* We don't want the default white background for WebFX Extras material text fields in the login window */
-.login * {
-    --webfx-material-background-color: transparent;
-}
-/*===== webfx-stack-authn-login-ui-portal-web@main.css from webfx-stack-authn-login-ui-portal =====*/
-
 @font-face {
     font-family: "Password";
     src: url("./fonts/password/password.woff") format("woff");
     font-weight: 100 900;
 }
 
+/* We don't want the default white background for WebFX Extras material text fields in the login window */
+.login * {
+    --webfx-material-background-color: transparent;
+}
+
+/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
+   So we apply that font only once the user started typing the password. This is done using [text-empty="false"] CSS
+   selector which is set by HtmlTextInputControlPeer to indicate whether the user has typed something or not.*/
+.login input[type="password"][data-text-empty="false"] {
+    font-family: "Password", serif;
+    letter-spacing: 0.15em;
+}
+
+/* Applying a style for the in-clear password that roughly matches the password dots */
+.login input[type="text"] {
+    font-size: 1.5em;
+    letter-spacing: 0.4em;
+}
+/*===== webfx-stack-authn-login-ui-portal-web@main.css from webfx-stack-authn-login-ui-portal =====*/
+
 :root {
     --webfx-login-portal-background-image: none;
     --webfx-login-portal-title-color: #0096D6;
     --webfx-login-portal-opacity: 1.0;
     --webfx-login-portal-filter: drop-shadow(1px 2px 8px lightgray);
-}
-
-/* Montserrat password dots are tiny! So we use another font for passwords, but we don't want that font for the placeholder!
-   So we apply that font only once the user started typing the password. This is done using :not([value=""]) CSS
-   selector. Normally "value" refers to the initial value of the input only. However HtmlTextInputControlPeer keeps
-   updating "value" to "" or "not-empty" whether the user has typed something, so this CSS rule finally works: */
-input[type="password"]:not([value=""]) {
-    font-family: "Password", serif;
-    letter-spacing: 0.15em;
 }
 
 .login {
@@ -1180,6 +1185,37 @@ input[type="password"]:not([value=""]) {
 
 .strikethrough fx-text {
     text-decoration: line-through;
+}
+
+/* Error message box styling */
+.error-message-box {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center; /* similar to -fx-alignment: center-left */
+  gap: 8px;            /* like -fx-spacing */
+  max-width: 100%;     /* instead of infinity */
+  box-sizing: border-box;
+}
+
+/* Error message text styling */
+.error-message-text {
+  white-space: normal;   /* allows wrapping */
+  word-wrap: break-word;
+  flex: 1;               /* take up remaining space */
+}
+
+/* Error icon styling */
+.error-icon {
+  font-size: 14px;
+  min-width: 20px;
+  max-width: 20px;
+  width: 20px;           /* equivalent to pref-width */
+  display: flex;
+  align-items: center;   /* align vertically */
+  justify-content: flex-start; /* mimic center-left */
 }
 /*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
 
@@ -1788,6 +1824,108 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     font-size: 16px;
     --fx-line-height: 1.6;
 }
+
+/* Dark Amber Alert Scheme*/
+:root {
+    --notification-bg-primary: #BF360C;
+    --notification-bg-secondary: #D84315;
+    --notification-text-color: #FFFDE7;
+    --notification-border-color: #FF6D00;
+    --notification-icon-color: #FFD600;
+    --notification-icon-bg: rgba(255, 214, 0, 0.2);
+    --notification-close-color: #FFE0B2;
+    --notification-close-hover-bg: rgba(255, 214, 0, 0.2);
+    --notification-close-hover-color: #FFD600;
+}
+
+.notification-bar {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Background styling for error notifications */
+.notification-error > fx-background {
+    background: linear-gradient(to bottom, var(--notification-bg-primary), var(--notification-bg-secondary));
+    border-radius: 8px;
+}
+
+/* Border styling for error notifications */
+.notification-error > fx-border {
+    border: 1px solid var(--notification-border-color);
+    border-radius: 8px;
+}
+
+/* Text container setup for scrolling */
+fx-label.notification-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+    --scroll-text-duration: 20s; /* Will be actually recomputed in the app to always get the same text speed */
+}
+
+/* Text with scrolling animation */
+fx-label.notification-text fx-text {
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--notification-text-color);
+    animation: scroll-text var(--scroll-text-duration) linear infinite;
+    padding-left: 100%;
+}
+
+/* Scroll text animation */
+@keyframes scroll-text {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Style the notification icon */
+.notification-error fx-label.notification-icon {
+    display: flex ;
+    align-items: center ;
+    justify-content: center ;
+}
+
+.notification-error fx-label.notification-icon fx-text {
+    color: var(--notification-icon-color) ;
+    font-size: 40px ;
+    font-weight: bold ;
+    text-align: center ;
+}
+
+/* Style the close button */
+.notification-bar fx-button.notification-close {
+    cursor: pointer ;
+    transition: all 0.2s ease ;
+}
+
+.notification-bar fx-button.notification-close > fx-background {
+    background: transparent ;
+    border-radius: 50% ;
+    transition: background-color 0.2s ease ;
+}
+
+.notification-bar fx-button.notification-close fx-text {
+    color: var(--notification-close-color) ;
+    font-size: 18px ;
+    font-weight: bold ;
+}
+
+/* Close button hover states */
+.notification-error fx-button.notification-close:hover > fx-background {
+    background-color: var(--notification-close-hover-bg) ;
+}
+
+.notification-error fx-button.notification-close:hover fx-text {
+    color: var(--notification-close-hover-color) ;
+}
+
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-client-recurringevents =====*/
 
 :root {
@@ -2004,6 +2142,13 @@ fx-aspectratiopane {
 
 .kbs-main-login .help-text a {
     color: white;
+}
+/*===== kbs-frontoffice-onlinefestival-web@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
+
+.linked-account-message {
+    text-align: center;
+    --fx-line-height: 1.8;
+    --fx-text-fill: var(--bootstrap-grey5);
 }
 /*===== override@modality-client-brand-web@main.css from kbs-frontoffice-application =====*/
 
