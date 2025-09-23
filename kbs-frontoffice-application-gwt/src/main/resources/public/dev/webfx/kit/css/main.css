@@ -1463,6 +1463,11 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .booking-elements .sub-price-label {
     --fx-text-fill: #838788;
 }
+/*===== modality-event-mediaview-web@main.css from modality-event-client-mediaview =====*/
+
+.media-button {
+    background-color: var(--brand-main-color);
+}
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
 .main-frame {

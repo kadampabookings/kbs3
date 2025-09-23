@@ -1210,6 +1210,11 @@ Text, Label, Button, TextField {
     -fx-border-radius: 19px;
     -fx-background-radius: 19px;
 }
+/*===== modality-event-mediaview-javafx@main.css from modality-event-client-mediaview =====*/
+
+.media-button {
+    -fx-fill: -brand-main-color;
+}
 /*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
 .main-frame {
