@@ -1465,8 +1465,12 @@ body, textarea /* because textarea has explicit default monospace font */ {
 }
 /*===== modality-event-mediaview-web@main.css from modality-event-client-mediaview =====*/
 
+.root {
+    --modality-media-button-circle-background: var(--brand-main-color);
+}
+
 .media-button {
-    background-color: var(--brand-main-color);
+    background-color: var(--modality-media-button-circle-background);
 }
 /*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
 
@@ -1830,49 +1834,46 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     --fx-line-height: 1.6;
 }
 
-/* Dark Amber Alert Scheme*/
-:root {
+
+.livestream {
+    /* Dark Amber Alert Scheme */
     --notification-bg-primary: #BF360C;
     --notification-bg-secondary: #D84315;
     --notification-text-color: #FFFDE7;
     --notification-border-color: #FF6D00;
-    --notification-icon-color: #FFD600;
     --notification-icon-bg: rgba(255, 214, 0, 0.2);
     --notification-close-color: #FFE0B2;
     --notification-close-hover-bg: rgba(255, 214, 0, 0.2);
     --notification-close-hover-color: #FFD600;
+
+    /* This is to uniformize the fullscreen button color with the notification bar color */
+    --modality-media-button-circle-background: var(--notification-bg-secondary);
 }
 
 .notification-bar {
-    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
 
 /* Background styling for error notifications */
-.notification-error > fx-background {
+.notification-bar > fx-background {
     background: linear-gradient(to bottom, var(--notification-bg-primary), var(--notification-bg-secondary));
     border-radius: 8px;
 }
 
 /* Border styling for error notifications */
-.notification-error > fx-border {
+.notification-bar > fx-border {
     border: 1px solid var(--notification-border-color);
     border-radius: 8px;
 }
 
 /* Text container setup for scrolling */
-fx-label.notification-text {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    overflow: hidden;
-    position: relative;
+.notification-text-box {
     --scroll-text-duration: 20s; /* Will be actually recomputed in the app to always get the same text speed */
 }
 
 /* Text with scrolling animation */
-fx-label.notification-text fx-text {
+.notification-text-box fx-text {
     font-size: 32px;
     font-weight: 500;
     color: var(--notification-text-color);
@@ -1883,22 +1884,15 @@ fx-label.notification-text fx-text {
 /* Scroll text animation */
 @keyframes scroll-text {
     0% {
-        transform: translateX(0);
+        transform: translateX(0) translateY(3px);
     }
     100% {
-        transform: translateX(-100%);
+        transform: translateX(-100%) translateY(3px);
     }
 }
 
 /* Style the notification icon */
-.notification-error fx-label.notification-icon {
-    display: flex ;
-    align-items: center ;
-    justify-content: center ;
-}
-
-.notification-error fx-label.notification-icon fx-text {
-    color: var(--notification-icon-color) ;
+.notification-bar fx-text.notification-icon {
     font-size: 40px ;
     font-weight: bold ;
     text-align: center ;
@@ -1907,13 +1901,12 @@ fx-label.notification-text fx-text {
 /* Style the close button */
 .notification-bar fx-button.notification-close {
     cursor: pointer ;
-    transition: all 0.2s ease ;
 }
 
 .notification-bar fx-button.notification-close > fx-background {
     background: transparent ;
     border-radius: 50% ;
-    transition: background-color 0.2s ease ;
+    transition: background-color 0.5s ease ;
 }
 
 .notification-bar fx-button.notification-close fx-text {
@@ -1923,11 +1916,11 @@ fx-label.notification-text fx-text {
 }
 
 /* Close button hover states */
-.notification-error fx-button.notification-close:hover > fx-background {
+.notification-bar fx-button.notification-close:hover > fx-background {
     background-color: var(--notification-close-hover-bg) ;
 }
 
-.notification-error fx-button.notification-close:hover fx-text {
+.notification-bar fx-button.notification-close:hover fx-text {
     color: var(--notification-close-hover-color) ;
 }
 
