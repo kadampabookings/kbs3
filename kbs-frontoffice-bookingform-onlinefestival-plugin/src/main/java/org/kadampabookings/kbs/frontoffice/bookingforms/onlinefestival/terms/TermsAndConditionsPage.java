@@ -22,12 +22,12 @@ import javafx.scene.layout.VBox;
 import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.shared.entities.Event;
 import one.modality.base.shared.entities.Letter;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
-import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
-import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
-import one.modality.ecommerce.frontoffice.bookingform.BookingForm;
-import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
-import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.booking.client.workingbooking.WorkingBookingProperties;
+import one.modality.booking.frontoffice.bookingelements.BookingElements;
+import one.modality.booking.frontoffice.bookingform.BookingForm;
+import one.modality.booking.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.booking.frontoffice.bookingform.multipages.BookingFormPage;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 
 /**

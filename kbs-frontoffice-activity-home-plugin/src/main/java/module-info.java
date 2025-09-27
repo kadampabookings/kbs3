@@ -10,7 +10,7 @@ module kbs.frontoffice.activity.home.plugin {
     requires modality.base.client.mainframe.fx;
     requires modality.base.frontoffice.utility;
     requires modality.base.shared.entities;
-    requires modality.ecommerce.frontoffice.bookingform;
+    requires modality.booking.frontoffice.bookingform;
     requires modality.event.client.lifecycle;
     requires modality.event.frontoffice.activity.book;
     requires webfx.extras.i18n;

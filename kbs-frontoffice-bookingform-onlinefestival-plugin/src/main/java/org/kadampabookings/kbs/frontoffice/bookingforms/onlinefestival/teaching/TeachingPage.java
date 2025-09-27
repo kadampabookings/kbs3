@@ -15,11 +15,11 @@ import one.modality.base.client.time.FrontOfficeTimeFormats;
 import one.modality.base.shared.entities.BookablePeriod;
 import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.base.shared.knownitems.KnownItemI18nKeys;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
-import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
-import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
-import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
-import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.booking.client.workingbooking.WorkingBookingProperties;
+import one.modality.booking.frontoffice.bookingelements.BookingElements;
+import one.modality.booking.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.booking.frontoffice.bookingform.multipages.BookingFormPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
 
 import java.time.LocalDateTime;

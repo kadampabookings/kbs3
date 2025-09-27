@@ -1,9 +1,9 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
 import one.modality.base.shared.entities.Event;
-import one.modality.ecommerce.client.workingbooking.HasWorkingBookingProperties;
-import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
-import one.modality.ecommerce.frontoffice.bookingform.multipages.MultiPageBookingForm;
+import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
+import one.modality.booking.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.booking.frontoffice.bookingform.multipages.MultiPageBookingForm;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording.AudioRecordingPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment.PaymentPage;

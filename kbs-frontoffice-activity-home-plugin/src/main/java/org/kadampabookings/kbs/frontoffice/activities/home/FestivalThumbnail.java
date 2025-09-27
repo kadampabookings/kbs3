@@ -26,7 +26,7 @@ import javafx.stage.Screen;
 import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
 import one.modality.base.shared.entities.Event;
-import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.booking.frontoffice.bookingform.BookingFormI18nKeys;
 import one.modality.event.client.lifecycle.EventLifeCycle;
 import one.modality.event.frontoffice.activities.book.BookStarter;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;

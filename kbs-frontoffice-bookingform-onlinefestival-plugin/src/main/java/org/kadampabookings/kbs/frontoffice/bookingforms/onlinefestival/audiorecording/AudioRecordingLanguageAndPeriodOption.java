@@ -7,8 +7,8 @@ import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.client.time.ModalityDates;
 import one.modality.base.shared.entities.Item;
 import one.modality.base.shared.entities.ScheduledItem;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
-import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
+import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.booking.frontoffice.bookingelements.BookingElements;
 
 import java.util.List;
 

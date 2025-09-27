@@ -9,11 +9,11 @@ import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import one.modality.ecommerce.frontoffice.order.OrderDetails;
-import one.modality.ecommerce.client.workingbooking.WorkingBooking;
-import one.modality.ecommerce.client.workingbooking.WorkingBookingProperties;
-import one.modality.ecommerce.frontoffice.bookingelements.BookingElements;
-import one.modality.ecommerce.frontoffice.bookingform.BookingFormI18nKeys;
-import one.modality.ecommerce.frontoffice.bookingform.multipages.BookingFormPage;
+import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.booking.client.workingbooking.WorkingBookingProperties;
+import one.modality.booking.frontoffice.bookingelements.BookingElements;
+import one.modality.booking.frontoffice.bookingform.BookingFormI18nKeys;
+import one.modality.booking.frontoffice.bookingform.multipages.BookingFormPage;
 
 /**
  * @author Bruno Salmon

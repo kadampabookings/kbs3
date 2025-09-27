@@ -12,14 +12,14 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires modality.base.client.time;
     requires modality.base.shared.entities;
     requires modality.base.shared.knownitems;
+    requires modality.booking.client.workingbooking;
+    requires modality.booking.frontoffice.bookingelements;
+    requires modality.booking.frontoffice.bookingform;
     requires modality.crm.client.authn.fx;
     requires modality.crm.client.i18n;
     requires modality.crm.frontoffice.activity.userprofile.plugin;
     requires modality.ecommerce.client.i18n;
-    requires modality.ecommerce.client.workingbooking;
     requires modality.ecommerce.document.service;
-    requires modality.ecommerce.frontoffice.bookingelements;
-    requires modality.ecommerce.frontoffice.bookingform;
     requires modality.ecommerce.frontoffice.order;
     requires modality.event.frontoffice.activity.book;
     requires modality.event.frontoffice.eventheader;
@@ -58,6 +58,6 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.terms;
 
     // Provided services
-    provides one.modality.ecommerce.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalBookingFormProvider;
+    provides one.modality.booking.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalBookingFormProvider;
 
 }

@@ -1,10 +1,10 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
 import one.modality.base.shared.entities.Event;
-import one.modality.ecommerce.client.workingbooking.HasWorkingBookingProperties;
+import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
-import one.modality.ecommerce.frontoffice.bookingform.BookingForm;
-import one.modality.ecommerce.frontoffice.bookingform.BookingFormProvider;
+import one.modality.booking.frontoffice.bookingform.BookingForm;
+import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
 import one.modality.event.frontoffice.eventheader.EventTitleHeader;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
