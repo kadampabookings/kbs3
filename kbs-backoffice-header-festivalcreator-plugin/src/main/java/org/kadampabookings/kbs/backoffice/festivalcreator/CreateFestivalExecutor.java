@@ -4,7 +4,7 @@ import dev.webfx.extras.aria.AriaToggleGroup;
 import dev.webfx.extras.exceptions.UserCancellationException;
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
-import dev.webfx.extras.operation.OperationUtil;
+import dev.webfx.extras.async.AsyncSpinner;
 import dev.webfx.extras.panes.ColumnsPane;
 import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
@@ -160,7 +160,7 @@ final class CreateFestivalExecutor {
                     si.setItem(festivalItemPrimaryKey);
                     si.setDate(date);
                 }
-                OperationUtil.turnOnButtonsWaitModeDuringExecution(
+                AsyncSpinner.displayButtonSpinnerDuringAsyncExecution(
                     updateStore.submitChanges()
                         // Setting venue afterwards TODO: Improve EntityChangesToSubmitBatchGenerator to solve cyclic references
                         .compose(ignored -> {

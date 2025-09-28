@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal
 
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
+import dev.webfx.extras.async.AsyncSpinner;
 import dev.webfx.extras.operation.OperationUtil;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
@@ -151,7 +152,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
         });
         userProfileView.saveButton.setOnAction(e -> {
             if (validateForm()) {
-                OperationUtil.turnOnButtonsWaitModeDuringExecution(
+                AsyncSpinner.displayButtonSpinnerDuringAsyncExecution(
                     updateStore.submitChanges()
                         .inUiThread()
                         .onFailure(failure -> {

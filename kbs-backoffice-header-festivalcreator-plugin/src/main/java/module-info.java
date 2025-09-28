@@ -21,6 +21,7 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires modality.event.client.event.fx;
     requires webfx.extras.action;
     requires webfx.extras.aria;
+    requires webfx.extras.async;
     requires webfx.extras.controlfactory;
     requires webfx.extras.exceptions;
     requires webfx.extras.i18n;
