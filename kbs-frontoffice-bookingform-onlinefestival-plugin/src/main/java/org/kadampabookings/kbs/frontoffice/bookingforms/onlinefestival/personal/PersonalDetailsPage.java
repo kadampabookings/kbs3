@@ -3,7 +3,7 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.async.AsyncSpinner;
-import dev.webfx.extras.operation.OperationUtil;
+import dev.webfx.extras.operation.OperationDirect;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
 import dev.webfx.extras.util.control.Controls;
@@ -112,7 +112,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
                 // Forcing logout for security staff if they try to book with that account
                 FrontendAccount userAccount = person.getFrontendAccount(); // Note: null (not loaded) for members
                 if (userAccount != null && userAccount.isSecurity())
-                    OperationUtil.executeOperation(new LogoutRequest());
+                    OperationDirect.executeOperation(new LogoutRequest());
                 else {
                     isLinkedAccount = Entities.getPrimaryKey(person.getAccountPersonId()) != null;
                     setPersonToBook(person);
