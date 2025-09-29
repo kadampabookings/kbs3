@@ -262,8 +262,29 @@
     <source path="one/modality/base/shared/entities/impl"/>
     <source path="one/modality/base/shared/entities/markers"/>
     <source path="one/modality/base/shared/entities/triggers"/>
+    <source path="one/modality/base/shared/entities/util"/>
     <!--========================< modality-base-shared-knownitems >=========================-->
     <source path="one/modality/base/shared/knownitems"/>
+    <!--==============< modality-booking-backoffice-activity-bookings-plugin >==============-->
+    <source path="one/modality/booking/backoffice/activities/bookings"/>
+    <!--===================< modality-booking-backoffice-bookingeditor >====================-->
+    <source path="one/modality/booking/backoffice/bookingeditor"/>
+    <source path="one/modality/booking/backoffice/bookingeditor/family"/>
+    <source path="one/modality/booking/backoffice/bookingeditor/multi"/>
+    <source path="one/modality/booking/backoffice/bookingeditor/spi"/>
+    <!--========< modality-booking-backoffice-bookingeditor-audiorecording-plugin >=========-->
+    <source path="one/modality/booking/backoffice/bookingeditor/audiorecording"/>
+    <!--===========< modality-booking-backoffice-bookingeditor-teaching-plugin >============-->
+    <source path="one/modality/booking/backoffice/bookingeditor/teaching"/>
+    <!--================< modality-booking-backoffice-operations-document >=================-->
+    <source path="one/modality/booking/backoffice/operations/entities/document"/>
+    <source path="one/modality/booking/backoffice/operations/entities/document/registration"/>
+    <!--=================< modality-booking-client-scheduleditemsselector >=================-->
+    <source path="one/modality/booking/client/scheduleditemsselector"/>
+    <!--===============< modality-booking-client-scheduleditemsselector-box >===============-->
+    <source path="one/modality/booking/client/selecteditemsselector/box"/>
+    <!--=====================< modality-booking-client-workingbooking >=====================-->
+    <source path="one/modality/booking/client/workingbooking"/>
     <!--==============< modality-catering-backoffice-activity-kitchen-plugin >==============-->
     <source path="one/modality/catering/backoffice/activities/kitchen"/>
     <!--=========================< modality-catering-client-i18n >==========================-->
@@ -294,8 +315,6 @@
     <!--===========================< modality-crm-shared-authn >============================-->
     <source path="one/modality/crm/shared/services/authn"/>
     <source path="one/modality/crm/shared/services/authn/serial"/>
-    <!--=============< modality-ecommerce-backoffice-activity-bookings-plugin >=============-->
-    <source path="one/modality/ecommerce/backoffice/activities/bookings"/>
     <!--============< modality-ecommerce-backoffice-activity-moneyflows-plugin >============-->
     <source path="one/modality/ecommerce/backoffice/activities/moneyflows"/>
     <!--============< modality-ecommerce-backoffice-activity-statistics-plugin >============-->
@@ -315,8 +334,6 @@
     <source path="one/modality/ecommerce/backoffice/operations/entities/moneytransfer"/>
     <!--=========================< modality-ecommerce-client-i18n >=========================-->
     <source path="one/modality/ecommerce/client/i18n"/>
-    <!--====================< modality-ecommerce-client-workingbooking >====================-->
-    <source path="one/modality/ecommerce/client/workingbooking"/>
     <!--======================< modality-ecommerce-document-service >=======================-->
     <source path="one/modality/ecommerce/document/service"/>
     <source path="one/modality/ecommerce/document/service/events"/>
@@ -368,12 +385,8 @@
     <source path="one/modality/event/backoffice/events/eventselector"/>
     <!--=================< modality-event-client-activity-eventdependent >==================-->
     <source path="one/modality/event/client/activity/eventdependent"/>
-    <!--=========================< modality-event-client-booking >==========================-->
-    <source path="one/modality/event/client/booking"/>
     <!--=========================< modality-event-client-event-fx >=========================-->
     <source path="one/modality/event/client/event/fx"/>
-    <!--=====================< modality-event-client-recurringevents >======================-->
-    <source path="one/modality/event/client/recurringevents"/>
     <!--==========================< modality-event-client-theme >===========================-->
     <source path="one/modality/event/client/theme"/>
     <!--====================< modality-hotel-backoffice-accommodation >=====================-->
@@ -391,6 +404,8 @@
     <source path="dev/webfx/extras/action/impl"/>
     <!--===============================< webfx-extras-aria >================================-->
     <source path="dev/webfx/extras/aria"/>
+    <!--===============================< webfx-extras-async >===============================-->
+    <source path="dev/webfx/extras/async"/>
     <!--==============================< webfx-extras-canvas >===============================-->
     <source path="dev/webfx/extras/canvas"/>
     <source path="dev/webfx/extras/canvas/impl"/>

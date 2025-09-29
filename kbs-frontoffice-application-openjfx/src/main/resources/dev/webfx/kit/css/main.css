@@ -1095,7 +1095,7 @@ Text, Label, Button, TextField {
     -fx-background-color: -bootstrap-grey1;
     -fx-border-color: black;
 }
-/*===== modality-frontoffice-bookingelements-javafx@main.css from modality-ecommerce-frontoffice-bookingelements =====*/
+/*===== modality-frontoffice-bookingelements-javafx@main.css from modality-booking-frontoffice-bookingelements =====*/
 
 .booking-elements {
     -fx-font-family: "Poppins";
@@ -1706,7 +1706,49 @@ CollapsePane.menu-bar.lang-menu-bar {
 .notification-bar Button.notification-close:hover {
     -fx-text-fill: -notification-close-hover-color;
 }
-/*===== modality-event-client-recurringevents-javafx@main.css from modality-event-client-recurringevents =====*/
+/*===== modality-event-client-selecteditemsselector-box-javafx@main.css from modality-booking-client-scheduleditemsselector-box =====*/
+
+.scheduled-item-box {
+    -fx-border-color: #cccccc;
+}
+
+.scheduled-item-box.date-unselected Text {
+    -fx-fill: #444;
+}
+
+.scheduled-item-box Text.time {
+    -fx-fill: #838788;
+}
+
+.scheduled-item-box.date-unselected {
+    -fx-background-color: none;
+}
+
+.scheduled-item-box.date-non-selectable {
+    -fx-border-color: #cccccc;
+    -fx-background-color: #dddddd;
+}
+
+.scheduled-item-box.date-non-selectable Text,
+.scheduled-item-box.date-non-selectable Text.time {
+    -fx-fill: #aaaaaa;
+}
+
+.scheduled-item-box.date-selected,
+.scheduled-item-box.date-already-booked {
+    -fx-border-color: none;
+    -fx-background-color: -brand-main-color;
+}
+
+.scheduled-item-box.date-selected Text {
+    -fx-fill: white;
+}
+
+.scheduled-item-box.date-already-booked Text {
+    -fx-fill: #eeeeee;
+}
+
+/*===== modality-event-client-recurringevents-javafx@main.css from modality-event-frontoffice-bookingform-recurringevent-plugin =====*/
 
 .root {
     -fx-event-description-text-color: #444;
@@ -1727,55 +1769,11 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-line-spacing: 12px;
 }
 
-
 .subtitle-grey {
    -fx-text-fill: grey;
    -fx-fill: grey;
    -fx-font-size: 14px;
 }
-
-/* Date cells for recurring events */
-
-.event-date-cell {
-    -fx-border-color: #cccccc;
-}
-
-.event-date-cell.date-unselected Text {
-    -fx-fill: #444;
-}
-
-.event-date-cell Text.event-time {
-    -fx-fill: #838788;
-}
-
-.event-date-cell.date-unselected {
-    -fx-background-color: none;
-}
-
-.event-date-cell.date-non-selectable {
-    -fx-border-color: #cccccc;
-    -fx-background-color: #dddddd;
-}
-
-.event-date-cell.date-non-selectable Text,
-.event-date-cell.date-non-selectable Text.event-time {
-    -fx-fill: #aaaaaa;
-}
-
-.event-date-cell.date-selected,
-.event-date-cell.date-already-booked {
-    -fx-border-color: none;
-    -fx-background-color: -brand-main-color;
-}
-
-.event-date-cell.date-selected Text {
-    -fx-fill: white;
-}
-
-.event-date-cell.date-already-booked Text {
-    -fx-fill: #eeeeee;
-}
-
 
 .line-total {
     -fx-background-color: #CCCCCC;

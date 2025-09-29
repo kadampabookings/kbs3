@@ -80,8 +80,8 @@ public final class GwtEntryPoint implements ApplicationBooterProvider, EntryPoin
         register(dev.webfx.stack.shareddata.cache.spi.CachesProvider.class, dev.webfx.stack.shareddata.cache.cachestorage.gwtj2cl.GwtJ2ClCacheStorageCachesProvider::new);
         register(javafx.application.Application.class, one.modality.base.frontoffice.application.ModalityFrontOfficeApplication::new);
         register(one.modality.base.frontoffice.mainframe.footernode.MainFrameFooterNodeProvider.class, org.kadampabookings.kbs.frontoffice.footer.nktikbu.NKTIKBUFooterProvider::new);
+        register(one.modality.booking.frontoffice.bookingform.BookingFormProvider.class, one.modality.event.frontoffice.bookingform.recurringevent.RecurringEventBookingFormProvider::new, org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalBookingFormProvider::new, org.kadampabookings.kbs.frontoffice.bookingforms.sttp.SttpBookingFormProvider::new);
         register(one.modality.ecommerce.document.service.spi.DocumentServiceProvider.class, one.modality.ecommerce.document.service.spi.impl.remote.RemoteDocumentServiceProvider::new);
-        register(one.modality.ecommerce.frontoffice.bookingform.BookingFormProvider.class, one.modality.event.frontoffice.bookingform.recurringevent.RecurringEventBookingFormProvider::new, org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalBookingFormProvider::new, org.kadampabookings.kbs.frontoffice.bookingforms.sttp.SttpBookingFormProvider::new);
         register(one.modality.ecommerce.payment.spi.PaymentServiceProvider.class, one.modality.ecommerce.payment.spi.impl.remote.RemotePaymentServiceProvider::new);
     }
 }

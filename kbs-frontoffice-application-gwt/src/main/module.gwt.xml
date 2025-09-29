@@ -262,8 +262,20 @@
     <source path="one/modality/base/shared/entities/impl"/>
     <source path="one/modality/base/shared/entities/markers"/>
     <source path="one/modality/base/shared/entities/triggers"/>
+    <source path="one/modality/base/shared/entities/util"/>
     <!--========================< modality-base-shared-knownitems >=========================-->
     <source path="one/modality/base/shared/knownitems"/>
+    <!--=================< modality-booking-client-scheduleditemsselector >=================-->
+    <source path="one/modality/booking/client/scheduleditemsselector"/>
+    <!--===============< modality-booking-client-scheduleditemsselector-box >===============-->
+    <source path="one/modality/booking/client/selecteditemsselector/box"/>
+    <!--=====================< modality-booking-client-workingbooking >=====================-->
+    <source path="one/modality/booking/client/workingbooking"/>
+    <!--==================< modality-booking-frontoffice-bookingelements >==================-->
+    <source path="one/modality/booking/frontoffice/bookingelements"/>
+    <!--====================< modality-booking-frontoffice-bookingform >====================-->
+    <source path="one/modality/booking/frontoffice/bookingform"/>
+    <source path="one/modality/booking/frontoffice/bookingform/multipages"/>
     <!--====================< modality-crm-backoffice-organization-fx >=====================-->
     <source path="one/modality/crm/backoffice/organization/fx"/>
     <source path="one/modality/crm/backoffice/organization/fx/impl"/>
@@ -292,8 +304,6 @@
     <source path="one/modality/crm/shared/services/authn/serial"/>
     <!--=========================< modality-ecommerce-client-i18n >=========================-->
     <source path="one/modality/ecommerce/client/i18n"/>
-    <!--====================< modality-ecommerce-client-workingbooking >====================-->
-    <source path="one/modality/ecommerce/client/workingbooking"/>
     <!--======================< modality-ecommerce-document-service >=======================-->
     <source path="one/modality/ecommerce/document/service"/>
     <source path="one/modality/ecommerce/document/service/events"/>
@@ -318,11 +328,6 @@
     <source path="one/modality/ecommerce/document/service/buscall/serial/security"/>
     <!--===================< modality-ecommerce-document-service-remote >===================-->
     <source path="one/modality/ecommerce/document/service/spi/impl/remote"/>
-    <!--=================< modality-ecommerce-frontoffice-bookingelements >=================-->
-    <source path="one/modality/ecommerce/frontoffice/bookingelements"/>
-    <!--===================< modality-ecommerce-frontoffice-bookingform >===================-->
-    <source path="one/modality/ecommerce/frontoffice/bookingform"/>
-    <source path="one/modality/ecommerce/frontoffice/bookingform/multipages"/>
     <!--======================< modality-ecommerce-frontoffice-order >======================-->
     <source path="one/modality/ecommerce/frontoffice/order"/>
     <!--===========================< modality-ecommerce-payment >===========================-->
@@ -337,8 +342,6 @@
     <source path="one/modality/ecommerce/payment/spi/impl/remote"/>
     <!--===================< modality-ecommerce-shared-pricecalculator >====================-->
     <source path="one/modality/ecommerce/shared/pricecalculator"/>
-    <!--=========================< modality-event-client-booking >==========================-->
-    <source path="one/modality/event/client/booking"/>
     <!--=========================< modality-event-client-event-fx >=========================-->
     <source path="one/modality/event/client/event/fx"/>
     <!--===========================< modality-event-client-i18n >===========================-->
@@ -347,8 +350,6 @@
     <source path="one/modality/event/client/lifecycle"/>
     <!--========================< modality-event-client-mediaview >=========================-->
     <source path="one/modality/event/client/mediaview"/>
-    <!--=====================< modality-event-client-recurringevents >======================-->
-    <source path="one/modality/event/client/recurringevents"/>
     <!--============< modality-event-frontoffice-activity-audiolibrary-plugin >=============-->
     <source path="one/modality/event/frontoffice/activities/audiolibrary"/>
     <resource path="one/modality/event/frontoffice/activities/audiolibrary"/>
@@ -372,6 +373,8 @@
     <source path="dev/webfx/extras/action/impl"/>
     <!--===============================< webfx-extras-aria >================================-->
     <source path="dev/webfx/extras/aria"/>
+    <!--===============================< webfx-extras-async >===============================-->
+    <source path="dev/webfx/extras/async"/>
     <!--==============================< webfx-extras-canvas >===============================-->
     <source path="dev/webfx/extras/canvas"/>
     <source path="dev/webfx/extras/canvas/impl"/>
