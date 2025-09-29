@@ -34,9 +34,9 @@ final class TeachingPeriodOption {
         //radioButton.setMinWidth(Region.USE_PREF_SIZE);
         radioButton.setMinWidth(0);
         Controls.setupTextWrapping(radioButton, true, false);
-        I18nEntities.bindExpressionProperties(radioButton, bookablePeriod, "i18n(this)");
-        I18nEntities.bindExpressionProperties(longPeriodLabel,  bookablePeriod, "dateIntervalFormat(startScheduledItem.date, endScheduledItem.date) + ' (' + (endScheduledItem.date - startScheduledItem.date + 1) + ' [days])'");
-        I18nEntities.bindExpressionProperties(shortPeriodLabel, bookablePeriod, "dateIntervalFormat(startScheduledItem.date, endScheduledItem.date)");
+        I18nEntities.bindTranslatedEntityToTextProperty(radioButton, bookablePeriod);
+        I18nEntities.bindExpressionToTextProperty(longPeriodLabel,  bookablePeriod, "dateIntervalFormat(startScheduledItem.date, endScheduledItem.date) + ' (' + (endScheduledItem.date - startScheduledItem.date + 1) + ' [days])'");
+        I18nEntities.bindExpressionToTextProperty(shortPeriodLabel, bookablePeriod, "dateIntervalFormat(startScheduledItem.date, endScheduledItem.date)");
         PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
         LocalDate startDate = bookablePeriod.getStartScheduledItem().getDate();
         LocalDate endDate = bookablePeriod.getEndScheduledItem().getDate();

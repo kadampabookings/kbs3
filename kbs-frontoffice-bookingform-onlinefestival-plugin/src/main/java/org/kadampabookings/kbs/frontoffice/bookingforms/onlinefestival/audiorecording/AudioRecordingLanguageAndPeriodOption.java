@@ -21,10 +21,10 @@ final class AudioRecordingLanguageAndPeriodOption {
     private final Label periodLabel = BookingElements.createPeriodLabel();
     private final Label priceLabel = BookingElements.createPriceLabel();
 
-    AudioRecordingLanguageAndPeriodOption(Item item, List<ScheduledItem> scheduledItems, WorkingBooking workingBooking) {
-        I18nEntities.bindExpressionTextProperty(bookButton, item, "i18n(this)");
-        periodLabel.setText(ModalityDates.formatHasDateSeries(scheduledItems));
-        BookingElements.setupPeriodOption(scheduledItems, priceLabel, bookButton.selectedProperty(), workingBooking);
+    AudioRecordingLanguageAndPeriodOption(Item audioRecordingItem, List<ScheduledItem> scheduledAudioRecordingItems, WorkingBooking workingBooking) {
+        I18nEntities.bindTranslatedEntityToTextProperty(bookButton, audioRecordingItem);
+        periodLabel.setText(ModalityDates.formatHasDateSeries(scheduledAudioRecordingItems));
+        BookingElements.setupPeriodOption(scheduledAudioRecordingItems, priceLabel, bookButton.selectedProperty(), workingBooking);
     }
 
     ButtonBase getBookButton() {

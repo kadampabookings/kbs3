@@ -53,7 +53,7 @@ public final class TermsAndConditionsPage implements BookingFormPage {
                 if (termsLetter == null) {
                     Console.log("No terms and conditions found for event " + event.getId());
                 } else {
-                    I18nEntities.bindExpressionTextProperty(termsHtmlText.textProperty(), termsLetter, "i18n(this)");
+                    I18nEntities.bindTranslatedEntityToTextProperty(termsHtmlText.textProperty(), termsLetter);
                 }
             });
         container.setAlignment(Pos.TOP_LEFT);
