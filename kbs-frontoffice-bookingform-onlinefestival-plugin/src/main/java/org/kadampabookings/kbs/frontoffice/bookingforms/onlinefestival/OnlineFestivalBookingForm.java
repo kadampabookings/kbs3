@@ -6,6 +6,7 @@ import one.modality.booking.frontoffice.bookingform.multipages.BookingFormPage;
 import one.modality.booking.frontoffice.bookingform.multipages.MultiPageBookingForm;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audiorecording.AudioRecordingPage;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.closed.BookingsClosedPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment.PaymentPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal.PersonalDetailsPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary.FestivalSummaryPage;
@@ -18,6 +19,7 @@ import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.terms.Ter
 final class OnlineFestivalBookingForm extends MultiPageBookingForm {
 
     private final BookingFormPage[] pages = {
+        new BookingsClosedPage(),
         new TeachingPage(),
         new AudioRecordingPage(),
         new PersonalDetailsPage(this),

@@ -63,7 +63,10 @@ final class FestivalThumbnail {
         festivalName.getStyleClass().setAll("festival-name");
 
         boolean canBookNow = EventLifeCycle.canBookNow(festival);
-        Button button = Bootstrap.button(I18nControls.newButton(canBookNow ? BookingFormI18nKeys.bookNow : EventLifeCycle.isPastEvent(festival) ? BookingFormI18nKeys.closed : BookingFormI18nKeys.comingSoon));
+        Button button = Bootstrap.button(I18nControls.newButton(
+            canBookNow ? BookingFormI18nKeys.bookNow
+                : EventLifeCycle.isPastEvent(festival) || EventLifeCycle.isClosed(festival, false) ? BookingFormI18nKeys.closed
+                : BookingFormI18nKeys.comingSoon));
         button.setPrefSize(240, 48);
         if (canBookNow) {
             button.setOnAction(e -> openBookNowDialog());

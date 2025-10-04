@@ -115,6 +115,7 @@
     <!--===============< kbs-frontoffice-bookingform-onlinefestival-plugin >================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/audiorecording"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/closed"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/payment"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/personal"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/summary"/>
@@ -1016,6 +1017,7 @@
     <source path="dev/webfx/stack/shareddata/storage"/>
 
     <!-- Speeding up GWT compilation and execution times -->
+    <set-property name="user.agent" value="safari"/> <!-- Only one permutation to speed up GWT compilation - now workings in all modern browsers -->
     <set-configuration-property name="user.agent.runtimeWarning" value="false"/> <!-- removing irrelevant warning in non-safari browsers -->
     <set-property name="jre.checks.checkLevel" value="MINIMAL"/> <!-- to speed up execution time -->
 

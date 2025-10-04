@@ -6,6 +6,7 @@ public interface OnlineFestivalI18nKeys {
     Object ModifyBooking1 = "ModifyBooking1";
     Object PersonAlreadyBooked1 = "PersonAlreadyBooked1";
     Object IncorrectPriceFormat = "IncorrectPriceFormat";
+    Object BookingsClosed = "BookingsClosed";
     Object LinkedAccountMessage = "LinkedAccountMessage";
     Object MustBeInRange2 = "MustBeInRange2";
     Object PaymentCancelledBookingSaved = "PaymentCancelledBookingSaved";
