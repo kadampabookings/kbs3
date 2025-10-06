@@ -37,8 +37,9 @@ public final class BookingsClosedPage implements BookingFormPage { // TODO: Move
 
     @Override
     public boolean isApplicableToBooking(WorkingBooking workingBooking) {
-        return EventLifeCycle.isClosed(workingBooking.getEvent(), false)
-            && !workingBooking.isPaymentRequestedByUser();
+        boolean considerAudioRecording = !workingBooking.isNewBooking();
+        return EventLifeCycle.isClosed(workingBooking.getEvent(), considerAudioRecording)
+               && !workingBooking.isPaymentRequestedByUser();
     }
 
     @Override
