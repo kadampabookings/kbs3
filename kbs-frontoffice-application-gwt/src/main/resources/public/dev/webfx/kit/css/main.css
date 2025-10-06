@@ -969,6 +969,12 @@ fx-switch.webfx-switch.selected {
 fx-switch.webfx-switch fx-circle.knob {
     background-color: var(--webfx-switch-knob-background-color);
 }
+/*===== webfx-videojs-web@main.css from webfx-extras-player-video-web-videojs =====*/
+
+.webfx-videojs-container {
+    display: grid;
+    place-items: center;
+}
 /*===== webfx-extra-player-audio-javafxmedia-web@main.css from webfx-extras-player-audio-javafxmedia =====*/
 
 .audio-player {
