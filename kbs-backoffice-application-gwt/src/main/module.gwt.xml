@@ -476,7 +476,6 @@
     <source path="dev/webfx/extras/panes/transitions"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
-    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->
@@ -833,6 +832,7 @@
     <source path="dev/webfx/stack/com/serial"/>
     <source path="dev/webfx/stack/com/serial/spi"/>
     <source path="dev/webfx/stack/com/serial/spi/impl"/>
+    <source path="dev/webfx/stack/com/serial/spi/impl/ast"/>
     <source path="dev/webfx/stack/com/serial/spi/impl/time"/>
     <!--===========================< webfx-stack-com-websocket >============================-->
     <source path="dev/webfx/stack/com/websocket"/>

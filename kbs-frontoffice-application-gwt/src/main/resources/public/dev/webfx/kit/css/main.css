@@ -1469,126 +1469,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .booking-elements .sub-price-label {
     --fx-text-fill: #838788;
 }
-/*===== modality-event-mediaview-web@main.css from modality-event-client-mediaview =====*/
-
-.root {
-    --modality-media-button-circle-background: var(--brand-main-color);
-}
-
-.media-button {
-    background-color: var(--modality-media-button-circle-background);
-}
-/*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
-
-.main-frame {
-    --fx-background-color: white;
-}
-
-.main-frame.keyboard-navigation-off .menu-bar {
-    --fx-border-style-focus: none;
-}
-
-.main-frame.keyboard-navigation-off .lang-menu-bar {
-    --fx-border-style-focus: solid;
-}
-
-.main-frame.keyboard-navigation-on .menu-bar {
-    --fx-border-style-focus: dashed;
-}
-
-.menu-bar {
-    font-family: var(--poppins-font-family), sans-serif;
-    --fx-button-background-color: transparent;
-    --fx-border-style: none;
-    --fx-text-fill: black;
-    --fx-button-border-style: none;
-    --webfx-aria-toggle-button-background-color-hover: transparent;
-    --webfx-aria-toggle-button-background-color-fired: transparent;
-    --webfx-aria-toggle-button-background-color-focused: transparent;
-    --webfx-aria-toggle-button-text-fill-fired: var(--fx-focus-color);
-}
-
-.menu-bar fx-togglebutton.aria-toggle.fired {
-    font-weight: bold;
-}
-
-.menu-bar fx-togglebutton.aria-toggle.fired fx-svgpath svg path {
-    fill: var(--fx-text-fill);
-}
-
-.lang-menu-bar {
-    --fx-button-border-color: #0096D6;
-    --fx-button-border-style: solid;
-    --fx-button-border-radius: 0;
-    --fx-button-border-width: 1px 1px 1px 0;
-    --fx-button-background-radius: 0;
-    --fx-togglebutton-border-color-hover: var(--fx-button-border-color);
-    --webfx-aria-toggle-button-background-color-focused: #F0F0F0;
-    --webfx-aria-toggle-button-background-color-fired: #0096D6;
-    --webfx-aria-toggle-button-text-fill-fired: white;
-}
-
-.lang-menu-bar .first-child {
-    --fx-button-border-width: 1px;
-    --fx-button-border-radius: 10px 0px 0px 10px;
-    --fx-button-background-radius: 10px 0px 0px 10px;
-}
-
-.lang-menu-bar .last-child {
-    --fx-border-radius:  0px 10px 10px 0px;
-    --fx-background-radius:  0px 10px 10px 0px;
-}
-
-.main-menu-bar fx-label.brand {
-    font-size: 14px;
-    font-weight: 500;
-    --fx-text-fill: var(--brand-blue-color);
-}
-
-.user-menu-bar fx-label, .user-menu-bar fx-button {
-    font-size: 12px;
-    --fx-text-fill: #838788;
-}
-
-.modality-dialog-area .gold-layout {
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-}
-
-fx-collapsepane.menu-bar {
-    --fx-background-color: white;
-    --fx-border-style: solid;
-    --fx-border-color: lightgray;
-    --fx-border-width: 0 0 1px 0;
-    --fx-border-radius: 0;
-}
-
-fx-collapsepane.menu-bar.lang-menu-bar {
-    --fx-border-style: none;
-}
-/*===== modality-base-front-office-web@main.css from modality-base-frontoffice-application =====*/
-
-:root {
-    /* We don't show the vertical grid lines in the front office (ex: AudioLibraryActivity or VideoStreamingActivity) */
-    --webfx-visualgrid-col-border-color: transparent;
-
-    /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
-    --webfx-aria-toggle-button-background-color-focused: var(--bootstrap-grey1);
-    --webfx-aria-toggle-button-background-color-fired: var(--brand-blue-color);
-}
-/*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
-
-/* We don't want the default white background for WebFX Extras material text fields in the login window */
-.user-account * {
-    --webfx-material-background-color: transparent;
-    --webfx-material-idle-text-fill: black;
-}
-
-.user-account .material-label {
-     font-weight: bold;
-     font-size: 14px;
-}
-
 /*===== modality-frontoffice-order-web@main.css from modality-ecommerce-frontoffice-order =====*/
 
 .order-card {
@@ -1699,6 +1579,153 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 .thank-you-message {
     font-size: 16px;
     color: #666;
+}
+
+/*===== modality-event-frontoffice-medias-web@main.css from modality-event-frontoffice-medias =====*/
+
+.notice-icon {
+    background-color: #FF6D00;
+    border-radius: 40px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notice-label fx-text {
+    font-size: 40px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.balance-box {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+}
+/*===== modality-event-mediaview-web@main.css from modality-event-client-mediaview =====*/
+
+.root {
+    --modality-media-button-circle-background: var(--brand-main-color);
+}
+
+.media-button {
+    background-color: var(--modality-media-button-circle-background);
+}
+/*===== modality-frontoffice-mainframe-web@main.css from modality-base-frontoffice-mainframe-activity =====*/
+
+.main-frame {
+    --fx-background-color: white;
+}
+
+.main-frame.keyboard-navigation-off .menu-bar {
+    --fx-border-style-focus: none;
+}
+
+.main-frame.keyboard-navigation-off .lang-menu-bar {
+    --fx-border-style-focus: solid;
+}
+
+.main-frame.keyboard-navigation-on .menu-bar {
+    --fx-border-style-focus: dashed;
+}
+
+.menu-bar {
+    font-family: var(--poppins-font-family), sans-serif;
+    --fx-button-background-color: transparent;
+    --fx-border-style: none;
+    --fx-text-fill: black;
+    --fx-button-border-style: none;
+    --webfx-aria-toggle-button-background-color-hover: transparent;
+    --webfx-aria-toggle-button-background-color-fired: transparent;
+    --webfx-aria-toggle-button-background-color-focused: transparent;
+    --webfx-aria-toggle-button-text-fill-fired: var(--fx-focus-color);
+}
+
+.menu-bar fx-togglebutton.aria-toggle.fired {
+    font-weight: bold;
+}
+
+.menu-bar fx-togglebutton.aria-toggle.fired fx-svgpath svg path[fill] {
+    fill: var(--fx-text-fill);
+}
+
+.menu-bar fx-togglebutton.aria-toggle.fired fx-svgpath svg path[stroke] {
+    stroke: var(--fx-text-fill);
+}
+
+.lang-menu-bar {
+    --fx-button-border-color: #0096D6;
+    --fx-button-border-style: solid;
+    --fx-button-border-radius: 0;
+    --fx-button-border-width: 1px 1px 1px 0;
+    --fx-button-background-radius: 0;
+    --fx-togglebutton-border-color-hover: var(--fx-button-border-color);
+    --webfx-aria-toggle-button-background-color-focused: #F0F0F0;
+    --webfx-aria-toggle-button-background-color-fired: #0096D6;
+    --webfx-aria-toggle-button-text-fill-fired: white;
+}
+
+.lang-menu-bar .first-child {
+    --fx-button-border-width: 1px;
+    --fx-button-border-radius: 10px 0px 0px 10px;
+    --fx-button-background-radius: 10px 0px 0px 10px;
+}
+
+.lang-menu-bar .last-child {
+    --fx-border-radius:  0px 10px 10px 0px;
+    --fx-background-radius:  0px 10px 10px 0px;
+}
+
+.main-menu-bar fx-label.brand {
+    font-size: 14px;
+    font-weight: 500;
+    --fx-text-fill: var(--brand-blue-color);
+}
+
+.user-menu-bar fx-label, .user-menu-bar fx-button {
+    font-size: 12px;
+    --fx-text-fill: #838788;
+}
+
+.modality-dialog-area .gold-layout {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+fx-collapsepane.menu-bar {
+    --fx-background-color: white;
+    --fx-border-style: solid;
+    --fx-border-color: lightgray;
+    --fx-border-width: 0 0 1px 0;
+    --fx-border-radius: 0;
+}
+
+fx-collapsepane.menu-bar.lang-menu-bar {
+    --fx-border-style: none;
+}
+/*===== modality-base-front-office-web@main.css from modality-base-frontoffice-application =====*/
+
+:root {
+    /* We don't show the vertical grid lines in the front office (ex: AudioLibraryActivity or VideoStreamingActivity) */
+    --webfx-visualgrid-col-border-color: transparent;
+
+    /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
+    --webfx-aria-toggle-button-background-color-focused: var(--bootstrap-grey1);
+    --webfx-aria-toggle-button-background-color-fired: var(--brand-blue-color);
+}
+/*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
+
+/* We don't want the default white background for WebFX Extras material text fields in the login window */
+.user-account * {
+    --webfx-material-background-color: transparent;
+    --webfx-material-idle-text-fill: black;
+}
+
+.user-account .material-label {
+     font-weight: bold;
+     font-size: 14px;
 }
 
 /*===== modality-front-office-userprofile-web@main.css from modality-crm-frontoffice-activity-userprofile-plugin =====*/

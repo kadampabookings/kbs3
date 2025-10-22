@@ -294,6 +294,8 @@
     <source path="one/modality/crm/client/i18n"/>
     <!--=============< modality-crm-frontoffice-activity-createaccount-plugin >=============-->
     <source path="one/modality/crm/frontoffice/activities/createaccount"/>
+    <!--================< modality-crm-frontoffice-activity-members-plugin >================-->
+    <source path="one/modality/crm/frontoffice/activities/members"/>
     <!--================< modality-crm-frontoffice-activity-orders-plugin >=================-->
     <source path="one/modality/crm/frontoffice/activities/orders"/>
     <!--==============< modality-crm-frontoffice-activity-userprofile-plugin >==============-->
@@ -467,7 +469,6 @@
     <source path="dev/webfx/extras/player/video/web/youtube"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
-    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->
@@ -822,6 +823,7 @@
     <source path="dev/webfx/stack/com/serial"/>
     <source path="dev/webfx/stack/com/serial/spi"/>
     <source path="dev/webfx/stack/com/serial/spi/impl"/>
+    <source path="dev/webfx/stack/com/serial/spi/impl/ast"/>
     <source path="dev/webfx/stack/com/serial/spi/impl/time"/>
     <!--===========================< webfx-stack-com-websocket >============================-->
     <source path="dev/webfx/stack/com/websocket"/>

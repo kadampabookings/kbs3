@@ -1,6 +1,24 @@
 /* @font-face rules listed first, otherwise they are ignored (OpenJFX bug) */
 
 @font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: bold;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-style: normal;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: 600; /* semi-bold */
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
+}
+
+@font-face {
     font-family: 'Roboto';
     font-weight: bold;
     src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
@@ -47,24 +65,6 @@
     font-weight: bold;
     font-style: italic;
     src: url('webfx-css:fonts/montserrat/Montserrat-BoldItalic.ttf');
-}
-
-@font-face {
-    font-family: 'Vollkorn SC';
-    font-weight: bold;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'Vollkorn SC';
-    font-style: normal;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'Vollkorn SC';
-    font-weight: 600; /* semi-bold */
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
 }
 
 @font-face {
@@ -947,10 +947,6 @@ HtmlText, HtmlTextEditor {
     -brand-main-color: -brand-orange-color;
     -brand-main-background-color: -brand-orange-color;
 }
-/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
-
-/*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
-
 /*===== modality-client-css-import-font-vollkornsc-javafx@main.css from modality-base-client-css =====*/
 
 /*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
@@ -987,6 +983,10 @@ Text, Label, Button, TextField {
     -fx-alignment: center;
     -fx-font-weight: bolder;
 }
+
+/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
+
+/*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
 
 /*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
 
@@ -1210,156 +1210,6 @@ Text, Label, Button, TextField {
     -fx-border-radius: 19px;
     -fx-background-radius: 19px;
 }
-/*===== modality-event-mediaview-javafx@main.css from modality-event-client-mediaview =====*/
-
-.root {
-    -modality-media-button-circle-background: -brand-main-color;
-}
-
-.media-button {
-    -fx-fill: -modality-media-button-circle-background;
-}
-/*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
-
-.main-frame {
-    -fx-background-color: white;
-}
-
-/* Actually not working in JavaFX
-.main-frame.keyboard-navigation-off {
-    -fx-border-style-focus: none;
-}
-so replaced by the following:
-*/
-
-.main-frame.keyboard-navigation-off :focused {
-    -fx-border-style: none;
-}
-
-/* Actually not working in JavaFX
-.main-frame.keyboard-navigation-on {
-    -fx-border-style-focus: dashed;
-}
-so replaced by the following:
-*/
-
-.main-frame.keyboard-navigation-on :focused {
-    -fx-border-style: dashed;
-    -fx-border-width: 1px;
-    -fx-border-color: -brand-blue-color;
-}
-
-.main-menu-bar ToggleButton, .user-menu-bar ToggleButton {
-    -fx-border-radius: 5px;
-}
-
-/* Actually not working in JavaFX
-.main-frame.keyboard-navigation-off .lang-menu-bar {
-    -fx-border-style-focus: solid;
-}
-so replaced by the following:
-*/
-
-.main-frame.keyboard-navigation-off .lang-menu-bar :focused {
-    -fx-border-style: solid;
-}
-
-.menu-bar {
-    -fx-font-family: "Poppins";
-    -webfx-aria-toggle-button-background-color-hover: transparent;
-    -webfx-aria-toggle-button-background-color-fired: transparent;
-    -webfx-aria-toggle-button-background-color-focused: transparent;
-    -webfx-aria-toggle-button-text-fill-fired: -brand-blue-color;
-}
-
-.menu-bar ToggleButton {
-    -fx-background-color: transparent; /* removes old-style button gradient */
-}
-
-.main-menu-bar ToggleButton {
-    -fx-text-fill: black;
-}
-
-.main-menu-bar ToggleButton.fired, .user-menu-bar ToggleButton.fired {
-    -fx-font-weight: bold;
-}
-
-.main-menu-bar ToggleButton.fired SVGPath, .user-menu-bar ToggleButton.fired SVGPath {
-    -fx-fill: -webfx-aria-toggle-button-text-fill-fired;
-}
-
-.user-menu-bar Label, .user-menu-bar ToggleButton {
-    -fx-font-size: 12px;
-    -fx-text-fill: #838788;
-}
-
-.main-menu-bar Label.brand {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -brand-blue-color;
-}
-
-.main-menu-bar Label.brand SVGPath {
-    -fx-fill: -brand-blue-color;
-}
-
-.lang-menu-bar ToggleButton {
-    -fx-border-color: #0096D6;
-    -fx-border-width: 1px 1px 1px 0;
-}
-
-.lang-menu-bar ToggleButton.first-child {
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px 0px 0px 10px;
-    -fx-background-radius: 10px 0px 0px 10px;
-}
-
-.lang-menu-bar ToggleButton.last-child {
-    -fx-border-radius:  0px 10px 10px 0px;
-    -fx-background-radius:  0px 10px 10px 0px;
-}
-
-.lang-menu-bar ToggleButton:selected {
-    -fx-background-color: #F0F0F0;
-}
-
-.lang-menu-bar ToggleButton.fired {
-    -fx-background-color: #0096D6;
-    -fx-text-fill: white;
-}
-
-CollapsePane.menu-bar.non-mobile {
-    -fx-background-color: white;
-    -fx-border-width: 0 0 1px 0 ;
-    -fx-border-color: lightgray;
-}
-
-CollapsePane.menu-bar.lang-menu-bar {
-    -fx-border-width: 0;
-}
-/*===== modality-base-front-office-javafx@main.css from modality-base-frontoffice-application =====*/
-
-.root {
-    /* We don't show the vertical grid lines in the front office (ex: AudioLibraryActivity or VideoStreamingActivity) */
-    -webfx-visualgrid-col-border-color: transparent;
-
-    /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
-    -webfx-aria-toggle-button-background-color-focused: -bootstrap-grey1;
-    -webfx-aria-toggle-button-background-color-fired: -brand-blue-color;
-}
-/*===== one-modality-crm-frontoffice-activities-createaccount-javafx@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
-
-/* We don't want the default white background for WebFX Extras material text fields in the login window */
-.user-account * {
-    -webfx-material-background-color: transparent;
-    -webfx-material-idle-text-fill: black;
-}
-
-.user-account Text.material-label {
-     -fx-font-weight: 900;
-     -fx-font-size: 14px;
-}
-
 /*===== modality-frontoffice-order-javafx@main.css from modality-ecommerce-frontoffice-order =====*/
 
 
@@ -1485,6 +1335,186 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 
 
+/*===== modality-event-frontoffice-medias-javafx@main.css from modality-event-frontoffice-medias =====*/
+
+.notice-icon {
+    -fx-background-color: #FF6D00;
+    -fx-background-radius: 45;
+}
+
+.notice-label {
+     -fx-font-size: 40px;
+     -fx-text-fill: #FFFFFF;
+     -fx-font-weight: bold;
+}
+
+.balance-box {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+/*===== modality-event-mediaview-javafx@main.css from modality-event-client-mediaview =====*/
+
+.root {
+    -modality-media-button-circle-background: -brand-main-color;
+}
+
+.media-button {
+    -fx-fill: -modality-media-button-circle-background;
+}
+/*===== modality-frontoffice-mainframe-javafx@main.css from modality-base-frontoffice-mainframe-activity =====*/
+
+.main-frame {
+    -fx-background-color: white;
+}
+
+/* Actually not working in JavaFX
+.main-frame.keyboard-navigation-off {
+    -fx-border-style-focus: none;
+}
+so replaced by the following:
+*/
+
+.main-frame.keyboard-navigation-off :focused {
+    -fx-border-style: none;
+}
+
+/* Actually not working in JavaFX
+.main-frame.keyboard-navigation-on {
+    -fx-border-style-focus: dashed;
+}
+so replaced by the following:
+*/
+
+.main-frame.keyboard-navigation-on :focused {
+    -fx-border-style: dashed;
+    -fx-border-width: 1px;
+    -fx-border-color: -brand-blue-color;
+}
+
+.main-menu-bar ToggleButton, .user-menu-bar ToggleButton {
+    -fx-border-radius: 5px;
+}
+
+/* Actually not working in JavaFX
+.main-frame.keyboard-navigation-off .lang-menu-bar {
+    -fx-border-style-focus: solid;
+}
+so replaced by the following:
+*/
+
+.main-frame.keyboard-navigation-off .lang-menu-bar :focused {
+    -fx-border-style: solid;
+}
+
+.menu-bar {
+    -fx-font-family: "Poppins";
+    -webfx-aria-toggle-button-background-color-hover: transparent;
+    -webfx-aria-toggle-button-background-color-fired: transparent;
+    -webfx-aria-toggle-button-background-color-focused: transparent;
+    -webfx-aria-toggle-button-text-fill-fired: -brand-blue-color;
+}
+
+.menu-bar ToggleButton {
+    -fx-background-color: transparent; /* removes old-style button gradient */
+}
+
+.main-menu-bar ToggleButton {
+    -fx-text-fill: black;
+}
+
+
+/* Highlighting the selected menu items (those with the class "fired") by making them bold (in addition to being colored
+   already with the rule defined in .menu-bar { -webfx-aria-toggle-button-text-fill-fired: -brand-blue-color; }). */
+.main-menu-bar ToggleButton.fired, .user-menu-bar ToggleButton.fired {
+    -fx-font-weight: bold;
+}
+
+/* Applying also the same blue color to the SVG icons used in those selected menu items. This is done by setting their
+   SVG fill and/or stroke, but only if required (some icons have no fill or no stroke). The presence of a fill or a
+   stroke are detected by the class "hasFill" and "hasStroke" set by ModalityFrontOfficeMainFrameActivity due to the
+   absence of [fill] and [stroke] support in JavaFX CSS. */
+.main-menu-bar ToggleButton.fired.hasFill SVGPath, .user-menu-bar ToggleButton.fired.hasFill SVGPath {
+    -fx-fill: -webfx-aria-toggle-button-text-fill-fired;
+}
+
+.main-menu-bar ToggleButton.fired.hasStroke SVGPath, .user-menu-bar ToggleButton.fired.hasStroke SVGPath {
+    -fx-stroke: -webfx-aria-toggle-button-text-fill-fired;
+}
+
+.user-menu-bar Label, .user-menu-bar ToggleButton {
+    -fx-font-size: 12px;
+    -fx-text-fill: #838788;
+}
+
+.main-menu-bar Label.brand {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -brand-blue-color;
+}
+
+.main-menu-bar Label.brand SVGPath {
+    -fx-fill: -brand-blue-color;
+}
+
+.lang-menu-bar ToggleButton {
+    -fx-border-color: #0096D6;
+    -fx-border-width: 1px 1px 1px 0;
+}
+
+.lang-menu-bar ToggleButton.first-child {
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px 0px 0px 10px;
+    -fx-background-radius: 10px 0px 0px 10px;
+}
+
+.lang-menu-bar ToggleButton.last-child {
+    -fx-border-radius:  0px 10px 10px 0px;
+    -fx-background-radius:  0px 10px 10px 0px;
+}
+
+.lang-menu-bar ToggleButton:selected {
+    -fx-background-color: #F0F0F0;
+}
+
+.lang-menu-bar ToggleButton.fired {
+    -fx-background-color: #0096D6;
+    -fx-text-fill: white;
+}
+
+CollapsePane.menu-bar.non-mobile {
+    -fx-background-color: white;
+    -fx-border-width: 0 0 1px 0 ;
+    -fx-border-color: lightgray;
+}
+
+CollapsePane.menu-bar.lang-menu-bar {
+    -fx-border-width: 0;
+}
+/*===== modality-base-front-office-javafx@main.css from modality-base-frontoffice-application =====*/
+
+.root {
+    /* We don't show the vertical grid lines in the front office (ex: AudioLibraryActivity or VideoStreamingActivity) */
+    -webfx-visualgrid-col-border-color: transparent;
+
+    /* Overriding the default focused & fired background colors for aria toggle buttons with bootstrap and brand colors */
+    -webfx-aria-toggle-button-background-color-focused: -bootstrap-grey1;
+    -webfx-aria-toggle-button-background-color-fired: -brand-blue-color;
+}
+/*===== one-modality-crm-frontoffice-activities-createaccount-javafx@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
+
+/* We don't want the default white background for WebFX Extras material text fields in the login window */
+.user-account * {
+    -webfx-material-background-color: transparent;
+    -webfx-material-idle-text-fill: black;
+}
+
+.user-account Text.material-label {
+     -fx-font-weight: 900;
+     -fx-font-size: 14px;
+}
+
 /*===== modality-front-office-userprofile-javafx@main.css from modality-crm-frontoffice-activity-userprofile-plugin =====*/
 
 .user-profile-modal-window {
@@ -1513,6 +1543,9 @@ CollapsePane.menu-bar.lang-menu-bar {
 }
 
 /** styles for the audio desktop table and mobile view **/
+.audio-library {
+    -notification-border-color: #FF6D00;
+}
 
 .audio-library .name, .audio-library .btn {
     -fx-font-weight: 600; /* semi-bold */
@@ -1537,6 +1570,8 @@ CollapsePane.menu-bar.lang-menu-bar {
     -fx-font-size: 10px;
     -fx-text-fill: -bootstrap-grey5;
 }
+
+
 
 /*===== modality-event-frontoffice-activities-videos-javafx@main.css from modality-event-frontoffice-activity-videostreaming-plugin =====*/
 

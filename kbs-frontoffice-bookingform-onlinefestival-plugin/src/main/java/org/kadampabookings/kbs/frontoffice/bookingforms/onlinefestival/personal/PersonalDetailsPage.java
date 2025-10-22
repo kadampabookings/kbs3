@@ -94,12 +94,10 @@ public final class PersonalDetailsPage implements BookingFormPage {
         // personalDetailsVBox is not visible when login is showing, and vice versa
         Layouts.bindManagedAndVisiblePropertiesTo(embeddedLoginContainer.visibleProperty().not(), personalDetailsVBox);
         // We want to show only the email, address and kadampa center info
-        userProfileView = new UserProfileView(null, false, false, true, true, false, false, true, true, true);
+        userProfileView = new UserProfileView(null, false, false, true, true, false, false, true, true, true,true,null);
         Node viewNode = userProfileView.buildView();
-        Button cancelButton = Bootstrap.largeSecondaryButton(I18nControls.newButton(UserProfileI18nKeys.Cancel));
-        Layouts.bindManagedAndVisiblePropertiesLike(cancelButton, userProfileView.saveButton);
         personalDetailsVBox.setAlignment(Pos.TOP_LEFT);
-        personalDetailsVBox.getChildren().addAll(viewNode, centerInVBoxWithMargin(cancelButton, new Insets(10, 0, 0, 0)));
+        personalDetailsVBox.getChildren().add(viewNode);
         Layouts.bindAllManagedAndVisiblePropertiesTo(alreadyBookedProperty, alreadyBookedLabel, modifyBookingPane);
         Layouts.bindAllManagedAndVisiblePropertiesTo(isLinkedAccountProperty.and(alreadyBookedProperty.not()), linkedAccountMessageLabel);
         linkedAccountMessageLabel.getStyleClass().add("linked-account-message");
@@ -123,29 +121,20 @@ public final class PersonalDetailsPage implements BookingFormPage {
             isLinkedAccountProperty.set(isLinkedAccount);
             userProfileView.setLoginDetailsVisible(!isLinkedAccount);
             userProfileView.setEmailFieldDisabled(isAccountOwner);
+            userProfileView.setChangeEmailLinkVisible(false);
             userProfileView.setAddressInfoVisible(!isLinkedAccount);
             userProfileView.setKadampaCenterVisible(!isLinkedAccount);
             userProfileView.saveButton.setVisible(!isLinkedAccount);
         }, FXPersonToBook.personToBookProperty());
 
-        FXProperties.runOnPropertiesChange(this::syncModelFromUI,
-            userProfileView.firstNameTextField.textProperty(),
-            userProfileView.lastNameTextField.textProperty(),
-            userProfileView.emailTextField.textProperty(),
-            userProfileView.layNameTextField.textProperty(),
-            userProfileView.phoneTextField.textProperty(),
-            userProfileView.streetTextField.textProperty(),
-            userProfileView.postCodeTextField.textProperty(),
-            userProfileView.cityNameTextField.textProperty(),
-            userProfileView.countrySelector.selectedItemProperty(),
-            userProfileView.organizationSelector.selectedItemProperty(),
-            userProfileView.noOrganizationRadioButton.selectedProperty()
-        );
 
         // If there are some changes, we forbid to switch to another user
         personToBookButton.disableProperty().bind(userProfileView.saveButton.disableProperty().not());
+        userProfileView.cancelButton.visibleProperty().bind(userProfileView.saveButton.visibleProperty());
+        userProfileView.cancelButton.managedProperty().bind(userProfileView.saveButton.managedProperty());
+        userProfileView.cancelButton.disableProperty().bind(userProfileView.saveButton.disableProperty());
 
-        cancelButton.setOnAction(e -> {
+        userProfileView.cancelButton.setOnAction(e -> {
             if (isNewPerson)
                 FXPersonToBook.setPersonToBook(FXUserPerson.getUserPerson());
             setPersonToBook(personToBook);
@@ -184,6 +173,8 @@ public final class PersonalDetailsPage implements BookingFormPage {
                 userProfileView.saveButton.disableProperty().bind(EntityBindings.hasChangesProperty(updateStore).not());
             }
             personToBook = updateStore.updateEntity(person);
+            userProfileView.setCurrentEditedPerson(personToBook);
+
             isNewPerson = false;
             busyFutureProperty.set(DocumentService.loadDocument(event, person)
                 .inUiThread()
@@ -198,58 +189,18 @@ public final class PersonalDetailsPage implements BookingFormPage {
         } else if (updateStore != null) { // Should be always true because the account owner was always selected first
             // Here the update store should have already been initialized
             personToBook = updateStore.insertEntity(Person.class);
+            userProfileView.setCurrentEditedPerson(personToBook);
             isNewPerson = true;
             alreadyBookedProperty.set(false);
             FXProperties.onPropertySet(FXUserPerson.userPersonProperty(), p -> personToBook.setFrontendAccount(p.getFrontendAccount()));
         }
-        syncUIFromModel();
-    }
-
-    private void syncModelFromUI() {
-        if (syncing)
-            return;
-        syncing = true;
-        personToBook.setFirstName(userProfileView.firstNameTextField.getText());
-        personToBook.setLastName(userProfileView.lastNameTextField.getText());
-        personToBook.setEmail(userProfileView.emailTextField.getText());
-        personToBook.setLayName(userProfileView.layNameTextField.getText());
-        personToBook.setPhone(userProfileView.phoneTextField.getText());
-        personToBook.setStreet(userProfileView.streetTextField.getText());
-        personToBook.setPostCode(userProfileView.postCodeTextField.getText());
-        personToBook.setCityName(userProfileView.cityNameTextField.getText());
-        personToBook.setCountry(userProfileView.countrySelector.getSelectedItem());
-        Organization organization = userProfileView.organizationSelector.getSelectedItem();
-        boolean noOrganization = userProfileView.noOrganizationRadioButton.isSelected()
-                                 && (organization == null || Entities.sameId(organization, personToBook.getOrganization()));
-        if (noOrganization) {
-            organization = null;
-        }
-        personToBook.setOrganization(organization);
-        userProfileView.organizationSelector.setSelectedItem(organization);
-        userProfileView.noOrganizationRadioButton.setSelected(organization == null);
-        syncing = false;
-    }
-
-    private void syncUIFromModel() {
-        if (syncing)
-            return;
-        syncing = true;
-        userProfileView.firstNameTextField.setText(personToBook.getFirstName());
-        userProfileView.lastNameTextField.setText(personToBook.getLastName());
-        userProfileView.emailTextField.setText(personToBook.getEmail());
-        userProfileView.layNameTextField.setText(personToBook.getLayName());
-        userProfileView.phoneTextField.setText(personToBook.getPhone());
-        userProfileView.streetTextField.setText(personToBook.getStreet());
-        userProfileView.postCodeTextField.setText(personToBook.getPostCode());
-        userProfileView.cityNameTextField.setText(personToBook.getCityName());
-        userProfileView.countrySelector.setSelectedItem(personToBook.getCountry());
-        userProfileView.organizationSelector.setSelectedItem(personToBook.getOrganization());
-        userProfileView.noOrganizationRadioButton.setSelected(personToBook.getOrganization() == null);
-
+        userProfileView.syncUIFromModel();
         Layouts.setManagedAndVisibleProperties(userProfileView.firstNameTextField, isNewPerson);
         Layouts.setManagedAndVisibleProperties(userProfileView.lastNameTextField, isNewPerson);
-        syncing = false;
     }
+
+
+
 
     @Override
     public Object getTitleI18nKey() {
