@@ -1014,15 +1014,6 @@ fx-switch.webfx-switch fx-circle.knob {
     font-size: 14px;
 }
 
-/*===== webfx-extras-filepicker-web@main.css from webfx-extras-filepicker-gwt-j2cl =====*/
-
-/* We dont want any background or border for the FilePicker button */
-
-.file-picker fx-button {
-    --fx-background-color: transparent;
-    --fx-border-style: none;
-}
-
 /*===== webfx-extras-ckeditor-web@main.css from webfx-extras-webtext-peers-gwt-j2cl =====*/
 
 /* Applying same user-select setting as fx-text to fx-htmltext */
@@ -1484,6 +1475,15 @@ tr.branch, .grid-row.branch {
 .scheduled-item-box.date-already-booked,
 .scheduled-item-box.date-already-booked .time {
     --fx-text-fill: #eeeeee;
+}
+
+/*===== modality-event-backoffice-activity-medias-web@main.css from modality-event-backoffice-activity-medias-plugin =====*/
+
+/* Media settings section styling */
+.media-settings-section {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 /*===== modality-backoffice-recurringevents-web@main.css from modality-event-backoffice-activity-recurringevents-plugin =====*/
