@@ -1389,6 +1389,8 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --admin-info-text-color: #1976d2;
     --admin-info-border-color: #2196f3;
     --admin-text-secondary: #666;
+    --admin-header-bg: #f5f5f5;
+    --admin-header-text: #555;
 }
 
 /* Card styling */
