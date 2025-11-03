@@ -291,6 +291,10 @@
     <source path="one/modality/catering/client/i18n"/>
     <!--=================< modality-crm-backoffice-activity-admin-plugin >==================-->
     <source path="one/modality/crm/backoffice/activities/admin"/>
+    <!--===============< modality-crm-backoffice-activity-customers-plugin >================-->
+    <source path="one/modality/crm/backoffice/activities/customers"/>
+    <!--===============< modality-crm-backoffice-activity-superadmin-plugin >===============-->
+    <source path="one/modality/crm/backoffice/activities/superadmin"/>
     <!--==================< modality-crm-backoffice-bookingdetailspanel >===================-->
     <source path="one/modality/crm/backoffice/controls/bookingdetailspanel"/>
     <!--====================< modality-crm-backoffice-operations-mail >=====================-->

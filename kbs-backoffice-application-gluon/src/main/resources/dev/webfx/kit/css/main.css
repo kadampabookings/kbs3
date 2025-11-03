@@ -1082,77 +1082,25 @@ Text, Label, Button, TextField {
 /*===== modality-crm-backoffice-activity-admin-javafx@main.css from modality-crm-backoffice-activity-admin-plugin =====*/
 
 /* Rights Management Admin Plugin - JavaFX CSS */
+/* Note: This file contains only CSS classes actually used in the admin module Java code */
 
 /* Root variables */
 .root {
     -admin-primary-color: #00b8d4;
-    -admin-success-color: #4caf50;
-    -admin-warning-color: #ffa726;
     -admin-danger-color: #ff5252;
-    -admin-info-color: #e1f5fe;
     -admin-info-bg-color: #e3f2fd;
     -admin-info-text-color: #1976d2;
     -admin-info-border-color: #2196f3;
-    -admin-gray-color: #9e9e9e;
-    -admin-border-color: #ddd;
-    -admin-background-white: white;
-    -admin-background-light: #f5f5f5;
-    -admin-text-primary: #333;
     -admin-text-secondary: #666;
+    -admin-header-bg: #f5f5f5;
+    -admin-header-text: #555;
 }
 
 /* Card styling */
 .admin-card {
-    -fx-background-color: -admin-background-white;
-    -fx-background-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
-}
-
-/* Note: Badge and alert styles are now centralized in Bootstrap module */
-/* Use: badge-light-info, badge-light-success, badge-light-warning, badge-light-danger, badge-gray */
-/* Use: alert-info (or info-box), alert-success, alert-warning, alert-danger */
-/* Padding for info boxes is set in Java code via Bootstrap helper methods */
-
-/* Section card - wraps content with white background and rounded corners */
-.section-card {
     -fx-background-color: white;
     -fx-background-radius: 8;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
-    -fx-padding: 24;
-}
-
-.section-title {
-    -fx-font-size: 18;
-    -fx-font-weight: bold;
-}
-
-/* Route label (monospace) */
-.admin-route-label {
-    -fx-font-family: 'Courier New', monospace;
-    -fx-background-color: -admin-background-light;
-    -fx-background-radius: 4;
-    -fx-text-fill: -admin-text-secondary;
-}
-
-/* Action buttons */
-.admin-action-btn {
-    -fx-background-color: -admin-background-light;
-    -fx-cursor: hand;
-    -fx-background-radius: 4;
-}
-
-.admin-action-btn:hover {
-    -fx-background-color: #e0e0e0;
-}
-
-.admin-action-btn-delete {
-    -fx-text-fill: -admin-danger-color;
-}
-
-.admin-action-btn-remove {
-    -fx-background-color: -admin-danger-color;
-    -fx-text-fill: white;
-    -fx-cursor: hand;
 }
 
 /* Title and subtitle */
@@ -1169,72 +1117,6 @@ Text, Label, Button, TextField {
 .admin-card-title {
     -fx-font-size: 18;
     -fx-font-weight: bold;
-}
-
-.admin-section-label {
-    -fx-font-size: 14;
-    -fx-font-weight: bold;
-}
-
-.admin-text-italic {
-    -fx-text-fill: #999;
-    -fx-font-style: italic;
-}
-
-/* Modern Tab Design for Super Admin Sub-Tabs */
-.super-admin-sub-tabs {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #ddd transparent;
-    -fx-border-width: 0 0 1 0;
-}
-
-.super-admin-sub-tabs .tab-header-area {
-    -fx-background-color: transparent;
-    -fx-padding: 0;
-}
-
-.super-admin-sub-tabs .tab-header-background {
-    -fx-background-color: transparent;
-}
-
-.super-admin-sub-tabs .headers-region {
-    -fx-background-color: transparent;
-}
-
-.super-admin-sub-tabs .tab {
-    -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-border-color: transparent transparent transparent transparent;
-    -fx-border-width: 0 0 3 0;
-    -fx-padding: 12 24 12 24;
-}
-
-.super-admin-sub-tabs .tab-label {
-    -fx-text-fill: #666;
-    -fx-font-size: 14;
-}
-
-.super-admin-sub-tabs .tab:hover .tab-label {
-    -fx-text-fill: #00b8d4;
-}
-
-.super-admin-sub-tabs .tab:selected {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #00b8d4 transparent;
-}
-
-.super-admin-sub-tabs .tab:selected .tab-label {
-    -fx-text-fill: #00b8d4;
-}
-
-.super-admin-sub-tabs .tab .focus-indicator {
-    -fx-border-color: transparent;
-}
-
-.super-admin-sub-tabs .tab-content-area {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 24 0 0 0;
 }
 
 /* Assign Role Dialog Styles */
@@ -1300,32 +1182,10 @@ Text, Label, Button, TextField {
 }
 
 /* Modal Dialog Styles */
-.modal-title {
-    -fx-font-size: 20;
-    -fx-font-weight: 800;
-}
-
 .modal-dialog-pane {
     -fx-background-color: white;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
-}
-
-/* Form Field Styles */
-.form-field-label {
-    -fx-font-weight: 500;
-    -fx-font-size: 14;
-}
-
-.form-field-input {
-    -fx-border-color: #ddd;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
-}
-
-.form-field-help {
-    -fx-text-fill: #666;
-    -fx-font-size: 12;
 }
 
 /* Error Dialog Styles */
@@ -1360,6 +1220,392 @@ Text, Label, Button, TextField {
     -fx-text-fill: #666;
 }
 
+
+.grid-head .grid-col {
+    -fx-background-color: #e9ecef;
+}
+
+.grid-head Text,
+.grid-head Label {
+    -fx-font-weight: bold;
+    -fx-font-size: 13;
+    -fx-fill: #495057;
+    -fx-text-fill: #495057;
+}
+
+
+/*===== modality-crm-customers-javafx@main.css from modality-crm-backoffice-activity-customers-plugin =====*/
+
+/* Customer Management Styles - JavaFX */
+
+/* Root variables */
+.root {
+    -kbs-primary-color: #00A3FF;
+    -kbs-primary-hover-color: #0088D9;
+    -kbs-danger-color: #F44336;
+    -kbs-text-primary-color: #2C3E50;
+    -kbs-text-secondary-color: #7F8C8D;
+    -kbs-border-color: #E8EAED;
+    -kbs-bg-light-color: #F8F9FA;
+    -kbs-white-color: #FFFFFF;
+}
+
+/* Page Header */
+.page-header {
+    -fx-background-color: -kbs-white-color;
+    -fx-border-color: transparent transparent -kbs-border-color transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -kbs-text-primary-color;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: -kbs-text-secondary-color;
+}
+
+/* Customers container */
+#customers {
+    -fx-background-color: -kbs-bg-light-color;
+}
+
+/* Customers grid styling */
+.customers-grid {
+    -fx-background-color: -kbs-white-color;
+}
+
+.customers-grid .table-view {
+    -fx-background-color: -kbs-white-color;
+}
+
+.customers-grid .table-view .column-header {
+    -fx-background-color: -kbs-bg-light-color;
+    -fx-border-color: -kbs-border-color;
+    -fx-text-fill: -kbs-text-secondary-color;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+}
+
+.customers-grid .table-view .table-row-cell {
+    -fx-border-color: transparent transparent -kbs-border-color transparent;
+}
+
+.customers-grid .table-view .table-row-cell:hover {
+    -fx-background-color: -kbs-bg-light-color;
+}
+
+.customers-grid .table-view .table-row-cell:selected {
+    -fx-background-color: #FFF3CD;
+    -fx-border-color: transparent transparent -kbs-border-color -kbs-primary-color;
+    -fx-border-width: 0 0 1px 3px;
+}
+
+/* Edit Panel */
+.edit-panel {
+    -fx-background-color: -kbs-white-color;
+    -fx-border-color: -kbs-primary-color transparent transparent transparent;
+    -fx-border-width: 3px 0 0 0;
+}
+
+.edit-panel-header {
+    -fx-background-color: -kbs-bg-light-color;
+    -fx-border-color: transparent transparent -kbs-border-color transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.edit-panel-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -kbs-text-primary-color;
+}
+
+.edit-panel-id {
+    -fx-background-color: -kbs-white-color;
+    -fx-background-radius: 12px;
+    -fx-padding: 4px 10px;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -kbs-text-secondary-color;
+    -fx-font-family: "Courier New", monospace;
+}
+
+/* Edit Tabs */
+.edit-tabs {
+    -fx-background-color: -kbs-bg-light-color;
+}
+
+.edit-tabs .tab-header-background {
+    -fx-background-color: -kbs-bg-light-color;
+}
+
+.edit-tabs .tab {
+    -fx-background-color: transparent;
+    -fx-text-fill: -kbs-text-secondary-color;
+    -fx-font-weight: 500;
+}
+
+.edit-tabs .tab:selected {
+    -fx-background-color: -kbs-white-color;
+    -fx-text-fill: -kbs-primary-color;
+    -fx-border-color: transparent transparent -kbs-primary-color transparent;
+    -fx-border-width: 0 0 2px 0;
+}
+
+.edit-tabs .tab:hover {
+    -fx-text-fill: -kbs-text-primary-color;
+}
+
+/* Edit Content */
+.edit-content {
+    -fx-background-color: -kbs-white-color;
+}
+
+.edit-scroll-pane {
+    -fx-background-color: -kbs-white-color;
+}
+
+.edit-scroll-pane > .viewport {
+    -fx-background-color: -kbs-white-color;
+}
+
+/* Form Elements */
+.form-grid-2,
+.form-grid-3 {
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+}
+
+.form-group {
+    -fx-spacing: 8;
+}
+
+.form-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -kbs-text-primary-color;
+}
+
+.form-field {
+    -fx-border-color: -kbs-border-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 14px;
+}
+
+.form-field:focused {
+    -fx-border-color: -kbs-primary-color;
+}
+
+.form-field:disabled {
+    -fx-background-color: -kbs-bg-light-color;
+    -fx-opacity: 1.0;
+}
+
+.form-checkbox {
+    -fx-font-size: 14px;
+}
+
+.form-checkbox:disabled {
+    -fx-opacity: 0.7;
+}
+
+/* Form Section Title */
+.form-section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -kbs-text-primary-color;
+    -fx-border-color: transparent transparent -kbs-border-color transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Password Hash Display */
+.password-hash-display {
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 12px;
+    -fx-background-color: -kbs-bg-light-color;
+}
+
+/* Account Credentials Section */
+.account-credentials-section {
+    -fx-background-color: #F0F8FF;
+    -fx-border-color: #B3D9FF;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+/* Linked Accounts Box */
+.linked-accounts-box {
+    -fx-background-color: #F0F8FF;
+    -fx-border-color: #B3D9FF;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.linked-accounts-description {
+    -fx-text-fill: -kbs-text-secondary-color;
+    -fx-font-size: 13px;
+}
+
+.linked-person-item {
+    -fx-spacing: 12;
+    -fx-background-color: -kbs-white-color;
+    -fx-border-color: -kbs-border-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.linked-person-name {
+    -fx-font-weight: 600;
+    -fx-text-fill: -kbs-text-primary-color;
+}
+
+.linked-person-email {
+    -fx-font-size: 12px;
+    -fx-text-fill: -kbs-text-secondary-color;
+}
+
+.linked-person-id {
+    -fx-font-size: 11px;
+    -fx-text-fill: -kbs-text-secondary-color;
+}
+
+/* Account Type Badges (using existing Bootstrap styles, additional custom) */
+.account-type-badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+/* Status Badges */
+.status-badge {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-background-radius: 16px;
+}
+
+.status-badge.active {
+    -fx-background-color: #E8F5E9;
+    -fx-text-fill: #2E7D32;
+}
+
+.status-badge.inactive {
+    -fx-background-color: #FFEBEE;
+    -fx-text-fill: #C62828;
+}
+
+/*===== modality-crm-backoffice-activity-superadmin-javafx@main.css from modality-crm-backoffice-activity-superadmin-plugin =====*/
+
+/* Rights Management Super Admin Plugin - JavaFX CSS */
+/* Note: This file contains only CSS classes actually used in the superadmin module Java code */
+
+/* Root variables */
+.root {
+    -admin-primary-color: #00b8d4;
+    -admin-success-color: #4caf50;
+    -admin-warning-color: #ffa726;
+    -admin-danger-color: #ff5252;
+    -admin-info-color: #e1f5fe;
+    -admin-info-bg-color: #e3f2fd;
+    -admin-info-text-color: #1976d2;
+    -admin-info-border-color: #2196f3;
+    -admin-gray-color: #9e9e9e;
+    -admin-border-color: #ddd;
+    -admin-background-white: white;
+    -admin-background-light: #f5f5f5;
+    -admin-text-primary: #333;
+    -admin-text-secondary: #666;
+}
+
+/* Route label (monospace) - used in Operations view */
+.admin-route-label {
+    -fx-font-family: 'Courier New', monospace;
+    -fx-background-color: -admin-background-light;
+    -fx-background-radius: 4;
+    -fx-text-fill: -admin-text-secondary;
+}
+
+/* Info banner - used in dialogs */
+.admin-info-banner {
+    -fx-background-color: -admin-info-bg-color;
+    -fx-border-color: -admin-info-border-color;
+    -fx-border-width: 0 0 0 3;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.admin-info-banner-text {
+    -fx-text-fill: -admin-info-text-color;
+    -fx-font-size: 13;
+}
+
+/* Modern Tab Design for Super Admin Sub-Tabs */
+.super-admin-sub-tabs {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.super-admin-sub-tabs .tab-header-area {
+    -fx-background-color: white;
+    -fx-padding: 0;
+    -fx-border-radius: 8 8 0 0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.super-admin-sub-tabs .tab-header-background {
+    -fx-background-color: white;
+    -fx-border-radius: 8 8 0 0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.super-admin-sub-tabs .headers-region {
+    -fx-background-color: white;
+}
+
+.super-admin-sub-tabs .tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-width: 0 0 3 0;
+    -fx-padding: 12 24 12 24;
+}
+
+.super-admin-sub-tabs .tab-label {
+    -fx-text-fill: #666;
+    -fx-font-size: 14;
+}
+
+.super-admin-sub-tabs .tab:hover .tab-label {
+    -fx-text-fill: #00b8d4;
+}
+
+.super-admin-sub-tabs .tab:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #00b8d4 transparent;
+}
+
+.super-admin-sub-tabs .tab:selected .tab-label {
+    -fx-text-fill: #00b8d4;
+}
+
+.super-admin-sub-tabs .tab .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.super-admin-sub-tabs .tab-content-area {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
 /* Role Dialog - Selected Permissions */
 .role-dialog-permissions-title {
     -fx-font-weight: bold;
@@ -1386,7 +1632,7 @@ Text, Label, Button, TextField {
     -fx-font-style: italic;
 }
 
-/* Permission Chip Styles */
+/* Permission Chip Styles - used in Roles dialog */
 .permission-chip-operation {
     -fx-background-color: #d1ecf1;
     -fx-border-color: #0c546022;
@@ -1453,52 +1699,7 @@ Text, Label, Button, TextField {
     -fx-text-fill: #dc3545;
 }
 
-/* Admin Chip Styles (Organization Admins) */
-.admin-selected-panel {
-    -fx-background-color: #f9f9f9;
-    -fx-border-color: #ddd;
-    -fx-border-width: 1;
-    -fx-border-style: dashed;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
-}
-
-.admin-count-label {
-    -fx-font-weight: bold;
-    -fx-font-size: 13;
-    -fx-text-fill: #333;
-}
-
-.admin-chip {
-    -fx-background-color: #e3f2fd;
-    -fx-border-color: #2196f322;
-    -fx-border-radius: 16;
-    -fx-background-radius: 16;
-}
-
-.admin-chip-label {
-    -fx-text-fill: #1976d2;
-    -fx-font-size: 13;
-}
-
-.admin-chip-remove {
-    -fx-text-fill: #1976d2;
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-
-.admin-chip-remove:hover {
-    -fx-text-fill: #dc3545;
-}
-
-/* Legend Label */
-.admin-legend-label {
-    -fx-font-weight: bold;
-    -fx-font-size: 12;
-}
-
-/* Operation Group Selection Panel (used in OperationGroupDialog) */
+/* Operation Group Selection Panel - used in OperationGroupDialog */
 .operation-selection-panel {
     -fx-background-color: #f9f9f9;
     -fx-border-color: #ddd;
@@ -1519,7 +1720,7 @@ Text, Label, Button, TextField {
     -fx-font-size: 13;
 }
 
-/* Operation Selection Chip Styles (used in OperationGroupDialog) */
+/* Operation Selection Chip Styles - used in OperationGroupDialog */
 .operation-selection-chip {
     -fx-background-color: #d1ecf1;
     -fx-border-color: #bee5eb;
@@ -1543,13 +1744,7 @@ Text, Label, Button, TextField {
     -fx-text-fill: #dc3545;
 }
 
-/* VisualGrid Header Styles */
-.grid-head {
-    -fx-background-color: #e9ecef;
-    -fx-border-color: transparent transparent #dee2e6 transparent;
-    -fx-border-width: 0 0 2 0;
-}
-
+/* Table header styling */
 .grid-head .grid-col {
     -fx-background-color: #e9ecef;
 }
@@ -1561,7 +1756,6 @@ Text, Label, Button, TextField {
     -fx-fill: #495057;
     -fx-text-fill: #495057;
 }
-
 
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
 
@@ -1667,6 +1861,336 @@ Text, Label, Button, TextField {
     -fx-fill: black;
     -fx-background-color: -bootstrap-grey1;
     -fx-border-color: black;
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    -fx-text-fill: -bootstrap-blue5;
+    -fx-fill: -bootstrap-blue5;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-blue5;
+    -fx-border-width: 1;
+}
+
+.btn.outline-primary:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-blue5;
+    -fx-border-color: -bootstrap-blue5;
+}
+
+.btn.outline-secondary {
+    -fx-text-fill: -bootstrap-grey6;
+    -fx-fill: -bootstrap-grey6;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-grey6;
+    -fx-border-width: 1;
+}
+
+.btn.outline-secondary:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-grey6;
+    -fx-border-color: -bootstrap-grey6;
+}
+
+.btn.outline-success {
+    -fx-text-fill: -bootstrap-green1;
+    -fx-fill: -bootstrap-green1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-green1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-success:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-green1;
+    -fx-border-color: -bootstrap-green1;
+}
+
+.btn.outline-danger {
+    -fx-text-fill: -bootstrap-red1;
+    -fx-fill: -bootstrap-red1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-red1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-danger:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-red1;
+    -fx-border-color: -bootstrap-red1;
+}
+
+.btn.outline-warning {
+    -fx-text-fill: -bootstrap-orange1;
+    -fx-fill: -bootstrap-orange1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-orange1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-warning:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-orange1;
+    -fx-border-color: -bootstrap-orange1;
+}
+
+.btn.outline-info {
+    -fx-text-fill: -bootstrap-blue1;
+    -fx-fill: -bootstrap-blue1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-blue1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-info:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-blue1;
+    -fx-border-color: -bootstrap-blue1;
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    -fx-fill: -fx-text-fill;
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    -fx-background-color: -bootstrap-white;
+    -fx-border-color: -bootstrap-grey3;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -bootstrap-grey7;
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    -fx-hgap: 16;
+    -fx-vgap: 16;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -bootstrap-grey6;
+    -fx-fill: -bootstrap-grey6;
+    -fx-cursor: hand;
+}
+
+.copy-button:hover {
+    -fx-text-fill: -bootstrap-blue5;
+    -fx-fill: -bootstrap-blue5;
+}
+
+/* Copy notification label */
+.copy-notification {
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    -fx-background-color: -bootstrap-grey1;
+    -fx-border-color: -bootstrap-grey3;
+    -fx-text-fill: -bootstrap-grey7;
+    -fx-opacity: 1.0;
+}
+
+.text-field.readonly-field .text {
+    -fx-fill: -bootstrap-grey7;
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    -fx-background-color: -bootstrap-grey1;
+    -fx-border-color: -bootstrap-grey3;
+    -fx-text-fill: -bootstrap-grey7;
+    -fx-opacity: 1.0;
+}
+
+.button.readonly-field .text {
+    -fx-fill: -bootstrap-grey7;
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    -fx-text-fill: -bootstrap-blue5;
+    -fx-fill: -bootstrap-blue5;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-blue5;
+    -fx-border-width: 1;
+}
+
+.btn.outline-primary:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-blue5;
+    -fx-border-color: -bootstrap-blue5;
+}
+
+.btn.outline-secondary {
+    -fx-text-fill: -bootstrap-grey6;
+    -fx-fill: -bootstrap-grey6;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-grey6;
+    -fx-border-width: 1;
+}
+
+.btn.outline-secondary:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-grey6;
+    -fx-border-color: -bootstrap-grey6;
+}
+
+.btn.outline-success {
+    -fx-text-fill: -bootstrap-green1;
+    -fx-fill: -bootstrap-green1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-green1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-success:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-green1;
+    -fx-border-color: -bootstrap-green1;
+}
+
+.btn.outline-danger {
+    -fx-text-fill: -bootstrap-red1;
+    -fx-fill: -bootstrap-red1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-red1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-danger:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-red1;
+    -fx-border-color: -bootstrap-red1;
+}
+
+.btn.outline-warning {
+    -fx-text-fill: -bootstrap-orange1;
+    -fx-fill: -bootstrap-orange1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-orange1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-warning:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-orange1;
+    -fx-border-color: -bootstrap-orange1;
+}
+
+.btn.outline-info {
+    -fx-text-fill: -bootstrap-blue1;
+    -fx-fill: -bootstrap-blue1;
+    -fx-background-color: transparent;
+    -fx-border-color: -bootstrap-blue1;
+    -fx-border-width: 1;
+}
+
+.btn.outline-info:hover {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-background-color: -bootstrap-blue1;
+    -fx-border-color: -bootstrap-blue1;
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    -fx-fill: -fx-text-fill;
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    -fx-background-color: -bootstrap-white;
+    -fx-border-color: -bootstrap-grey3;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -bootstrap-grey7;
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    -fx-hgap: 16;
+    -fx-vgap: 16;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -bootstrap-grey6;
+    -fx-fill: -bootstrap-grey6;
+    -fx-cursor: hand;
+}
+
+.copy-button:hover {
+    -fx-text-fill: -bootstrap-blue5;
+    -fx-fill: -bootstrap-blue5;
+}
+
+/* Copy notification label */
+.copy-notification {
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    -fx-background-color: -bootstrap-grey1;
+    -fx-border-color: -bootstrap-grey3;
+    -fx-text-fill: -bootstrap-grey7;
+    -fx-opacity: 1.0;
+}
+
+.text-field.readonly-field .text {
+    -fx-fill: -bootstrap-grey7;
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    -fx-background-color: -bootstrap-grey1;
+    -fx-border-color: -bootstrap-grey3;
+    -fx-text-fill: -bootstrap-grey7;
+    -fx-opacity: 1.0;
+}
+
+.button.readonly-field .text {
+    -fx-fill: -bootstrap-grey7;
 }
 /*===== modality-backoffice-bookingdetailspanel-javafx@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
 
