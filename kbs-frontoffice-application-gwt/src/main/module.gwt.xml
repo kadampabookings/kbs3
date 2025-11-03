@@ -790,6 +790,8 @@
     <source path="dev/webfx/stack/authn/spi/impl/remote"/>
     <!--============================< webfx-stack-authz-client >============================-->
     <source path="dev/webfx/stack/authz/client"/>
+    <source path="dev/webfx/stack/authz/client/binder"/>
+    <source path="dev/webfx/stack/authz/client/context"/>
     <source path="dev/webfx/stack/authz/client/factory"/>
     <source path="dev/webfx/stack/authz/client/operation"/>
     <source path="dev/webfx/stack/authz/client/spi"/>

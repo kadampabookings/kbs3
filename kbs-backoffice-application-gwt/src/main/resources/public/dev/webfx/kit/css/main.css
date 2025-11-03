@@ -817,36 +817,64 @@ fx-togglebutton.aria-toggle.fired {
 .badge.danger{
     --fx-text-fill: var(--badge-danger-txt);
     background-color: var(--badge-danger-bg);
+    color: var(--badge-danger-txt);
+}
+.badge.danger fx-text {
+    color: var(--badge-danger-txt);
 }
 
 .badge.success{
     --fx-text-fill: var(--badge-success-txt);
     background-color: var(--badge-success-bg);
+    color: var(--badge-success-txt);
+}
+.badge.success fx-text {
+    color: var(--badge-success-txt);
 }
 
 .badge.warning{
     --fx-text-fill: var(--badge-warning-txt);
     background-color: var(--badge-warning-bg);
+    color: var(--badge-warning-txt);
+}
+.badge.warning fx-text {
+    color: var(--badge-warning-txt);
 }
 
 .badge.info{
     --fx-text-fill: var(--badge-info-txt);
     background-color: var(--badge-info-bg);
+    color: var(--badge-info-txt);
+}
+.badge.info fx-text {
+    color: var(--badge-info-txt);
 }
 
 .badge.secondary{
     --fx-text-fill: var(--badge-secondary-txt);
     background-color: var(--badge-secondary-bg);
+    color: var(--badge-secondary-txt);
+}
+.badge.secondary fx-text {
+    color: var(--badge-secondary-txt);
 }
 
 .badge.primary{
     --fx-text-fill: var(--badge-primary-txt);
     background-color: var(--badge-primary-bg);
+    color: var(--badge-primary-txt);
+}
+.badge.primary fx-text {
+    color: var(--badge-primary-txt);
 }
 
 .badge.default{
     --fx-text-fill: var(--badge-default-txt);
     background-color: var(--badge-default-bg);
+    color: var(--badge-default-txt);
+}
+.badge.default fx-text {
+    color: var(--badge-default-txt);
 }
 
 /* Modern Badge Variants (Light backgrounds for better readability) */
@@ -855,11 +883,17 @@ fx-togglebutton.aria-toggle.fired {
     color: #00b8d4;
     border-radius: 12px;
 }
+.badge-light-info fx-text {
+    color: #00b8d4;
+}
 
 .badge-light-success {
     background-color: #e8f5e9;
     color: #4caf50;
     border-radius: 12px;
+}
+.badge-light-success fx-text {
+    color: #4caf50;
 }
 
 .badge-light-warning {
@@ -867,11 +901,17 @@ fx-togglebutton.aria-toggle.fired {
     color: #ffa726;
     border-radius: 12px;
 }
+.badge-light-warning fx-text {
+    color: #ffa726;
+}
 
 .badge-light-danger {
     background-color: #ffebee;
     color: #ff5252;
     border-radius: 12px;
+}
+.badge-light-danger fx-text {
+    color: #ff5252;
 }
 
 .badge-light-gray, .badge-gray {
@@ -879,11 +919,19 @@ fx-togglebutton.aria-toggle.fired {
     color: #666;
     border-radius: 12px;
 }
+.badge-light-gray fx-text,
+.badge-gray fx-text {
+    color: #666;
+}
 
 .badge-light-purple, .badge-purple {
     background-color: #f3e5f5;
     color: #9c27b0;
     border-radius: 12px;
+}
+.badge-light-purple fx-text,
+.badge-purple fx-text {
+    color: #9c27b0;
 }
 
 /* Admin Module Badge Variants - Semantic Colors */
@@ -892,11 +940,17 @@ fx-togglebutton.aria-toggle.fired {
     color: #006064;
     border-radius: 12px;
 }
+.badge-operation fx-text {
+    color: #006064;
+}
 
 .badge-operation-group {
     background-color: #FFF3E0;
     color: #E65100;
     border-radius: 12px;
+}
+.badge-operation-group fx-text {
+    color: #E65100;
 }
 
 .badge-rule {
@@ -904,17 +958,26 @@ fx-togglebutton.aria-toggle.fired {
     color: #1B5E20;
     border-radius: 12px;
 }
+.badge-rule fx-text {
+    color: #1B5E20;
+}
 
 .badge-role {
     background-color: #EDE7F6;
     color: #4527A0;
     border-radius: 12px;
 }
+.badge-role fx-text {
+    color: #4527A0;
+}
 
 .badge-user {
     background-color: #E3F2FD;
     color: #0D47A1;
     border-radius: 12px;
+}
+.badge-user fx-text {
+    color: #0D47A1;
 }
 
 /* Alert / Info Box Styles - left border only, no full border */
@@ -1316,76 +1379,23 @@ body, textarea /* because textarea has explicit default monospace font */ {
 /*===== modality-crm-backoffice-activity-admin-web@main.css from modality-crm-backoffice-activity-admin-plugin =====*/
 
 /* Rights Management Admin Plugin - Web CSS */
+/* Note: This file contains only CSS classes actually used in the admin module Java code */
 
 /* Root variables */
 :root {
     --admin-primary-color: #00b8d4;
-    --admin-success-color: #4caf50;
-    --admin-warning-color: #ffa726;
     --admin-danger-color: #ff5252;
-    --admin-info-color: #e1f5fe;
     --admin-info-bg-color: #e3f2fd;
     --admin-info-text-color: #1976d2;
     --admin-info-border-color: #2196f3;
-    --admin-gray-color: #9e9e9e;
-    --admin-border-color: #ddd;
-    --admin-background-white: white;
-    --admin-background-light: #f5f5f5;
-    --admin-text-primary: #333;
     --admin-text-secondary: #666;
 }
 
 /* Card styling */
 .admin-card {
-    background-color: var(--admin-background-white);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Note: Badge and alert styles are now centralized in Bootstrap module */
-/* Use: badge-light-info, badge-light-success, badge-light-warning, badge-light-danger, badge-gray */
-/* Use: alert-info (or info-box), alert-success, alert-warning, alert-danger */
-/* Padding for info boxes is set in Java code via Bootstrap helper methods */
-
-/* Section card - wraps content with white background and rounded corners */
-.section-card {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* Route label (monospace) */
-.admin-route-label {
-    font-family: 'Courier New', monospace;
-    background-color: var(--admin-background-light);
-    border-radius: 4px;
-    color: var(--admin-text-secondary);
-}
-
-/* Action buttons */
-.admin-action-btn {
-    background-color: var(--admin-background-light);
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.admin-action-btn:hover {
-    background-color: #e0e0e0;
-}
-
-.admin-action-btn-delete {
-    color: var(--admin-danger-color);
-}
-
-.admin-action-btn-remove {
-    background-color: var(--admin-danger-color);
-    color: white;
-    cursor: pointer;
 }
 
 /* Title and subtitle */
@@ -1402,73 +1412,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .admin-card-title {
     font-size: 18px;
     font-weight: bold;
-}
-
-.admin-section-label {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.admin-text-italic {
-    color: #999;
-    font-style: italic;
-}
-
-/* Modern Tab Design for Super Admin Sub-Tabs */
-.super-admin-sub-tabs {
-    background-color: transparent;
-    border-style: solid;
-    border-color: transparent transparent #ddd transparent;
-    border-width: 0 0 1px 0;
-}
-
-.super-admin-sub-tabs .tab-header-area {
-    background-color: transparent;
-}
-
-.super-admin-sub-tabs .tab-header-background {
-    background-color: transparent;
-}
-
-.super-admin-sub-tabs .headers-region {
-    background-color: transparent;
-}
-
-.super-admin-sub-tabs .tab {
-    background-color: transparent;
-    border-radius: 0;
-    border-style: solid;
-    border-color: transparent transparent transparent transparent;
-    border-width: 0 0 3px 0;
-}
-
-.super-admin-sub-tabs .tab-label {
-    color: #666;
-    font-size: 14px;
-}
-
-.super-admin-sub-tabs .tab:hover .tab-label {
-    color: #00b8d4;
-}
-
-.super-admin-sub-tabs .tab:selected,
-.super-admin-sub-tabs .tab.selected {
-    background-color: transparent;
-    border-color: transparent transparent #00b8d4 transparent;
-}
-
-.super-admin-sub-tabs .tab:selected .tab-label,
-.super-admin-sub-tabs .tab.selected .tab-label {
-    color: #00b8d4;
-}
-
-.super-admin-sub-tabs .tab .focus-indicator {
-    border-color: transparent;
-}
-
-.super-admin-sub-tabs .tab-content-area {
-    background-color: transparent;
-    border-color: transparent;
 }
 
 /* Assign Role Dialog Styles */
@@ -1529,35 +1472,27 @@ body, textarea /* because textarea has explicit default monospace font */ {
     color: #666;
 }
 
+/* Table header styling */
+.grid-head .grid-col {
+    background-color: #e9ecef;
+}
+
+.grid-head Text,
+.grid-head Label {
+    font-weight: bold;
+    font-size: 13px;
+    fill: #495057;
+    color: #495057;
+}
+
 .dialog-summary {
     font-size: 14px;
 }
 
 /* Modal Dialog Styles */
-.modal-title {
-    font-size: 20px;
-    font-weight: 800;
-}
-
 .modal-dialog-pane {
     background-color: white;
     border-radius: 8px;
-}
-
-/* Form Field Styles */
-.form-field-label {
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.form-field-input {
-    border-color: #ddd;
-    border-radius: 4px;
-}
-
-.form-field-help {
-    color: #666;
-    font-size: 12px;
 }
 
 /* Error Dialog Styles */
@@ -1592,6 +1527,474 @@ body, textarea /* because textarea has explicit default monospace font */ {
     color: #666;
 }
 
+/*===== modality-crm-customers-web@main.css from modality-crm-backoffice-activity-customers-plugin =====*/
+
+/* Customer Management Styles - Web */
+
+/* Root variables */
+:root {
+    --kbs-primary-color: #00A3FF;
+    --kbs-primary-hover-color: #0088D9;
+    --kbs-danger-color: #F44336;
+    --kbs-text-primary-color: #2C3E50;
+    --kbs-text-secondary-color: #7F8C8D;
+    --kbs-border-color: #E8EAED;
+    --kbs-bg-light-color: #F8F9FA;
+    --kbs-white-color: #FFFFFF;
+}
+
+/* Page Header */
+.page-header {
+    background-color: var(--kbs-white-color);
+    border-bottom: 1px solid var(--kbs-border-color);
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--kbs-text-primary-color);
+    margin: 0 0 4px 0;
+}
+
+.page-subtitle {
+    font-size: 13px;
+    color: var(--kbs-text-secondary-color);
+    margin: 0;
+}
+
+/* Customers container */
+#customers {
+    background-color: var(--kbs-bg-light-color);
+}
+
+/* Customers grid styling */
+.customers-grid {
+    background-color: var(--kbs-white-color);
+}
+
+.customers-grid table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--kbs-white-color);
+}
+
+.customers-grid thead {
+    background-color: var(--kbs-bg-light-color);
+    border-bottom: 1px solid var(--kbs-border-color);
+}
+
+.customers-grid th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kbs-text-secondary-color);
+    text-transform: uppercase;
+}
+
+.customers-grid td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--kbs-border-color);
+    font-size: 14px;
+}
+
+.customers-grid tbody tr:hover {
+    background-color: var(--kbs-bg-light-color);
+}
+
+.customers-grid tbody tr.selected {
+    background-color: #FFF3CD;
+    border-left: 3px solid var(--kbs-primary-color);
+}
+
+/* Edit Panel */
+.edit-panel {
+    background-color: var(--kbs-white-color);
+    border-top: 3px solid var(--kbs-primary-color);
+    display: none;
+    animation: slideDown 0.3s ease-out;
+}
+
+.edit-panel.active {
+    display: block;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.edit-panel-header {
+    padding: 20px 24px;
+    background-color: var(--kbs-bg-light-color);
+    border-bottom: 1px solid var(--kbs-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-panel-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--kbs-text-primary-color);
+}
+
+.edit-panel-id {
+    padding: 4px 10px;
+    background-color: var(--kbs-white-color);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kbs-text-secondary-color);
+    font-family: 'Courier New', monospace;
+}
+
+/* Edit Tabs */
+.edit-tabs {
+    display: flex;
+    background-color: var(--kbs-bg-light-color);
+    padding: 0 24px;
+    border-bottom: 1px solid var(--kbs-border-color);
+}
+
+.edit-tab {
+    padding: 14px 20px;
+    border: none;
+    background-color: transparent;
+    color: var(--kbs-text-secondary-color);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-tab:hover {
+    color: var(--kbs-text-primary-color);
+    background-color: rgba(0, 163, 255, 0.05);
+}
+
+.edit-tab.active {
+    color: var(--kbs-primary-color);
+    background-color: var(--kbs-white-color);
+    border-bottom-color: var(--kbs-primary-color);
+}
+
+/* Edit Content */
+.edit-content {
+    padding: 24px;
+    max-height: 600px;
+    overflow-y: auto;
+    background-color: var(--kbs-white-color);
+}
+
+.edit-tab-content {
+    display: none;
+}
+
+.edit-tab-content.active {
+    display: block;
+}
+
+.edit-scroll-pane {
+    background-color: var(--kbs-white-color);
+}
+
+/* Form Elements */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kbs-text-primary-color);
+}
+
+.form-field {
+    padding: 10px 12px;
+    border: 1px solid var(--kbs-border-color);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-field:focus {
+    border-color: var(--kbs-primary-color);
+    outline: none;
+}
+
+.form-field:disabled {
+    background-color: var(--kbs-bg-light-color);
+    cursor: not-allowed;
+}
+
+.form-checkbox {
+    font-size: 14px;
+}
+
+.form-checkbox:disabled {
+    opacity: 0.7;
+}
+
+/* Form Section Title */
+.form-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--kbs-text-primary-color);
+    margin: 24px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--kbs-border-color);
+}
+
+/* Password Hash Display */
+.password-hash-display {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background-color: var(--kbs-bg-light-color) !important;
+    letter-spacing: 1px;
+}
+
+/* Account Credentials Section */
+.account-credentials-section {
+    background-color: #F0F8FF;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #B3D9FF;
+}
+
+/* Linked Accounts Box */
+.linked-accounts-box {
+    background-color: #F0F8FF;
+    border: 1px solid #B3D9FF;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.linked-accounts-description {
+    color: var(--kbs-text-secondary-color);
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.linked-person-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: var(--kbs-white-color);
+    border-radius: 6px;
+    border: 1px solid var(--kbs-border-color);
+    margin-bottom: 8px;
+}
+
+.linked-person-name {
+    font-weight: 600;
+    color: var(--kbs-text-primary-color);
+}
+
+.linked-person-email {
+    font-size: 12px;
+    color: var(--kbs-text-secondary-color);
+    flex: 1;
+}
+
+.linked-person-id {
+    font-size: 11px;
+    color: var(--kbs-text-secondary-color);
+}
+
+/* Account Type Badges */
+.account-type-badge {
+    display: inline-flex;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+.status-badge.inactive {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
+/* Action Buttons in Table */
+.btn-icon {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: var(--kbs-text-secondary-color);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background-color: var(--kbs-bg-light-color);
+    color: var(--kbs-text-primary-color);
+}
+
+.btn-icon.danger:hover {
+    background-color: #FFEBEE;
+    color: var(--kbs-danger-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-grid-2,
+    .form-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}
+
+/*===== modality-crm-backoffice-activity-superadmin-web@main.css from modality-crm-backoffice-activity-superadmin-plugin =====*/
+
+/* Rights Management Super Admin Plugin - Web CSS */
+/* Note: This file contains only CSS classes actually used in the superadmin module Java code */
+
+/* Root variables */
+:root {
+    --admin-primary-color: #00b8d4;
+    --admin-success-color: #4caf50;
+    --admin-warning-color: #ffa726;
+    --admin-danger-color: #ff5252;
+    --admin-info-color: #e1f5fe;
+    --admin-info-bg-color: #e3f2fd;
+    --admin-info-text-color: #1976d2;
+    --admin-info-border-color: #2196f3;
+    --admin-gray-color: #9e9e9e;
+    --admin-border-color: #ddd;
+    --admin-background-white: white;
+    --admin-background-light: #f5f5f5;
+    --admin-text-primary: #333;
+    --admin-text-secondary: #666;
+}
+
+/* Route label (monospace) - used in Operations view */
+.admin-route-label {
+    font-family: 'Courier New', monospace;
+    background-color: var(--admin-background-light);
+    border-radius: 4px;
+    color: var(--admin-text-secondary);
+}
+
+/* Info banner - used in dialogs */
+.admin-info-banner {
+    background-color: var(--admin-info-bg-color);
+    border-left: 3px solid var(--admin-info-border-color);
+    border-radius: 4px;
+}
+
+.admin-info-banner-text {
+    color: var(--admin-info-text-color);
+    font-size: 13px;
+}
+
+/* Modern Tab Design for Super Admin Sub-Tabs */
+.super-admin-sub-tabs {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.super-admin-sub-tabs .tab-header-area {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.super-admin-sub-tabs .tab-header-background {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.super-admin-sub-tabs .headers-region {
+    background-color: white;
+}
+
+.super-admin-sub-tabs .tab {
+    background-color: transparent;
+    border-radius: 0;
+    border-style: solid;
+    border-color: transparent transparent transparent transparent;
+    border-width: 0 0 3px 0;
+}
+
+.super-admin-sub-tabs .tab-label {
+    color: #666;
+    font-size: 14px;
+}
+
+.super-admin-sub-tabs .tab:hover .tab-label {
+    color: #00b8d4;
+}
+
+.super-admin-sub-tabs .tab:selected,
+.super-admin-sub-tabs .tab.selected {
+    background-color: transparent;
+    border-color: transparent transparent #00b8d4 transparent;
+}
+
+.super-admin-sub-tabs .tab:selected .tab-label,
+.super-admin-sub-tabs .tab.selected .tab-label {
+    color: #00b8d4;
+}
+
+.super-admin-sub-tabs .tab .focus-indicator {
+    border-color: transparent;
+}
+
+.super-admin-sub-tabs .tab-content-area {
+    background-color: white;
+    border-color: transparent;
+}
+
 /* Role Dialog - Selected Permissions */
 .role-dialog-permissions-title {
     font-weight: bold;
@@ -1618,7 +2021,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
     font-style: italic;
 }
 
-/* Permission Chip Styles */
+/* Permission Chip Styles - used in Roles dialog */
 .permission-chip-operation {
     background-color: #d1ecf1;
     border: 1px solid rgba(12, 84, 96, 0.13);
@@ -1682,48 +2085,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
     color: #dc3545;
 }
 
-/* Admin Chip Styles (Organization Admins) */
-.admin-selected-panel {
-    background-color: #f9f9f9;
-    border: 1px dashed #ddd;
-    border-radius: 4px;
-}
-
-.admin-count-label {
-    font-weight: bold;
-    font-size: 13px;
-    color: #333;
-}
-
-.admin-chip {
-    background-color: #e3f2fd;
-    border: 1px solid rgba(33, 150, 243, 0.13);
-    border-radius: 16px;
-}
-
-.admin-chip-label {
-    color: #1976d2;
-    font-size: 13px;
-}
-
-.admin-chip-remove {
-    color: #1976d2;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.admin-chip-remove:hover {
-    color: #dc3545;
-}
-
-/* Legend Label */
-.admin-legend-label {
-    font-weight: bold;
-    font-size: 12px;
-}
-
-/* Operation Group Selection Panel (used in OperationGroupDialog) */
+/* Operation Group Selection Panel - used in OperationGroupDialog */
 .operation-selection-panel {
     background-color: #f9f9f9;
     border: 1px dashed #ddd;
@@ -1741,7 +2103,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
     font-size: 13px;
 }
 
-/* Operation Selection Chip Styles (used in OperationGroupDialog) */
+/* Operation Selection Chip Styles - used in OperationGroupDialog */
 .operation-selection-chip {
     background-color: #d1ecf1;
     border: 1px solid #bee5eb;
@@ -1764,50 +2126,18 @@ body, textarea /* because textarea has explicit default monospace font */ {
     color: #dc3545;
 }
 
-/* VisualGrid Header Styles - minimal styling to avoid interfering with default behavior */
-.grid-head {
-    background-color: #e9ecef !important;
-    border-bottom: 2px solid #dee2e6;
+/* Table header styling */
+.grid-head .grid-col {
+    background-color: #e9ecef;
+}
+
+.grid-head Text,
+.grid-head Label {
     font-weight: bold;
     font-size: 13px;
+    fill: #495057;
     color: #495057;
 }
-
-/* Fix badge colors in web view - override with !important */
-.badge-light-info {
-    background-color: #e1f5fe !important;
-    color: #00b8d4 !important;
-}
-
-.badge-light-success {
-    background-color: #e8f5e9 !important;
-    color: #4caf50 !important;
-}
-
-.badge-light-warning {
-    background-color: #fff3e0 !important;
-    color: #ffa726 !important;
-}
-
-.badge-light-danger {
-    background-color: #ffebee !important;
-    color: #ff5252 !important;
-}
-
-.badge-gray, .badge-light-gray {
-    background-color: #f5f5f5 !important;
-    color: #666 !important;
-}
-
-/* Ensure table cells are properly aligned and have no extra padding */
-table tbody td {
-    vertical-align: middle;
-}
-
-table tbody td > * {
-    vertical-align: middle;
-}
-
 
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
@@ -1902,6 +2232,350 @@ table tbody td > * {
 .btn-white:hover:not(.disabled) {
     --fx-text-fill: black;
     --fx-background-color: var(--bootstrap-grey1);
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue5);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue5);
+    --fx-border-color: var(--bootstrap-blue5);
+}
+
+.btn.outline-secondary {
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-grey6);
+    --fx-border-color: var(--bootstrap-grey6);
+}
+
+.btn.outline-success {
+    --fx-text-fill: var(--bootstrap-green1);
+    --fx-svg-path-fill: var(--bootstrap-green1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-green1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-green1);
+    --fx-border-color: var(--bootstrap-green1);
+}
+
+.btn.outline-danger {
+    --fx-text-fill: var(--bootstrap-red1);
+    --fx-svg-path-fill: var(--bootstrap-red1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-red1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-red1);
+    --fx-border-color: var(--bootstrap-red1);
+}
+
+.btn.outline-warning {
+    --fx-text-fill: var(--bootstrap-orange1);
+    --fx-svg-path-fill: var(--bootstrap-orange1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-orange1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-orange1);
+    --fx-border-color: var(--bootstrap-orange1);
+}
+
+.btn.outline-info {
+    --fx-text-fill: var(--bootstrap-blue1);
+    --fx-svg-path-fill: var(--bootstrap-blue1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue1);
+    --fx-border-color: var(--bootstrap-blue1);
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    fill: var(--fx-text-fill);
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    --fx-background-color: var(--bootstrap-white);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border-width: 1px;
+    --fx-border-radius: 6px;
+    --fx-background-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    --fx-text-fill: var(--bootstrap-grey7);
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    --fx-hgap: 16px;
+    --fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    --fx-background-color: transparent;
+    --fx-border-color: transparent;
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    cursor: pointer;
+}
+
+.copy-button:hover:not(.disabled) {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+}
+
+/* Copy notification label */
+.copy-notification {
+    --fx-background-color: rgba(0, 0, 0, 0.75);
+    --fx-text-fill: white;
+    --fx-background-radius: 4px;
+    font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.text-field.readonly-field input {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.button.readonly-field button {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue5);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue5);
+    --fx-border-color: var(--bootstrap-blue5);
+}
+
+.btn.outline-secondary {
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-grey6);
+    --fx-border-color: var(--bootstrap-grey6);
+}
+
+.btn.outline-success {
+    --fx-text-fill: var(--bootstrap-green1);
+    --fx-svg-path-fill: var(--bootstrap-green1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-green1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-green1);
+    --fx-border-color: var(--bootstrap-green1);
+}
+
+.btn.outline-danger {
+    --fx-text-fill: var(--bootstrap-red1);
+    --fx-svg-path-fill: var(--bootstrap-red1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-red1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-red1);
+    --fx-border-color: var(--bootstrap-red1);
+}
+
+.btn.outline-warning {
+    --fx-text-fill: var(--bootstrap-orange1);
+    --fx-svg-path-fill: var(--bootstrap-orange1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-orange1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-orange1);
+    --fx-border-color: var(--bootstrap-orange1);
+}
+
+.btn.outline-info {
+    --fx-text-fill: var(--bootstrap-blue1);
+    --fx-svg-path-fill: var(--bootstrap-blue1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue1);
+    --fx-border-color: var(--bootstrap-blue1);
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    fill: var(--fx-text-fill);
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    --fx-background-color: var(--bootstrap-white);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border-width: 1px;
+    --fx-border-radius: 6px;
+    --fx-background-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    --fx-text-fill: var(--bootstrap-grey7);
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    --fx-hgap: 16px;
+    --fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    --fx-background-color: transparent;
+    --fx-border-color: transparent;
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    cursor: pointer;
+}
+
+.copy-button:hover:not(.disabled) {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+}
+
+/* Copy notification label */
+.copy-notification {
+    --fx-background-color: rgba(0, 0, 0, 0.75);
+    --fx-text-fill: white;
+    --fx-background-radius: 4px;
+    font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.text-field.readonly-field input {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.button.readonly-field button {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
 }
 
 /*===== modality-backoffice-bookingdetailspanel-web@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
