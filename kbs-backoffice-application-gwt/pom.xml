@@ -130,6 +130,13 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-base-backoffice-formatters-renderers</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-base-backoffice-gantt-canvas</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>

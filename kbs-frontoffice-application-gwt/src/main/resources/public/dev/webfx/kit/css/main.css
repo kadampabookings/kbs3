@@ -372,6 +372,124 @@ iframe {
     border: none;
 }
 
+/*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
+
+:root {
+    --webfx-visualgrid-row-border-color: #D3D3D3;
+    --webfx-visualgrid-col-border-color: #D3D3D3;
+    --webfx-visualgrid-row-height: 28px;
+    --webfx-visualgrid-selection-color: #AED6F1;
+}
+
+th, td {
+    border: 1px solid var(--webfx-visualgrid-row-border-color);
+    border-top-width: 0;
+}
+
+table {
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+
+thead {
+    border: none;
+    height: var(--webfx-visualgrid-row-height);
+    position: sticky;
+    top: 1px;
+    z-index: 2; /* header must be above body when scrolling */
+}
+
+thead th {
+    border-right-width: thin;
+    border-right-style: solid;
+    border-right-color: var(--webfx-visualgrid-col-border-color);
+    height: var(--webfx-visualgrid-row-height);
+    font-weight: bold;
+    text-align: center;
+    overflow: hidden;
+}
+
+tbody td {
+    border-bottom-color: var(--webfx-visualgrid-row-border-color);
+}
+
+tbody tr {
+    height: var(--webfx-visualgrid-row-height);
+}
+
+thead th, tbody td {
+    padding: 0 5px 0 5px;
+    max-width: 0;
+    overflow: hidden;
+}
+
+th:before { /* this rule is to prevent body appearing in 1px line above header when scrolling */
+    content: '';
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: -1px;
+    border-top: 1px solid var(--webfx-visualgrid-row-border-color);
+}
+
+
+/***********************************
+ *** Table header and row colors ***
+ ***********************************/
+
+/*** Table header gray gradient ***/
+
+thead tr {
+    background: linear-gradient( 180deg, white, lightgray 100%);
+}
+
+th, tbody, td {
+    background-color: transparent;
+}
+
+
+/**************************
+*** VisualGridTableSkin ***
+**************************/
+
+.grid, .grid-col, .grid-row {
+    overflow: hidden;
+}
+
+.grid-head, .grid-row {
+    border-bottom: 1px solid var(--webfx-visualgrid-row-border-color);
+}
+
+.grid-col {
+    border-right: 1px solid var(--webfx-visualgrid-col-border-color);
+}
+
+tr.selected, .grid-row.selected {
+    background: var(--webfx-visualgrid-selection-color)
+}
+
+/*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
+
+:root {
+    --webfx-aria-toggle-button-background-color-focused: lightgray;
+    --webfx-aria-toggle-button-background-color-hover: var(--webfx-aria-toggle-button-background-color-focused);
+    --webfx-aria-toggle-button-background-color-fired: #0096D6;
+    --webfx-aria-toggle-button-text-fill-fired: white;
+}
+
+
+fx-togglebutton.aria-toggle {
+    --fx-togglebutton-background-color-selected: var(--webfx-aria-toggle-button-background-color-focused);
+    --fx-togglebutton-background-color-hover: var(--webfx-aria-toggle-button-background-color-hover);
+}
+
+fx-togglebutton.aria-toggle.fired {
+    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
+    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
+    --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
+}
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
 
 :root {
@@ -857,108 +975,17 @@ iframe {
     color: var(--badge-default-txt);
 }
 
-/* Modern Badge Variants (Light backgrounds for better readability) */
-.badge-light-info {
-    background-color: #e1f5fe;
-    color: #00b8d4;
-    border-radius: 12px;
-}
-.badge-light-info fx-text {
-    color: #00b8d4;
-}
 
-.badge-light-success {
-    background-color: #e8f5e9;
-    color: #4caf50;
-    border-radius: 12px;
-}
-.badge-light-success fx-text {
-    color: #4caf50;
-}
 
-.badge-light-warning {
-    background-color: #fff3e0;
-    color: #ffa726;
-    border-radius: 12px;
-}
-.badge-light-warning fx-text {
-    color: #ffa726;
-}
 
-.badge-light-danger {
-    background-color: #ffebee;
-    color: #ff5252;
-    border-radius: 12px;
-}
-.badge-light-danger fx-text {
-    color: #ff5252;
-}
 
-.badge-light-gray, .badge-gray {
-    background-color: #f5f5f5;
-    color: #666;
-    border-radius: 12px;
-}
-.badge-light-gray fx-text,
-.badge-gray fx-text {
-    color: #666;
-}
 
-.badge-light-purple, .badge-purple {
-    background-color: #f3e5f5;
-    color: #9c27b0;
-    border-radius: 12px;
-}
-.badge-light-purple fx-text,
-.badge-purple fx-text {
-    color: #9c27b0;
-}
 
-/* Admin Module Badge Variants - Semantic Colors */
-.badge-operation {
-    background-color: #E0F7FA;
-    color: #006064;
-    border-radius: 12px;
-}
-.badge-operation fx-text {
-    color: #006064;
-}
 
-.badge-operation-group {
-    background-color: #FFF3E0;
-    color: #E65100;
-    border-radius: 12px;
-}
-.badge-operation-group fx-text {
-    color: #E65100;
-}
 
-.badge-rule {
-    background-color: #E8F5E9;
-    color: #1B5E20;
-    border-radius: 12px;
-}
-.badge-rule fx-text {
-    color: #1B5E20;
-}
 
-.badge-role {
-    background-color: #EDE7F6;
-    color: #4527A0;
-    border-radius: 12px;
-}
-.badge-role fx-text {
-    color: #4527A0;
-}
 
-.badge-user {
-    background-color: #E3F2FD;
-    color: #0D47A1;
-    border-radius: 12px;
-}
-.badge-user fx-text {
-    color: #0D47A1;
-}
+
 
 /* Alert / Info Box Styles - left border only, no full border */
 .alert-info, .info-box {
@@ -989,124 +1016,6 @@ iframe {
     color: #c62828;
 }
 
-/*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
-
-:root {
-    --webfx-visualgrid-row-border-color: #D3D3D3;
-    --webfx-visualgrid-col-border-color: #D3D3D3;
-    --webfx-visualgrid-row-height: 28px;
-    --webfx-visualgrid-selection-color: #AED6F1;
-}
-
-th, td {
-    border: 1px solid var(--webfx-visualgrid-row-border-color);
-    border-top-width: 0;
-}
-
-table {
-    width: 100%;
-    border: none;
-    border-collapse: collapse;
-    cursor: pointer;
-}
-
-thead {
-    border: none;
-    height: var(--webfx-visualgrid-row-height);
-    position: sticky;
-    top: 1px;
-    z-index: 2; /* header must be above body when scrolling */
-}
-
-thead th {
-    border-right-width: thin;
-    border-right-style: solid;
-    border-right-color: var(--webfx-visualgrid-col-border-color);
-    height: var(--webfx-visualgrid-row-height);
-    font-weight: bold;
-    text-align: center;
-    overflow: hidden;
-}
-
-tbody td {
-    border-bottom-color: var(--webfx-visualgrid-row-border-color);
-}
-
-tbody tr {
-    height: var(--webfx-visualgrid-row-height);
-}
-
-thead th, tbody td {
-    padding: 0 5px 0 5px;
-    max-width: 0;
-    overflow: hidden;
-}
-
-th:before { /* this rule is to prevent body appearing in 1px line above header when scrolling */
-    content: '';
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: -1px;
-    border-top: 1px solid var(--webfx-visualgrid-row-border-color);
-}
-
-
-/***********************************
- *** Table header and row colors ***
- ***********************************/
-
-/*** Table header gray gradient ***/
-
-thead tr {
-    background: linear-gradient( 180deg, white, lightgray 100%);
-}
-
-th, tbody, td {
-    background-color: transparent;
-}
-
-
-/**************************
-*** VisualGridTableSkin ***
-**************************/
-
-.grid, .grid-col, .grid-row {
-    overflow: hidden;
-}
-
-.grid-head, .grid-row {
-    border-bottom: 1px solid var(--webfx-visualgrid-row-border-color);
-}
-
-.grid-col {
-    border-right: 1px solid var(--webfx-visualgrid-col-border-color);
-}
-
-tr.selected, .grid-row.selected {
-    background: var(--webfx-visualgrid-selection-color)
-}
-
-/*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
-
-:root {
-    --webfx-aria-toggle-button-background-color-focused: lightgray;
-    --webfx-aria-toggle-button-background-color-hover: var(--webfx-aria-toggle-button-background-color-focused);
-    --webfx-aria-toggle-button-background-color-fired: #0096D6;
-    --webfx-aria-toggle-button-text-fill-fired: white;
-}
-
-
-fx-togglebutton.aria-toggle {
-    --fx-togglebutton-background-color-selected: var(--webfx-aria-toggle-button-background-color-focused);
-    --fx-togglebutton-background-color-hover: var(--webfx-aria-toggle-button-background-color-hover);
-}
-
-fx-togglebutton.aria-toggle.fired {
-    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
-    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
-    --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
-}
 /*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
 
 :root {
@@ -1374,44 +1283,6 @@ fx-htmltext {
   align-items: center;   /* align vertically */
   justify-content: flex-start; /* mimic center-left */
 }
-/*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
-
-:root {
-    --brand-orange-color: #F6782E;
-    --brand-blue-color: #0096D6;
-    --brand-main-color: var(--brand-orange-color);
-    --brand-main-background-color: var(--brand-orange-color);
-}
-/*===== modality-client-css-web@main.css from modality-base-client-css =====*/
-
-:root {
-    --montserrat-font-family: "Montserrat";
-    --roboto-font-family: "Roboto";
-    --poppins-font-family: "Poppins";
-    --vollkorn-font-family: "Vollkorn SC";
-
-    /* Overriding some WebFX Extras CSS variables  */
-    --webfx-switch-selected-background-color: var(--brand-main-background-color);
-    --webfx-visualgrid-selection-color: #BBBBBB;
-}
-
-/* Applying Montserrat as default font for Modality */
-body, textarea /* because textarea has explicit default monospace font */ {
-    font-family: var(--montserrat-font-family), serif;
-    font-size: 13px;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* Not sure if it's the right place for this CSS rules */
-.event-button {
-    height: 35px;
-    max-height: 35px;
-    text-align: center;
-    font-weight: normal;
-    --fx-border-style: none;
-    --fx-border-radius: 4px;
-}
-
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
@@ -1851,6 +1722,133 @@ body, textarea /* because textarea has explicit default monospace font */ {
     color: var(--bootstrap-grey7);
 }
 
+/* Badge - Light Pink (for admin/role badges) */
+.badge-light-pink {
+    background-color: #FCE4EC;
+    color: #C2185B;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 3px;
+}
+
+/* Modern Badge Variants (Light backgrounds for better readability) - Moved from Bootstrap */
+.badge-light-info {
+    background-color: #e1f5fe;
+    color: #00b8d4;
+    border-radius: 12px;
+}
+.badge-light-info fx-text {
+    color: #00b8d4;
+}
+
+.badge-light-success {
+    background-color: #e8f5e9;
+    color: #4caf50;
+    border-radius: 12px;
+}
+.badge-light-success fx-text {
+    color: #4caf50;
+}
+
+.badge-light-warning {
+    background-color: #fff3e0;
+    color: #ffa726;
+    border-radius: 12px;
+}
+.badge-light-warning fx-text {
+    color: #ffa726;
+}
+
+.badge-light-danger {
+    background-color: #ffebee;
+    color: #ff5252;
+    border-radius: 12px;
+}
+.badge-light-danger fx-text {
+    color: #ff5252;
+}
+
+.badge-light-gray, .badge-gray {
+    background-color: #f5f5f5;
+    color: #666;
+    border-radius: 12px;
+}
+.badge-light-gray fx-text,
+.badge-gray fx-text {
+    color: #666;
+}
+
+.badge-light-purple, .badge-purple {
+    background-color: #f3e5f5;
+    color: #9c27b0;
+    border-radius: 12px;
+}
+.badge-light-purple fx-text,
+.badge-purple fx-text {
+    color: #9c27b0;
+}
+
+/* Modern Tab Design for Admin Panels */
+.modality-modern-tabs {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.modality-modern-tabs .tab-header-area {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .tab-header-background {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .headers-region {
+    background-color: white;
+    gap: 8px;
+}
+
+.modality-modern-tabs .tab {
+    background-color: transparent;
+    border-radius: 0;
+    border-style: solid;
+    border-color: transparent transparent transparent transparent;
+    border-width: 0 0 3px 0;
+    min-height: 48px;
+    height: 48px;
+}
+
+.modality-modern-tabs .tab-label {
+    color: #666;
+    font-size: 15px;
+}
+
+.modality-modern-tabs .tab:hover .tab-label {
+    color: var(--bootstrap-blue5);
+}
+
+.modality-modern-tabs .tab:selected,
+.modality-modern-tabs .tab.selected {
+    background-color: transparent;
+    border-color: transparent transparent var(--bootstrap-blue5) transparent;
+}
+
+.modality-modern-tabs .tab:selected .tab-label,
+.modality-modern-tabs .tab.selected .tab-label {
+    color: var(--bootstrap-blue5);
+}
+
+.modality-modern-tabs .tab .focus-indicator {
+    border-color: transparent;
+}
+
+.modality-modern-tabs .tab-content-area {
+    background-color: white;
+    border-color: transparent;
+}
+
 /*===== modality-frontoffice-bookingelements-web@main.css from modality-booking-frontoffice-bookingelements =====*/
 
 .booking-elements {
@@ -1964,6 +1962,44 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .booking-elements .sub-price-label {
     --fx-text-fill: #838788;
 }
+/*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
+
+:root {
+    --brand-orange-color: #F6782E;
+    --brand-blue-color: #0096D6;
+    --brand-main-color: var(--brand-orange-color);
+    --brand-main-background-color: var(--brand-orange-color);
+}
+/*===== modality-client-css-web@main.css from modality-base-client-css =====*/
+
+:root {
+    --montserrat-font-family: "Montserrat";
+    --roboto-font-family: "Roboto";
+    --poppins-font-family: "Poppins";
+    --vollkorn-font-family: "Vollkorn SC";
+
+    /* Overriding some WebFX Extras CSS variables  */
+    --webfx-switch-selected-background-color: var(--brand-main-background-color);
+    --webfx-visualgrid-selection-color: #BBBBBB;
+}
+
+/* Applying Montserrat as default font for Modality */
+body, textarea /* because textarea has explicit default monospace font */ {
+    font-family: var(--montserrat-font-family), serif;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Not sure if it's the right place for this CSS rules */
+.event-button {
+    height: 35px;
+    max-height: 35px;
+    text-align: center;
+    font-weight: normal;
+    --fx-border-style: none;
+    --fx-border-radius: 4px;
+}
+
 /*===== modality-frontoffice-order-web@main.css from modality-ecommerce-frontoffice-order =====*/
 
 .order-card {

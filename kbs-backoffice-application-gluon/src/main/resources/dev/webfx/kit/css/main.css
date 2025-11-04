@@ -1,30 +1,6 @@
 /* @font-face rules listed first, otherwise they are ignored (OpenJFX bug) */
 
 @font-face {
-    font-family: 'Roboto';
-    font-weight: bold;
-    src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-style: italic;
-    src: url('webfx-css:fonts/roboto/Roboto-Italic.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: 300; /* light */
-    src: url('webfx-css:fonts/roboto/Roboto-Light.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: bold;
-    font-style: italic;
-    src: url('webfx-css:fonts/roboto/Roboto-BoldItalic.ttf');
-}
-@font-face {
     font-family: 'Montserrat';
     font-style: normal;
     src: url('webfx-css:fonts/montserrat/Montserrat-Regular.ttf');
@@ -50,23 +26,29 @@
 }
 
 @font-face {
-    font-family: 'Vollkorn SC';
+    font-family: 'Roboto';
     font-weight: bold;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
+    src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
 }
 
 @font-face {
-    font-family: 'Vollkorn SC';
-    font-style: normal;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
+    font-family: 'Roboto';
+    font-style: italic;
+    src: url('webfx-css:fonts/roboto/Roboto-Italic.ttf');
 }
 
 @font-face {
-    font-family: 'Vollkorn SC';
-    font-weight: 600; /* semi-bold */
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
+    font-family: 'Roboto';
+    font-weight: 300; /* light */
+    src: url('webfx-css:fonts/roboto/Roboto-Light.ttf');
 }
 
+@font-face {
+    font-family: 'Roboto';
+    font-weight: bold;
+    font-style: italic;
+    src: url('webfx-css:fonts/roboto/Roboto-BoldItalic.ttf');
+}
 @font-face {
     font-family: 'Poppins';
     font-style: normal;
@@ -108,6 +90,24 @@
     font-family: 'Poppins';
     font-weight: 600; /* semi-bold */
     src: url('webfx-css:fonts/poppins/Poppins-SemiBold.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: bold;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-style: normal;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: 600; /* semi-bold */
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
 }
 
 
@@ -683,73 +683,16 @@ ToggleButton.aria-toggle SVGPath { !* TODO: completely remove? *!
      -fx-background-color: -badge-default-bg;
  }
 
-/* Modern Badge Variants (Light backgrounds for better readability) */
-.badge-light-info {
-    -fx-background-color: #e1f5fe;
-    -fx-text-fill: #00b8d4;
-    -fx-background-radius: 12;
-}
 
-.badge-light-success {
-    -fx-background-color: #e8f5e9;
-    -fx-text-fill: #4caf50;
-    -fx-background-radius: 12;
-}
 
-.badge-light-warning {
-    -fx-background-color: #fff3e0;
-    -fx-text-fill: #ffa726;
-    -fx-background-radius: 12;
-}
 
-.badge-light-danger {
-    -fx-background-color: #ffebee;
-    -fx-text-fill: #ff5252;
-    -fx-background-radius: 12;
-}
 
-.badge-light-gray, .badge-gray {
-    -fx-background-color: #f5f5f5;
-    -fx-text-fill: #666;
-    -fx-background-radius: 12;
-}
 
-.badge-light-purple, .badge-purple {
-    -fx-background-color: #f3e5f5;
-    -fx-text-fill: #9c27b0;
-    -fx-background-radius: 12;
-}
 
-/* Admin Module Badge Variants - Semantic Colors */
-.badge-operation {
-    -fx-background-color: #E0F7FA;
-    -fx-text-fill: #006064;
-    -fx-background-radius: 12;
-}
 
-.badge-operation-group {
-    -fx-background-color: #FFF3E0;
-    -fx-text-fill: #E65100;
-    -fx-background-radius: 12;
-}
 
-.badge-rule {
-    -fx-background-color: #E8F5E9;
-    -fx-text-fill: #1B5E20;
-    -fx-background-radius: 12;
-}
 
-.badge-role {
-    -fx-background-color: #EDE7F6;
-    -fx-text-fill: #4527A0;
-    -fx-background-radius: 12;
-}
 
-.badge-user {
-    -fx-background-color: #E3F2FD;
-    -fx-text-fill: #0D47A1;
-    -fx-background-radius: 12;
-}
 
 /* Alert / Info Box Styles - left border only, no full border */
 .alert-info, .info-box {
@@ -823,6 +766,18 @@ VisualGrid {
     -fx-padding: 1.4mm 1.4mm 0.6mm 1.4mm;
 }
 
+.table-row-cell:selected {
+    -fx-background: -webfx-visualgrid-selection-color;
+}
+
+.table-row-cell:selected .table-cell {
+   -fx-text-fill: -fx-text-inner-color;
+}
+
+/**************************
+*** VisualGridTableSkin ***
+**************************/
+
 .grid .scroll-pane {
     -fx-padding: 0;
 }
@@ -837,12 +792,8 @@ VisualGrid {
     -fx-border-width: 0 1px 0 0;
 }
 
-.table-row-cell:selected {
-    -fx-background: -webfx-visualgrid-selection-color;
-}
-
-.table-row-cell:selected .table-cell {
-   -fx-text-fill: -fx-text-inner-color;
+.grid-row.selected {
+    -fx-background-color: -webfx-visualgrid-selection-color;
 }
 
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
@@ -991,11 +942,9 @@ HtmlText, HtmlTextEditor {
 .button.main-frame-header-button:hover {
     -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #BBB 99%, transparent 100%);
 }
-/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
-
 /*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
 
-/*===== modality-client-css-import-font-vollkornsc-javafx@main.css from modality-base-client-css =====*/
+/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
 
 /*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
 
@@ -1033,6 +982,8 @@ Text, Label, Button, TextField {
 }
 
 /*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
+
+/*===== modality-client-css-import-font-vollkornsc-javafx@main.css from modality-base-client-css =====*/
 
 /*===== modality-event-backoffice-activity-medias-plugin-javafx@main.css from modality-base-client-i18n =====*/
 
@@ -1092,8 +1043,6 @@ Text, Label, Button, TextField {
     -admin-info-text-color: #1976d2;
     -admin-info-border-color: #2196f3;
     -admin-text-secondary: #666;
-    -admin-header-bg: #f5f5f5;
-    -admin-header-text: #555;
 }
 
 /* Card styling */
@@ -1288,10 +1237,16 @@ Text, Label, Button, TextField {
     -fx-text-fill: -kbs-text-secondary-color;
     -fx-font-weight: 600;
     -fx-font-size: 12px;
+    -fx-min-height: 28;
+    -fx-pref-height: 28;
+    -fx-max-height: 28;
 }
 
 .customers-grid .table-view .table-row-cell {
     -fx-border-color: transparent transparent -kbs-border-color transparent;
+    -fx-min-height: 32;
+    -fx-pref-height: 32;
+    -fx-max-height: 32;
 }
 
 .customers-grid .table-view .table-row-cell:hover {
@@ -1299,9 +1254,10 @@ Text, Label, Button, TextField {
 }
 
 .customers-grid .table-view .table-row-cell:selected {
-    -fx-background-color: #FFF3CD;
+    -fx-background-color: #E3F2FD;
     -fx-border-color: transparent transparent -kbs-border-color -kbs-primary-color;
-    -fx-border-width: 0 0 1px 3px;
+    -fx-border-width: 0 0 1px 4px;
+    -fx-font-weight: 500;
 }
 
 /* Edit Panel */
@@ -1326,7 +1282,6 @@ Text, Label, Button, TextField {
 .edit-panel-id {
     -fx-background-color: -kbs-white-color;
     -fx-background-radius: 12px;
-    -fx-padding: 4px 10px;
     -fx-font-size: 12px;
     -fx-font-weight: 600;
     -fx-text-fill: -kbs-text-secondary-color;
@@ -1452,14 +1407,26 @@ Text, Label, Button, TextField {
     -fx-font-size: 13px;
 }
 
+.linked-person-items {
+    /* No padding/spacing here - set in Java code */
+}
+
 .linked-person-item {
-    -fx-spacing: 12;
+    /* No padding/spacing here - set in Java code */
     -fx-background-color: -kbs-white-color;
     -fx-border-color: -kbs-border-color;
     -fx-border-radius: 6px;
     -fx-background-radius: 6px;
     -fx-border-width: 1px;
-    -fx-alignment: CENTER_LEFT;
+}
+
+.linked-person-check-icon {
+    -fx-font-size: 14px;
+    -fx-fill: #2E7D32;
+}
+
+.linked-person-user-icon {
+    -fx-font-size: 20px;
 }
 
 .linked-person-name {
@@ -1477,10 +1444,11 @@ Text, Label, Button, TextField {
     -fx-text-fill: -kbs-text-secondary-color;
 }
 
-/* Account Type Badges (using existing Bootstrap styles, additional custom) */
+/* Account Type Badges */
 .account-type-badge {
     -fx-font-size: 11px;
     -fx-font-weight: 600;
+    -fx-background-radius: 16px;
 }
 
 /* Status Badges */
@@ -1499,6 +1467,175 @@ Text, Label, Button, TextField {
     -fx-background-color: #FFEBEE;
     -fx-text-fill: #C62828;
 }
+
+/* Role Badges */
+.role-badge {
+    -fx-background-radius: 3px;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+.role-badge.admin {
+    -fx-background-color: #FCE4EC;
+    -fx-text-fill: #C2185B;
+}
+
+.role-badge.developer {
+    -fx-background-color: #E8F5E9;
+    -fx-text-fill: #2E7D32;
+}
+
+/* Action Buttons */
+.action-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: -kbs-bg-light-color;
+}
+
+.action-button.danger:hover {
+    -fx-background-color: #FFEBEE;
+}
+
+.action-icon {
+    -fx-fill: #666666;
+}
+
+.action-icon.danger {
+    -fx-fill: -kbs-danger-color;
+}
+
+.action-button:hover .action-icon {
+    -fx-fill: -kbs-text-primary-color;
+}
+
+.action-button.danger:hover .action-icon.danger {
+    -fx-fill: -kbs-danger-color;
+}
+
+/* Search Bar */
+.search-bar {
+    -fx-background-color: -kbs-white-color;
+    -fx-border-color: transparent transparent -kbs-border-color transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.search-box {
+    -fx-border-color: -kbs-border-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 14px;
+}
+
+.search-box:focused {
+    -fx-border-color: -kbs-primary-color;
+}
+
+.limit-checkbox {
+    -fx-font-size: 14px;
+    -fx-text-fill: -kbs-text-secondary-color;
+}
+
+/* Account Type Toggle Buttons */
+.account-type-toggle-container {
+    /* No padding/spacing here - set in Java code */
+}
+
+.account-type-toggle {
+    -fx-background-color: -kbs-white-color;
+    -fx-border-color: -kbs-border-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: -kbs-text-secondary-color;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+}
+
+.account-type-toggle:hover {
+    -fx-background-color: -kbs-bg-light-color;
+    -fx-text-fill: -kbs-text-primary-color;
+}
+
+.account-type-toggle:selected {
+    -fx-background-color: -kbs-primary-color;
+    -fx-text-fill: -kbs-white-color;
+    -fx-border-color: -kbs-primary-color;
+}
+
+.account-type-toggle:selected:hover {
+    -fx-background-color: -kbs-primary-hover-color;
+    -fx-border-color: -kbs-primary-hover-color;
+}
+
+/* Filter Group Separator */
+.filter-group-separator {
+    -fx-background-color: -kbs-border-color;
+    -fx-opacity: 0.5;
+}
+
+.filter-group-separator .line {
+    -fx-border-color: -kbs-border-color;
+    -fx-background-color: -kbs-border-color;
+    -fx-opacity: 0.5;
+}
+
+/* Readonly field styling */
+.readonly-field {
+    -fx-background-color: -kbs-bg-light-color;
+    -fx-opacity: 1.0;
+}
+
+/* Customer ID - monospace display */
+.customer-id {
+    -fx-font-family: "Courier New", monospace;
+}
+
+/* Panel header icon */
+.panel-header-icon {
+    -fx-font-size: 20px;
+}
+
+/* Role/Link icons and text */
+.role-icon {
+    -fx-font-size: 13px;
+}
+
+.role-icon-success {
+    -fx-font-size: 13px;
+    -fx-fill: #2E7D32;
+}
+
+.role-link-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: -kbs-text-secondary-color;
+}
+
+/* Close Button */
+.btn-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666666;
+    -fx-font-size: 20px;
+    -fx-font-weight: 300;
+    -fx-cursor: hand;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.btn-close:hover {
+    -fx-background-color: #E3F2FD;
+    -fx-text-fill: -kbs-primary-color;
+}
+
+.btn-close:pressed {
+    -fx-background-color: #BBDEFB;
+}
+
 
 /*===== modality-crm-backoffice-activity-superadmin-javafx@main.css from modality-crm-backoffice-activity-superadmin-plugin =====*/
 
@@ -2192,6 +2329,115 @@ Text, Label, Button, TextField {
 .button.readonly-field .text {
     -fx-fill: -bootstrap-grey7;
 }
+/* Badge - Light Pink (for admin/role badges) */
+.badge-light-pink {
+    -fx-background-color: #FCE4EC;
+    -fx-text-fill: #C2185B;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 3px;
+}
+
+/* Modern Badge Variants (Light backgrounds for better readability) - Moved from Bootstrap */
+.badge-light-info {
+    -fx-background-color: #e1f5fe;
+    -fx-text-fill: #00b8d4;
+    -fx-background-radius: 12;
+}
+
+.badge-light-success {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #4caf50;
+    -fx-background-radius: 12;
+}
+
+.badge-light-warning {
+    -fx-background-color: #fff3e0;
+    -fx-text-fill: #ffa726;
+    -fx-background-radius: 12;
+}
+
+.badge-light-danger {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #ff5252;
+    -fx-background-radius: 12;
+}
+
+.badge-light-gray, .badge-gray {
+    -fx-background-color: #f5f5f5;
+    -fx-text-fill: #666;
+    -fx-background-radius: 12;
+}
+
+.badge-light-purple, .badge-purple {
+    -fx-background-color: #f3e5f5;
+    -fx-text-fill: #9c27b0;
+    -fx-background-radius: 12;
+}
+
+/* Modern Tab Design for Admin Panels */
+.modality-modern-tabs {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.modality-modern-tabs .tab-header-area {
+    -fx-background-color: white;
+    -fx-border-radius: 8 8 0 0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.modality-modern-tabs .tab-header-background {
+    -fx-background-color: white;
+    -fx-border-radius: 8 8 0 0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.modality-modern-tabs .headers-region {
+    -fx-background-color: white;
+    -fx-spacing: 8;
+}
+
+.modality-modern-tabs .tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-width: 0 0 3 0;
+    -fx-min-height: 48;
+    -fx-pref-height: 48;
+}
+
+.modality-modern-tabs .tab-label {
+    -fx-text-fill: #666;
+    -fx-font-size: 15;
+}
+
+.modality-modern-tabs .tab:hover .tab-label {
+    -fx-text-fill: -bootstrap-blue5;
+}
+
+.modality-modern-tabs .tab:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -bootstrap-blue5 transparent;
+}
+
+.modality-modern-tabs .tab:selected .tab-label {
+    -fx-text-fill: -bootstrap-blue5;
+}
+
+.modality-modern-tabs .tab .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.modality-modern-tabs .tab-content-area {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+
 /*===== modality-backoffice-bookingdetailspanel-javafx@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
 
 .titled-pane .title {
@@ -2345,8 +2591,275 @@ Text, Label, Button, TextField {
 
 /*===== modality-event-backoffice-activity-medias-javafx@main.css from modality-event-backoffice-activity-medias-plugin =====*/
 
+/* Media Dashboard Styles */
 
+/* Event Subtitle - discrete display */
+.event-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: 400;
+}
 
+/* Livestream Section */
+.livestream-section {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+/* No Livestream Message */
+.no-livestream-message {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+.no-livestream-icon {
+    -fx-fill: #95a5a6;
+}
+
+.no-livestream-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2c3e50;
+}
+
+.no-livestream-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #00ADEF;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 2px 0;
+}
+
+.section-title-icon {
+    -fx-fill: #00ADEF;
+}
+
+.section-title-text {
+    -fx-text-fill: #00ADEF;
+}
+
+/* Session Info Box */
+.session-info-box {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8px;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-color: #e74c3c;
+}
+
+.session-name-live {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2c3e50;
+}
+
+.session-date-live {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.session-time-live {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.live-badge {
+    -fx-background-color: #e74c3c;
+    -fx-background-radius: 6px;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.live-dot {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+}
+
+.live-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+
+/* Stat Cards */
+.stat-card {
+    -fx-background-color: #3498db;
+    -fx-background-radius: 5px;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+.stat-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.stat-value-live {
+    -fx-text-fill: white;
+}
+
+/* Session Details Section */
+.session-details-section {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+}
+
+.session-selector-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.session-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+}
+
+.session-cell {
+    /* Container for session dropdown cells */
+}
+
+.select-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #00ADEF;
+}
+
+.session-select {
+    -fx-background-color: white;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 2px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #2c3e50;
+}
+
+.session-select:hover {
+    -fx-border-color: #00ADEF;
+    -fx-effect: dropshadow(gaussian, rgba(0,173,239,0.1), 8, 0, 0, 2);
+}
+
+.session-select:focused {
+    -fx-border-color: #00ADEF;
+    -fx-effect: dropshadow(gaussian, rgba(0,173,239,0.1), 3, 0, 0, 0);
+}
+
+.filter-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555;
+    -fx-font-weight: 600;
+}
+
+/* Filter Buttons */
+.filter-button {
+    -fx-cursor: hand;
+}
+
+.filter-button-active {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-font-weight: 600;
+}
+
+.filter-button-inactive {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #495057;
+    -fx-background-radius: 4px;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+}
+
+.filter-select {
+    -fx-background-color: white;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 2px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #2c3e50;
+}
+
+.filter-select:hover {
+    -fx-border-color: #00ADEF;
+    -fx-effect: dropshadow(gaussian, rgba(0,173,239,0.1), 8, 0, 0, 2);
+}
+
+.filter-select:focused {
+    -fx-border-color: #00ADEF;
+    -fx-effect: dropshadow(gaussian, rgba(0,173,239,0.1), 3, 0, 0, 0);
+}
+
+/* Stat Boxes */
+.stat-box {
+    -fx-background-radius: 5px;
+}
+
+.stat-box-purple {
+    -fx-background-color: #9b59b6;
+}
+
+.stat-box-red {
+    -fx-background-color: #e74c3c;
+}
+
+.stat-box-green {
+    -fx-background-color: #2ecc71;
+}
+
+.stat-box-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+}
+
+.stat-box-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Table Styling for Media Dashboard */
+.livestream-section .grid-head Text,
+.session-details-section .grid-head Text {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-fill: #00ADEF;
+}
+
+.livestream-section .grid-head,
+.session-details-section .grid-head {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 0 0 2px 0;
+}
+
+.livestream-section .grid-body,
+.session-details-section .grid-body {
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.livestream-section .grid-row:hover,
+.session-details-section .grid-row:hover {
+    -fx-background-color: #f8fafb;
+}
 
 /*===== modality-backoffice-recurringevents-javafx@main.css from modality-event-backoffice-activity-recurringevents-plugin =====*/
 
