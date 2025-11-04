@@ -114,6 +114,8 @@
     <source path="one/modality/base/backoffice/activities/operations"/>
     <!--======================< modality-base-backoffice-application >======================-->
     <source path="one/modality/base/backoffice/application"/>
+    <!--=================< modality-base-backoffice-formatters-renderers >==================-->
+    <source path="one/modality/base/backoffice/formattersrenderers"/>
     <!--=====================< modality-base-backoffice-gantt-canvas >======================-->
     <source path="one/modality/base/backoffice/ganttcanvas"/>
     <source path="one/modality/base/backoffice/ganttcanvas/spi"/>
@@ -805,6 +807,8 @@
     <source path="dev/webfx/stack/authn/spi/impl/remote"/>
     <!--============================< webfx-stack-authz-client >============================-->
     <source path="dev/webfx/stack/authz/client"/>
+    <source path="dev/webfx/stack/authz/client/binder"/>
+    <source path="dev/webfx/stack/authz/client/context"/>
     <source path="dev/webfx/stack/authz/client/factory"/>
     <source path="dev/webfx/stack/authz/client/operation"/>
     <source path="dev/webfx/stack/authz/client/spi"/>
