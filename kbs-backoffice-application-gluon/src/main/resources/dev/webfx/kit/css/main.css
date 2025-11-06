@@ -1183,6 +1183,115 @@ Text, Label, Button, TextField {
 }
 
 
+/*===== modality-backoffice-bookingdetailspanel-javafx@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
+
+.titled-pane .title {
+    -fx-font-size: 14px;
+}
+
+/*===== modality-backoffice-bookings-javafx@main.css from modality-booking-backoffice-activity-bookings-plugin =====*/
+
+/* Declaring color variables with default values */
+.root {
+   -color-base: white;
+   -stay-color: transparent;
+   -selection-color: #8AAAD380;
+}
+
+/* Bookings */
+.abandoned { -color-base: #E0CDCD; }
+.absent { -color-base: #FF8080; }
+.cancelled { -color-base: #E0A0CD; }
+.arrived { -color-base: #09EF00; }
+.arrivedWithBalance { -color-base: #01afef; }
+.flagged { -color-base: #FF8800; }
+.changed { -color-base: #A8A8FF; }
+.passReady { -color-base: #5DC8CD; }
+.confirmed { -color-base: #A8A8FF; }
+.paidInFull { -color-base: #CCFF00; }
+.overPaid { -color-base: #FF9955; }
+.noDeposit { -color-base: #FFFFFF; }
+.willPay { -color-base: #E0E0E0; }
+.paidUnderMinimal { -color-base: #D3BC5F; }
+.paidEnough { -color-base: #FAFD00; }
+
+/* Booking options */
+.share_mate { -color-base: #FFF073; }
+.wrongAllocation { -color-base: #FF4400; }
+
+.backoffice_released {-color-base: #E0CDCD;}
+.frontoffice_released {-color-base: #E0CDCD;}
+
+.backoffice_released {
+    -fx-background-color:   -fx-table-cell-border-color,
+                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
+                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080);
+}
+
+.frontoffice_released {
+    -fx-background-color:   -fx-table-cell-border-color,
+                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
+                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080),
+                            linear-gradient(from 0px 0px to 5px 5px, reflect, transparent, transparent 85%, #808080);
+}
+
+.share_owner {
+    -fx-font-style: italic;
+}
+
+.no_share { }
+
+/* Stays */
+.nonStay { -stay-color: transparent; }
+.workingVisitStay { -stay-color: #E4399E; }
+.discoveryStay { -stay-color: #FF9A40; }
+.guestStay { -stay-color: #200772; }
+.standardStay { -stay-color: #9276EB; }
+
+/* Payments */
+.pending { -color-base: #E0CDCD; }
+.successful { -color-base: #CCFF00; }
+.failed { -color-base: #FF8080; }
+.batch { -color-base: #FFDD73; }
+
+/* Organizations */
+.kmc { -color-base: #dfabfc; }
+.kbc { -color-base: #fdfe96; }
+.branch { -color-base: #cef7ff; }
+.closed { -color-base: #E0CDCD; }
+
+/* .table-row-cell { */
+.abandoned, .absent, .cancelled, .arrived, .arrivedWithBalance, .flagged, .changed, .passReady, .confirmed, .paidInFull, .overPaid, .noDeposit, .willPay, .paidUnderMinimal, .paidEnough, .share_mate, .wrongAllocation, .nonStay, .workingVisitStay, .discoveryStay, .guestStay, .standardStay, .pending, .successful, .failed, .batch, .kmc, .kbc, .branch, .closed {
+    -fx-background-color:
+        /*-fx-table-cell-border-color,*/
+        linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
+        linear-gradient(from 0% 0% to 100% 0%, -stay-color 0%, -stay-color 40%, transparent 50%, transparent 100%);
+    -fx-font-weight: normal;
+}
+
+#bookings .table-row-cell:selected, #bookings .grid-row.selected {
+    -fx-background-color:
+        -fx-focus-color,
+        -fx-cell-focus-inner-border,
+        linear-gradient(to bottom, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
+        linear-gradient(to right, -stay-color 0%, -stay-color 40%, transparent 50%, transparent 100%),
+        linear-gradient(from 0px 0px to 5px 10px, reflect, -selection-color 30%, transparent 70%);
+}
+
+.unread, .kmc {
+    -fx-font-weight: bold;
+}
+
+.specialRate, .branch {
+    -fx-font-style: italic;
+}
+
+.child .table-cell, .child .text {
+    -fx-text-fill: blue;
+    -fx-fill: blue;
+    -fx-font-style: italic;
+}
+
 /*===== modality-crm-customers-javafx@main.css from modality-crm-backoffice-activity-customers-plugin =====*/
 
 /* Customer Management Styles - JavaFX */
@@ -1201,7 +1310,7 @@ Text, Label, Button, TextField {
 
 /* Page Header */
 .page-header {
-    -fx-background-color: -kbs-white-color;
+    -fx-background-color: transparent;
     -fx-border-color: transparent transparent -kbs-border-color transparent;
     -fx-border-width: 0 0 1px 0;
 }
@@ -1219,7 +1328,7 @@ Text, Label, Button, TextField {
 
 /* Customers container */
 #customers {
-    -fx-background-color: -kbs-bg-light-color;
+    -fx-background-color: transparent;
 }
 
 /* Customers grid styling */
@@ -1393,8 +1502,8 @@ Text, Label, Button, TextField {
     -fx-border-width: 1px;
 }
 
-/* Linked Accounts Box */
-.linked-accounts-box {
+/* Members Box */
+.members-box {
     -fx-background-color: #F0F8FF;
     -fx-border-color: #B3D9FF;
     -fx-border-radius: 8px;
@@ -1402,16 +1511,16 @@ Text, Label, Button, TextField {
     -fx-border-width: 1px;
 }
 
-.linked-accounts-description {
+.members-description {
     -fx-text-fill: -kbs-text-secondary-color;
     -fx-font-size: 13px;
 }
 
-.linked-person-items {
+.member-items {
     /* No padding/spacing here - set in Java code */
 }
 
-.linked-person-item {
+.member-item {
     /* No padding/spacing here - set in Java code */
     -fx-background-color: -kbs-white-color;
     -fx-border-color: -kbs-border-color;
@@ -1420,26 +1529,26 @@ Text, Label, Button, TextField {
     -fx-border-width: 1px;
 }
 
-.linked-person-check-icon {
+.member-check-icon {
     -fx-font-size: 14px;
     -fx-fill: #2E7D32;
 }
 
-.linked-person-user-icon {
+.member-user-icon {
     -fx-font-size: 20px;
 }
 
-.linked-person-name {
+.member-name {
     -fx-font-weight: 600;
     -fx-text-fill: -kbs-text-primary-color;
 }
 
-.linked-person-email {
+.member-email {
     -fx-font-size: 12px;
     -fx-text-fill: -kbs-text-secondary-color;
 }
 
-.linked-person-id {
+.member-id {
     -fx-font-size: 11px;
     -fx-text-fill: -kbs-text-secondary-color;
 }
@@ -2437,115 +2546,6 @@ Text, Label, Button, TextField {
     -fx-border-color: transparent;
 }
 
-
-/*===== modality-backoffice-bookingdetailspanel-javafx@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
-
-.titled-pane .title {
-    -fx-font-size: 14px;
-}
-
-/*===== modality-backoffice-bookings-javafx@main.css from modality-booking-backoffice-activity-bookings-plugin =====*/
-
-/* Declaring color variables with default values */
-.root {
-   -color-base: white;
-   -stay-color: transparent;
-   -selection-color: #8AAAD380;
-}
-
-/* Bookings */
-.abandoned { -color-base: #E0CDCD; }
-.absent { -color-base: #FF8080; }
-.cancelled { -color-base: #E0A0CD; }
-.arrived { -color-base: #09EF00; }
-.arrivedWithBalance { -color-base: #01afef; }
-.flagged { -color-base: #FF8800; }
-.changed { -color-base: #A8A8FF; }
-.passReady { -color-base: #5DC8CD; }
-.confirmed { -color-base: #A8A8FF; }
-.paidInFull { -color-base: #CCFF00; }
-.overPaid { -color-base: #FF9955; }
-.noDeposit { -color-base: #FFFFFF; }
-.willPay { -color-base: #E0E0E0; }
-.paidUnderMinimal { -color-base: #D3BC5F; }
-.paidEnough { -color-base: #FAFD00; }
-
-/* Booking options */
-.share_mate { -color-base: #FFF073; }
-.wrongAllocation { -color-base: #FF4400; }
-
-.backoffice_released {-color-base: #E0CDCD;}
-.frontoffice_released {-color-base: #E0CDCD;}
-
-.backoffice_released {
-    -fx-background-color:   -fx-table-cell-border-color,
-                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
-                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080);
-}
-
-.frontoffice_released {
-    -fx-background-color:   -fx-table-cell-border-color,
-                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
-                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080),
-                            linear-gradient(from 0px 0px to 5px 5px, reflect, transparent, transparent 85%, #808080);
-}
-
-.share_owner {
-    -fx-font-style: italic;
-}
-
-.no_share { }
-
-/* Stays */
-.nonStay { -stay-color: transparent; }
-.workingVisitStay { -stay-color: #E4399E; }
-.discoveryStay { -stay-color: #FF9A40; }
-.guestStay { -stay-color: #200772; }
-.standardStay { -stay-color: #9276EB; }
-
-/* Payments */
-.pending { -color-base: #E0CDCD; }
-.successful { -color-base: #CCFF00; }
-.failed { -color-base: #FF8080; }
-.batch { -color-base: #FFDD73; }
-
-/* Organizations */
-.kmc { -color-base: #dfabfc; }
-.kbc { -color-base: #fdfe96; }
-.branch { -color-base: #cef7ff; }
-.closed { -color-base: #E0CDCD; }
-
-/* .table-row-cell { */
-.abandoned, .absent, .cancelled, .arrived, .arrivedWithBalance, .flagged, .changed, .passReady, .confirmed, .paidInFull, .overPaid, .noDeposit, .willPay, .paidUnderMinimal, .paidEnough, .share_mate, .wrongAllocation, .nonStay, .workingVisitStay, .discoveryStay, .guestStay, .standardStay, .pending, .successful, .failed, .batch, .kmc, .kbc, .branch, .closed {
-    -fx-background-color:
-        /*-fx-table-cell-border-color,*/
-        linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
-        linear-gradient(from 0% 0% to 100% 0%, -stay-color 0%, -stay-color 40%, transparent 50%, transparent 100%);
-    -fx-font-weight: normal;
-}
-
-#bookings .table-row-cell:selected, #bookings .grid-row.selected {
-    -fx-background-color:
-        -fx-focus-color,
-        -fx-cell-focus-inner-border,
-        linear-gradient(to bottom, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
-        linear-gradient(to right, -stay-color 0%, -stay-color 40%, transparent 50%, transparent 100%),
-        linear-gradient(from 0px 0px to 5px 10px, reflect, -selection-color 30%, transparent 70%);
-}
-
-.unread, .kmc {
-    -fx-font-weight: bold;
-}
-
-.specialRate, .branch {
-    -fx-font-style: italic;
-}
-
-.child .table-cell, .child .text {
-    -fx-text-fill: blue;
-    -fx-fill: blue;
-    -fx-font-style: italic;
-}
 
 /*===== modality-event-client-selecteditemsselector-box-javafx@main.css from modality-booking-client-scheduleditemsselector-box =====*/
 

@@ -202,6 +202,25 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
     --fx-togglebutton-background-color-hover: var(--fx-togglebutton-background-color-selected);
     --fx-togglebutton-border-color-hover: var(--fx-togglebutton-border-color-selected);
 
+    --fx-tabheaderarea-background-color: #D3D3D3;
+    --fx-tabheaderarea-border-radius: 0;
+    --fx-tabheaderarea-padding-top: 5px;
+    --fx-tabheaderarea-padding-bottom: 0;
+    --fx-tabheaderarea-padding-left: 10px;
+    --fx-tabheaderarea-padding-right: 0;
+    --fx-tabheader-background-color: #e5e5e5;
+    --fx-tabheader-background-color-selected: #f5f5f5;
+    --fx-tabheader-border-radius: 5px 5px 0 0;
+    --fx-tabheader-border-style: solid;
+    --fx-tabheader-border-color: darkgray;
+    --fx-tabheader-border-width: 1px;
+    --fx-tabheader-border-width-selected: 1px 1px 0 1px;
+    --fx-tabheader-padding-top: 3px;
+    --fx-tabheader-padding-bottom: 3px;
+    --fx-tabheader-padding-left: 10px;
+    --fx-tabheader-padding-right: 10px;
+    --fx-tabheader-text-fill-selected: var(--fx-text-fill);
+
     --fx-theme-color: #0095cb;
     --fx-placholder-color: #888;
     --fx-progress-indicator-color: var(--fx-theme-color);
@@ -366,19 +385,38 @@ fx-radiobutton.pseudo-selected .radio .dot {
     --fx-background-color: var(--fx-radiobutton-background-color);
 }
 
+fx-tabheaderarea {
+    --fx-background-color: var(--fx-tabheaderarea-background-color);
+    --fx-border-radius: var(--fx-tabheaderarea-border-radius);
+}
+
+/* Web padding that is read back by WebFX to JavaFX padding */
+fx-tabheaderarea > fx-children {
+    padding: var(--fx-tabheaderarea-padding-top) var(--fx-tabheaderarea-padding-right) var(--fx-tabheaderarea-padding-bottom) var(--fx-tabheaderarea-padding-left);
+}
+
+
 fx-tabheaderskin {
-    --fx-background-color: #e5e5e5;
-    --fx-border-radius: 5px 5px 0 0;
-    --fx-border-style: solid;
-    --fx-border-color: #808080;
-    --fx-border-width: 1px;
+    --fx-background-color: var(--fx-tabheader-background-color);
+    --fx-border-radius: var(--fx-tabheader-border-radius);
+    --fx-border-style: var(--fx-tabheader-border-style);
+    --fx-border-color: var(--fx-tabheader-border-color);
+    --fx-border-width: var(--fx-tabheader-border-width);
+    --fx-text-fill: var(--fx-tabheader-text-fill);
     cursor: pointer;
 }
 
 fx-tabheaderskin.selected {
-    --fx-background-color: #f5f5f5;
-    --fx-border-width: 1px 1px 0 1px;
+    --fx-tabheader-background-color: var(--fx-tabheader-background-color-selected);
+    --fx-tabheader-border-width: var(--fx-tabheader-border-width-selected);
+    --fx-text-fill: var(--fx-tabheader-text-fill-selected);
 }
+
+/* Web padding that is read back by WebFX to JavaFX padding */
+fx-tabheaderskin > fx-children {
+    padding: var(--fx-tabheader-padding-top) var(--fx-tabheader-padding-right) var(--fx-tabheader-padding-bottom) var(--fx-tabheader-padding-left);
+}
+
 /*===== webfx-kit-javafxweb-web@main.css from webfx-kit-javafxweb-peers-gwt-j2cl =====*/
 
 iframe {
@@ -1233,6 +1271,37 @@ fx-homepane fx-tile * {
     /* Overriding some WebFX Extras CSS variables  */
     --webfx-switch-selected-background-color: var(--brand-main-background-color);
     --webfx-visualgrid-selection-color: #BBBBBB;
+
+    /* Modern Tab Design */
+    --fx-tabheaderarea-background-color: transparent;
+    --fx-tabheaderarea-padding-top: 0;
+    --fx-tabheaderarea-padding-left: 0;
+    --fx-tabheader-background-color: transparent;
+    --fx-tabheader-background-color-selected: transparent;
+    --fx-tabheader-border-width: 0px;
+    --fx-tabheader-border-width-selected: 0 0 3px 0;
+    --fx-tabheader-border-color: #00b8d4;
+    --fx-tabheader-padding-top: 15px;
+    --fx-tabheader-padding-right: 20px;
+    --fx-tabheader-padding-bottom: 15px;
+    --fx-tabheader-padding-left: 20px;
+    --fx-tabheader-text-fill: #666;
+    --fx-tabheader-text-fill-selected: #00b8d4;
+}
+
+fx-tabpane {
+    --fx-background-color: white;
+    --fx-border-width: 1px;
+    --fx-border-style: solid;
+    --fx-border-color: #ddd;
+    --fx-border-radius: 8px;
+    --fx-background-radius: 8px;
+    --fx-border-color-focus: var(--fx-border-color);
+    --fx-border-style-focus: var(--fx-border-style);
+}
+
+fx-tabheaderskin {
+    font-size: 14px;
 }
 
 /* Applying Montserrat as default font for Modality */
@@ -1449,6 +1518,121 @@ body, textarea /* because textarea has explicit default monospace font */ {
     color: #666;
 }
 
+/*===== modality-backoffice-bookingdetailspanel-web@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
+
+fx-titledpane .title {
+    font-size: 14px;
+}
+
+/*===== modality-backoffice-bookings-web@main.css from modality-booking-backoffice-activity-bookings-plugin =====*/
+
+/***** Declaring table row color variables with default values *****/
+:root {
+    --color-light: white;
+    --color-dark: white;
+    --stay-color: transparent;
+    --selection-color: rgba(137, 169, 210, 0.5);
+}
+
+/***** Bookings colors *****/
+.abandoned          { --color-light: #e3d2d2; --color-dark: #cab8b8; }
+.absent             { --color-light: #ff8d8d; --color-dark: #e57373; }
+.cancelled          { --color-light: #e3a9d3; --color-dark: #ca90b9; }
+.arrived            { --color-light: #21f016; --color-dark: #0bd700; }
+.arrivedWithBalance { --color-light: #17b6f0; --color-dark: #019ed7; }
+.flagged            { --color-light: #ff941a; --color-dark: #e57a00; }
+.changed            { --color-light: #b1b1ff; --color-dark: #9797e5; }
+.passReady          { --color-light: #6bcfd2; --color-dark: #54b5b8; }
+.confirmed          { --color-light: #b1b1ff; --color-dark: #9797e5; }
+.paidInFull         { --color-light: #d5ff1a; --color-dark: #bbe500; }
+.overPaid           { --color-light: #ffa366; --color-dark: #e58a4d; }
+.noDeposit          { --color-light: #FFFFFF; --color-dark: #FFFFFF; }
+.willPay            { --color-light: #e5e5e5; --color-dark: #cacaca; }
+.paidUnderMinimal   { --color-light: #d7c26d; --color-dark: #bea956; }
+.paidEnough         { --color-light: #fdfd29; --color-dark: #e4e400; }
+
+tr.unread, .grid-row.unread {
+    font-weight: bold;
+}
+
+tr.specialRate, .grid-row.specialRate {
+    font-style: italic;
+}
+
+/***** Stay colors *****/
+.workingVisitStay   { --stay-color: #E4399E; }
+.discoveryStay      { --stay-color: #FF9A40; }
+.guestStay          { --stay-color: #200772; }
+.standardStay       { --stay-color: #9276EB; }
+
+/***** Booking options colors *****/
+
+.share_mate { --color-light: #fef087; --color-dark: #e6d768 }
+.wrongAllocation { --color-base: #FF4400; }
+
+/* JavaFX declaration for backoffice_released and frontoffice_release (not converted to html5 css for now)
+.backoffice_released { --color-base: #E0CDCD;}
+.frontoffice_released { --color-base: #E0CDCD;}
+
+.backoffice_released {
+    -fx-background-color:   -fx-table-cell-border-color,
+                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
+                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080);
+}
+
+.frontoffice_released {
+    -fx-background-color:   -fx-table-cell-border-color,
+                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
+                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080),
+                            linear-gradient(from 0px 0px to 5px 5px, reflect, transparent, transparent 85%, #808080);
+}
+*/
+
+/* Just applying the same as cancelled for now */
+.backoffice_released, .frontoffice_released { --color-light: #e3a9d3; --color-dark: #ca90b9; }
+
+tr.share_owner, .grid-row.share_owner {
+    font-style: italic;
+}
+
+
+/***** Payments colors *****/
+.pending            { --color-light: #FAE7E7; --color-dark: #C7B4B4; }
+.successful         { --color-light: #d4fe19; --color-dark: #bbe600; }
+.failed             { --color-light: #FF9A9A; --color-dark: #E66767; }
+.batch              { --color-light: #FFF78D; --color-dark: #E6C45A; }
+
+tr.child, .grid-row.child {
+    color: blue;
+    font-style: italic;
+}
+
+/***** Organizations colors *****/
+.kmc                { --color-light: #F9C5FF; --color-dark: #C692E3; }
+.kbc                { --color-light: #FFFFB0; --color-dark: #E4E57D; }
+.branch             { --color-light: #E8FFFF; --color-dark: #B5DEE6; }
+.closed             { --color-light: #E0CDCD; --color-dark: #E0CDCD; }
+
+tr.kmc, .grid-row.kmc {
+    font-weight: bold;
+}
+
+tr.branch, .grid-row.branch {
+    font-style: italic;
+}
+
+/**** Applying styles to data table and grid ****/
+
+#bookings tbody tr, #bookings .grid-row {
+    background: linear-gradient(  90deg, var(--stay-color) 0%, var(--stay-color) 40%, transparent 50%, transparent 100%),
+    linear-gradient( 180deg, var(--color-light), var(--color-dark) 100%);
+}
+
+#bookings tbody tr.selected, #bookings .grid-row.selected {
+    background: repeating-linear-gradient(155deg, var(--selection-color), transparent 5px, transparent 10px, var(--selection-color) 15px, var(--selection-color) 20px),
+    linear-gradient(  90deg, var(--stay-color) 0%, var(--stay-color) 40%, transparent 50%, transparent 100%),
+    linear-gradient( 180deg, var(--color-light), var(--color-dark) 100%);
+}
 /*===== modality-crm-customers-web@main.css from modality-crm-backoffice-activity-customers-plugin =====*/
 
 /* Customer Management Styles - Web */
@@ -1467,7 +1651,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /* Page Header */
 .page-header {
-    background-color: var(--kbs-white-color);
+    background-color: transparent;
     border-bottom: 1px solid var(--kbs-border-color);
 }
 
@@ -1484,7 +1668,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 /* Customers container */
 #customers {
-    background-color: var(--kbs-bg-light-color);
+    background-color: transparent;
 }
 
 /* Customers grid styling */
@@ -1593,23 +1777,23 @@ body, textarea /* because textarea has explicit default monospace font */ {
     opacity: 0.5;
 }
 
-/* Linked Accounts Box */
-.linked-accounts-box {
+/* Members Box */
+.members-box {
     background: #F0F8FF;
     border: 1px solid #B3D9FF;
     border-radius: 8px;
 }
 
-.linked-accounts-description {
+.members-description {
     color: var(--kbs-text-secondary-color);
     font-size: 13px;
 }
 
-.linked-person-items {
+.member-items {
     /* No padding/spacing here - set in Java code */
 }
 
-.linked-person-item {
+.member-item {
     /* No padding/spacing here - set in Java code */
     display: flex;
     align-items: center;
@@ -1618,27 +1802,27 @@ body, textarea /* because textarea has explicit default monospace font */ {
     border: 1px solid var(--kbs-border-color);
 }
 
-.linked-person-check-icon {
+.member-check-icon {
     font-size: 14px;
     color: #2E7D32;
 }
 
-.linked-person-user-icon {
+.member-user-icon {
     font-size: 20px;
 }
 
-.linked-person-name {
+.member-name {
     font-weight: 600;
     color: var(--kbs-text-primary-color);
 }
 
-.linked-person-email {
+.member-email {
     flex: 1;
     font-size: 12px;
     color: var(--kbs-text-secondary-color);
 }
 
-.linked-person-id {
+.member-id {
     font-size: 11px;
     color: var(--kbs-text-secondary-color);
 }
@@ -1685,64 +1869,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .admin-info-banner-text {
     color: var(--admin-info-text-color);
     font-size: 13px;
-}
-
-/* Modern Tab Design for Super Admin Sub-Tabs */
-.super-admin-sub-tabs {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.super-admin-sub-tabs .tab-header-area {
-    background-color: white;
-    border-radius: 8px 8px 0 0;
-}
-
-.super-admin-sub-tabs .tab-header-background {
-    background-color: white;
-    border-radius: 8px 8px 0 0;
-}
-
-.super-admin-sub-tabs .headers-region {
-    background-color: white;
-}
-
-.super-admin-sub-tabs .tab {
-    background-color: transparent;
-    border-radius: 0;
-    border-style: solid;
-    border-color: transparent transparent transparent transparent;
-    border-width: 0 0 3px 0;
-}
-
-.super-admin-sub-tabs .tab-label {
-    color: #666;
-    font-size: 14px;
-}
-
-.super-admin-sub-tabs .tab:hover .tab-label {
-    color: #00b8d4;
-}
-
-.super-admin-sub-tabs .tab:selected,
-.super-admin-sub-tabs .tab.selected {
-    background-color: transparent;
-    border-color: transparent transparent #00b8d4 transparent;
-}
-
-.super-admin-sub-tabs .tab:selected .tab-label,
-.super-admin-sub-tabs .tab.selected .tab-label {
-    color: #00b8d4;
-}
-
-.super-admin-sub-tabs .tab .focus-indicator {
-    border-color: transparent;
-}
-
-.super-admin-sub-tabs .tab-content-area {
-    background-color: white;
-    border-color: transparent;
 }
 
 /* Role Dialog - Selected Permissions */
@@ -2455,121 +2581,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
     border-color: transparent;
 }
 
-/*===== modality-backoffice-bookingdetailspanel-web@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
-
-fx-titledpane .title {
-    font-size: 14px;
-}
-
-/*===== modality-backoffice-bookings-web@main.css from modality-booking-backoffice-activity-bookings-plugin =====*/
-
-/***** Declaring table row color variables with default values *****/
-:root {
-    --color-light: white;
-    --color-dark: white;
-    --stay-color: transparent;
-    --selection-color: rgba(137, 169, 210, 0.5);
-}
-
-/***** Bookings colors *****/
-.abandoned          { --color-light: #e3d2d2; --color-dark: #cab8b8; }
-.absent             { --color-light: #ff8d8d; --color-dark: #e57373; }
-.cancelled          { --color-light: #e3a9d3; --color-dark: #ca90b9; }
-.arrived            { --color-light: #21f016; --color-dark: #0bd700; }
-.arrivedWithBalance { --color-light: #17b6f0; --color-dark: #019ed7; }
-.flagged            { --color-light: #ff941a; --color-dark: #e57a00; }
-.changed            { --color-light: #b1b1ff; --color-dark: #9797e5; }
-.passReady          { --color-light: #6bcfd2; --color-dark: #54b5b8; }
-.confirmed          { --color-light: #b1b1ff; --color-dark: #9797e5; }
-.paidInFull         { --color-light: #d5ff1a; --color-dark: #bbe500; }
-.overPaid           { --color-light: #ffa366; --color-dark: #e58a4d; }
-.noDeposit          { --color-light: #FFFFFF; --color-dark: #FFFFFF; }
-.willPay            { --color-light: #e5e5e5; --color-dark: #cacaca; }
-.paidUnderMinimal   { --color-light: #d7c26d; --color-dark: #bea956; }
-.paidEnough         { --color-light: #fdfd29; --color-dark: #e4e400; }
-
-tr.unread, .grid-row.unread {
-    font-weight: bold;
-}
-
-tr.specialRate, .grid-row.specialRate {
-    font-style: italic;
-}
-
-/***** Stay colors *****/
-.workingVisitStay   { --stay-color: #E4399E; }
-.discoveryStay      { --stay-color: #FF9A40; }
-.guestStay          { --stay-color: #200772; }
-.standardStay       { --stay-color: #9276EB; }
-
-/***** Booking options colors *****/
-
-.share_mate { --color-light: #fef087; --color-dark: #e6d768 }
-.wrongAllocation { --color-base: #FF4400; }
-
-/* JavaFX declaration for backoffice_released and frontoffice_release (not converted to html5 css for now)
-.backoffice_released { --color-base: #E0CDCD;}
-.frontoffice_released { --color-base: #E0CDCD;}
-
-.backoffice_released {
-    -fx-background-color:   -fx-table-cell-border-color,
-                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
-                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080);
-}
-
-.frontoffice_released {
-    -fx-background-color:   -fx-table-cell-border-color,
-                            linear-gradient(from 0% 0% to 0% 100%, derive(-color-base, +10%) 0%, derive(-color-base, -10%) 100%),
-                            linear-gradient(from 0px 5px to 5px 0px, reflect, transparent, transparent 85%, #808080),
-                            linear-gradient(from 0px 0px to 5px 5px, reflect, transparent, transparent 85%, #808080);
-}
-*/
-
-/* Just applying the same as cancelled for now */
-.backoffice_released, .frontoffice_released { --color-light: #e3a9d3; --color-dark: #ca90b9; }
-
-tr.share_owner, .grid-row.share_owner {
-    font-style: italic;
-}
-
-
-/***** Payments colors *****/
-.pending            { --color-light: #FAE7E7; --color-dark: #C7B4B4; }
-.successful         { --color-light: #d4fe19; --color-dark: #bbe600; }
-.failed             { --color-light: #FF9A9A; --color-dark: #E66767; }
-.batch              { --color-light: #FFF78D; --color-dark: #E6C45A; }
-
-tr.child, .grid-row.child {
-    color: blue;
-    font-style: italic;
-}
-
-/***** Organizations colors *****/
-.kmc                { --color-light: #F9C5FF; --color-dark: #C692E3; }
-.kbc                { --color-light: #FFFFB0; --color-dark: #E4E57D; }
-.branch             { --color-light: #E8FFFF; --color-dark: #B5DEE6; }
-.closed             { --color-light: #E0CDCD; --color-dark: #E0CDCD; }
-
-tr.kmc, .grid-row.kmc {
-    font-weight: bold;
-}
-
-tr.branch, .grid-row.branch {
-    font-style: italic;
-}
-
-/**** Applying styles to data table and grid ****/
-
-#bookings tbody tr, #bookings .grid-row {
-    background: linear-gradient(  90deg, var(--stay-color) 0%, var(--stay-color) 40%, transparent 50%, transparent 100%),
-    linear-gradient( 180deg, var(--color-light), var(--color-dark) 100%);
-}
-
-#bookings tbody tr.selected, #bookings .grid-row.selected {
-    background: repeating-linear-gradient(155deg, var(--selection-color), transparent 5px, transparent 10px, var(--selection-color) 15px, var(--selection-color) 20px),
-    linear-gradient(  90deg, var(--stay-color) 0%, var(--stay-color) 40%, transparent 50%, transparent 100%),
-    linear-gradient( 180deg, var(--color-light), var(--color-dark) 100%);
-}
 /*===== modality-event-client-selecteditemsselector-box-web@main.css from modality-booking-client-scheduleditemsselector-box =====*/
 
 .scheduled-item-box {
