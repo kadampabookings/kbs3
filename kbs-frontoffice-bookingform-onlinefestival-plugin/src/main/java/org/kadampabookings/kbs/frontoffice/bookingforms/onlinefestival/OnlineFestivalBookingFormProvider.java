@@ -1,10 +1,11 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
 
+import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
-import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
 import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
+import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
 import one.modality.event.frontoffice.eventheader.EventTitleHeader;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
@@ -15,7 +16,9 @@ public final class OnlineFestivalBookingFormProvider implements BookingFormProvi
 
     @Override
     public boolean acceptEvent(Event event) {
-        return FestivalType.isFestival(event);
+        return FestivalType.isFestival(event)
+               // We use this booking form also for MKMC online empowerment weekends (hardcoded for now)
+               || Entities.samePrimaryKey(event.getType(), 24);
     }
 
     @Override
