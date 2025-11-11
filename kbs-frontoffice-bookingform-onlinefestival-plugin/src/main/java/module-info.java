@@ -49,6 +49,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     requires webfx.stack.orm.entity;
     requires webfx.stack.orm.entity.binding;
     requires webfx.stack.orm.entity.controls;
+    requires webfx.platform.useragent;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival;
@@ -56,6 +57,7 @@ module kbs.frontoffice.bookingform.onlinefestival.plugin {
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.closed;
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment;
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal;
+    exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.prerequisite;
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary;
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching;
     exports org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.terms;

@@ -123,8 +123,8 @@ public final class PaymentPage implements BookingFormPage {
         int minDeposit = workingBookingProperties.getMinDeposit();
         int deposit = workingBookingProperties.getDeposit();
         int balance = total - deposit;
-        int minAmount = Math.max(100, minDeposit - deposit);
-        int maxAmount = balance;
+        int maxAmount = Math.max(0, balance);
+        int minAmount = Math.min(maxAmount, Math.max(100, minDeposit - deposit));
         int initialAmount = deposit < minDeposit ? minAmount : maxAmount;
         String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(event);
         Function<Number, String> priceWithCurrencyFormatter = amount -> EventPriceFormatter.formatWithCurrency(amount, event);
@@ -146,6 +146,7 @@ public final class PaymentPage implements BookingFormPage {
         selectedAmountProperty.set(initialAmount);
         selectedAmountCurrencyLabel.setText(currencySymbol);
         selectedAmountValueTextField.setText(priceWithoutCurrencyFormatter.apply(initialAmount));
+        selectedAmountValueTextField.setDisable(maxAmount == 0);
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         // We hide the save button if there are no changes
         Layouts.setManagedAndVisibleProperties(saveButton, workingBookingProperties.hasChanges());
