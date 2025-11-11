@@ -2923,14 +2923,28 @@ tr.branch, .grid-row.branch {
 }
 
 .program-step-check-completed {
-    color: white;
     font-size: 18px;
     font-weight: bold;
+}
+
+.program-step-check-completed fx-children {
+    --fx-text-fill: white;
+}
+
+.program-step-check-completed fx-children fx-text {
+    color: white;
 }
 
 .program-step-label-completed {
     font-size: 14px;
     font-weight: 500;
+}
+
+.program-step-label-completed fx-children {
+    --fx-text-fill: #10b981;
+}
+
+.program-step-label-completed fx-children fx-text {
     color: #10b981;
 }
 
@@ -2942,14 +2956,28 @@ tr.branch, .grid-row.branch {
 }
 
 .program-step-number-active {
-    color: white;
     font-size: 16px;
     font-weight: bold;
+}
+
+.program-step-number-active fx-children {
+    --fx-text-fill: white;
+}
+
+.program-step-number-active fx-children fx-text {
+    color: white;
 }
 
 .program-step-label-active {
     font-size: 14px;
     font-weight: 600;
+}
+
+.program-step-label-active fx-children {
+    --fx-text-fill: #0ea5e9;
+}
+
+.program-step-label-active fx-children fx-text {
     color: #0ea5e9;
 }
 
@@ -2961,14 +2989,28 @@ tr.branch, .grid-row.branch {
 }
 
 .program-step-number-inactive {
-    color: #94a3b8;
     font-size: 16px;
     font-weight: bold;
+}
+
+.program-step-number-inactive fx-children {
+    --fx-text-fill: #94a3b8;
+}
+
+.program-step-number-inactive fx-children fx-text {
+    color: #94a3b8;
 }
 
 .program-step-label-inactive {
     font-size: 14px;
     font-weight: 500;
+}
+
+.program-step-label-inactive fx-children {
+    --fx-text-fill: #64748b;
+}
+
+.program-step-label-inactive fx-children fx-text {
     color: #64748b;
 }
 
