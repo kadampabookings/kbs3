@@ -3,7 +3,6 @@ package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching
 import dev.webfx.extras.i18n.I18nKeys;
 import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.extras.time.format.LocalizedTime;
-import dev.webfx.extras.util.layout.Layouts;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -32,11 +31,11 @@ import java.util.List;
 public final class TeachingPage implements BookingFormPage {
 
     private final GridPane optionsGridPane = BookingElements.createOptionsGridPane(true);
-    private final Label onlineFestivalVideoExpirationMessageLabel = BookingElements.createWordingLabel();
+    private final Label videoRecordingMessageLabel = BookingElements.createWordingLabel();
     private final VBox container = BookingElements.createFormPageVBox(true,
         BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.BookingOptions),
         optionsGridPane,
-        onlineFestivalVideoExpirationMessageLabel
+        videoRecordingMessageLabel
     );
 
     @Override
@@ -75,12 +74,13 @@ public final class TeachingPage implements BookingFormPage {
             if (n == 1) // If there is only one option, we select it by default
                 radioButton.setSelected(true);
         }
-        // We display at the bottom an explanation of the VOD expiration date if the event has one
+        // We display at the bottom an explanation of the VOD expiration date if the event has one (ex: Festivals)
         LocalDateTime vodExpirationDate = workingBooking.getPolicyAggregate().getEvent().getVodExpirationDate();
-        I18nControls.bindI18nProperties(onlineFestivalVideoExpirationMessageLabel, OnlineFestivalI18nKeys.OnlineFestivalVideoExpirationMessage1,
-            LocalizedTime.formatLocalDateTimeProperty(vodExpirationDate, FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
-        // We hide this explanation if the event has no VOD expiration date
-        Layouts.setManagedAndVisibleProperties(onlineFestivalVideoExpirationMessageLabel, vodExpirationDate != null);
+        if (vodExpirationDate != null)
+            I18nControls.bindI18nProperties(videoRecordingMessageLabel, OnlineFestivalI18nKeys.VideoRecordingExpirationMessage1,
+                LocalizedTime.formatLocalDateTimeProperty(vodExpirationDate, FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
+        else // or an explanation there are no video recordings (ex: Empowerment weekends)
+            I18nControls.bindI18nProperties(videoRecordingMessageLabel, OnlineFestivalI18nKeys.NoVideoRecordingMessage);
     }
 
 }
