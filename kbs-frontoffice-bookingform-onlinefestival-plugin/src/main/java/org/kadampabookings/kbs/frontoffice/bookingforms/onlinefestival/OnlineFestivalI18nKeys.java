@@ -7,10 +7,13 @@ public interface OnlineFestivalI18nKeys {
     Object PersonAlreadyBooked1 = "PersonAlreadyBooked1";
     Object IncorrectPriceFormat = "IncorrectPriceFormat";
     Object BookingsClosed = "BookingsClosed";
-    Object LinkedAccountMessage = "LinkedAccountMessage";
+    Object VideoRecordingExpirationMessage1 = "VideoRecordingExpirationMessage1";
     Object MustBeInRange2 = "MustBeInRange2";
     Object PaymentCancelledBookingSaved = "PaymentCancelledBookingSaved";
-    Object OnlineFestivalTeachingBottomMessage1 = "OnlineFestivalTeachingBottomMessage1";
     Object AudioRecordingTopMessage = "AudioRecordingTopMessage";
+    Object OnlineEmpowermentUKMessage = "OnlineEmpowermentUKMessage";
+    Object NoVideoRecordingMessage = "NoVideoRecordingMessage";
+    Object OnlineEmpowermentUKConfirm = "OnlineEmpowermentUKConfirm";
+    Object Prerequisite = "Prerequisite";
 
 }

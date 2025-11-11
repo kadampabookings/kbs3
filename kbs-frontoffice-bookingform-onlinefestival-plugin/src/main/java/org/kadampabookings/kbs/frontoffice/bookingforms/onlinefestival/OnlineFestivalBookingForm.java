@@ -9,6 +9,7 @@ import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.audioreco
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.closed.BookingsClosedPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.payment.PaymentPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal.PersonalDetailsPage;
+import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.prerequisite.PrerequisitePage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.summary.FestivalSummaryPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.teaching.TeachingPage;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.terms.TermsAndConditionsPage;
@@ -20,6 +21,7 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
 
     private final BookingFormPage[] pages = {
         new BookingsClosedPage(),
+        new PrerequisitePage(),
         new TeachingPage(),
         new AudioRecordingPage(),
         new PersonalDetailsPage(this),

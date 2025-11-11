@@ -30,12 +30,12 @@ import java.util.List;
  */
 public final class TeachingPage implements BookingFormPage {
 
-    private final GridPane gridPane = BookingElements.createOptionsGridPane(true);
-    private final Label bottomLabel = BookingElements.createWordingLabel();
+    private final GridPane optionsGridPane = BookingElements.createOptionsGridPane(true);
+    private final Label videoRecordingMessageLabel = BookingElements.createWordingLabel();
     private final VBox container = BookingElements.createFormPageVBox(true,
         BookingElements.createSecondaryWordingLabel(BookingFormI18nKeys.BookingOptions),
-        gridPane,
-        bottomLabel
+        optionsGridPane,
+        videoRecordingMessageLabel
     );
 
     @Override
@@ -59,24 +59,28 @@ public final class TeachingPage implements BookingFormPage {
         List<BookablePeriod> bookablePeriods = workingBooking.getPolicyAggregate()
             .getBookablePeriods(KnownItemFamily.TEACHING, I18nKeys.upperCaseFirstChar(BookingFormI18nKeys.wholeEvent));
         ToggleGroup teachingOptionsToggleGroup = new ToggleGroup();
-        gridPane.getChildren().clear();
+        optionsGridPane.getChildren().clear();
         ColumnConstraints c1 = new ColumnConstraints();
         c1.setHgrow(Priority.NEVER);
-        gridPane.getColumnConstraints().setAll(c1);
+        optionsGridPane.getColumnConstraints().setAll(c1);
         for (int i = 0, n = bookablePeriods.size(); i < n; i++) {
             BookablePeriod bookablePeriod = bookablePeriods.get(i);
             TeachingPeriodOption teachingPeriodOption = new TeachingPeriodOption(bookablePeriod, workingBooking);
             RadioButton radioButton = teachingPeriodOption.getRadioButton();
             radioButton.setToggleGroup(teachingOptionsToggleGroup);
-            gridPane.add(radioButton, 0, i);
-            gridPane.add(teachingPeriodOption.getPeriodLabel(), 1, i);
-            gridPane.add(teachingPeriodOption.getPriceLabel(), 2, i);
-            if (n == 1)
+            optionsGridPane.add(radioButton, 0, i);
+            optionsGridPane.add(teachingPeriodOption.getPeriodLabel(), 1, i);
+            optionsGridPane.add(teachingPeriodOption.getPriceLabel(),  2, i);
+            if (n == 1) // If there is only one option, we select it by default
                 radioButton.setSelected(true);
         }
+        // We display at the bottom an explanation of the VOD expiration date if the event has one (ex: Festivals)
         LocalDateTime vodExpirationDate = workingBooking.getPolicyAggregate().getEvent().getVodExpirationDate();
-        I18nControls.bindI18nProperties(bottomLabel, OnlineFestivalI18nKeys.OnlineFestivalTeachingBottomMessage1,
-            LocalizedTime.formatLocalDateTimeProperty(vodExpirationDate, FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
+        if (vodExpirationDate != null)
+            I18nControls.bindI18nProperties(videoRecordingMessageLabel, OnlineFestivalI18nKeys.VideoRecordingExpirationMessage1,
+                LocalizedTime.formatLocalDateTimeProperty(vodExpirationDate, FrontOfficeTimeFormats.MEDIA_EXPIRATION_DATE_TIME_FORMAT));
+        else // or an explanation there are no video recordings (ex: Empowerment weekends)
+            I18nControls.bindI18nProperties(videoRecordingMessageLabel, OnlineFestivalI18nKeys.NoVideoRecordingMessage);
     }
 
 }

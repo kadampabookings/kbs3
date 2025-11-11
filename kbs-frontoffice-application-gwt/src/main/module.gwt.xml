@@ -118,6 +118,7 @@
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/closed"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/payment"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/personal"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/prerequisite"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/summary"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/teaching"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingforms/onlinefestival/terms"/>
