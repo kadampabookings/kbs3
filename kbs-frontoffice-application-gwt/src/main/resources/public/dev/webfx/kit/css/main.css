@@ -202,6 +202,25 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
     --fx-togglebutton-background-color-hover: var(--fx-togglebutton-background-color-selected);
     --fx-togglebutton-border-color-hover: var(--fx-togglebutton-border-color-selected);
 
+    --fx-tabheaderarea-background-color: #D3D3D3;
+    --fx-tabheaderarea-border-radius: 0;
+    --fx-tabheaderarea-padding-top: 5px;
+    --fx-tabheaderarea-padding-bottom: 0;
+    --fx-tabheaderarea-padding-left: 10px;
+    --fx-tabheaderarea-padding-right: 0;
+    --fx-tabheader-background-color: #e5e5e5;
+    --fx-tabheader-background-color-selected: #f5f5f5;
+    --fx-tabheader-border-radius: 5px 5px 0 0;
+    --fx-tabheader-border-style: solid;
+    --fx-tabheader-border-color: darkgray;
+    --fx-tabheader-border-width: 1px;
+    --fx-tabheader-border-width-selected: 1px 1px 0 1px;
+    --fx-tabheader-padding-top: 3px;
+    --fx-tabheader-padding-bottom: 3px;
+    --fx-tabheader-padding-left: 10px;
+    --fx-tabheader-padding-right: 10px;
+    --fx-tabheader-text-fill-selected: var(--fx-text-fill);
+
     --fx-theme-color: #0095cb;
     --fx-placholder-color: #888;
     --fx-progress-indicator-color: var(--fx-theme-color);
@@ -366,25 +385,162 @@ fx-radiobutton.pseudo-selected .radio .dot {
     --fx-background-color: var(--fx-radiobutton-background-color);
 }
 
+fx-tabheaderarea {
+    --fx-background-color: var(--fx-tabheaderarea-background-color);
+    --fx-border-radius: var(--fx-tabheaderarea-border-radius);
+}
+
+/* Web padding that is read back by WebFX to JavaFX padding */
+fx-tabheaderarea > fx-children {
+    padding: var(--fx-tabheaderarea-padding-top) var(--fx-tabheaderarea-padding-right) var(--fx-tabheaderarea-padding-bottom) var(--fx-tabheaderarea-padding-left);
+}
+
+
 fx-tabheaderskin {
-    --fx-background-color: #e5e5e5;
-    --fx-border-radius: 5px 5px 0 0;
-    --fx-border-style: solid;
-    --fx-border-color: #808080;
-    --fx-border-width: 1px;
+    --fx-background-color: var(--fx-tabheader-background-color);
+    --fx-border-radius: var(--fx-tabheader-border-radius);
+    --fx-border-style: var(--fx-tabheader-border-style);
+    --fx-border-color: var(--fx-tabheader-border-color);
+    --fx-border-width: var(--fx-tabheader-border-width);
+    --fx-text-fill: var(--fx-tabheader-text-fill);
     cursor: pointer;
 }
 
 fx-tabheaderskin.selected {
-    --fx-background-color: #f5f5f5;
-    --fx-border-width: 1px 1px 0 1px;
+    --fx-tabheader-background-color: var(--fx-tabheader-background-color-selected);
+    --fx-tabheader-border-width: var(--fx-tabheader-border-width-selected);
+    --fx-text-fill: var(--fx-tabheader-text-fill-selected);
 }
+
+/* Web padding that is read back by WebFX to JavaFX padding */
+fx-tabheaderskin > fx-children {
+    padding: var(--fx-tabheader-padding-top) var(--fx-tabheader-padding-right) var(--fx-tabheader-padding-bottom) var(--fx-tabheader-padding-left);
+}
+
 /*===== webfx-kit-javafxweb-web@main.css from webfx-kit-javafxweb-peers-gwt-j2cl =====*/
 
 iframe {
     border: none;
 }
 
+/*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
+
+:root {
+    --webfx-visualgrid-row-border-color: #D3D3D3;
+    --webfx-visualgrid-col-border-color: #D3D3D3;
+    --webfx-visualgrid-row-height: 28px;
+    --webfx-visualgrid-selection-color: #AED6F1;
+}
+
+th, td {
+    border: 1px solid var(--webfx-visualgrid-row-border-color);
+    border-top-width: 0;
+}
+
+table {
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+
+thead {
+    border: none;
+    height: var(--webfx-visualgrid-row-height);
+    position: sticky;
+    top: 1px;
+    z-index: 2; /* header must be above body when scrolling */
+}
+
+thead th {
+    border-right-width: thin;
+    border-right-style: solid;
+    border-right-color: var(--webfx-visualgrid-col-border-color);
+    height: var(--webfx-visualgrid-row-height);
+    font-weight: bold;
+    text-align: center;
+    overflow: hidden;
+}
+
+tbody td {
+    border-bottom-color: var(--webfx-visualgrid-row-border-color);
+}
+
+tbody tr {
+    height: var(--webfx-visualgrid-row-height);
+}
+
+thead th, tbody td {
+    padding: 0 5px 0 5px;
+    max-width: 0;
+    overflow: hidden;
+}
+
+th:before { /* this rule is to prevent body appearing in 1px line above header when scrolling */
+    content: '';
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: -1px;
+    border-top: 1px solid var(--webfx-visualgrid-row-border-color);
+}
+
+
+/***********************************
+ *** Table header and row colors ***
+ ***********************************/
+
+/*** Table header gray gradient ***/
+
+thead tr {
+    background: linear-gradient( 180deg, white, lightgray 100%);
+}
+
+th, tbody, td {
+    background-color: transparent;
+}
+
+
+/**************************
+*** VisualGridTableSkin ***
+**************************/
+
+.grid, .grid-col, .grid-row {
+    overflow: hidden;
+}
+
+.grid-head, .grid-row {
+    border-bottom: 1px solid var(--webfx-visualgrid-row-border-color);
+}
+
+.grid-col {
+    border-right: 1px solid var(--webfx-visualgrid-col-border-color);
+}
+
+tr.selected, .grid-row.selected {
+    background: var(--webfx-visualgrid-selection-color)
+}
+
+/*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
+
+:root {
+    --webfx-aria-toggle-button-background-color-focused: lightgray;
+    --webfx-aria-toggle-button-background-color-hover: var(--webfx-aria-toggle-button-background-color-focused);
+    --webfx-aria-toggle-button-background-color-fired: #0096D6;
+    --webfx-aria-toggle-button-text-fill-fired: white;
+}
+
+
+fx-togglebutton.aria-toggle {
+    --fx-togglebutton-background-color-selected: var(--webfx-aria-toggle-button-background-color-focused);
+    --fx-togglebutton-background-color-hover: var(--webfx-aria-toggle-button-background-color-hover);
+}
+
+fx-togglebutton.aria-toggle.fired {
+    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
+    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
+    --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
+}
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
 
 :root {
@@ -911,124 +1067,6 @@ iframe {
     color: #c62828;
 }
 
-/*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
-
-:root {
-    --webfx-visualgrid-row-border-color: #D3D3D3;
-    --webfx-visualgrid-col-border-color: #D3D3D3;
-    --webfx-visualgrid-row-height: 28px;
-    --webfx-visualgrid-selection-color: #AED6F1;
-}
-
-th, td {
-    border: 1px solid var(--webfx-visualgrid-row-border-color);
-    border-top-width: 0;
-}
-
-table {
-    width: 100%;
-    border: none;
-    border-collapse: collapse;
-    cursor: pointer;
-}
-
-thead {
-    border: none;
-    height: var(--webfx-visualgrid-row-height);
-    position: sticky;
-    top: 1px;
-    z-index: 2; /* header must be above body when scrolling */
-}
-
-thead th {
-    border-right-width: thin;
-    border-right-style: solid;
-    border-right-color: var(--webfx-visualgrid-col-border-color);
-    height: var(--webfx-visualgrid-row-height);
-    font-weight: bold;
-    text-align: center;
-    overflow: hidden;
-}
-
-tbody td {
-    border-bottom-color: var(--webfx-visualgrid-row-border-color);
-}
-
-tbody tr {
-    height: var(--webfx-visualgrid-row-height);
-}
-
-thead th, tbody td {
-    padding: 0 5px 0 5px;
-    max-width: 0;
-    overflow: hidden;
-}
-
-th:before { /* this rule is to prevent body appearing in 1px line above header when scrolling */
-    content: '';
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: -1px;
-    border-top: 1px solid var(--webfx-visualgrid-row-border-color);
-}
-
-
-/***********************************
- *** Table header and row colors ***
- ***********************************/
-
-/*** Table header gray gradient ***/
-
-thead tr {
-    background: linear-gradient( 180deg, white, lightgray 100%);
-}
-
-th, tbody, td {
-    background-color: transparent;
-}
-
-
-/**************************
-*** VisualGridTableSkin ***
-**************************/
-
-.grid, .grid-col, .grid-row {
-    overflow: hidden;
-}
-
-.grid-head, .grid-row {
-    border-bottom: 1px solid var(--webfx-visualgrid-row-border-color);
-}
-
-.grid-col {
-    border-right: 1px solid var(--webfx-visualgrid-col-border-color);
-}
-
-tr.selected, .grid-row.selected {
-    background: var(--webfx-visualgrid-selection-color)
-}
-
-/*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
-
-:root {
-    --webfx-aria-toggle-button-background-color-focused: lightgray;
-    --webfx-aria-toggle-button-background-color-hover: var(--webfx-aria-toggle-button-background-color-focused);
-    --webfx-aria-toggle-button-background-color-fired: #0096D6;
-    --webfx-aria-toggle-button-text-fill-fired: white;
-}
-
-
-fx-togglebutton.aria-toggle {
-    --fx-togglebutton-background-color-selected: var(--webfx-aria-toggle-button-background-color-focused);
-    --fx-togglebutton-background-color-hover: var(--webfx-aria-toggle-button-background-color-hover);
-}
-
-fx-togglebutton.aria-toggle.fired {
-    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
-    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
-    --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
-}
 /*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
 
 :root {
@@ -1296,44 +1334,6 @@ fx-htmltext {
   align-items: center;   /* align vertically */
   justify-content: flex-start; /* mimic center-left */
 }
-/*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
-
-:root {
-    --brand-orange-color: #F6782E;
-    --brand-blue-color: #0096D6;
-    --brand-main-color: var(--brand-orange-color);
-    --brand-main-background-color: var(--brand-orange-color);
-}
-/*===== modality-client-css-web@main.css from modality-base-client-css =====*/
-
-:root {
-    --montserrat-font-family: "Montserrat";
-    --roboto-font-family: "Roboto";
-    --poppins-font-family: "Poppins";
-    --vollkorn-font-family: "Vollkorn SC";
-
-    /* Overriding some WebFX Extras CSS variables  */
-    --webfx-switch-selected-background-color: var(--brand-main-background-color);
-    --webfx-visualgrid-selection-color: #BBBBBB;
-}
-
-/* Applying Montserrat as default font for Modality */
-body, textarea /* because textarea has explicit default monospace font */ {
-    font-family: var(--montserrat-font-family), serif;
-    font-size: 13px;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* Not sure if it's the right place for this CSS rules */
-.event-button {
-    height: 35px;
-    max-height: 35px;
-    text-align: center;
-    font-weight: normal;
-    --fx-border-style: none;
-    --fx-border-radius: 4px;
-}
-
 /*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
@@ -2013,6 +2013,75 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .booking-elements .sub-price-label {
     --fx-text-fill: #838788;
 }
+/*===== modality-client-brand-web@main.css from modality-base-client-brand =====*/
+
+:root {
+    --brand-orange-color: #F6782E;
+    --brand-blue-color: #0096D6;
+    --brand-main-color: var(--brand-orange-color);
+    --brand-main-background-color: var(--brand-orange-color);
+}
+/*===== modality-client-css-web@main.css from modality-base-client-css =====*/
+
+:root {
+    --montserrat-font-family: "Montserrat";
+    --roboto-font-family: "Roboto";
+    --poppins-font-family: "Poppins";
+    --vollkorn-font-family: "Vollkorn SC";
+
+    /* Overriding some WebFX Extras CSS variables  */
+    --webfx-switch-selected-background-color: var(--brand-main-background-color);
+    --webfx-visualgrid-selection-color: #BBBBBB;
+
+    /* Modern Tab Design */
+    --fx-tabheaderarea-background-color: transparent;
+    --fx-tabheaderarea-padding-top: 0;
+    --fx-tabheaderarea-padding-left: 0;
+    --fx-tabheader-background-color: transparent;
+    --fx-tabheader-background-color-selected: transparent;
+    --fx-tabheader-border-width: 0px;
+    --fx-tabheader-border-width-selected: 0 0 3px 0;
+    --fx-tabheader-border-color: #00b8d4;
+    --fx-tabheader-padding-top: 15px;
+    --fx-tabheader-padding-right: 20px;
+    --fx-tabheader-padding-bottom: 15px;
+    --fx-tabheader-padding-left: 20px;
+    --fx-tabheader-text-fill: #666;
+    --fx-tabheader-text-fill-selected: #00b8d4;
+}
+
+fx-tabpane {
+    --fx-background-color: white;
+    --fx-border-width: 1px;
+    --fx-border-style: solid;
+    --fx-border-color: #ddd;
+    --fx-border-radius: 8px;
+    --fx-background-radius: 8px;
+    --fx-border-color-focus: var(--fx-border-color);
+    --fx-border-style-focus: var(--fx-border-style);
+}
+
+fx-tabheaderskin {
+    font-size: 14px;
+}
+
+/* Applying Montserrat as default font for Modality */
+body, textarea /* because textarea has explicit default monospace font */ {
+    font-family: var(--montserrat-font-family), serif;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Not sure if it's the right place for this CSS rules */
+.event-button {
+    height: 35px;
+    max-height: 35px;
+    text-align: center;
+    font-weight: normal;
+    --fx-border-style: none;
+    --fx-border-radius: 4px;
+}
+
 /*===== modality-frontoffice-order-web@main.css from modality-ecommerce-frontoffice-order =====*/
 
 .order-card {

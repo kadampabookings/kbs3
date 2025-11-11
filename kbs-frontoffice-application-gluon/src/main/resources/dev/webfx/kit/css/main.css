@@ -1,30 +1,6 @@
 /* @font-face rules listed first, otherwise they are ignored (OpenJFX bug) */
 
 @font-face {
-    font-family: 'Roboto';
-    font-weight: bold;
-    src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-style: italic;
-    src: url('webfx-css:fonts/roboto/Roboto-Italic.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: 300; /* light */
-    src: url('webfx-css:fonts/roboto/Roboto-Light.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: bold;
-    font-style: italic;
-    src: url('webfx-css:fonts/roboto/Roboto-BoldItalic.ttf');
-}
-@font-face {
     font-family: 'Montserrat';
     font-style: normal;
     src: url('webfx-css:fonts/montserrat/Montserrat-Regular.ttf');
@@ -50,23 +26,29 @@
 }
 
 @font-face {
-    font-family: 'Vollkorn SC';
+    font-family: 'Roboto';
     font-weight: bold;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
+    src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
 }
 
 @font-face {
-    font-family: 'Vollkorn SC';
-    font-style: normal;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
+    font-family: 'Roboto';
+    font-style: italic;
+    src: url('webfx-css:fonts/roboto/Roboto-Italic.ttf');
 }
 
 @font-face {
-    font-family: 'Vollkorn SC';
-    font-weight: 600; /* semi-bold */
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
+    font-family: 'Roboto';
+    font-weight: 300; /* light */
+    src: url('webfx-css:fonts/roboto/Roboto-Light.ttf');
 }
 
+@font-face {
+    font-family: 'Roboto';
+    font-weight: bold;
+    font-style: italic;
+    src: url('webfx-css:fonts/roboto/Roboto-BoldItalic.ttf');
+}
 @font-face {
     font-family: 'Poppins';
     font-style: normal;
@@ -110,6 +92,126 @@
     src: url('webfx-css:fonts/poppins/Poppins-SemiBold.ttf');
 }
 
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: bold;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-style: normal;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: 600; /* semi-bold */
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
+}
+
+
+/*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
+
+VisualGrid {
+    -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
+}
+
+.root {
+    -webfx-visualgrid-row-border-color: #D3D3D3;
+    -webfx-visualgrid-col-border-color: #D3D3D3;
+    -webfx-visualgrid-selection-color: #AED6F1;
+}
+
+.table-view {
+    -fx-table-cell-border-color: #bbbbbb; /* same color as java 7 caspian, java 8 one is too light on colored rows */
+    -fx-cursor: hand;
+}
+
+.table-view.noHeader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+.table-view.fullHeight *.scroll-bar:vertical {
+    -fx-max-width: 0;
+    -fx-pref-width: 0;
+    -fx-min-width: 0;
+}
+
+.table-row-cell:empty {
+    -fx-opacity: 0.0;
+}
+
+.table-row-cell .table-cell {
+    -fx-padding: 1.4mm 1.4mm 0.6mm 1.4mm;
+}
+
+.table-row-cell:selected {
+    -fx-background: -webfx-visualgrid-selection-color;
+}
+
+.table-row-cell:selected .table-cell {
+   -fx-text-fill: -fx-text-inner-color;
+}
+
+/**************************
+*** VisualGridTableSkin ***
+**************************/
+
+.grid .scroll-pane {
+    -fx-padding: 0;
+}
+
+.grid-head, .grid-row {
+    -fx-border-color: -webfx-visualgrid-row-border-color;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.grid-col {
+    -fx-border-color: -webfx-visualgrid-col-border-color;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.grid-row.selected {
+    -fx-background-color: -webfx-visualgrid-selection-color;
+}
+
+/*===== webfx-extras-aria-javafx@main.css from webfx-extras-aria =====*/
+
+.root {
+    -webfx-aria-toggle-button-border-color: transparent;
+    -webfx-aria-toggle-button-background-color: white;
+    -webfx-aria-toggle-button-background-color-focused: lightgray;
+    -webfx-aria-toggle-button-background-color-hover: -webfx-aria-toggle-button-background-focused;
+    -webfx-aria-toggle-button-background-color-fired: blue;
+    -webfx-aria-toggle-button-text-fill-fired: white;
+}
+
+ToggleButton.aria-toggle {
+    -fx-border-color: -webfx-aria-toggle-button-border-color;
+    -fx-background-color: -webfx-aria-toggle-button-background-color;
+}
+
+ToggleButton.aria-toggle:hover {
+    -fx-background-color: -webfx-aria-toggle-button-background-color-hover;
+}
+
+ToggleButton.aria-toggle:selected {
+    -fx-background-color: -webfx-aria-toggle-button-background-color-focused;
+}
+
+ToggleButton.aria-toggle.fired {
+    -fx-background-color: -webfx-aria-toggle-button-background-color-fired;
+    -fx-text-fill: -webfx-aria-toggle-button-text-fill-fired;
+}
+
+/* Automatically applying the same color as the text to SVG icons used inside the toggle buttons. */
+/* Commented as some icons don't have fill but stroke instead => using specific rules in modality-frontoffice-mainframe-javafx@main.css
+ToggleButton.aria-toggle SVGPath { !* TODO: completely remove? *!
+    -fx-fill: -fx-text-fill;
+}*/
 
 /*===== webfx-extras-material-javafx@main.css from webfx-extras-styles-materialdesign =====*/
 
@@ -694,108 +796,6 @@
 
 
 
-/*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
-
-VisualGrid {
-    -fx-skin: "dev.webfx.kit.mapper.peers.javafxcontrols.openjfx.skin.FxControlPeerSkin";
-}
-
-.root {
-    -webfx-visualgrid-row-border-color: #D3D3D3;
-    -webfx-visualgrid-col-border-color: #D3D3D3;
-    -webfx-visualgrid-selection-color: #AED6F1;
-}
-
-.table-view {
-    -fx-table-cell-border-color: #bbbbbb; /* same color as java 7 caspian, java 8 one is too light on colored rows */
-    -fx-cursor: hand;
-}
-
-.table-view.noHeader .column-header-background {
-    -fx-max-height: 0;
-    -fx-pref-height: 0;
-    -fx-min-height: 0;
-}
-
-.table-view.fullHeight *.scroll-bar:vertical {
-    -fx-max-width: 0;
-    -fx-pref-width: 0;
-    -fx-min-width: 0;
-}
-
-.table-row-cell:empty {
-    -fx-opacity: 0.0;
-}
-
-.table-row-cell .table-cell {
-    -fx-padding: 1.4mm 1.4mm 0.6mm 1.4mm;
-}
-
-.table-row-cell:selected {
-    -fx-background: -webfx-visualgrid-selection-color;
-}
-
-.table-row-cell:selected .table-cell {
-   -fx-text-fill: -fx-text-inner-color;
-}
-
-/**************************
-*** VisualGridTableSkin ***
-**************************/
-
-.grid .scroll-pane {
-    -fx-padding: 0;
-}
-
-.grid-head, .grid-row {
-    -fx-border-color: -webfx-visualgrid-row-border-color;
-    -fx-border-width: 0 0 1px 0;
-}
-
-.grid-col {
-    -fx-border-color: -webfx-visualgrid-col-border-color;
-    -fx-border-width: 0 1px 0 0;
-}
-
-.grid-row.selected {
-    -fx-background-color: -webfx-visualgrid-selection-color;
-}
-
-/*===== webfx-extras-aria-javafx@main.css from webfx-extras-aria =====*/
-
-.root {
-    -webfx-aria-toggle-button-border-color: transparent;
-    -webfx-aria-toggle-button-background-color: white;
-    -webfx-aria-toggle-button-background-color-focused: lightgray;
-    -webfx-aria-toggle-button-background-color-hover: -webfx-aria-toggle-button-background-focused;
-    -webfx-aria-toggle-button-background-color-fired: blue;
-    -webfx-aria-toggle-button-text-fill-fired: white;
-}
-
-ToggleButton.aria-toggle {
-    -fx-border-color: -webfx-aria-toggle-button-border-color;
-    -fx-background-color: -webfx-aria-toggle-button-background-color;
-}
-
-ToggleButton.aria-toggle:hover {
-    -fx-background-color: -webfx-aria-toggle-button-background-color-hover;
-}
-
-ToggleButton.aria-toggle:selected {
-    -fx-background-color: -webfx-aria-toggle-button-background-color-focused;
-}
-
-ToggleButton.aria-toggle.fired {
-    -fx-background-color: -webfx-aria-toggle-button-background-color-fired;
-    -fx-text-fill: -webfx-aria-toggle-button-text-fill-fired;
-}
-
-/* Automatically applying the same color as the text to SVG icons used inside the toggle buttons. */
-/* Commented as some icons don't have fill but stroke instead => using specific rules in modality-frontoffice-mainframe-javafx@main.css
-ToggleButton.aria-toggle SVGPath { !* TODO: completely remove? *!
-    -fx-fill: -fx-text-fill;
-}*/
-
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
 
 .root {
@@ -991,57 +991,6 @@ HtmlText, HtmlTextEditor {
     -fx-max-width: 20px;
     -fx-alignment: center-left;
 }
-/*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
-
-.root {
-    -brand-orange-color: #F6782E;
-    -brand-blue-color: #0096D6;
-    -brand-main-color: -brand-orange-color;
-    -brand-main-background-color: -brand-orange-color;
-}
-/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
-
-/*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
-
-/*===== modality-client-css-import-font-vollkornsc-javafx@main.css from modality-base-client-css =====*/
-
-/*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
-
-.root {
-    -montserrat-font-family: "Montserrat";
-    -roboto-font-family: "Roboto";
-    -poppins-font-family: "Poppins";
-    -vollkorn-font-family: "Vollkorn SC";
-
-    /* Overriding some WebFX Extras CSS variables  */
-    -webfx-switch-selected-background-color: -brand-main-background-color;
-    -webfx-visualgrid-selection-color: #BBBBBB;
-}
-
-Text, Label, Button, TextField {
-    -fx-font-family: "Montserrat"; /* -montserrat-font-family; */
-}
-
-.scroll-pane {
-    -fx-background-color: transparent;
-    -fx-padding: 0;
-}
-
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-/* Not sure if it's the right place for this CSS rules */
-.event-button Button {
-    -fx-background-radius: 4;
-    -fx-pref-height:36px;
-    -fx-max-height:36px;
-    -fx-alignment: center;
-    -fx-font-weight: bolder;
-}
-
-/*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
-
 /*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
@@ -1701,6 +1650,57 @@ Text, Label, Button, TextField {
     -fx-border-radius: 19px;
     -fx-background-radius: 19px;
 }
+/*===== modality-client-brand-javafx@main.css from modality-base-client-brand =====*/
+
+.root {
+    -brand-orange-color: #F6782E;
+    -brand-blue-color: #0096D6;
+    -brand-main-color: -brand-orange-color;
+    -brand-main-background-color: -brand-orange-color;
+}
+/*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
+
+/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
+
+/*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
+
+.root {
+    -montserrat-font-family: "Montserrat";
+    -roboto-font-family: "Roboto";
+    -poppins-font-family: "Poppins";
+    -vollkorn-font-family: "Vollkorn SC";
+
+    /* Overriding some WebFX Extras CSS variables  */
+    -webfx-switch-selected-background-color: -brand-main-background-color;
+    -webfx-visualgrid-selection-color: #BBBBBB;
+}
+
+Text, Label, Button, TextField {
+    -fx-font-family: "Montserrat"; /* -montserrat-font-family; */
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Not sure if it's the right place for this CSS rules */
+.event-button Button {
+    -fx-background-radius: 4;
+    -fx-pref-height:36px;
+    -fx-max-height:36px;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+}
+
+/*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
+
+/*===== modality-client-css-import-font-vollkornsc-javafx@main.css from modality-base-client-css =====*/
+
 /*===== modality-frontoffice-order-javafx@main.css from modality-ecommerce-frontoffice-order =====*/
 
 
