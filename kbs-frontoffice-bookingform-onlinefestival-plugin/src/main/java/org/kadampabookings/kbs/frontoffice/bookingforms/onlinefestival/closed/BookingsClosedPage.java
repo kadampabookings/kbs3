@@ -20,7 +20,7 @@ import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFes
  */
 public final class BookingsClosedPage implements BookingFormPage { // TODO: Move this page to Modality
 
-    private final BooleanProperty endReachedProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty canGoForwardProperty = new SimpleBooleanProperty(false);
 
     @Override
     public Object getTitleI18nKey() {
@@ -52,8 +52,8 @@ public final class BookingsClosedPage implements BookingFormPage { // TODO: Move
     }
 
     @Override
-    public ObservableBooleanValue endReachedProperty() {
-        return endReachedProperty;
+    public ObservableBooleanValue canGoForwardProperty() {
+        return canGoForwardProperty;
     }
 
 }

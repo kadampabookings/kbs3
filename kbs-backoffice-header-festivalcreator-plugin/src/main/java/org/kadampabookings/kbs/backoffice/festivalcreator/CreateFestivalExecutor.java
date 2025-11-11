@@ -34,11 +34,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import one.modality.base.client.i18n.BaseI18nKeys;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
-import one.modality.base.shared.entities.Event;
-import one.modality.base.shared.entities.ScheduledItem;
-import one.modality.base.shared.entities.Site;
-import one.modality.base.shared.entities.SiteItemFamily;
+import one.modality.base.shared.entities.*;
 import one.modality.base.shared.knownitems.KnownItemFamily;
+import one.modality.crm.backoffice.organization.fx.FXOrganization;
 import one.modality.event.backoffice.activities.pricing.EventPricingRouting;
 import one.modality.event.client.event.fx.FXEventId;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
@@ -118,6 +116,7 @@ final class CreateFestivalExecutor {
         cancelButton.setOnAction(e -> dialogCallback.closeDialog());
         createButton.setOnAction(e -> {
             if (validationSupport.isValid()) {
+                Organization organization = FXOrganization.getOrganization();
                 // Getting the festival type selected by the user (was stored in the toggle button user data)
                 FestivalType festivalType = getSelectedFestivalType();
                 int year = startDateField.getDate().getYear();
@@ -126,7 +125,7 @@ final class CreateFestivalExecutor {
                 Event event = updateStore.insertEntity(Event.class);
                 // For now (2025) we do only Online Festivals with KBS3 (in 2026 the same event will be for both in-person & online)
                 event.setName(I18n.getI18nText("[{0}] Festival {1} Online", festivalType.getShortI18nKey(), year));
-                event.setOrganization(1);
+                event.setOrganization(organization);
                 event.setCorporation(1); // TODO: remove this from database
                 event.setType(festivalType.getTypeId());
                 event.setStartDate(startDateField.getDate());
@@ -138,7 +137,7 @@ final class CreateFestivalExecutor {
                 Site site = updateStore.insertEntity(Site.class);
                 site.setName("Online");
                 site.setEvent(event);
-                site.setOrganization(1);
+                site.setOrganization(organization);
                 site.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
                 site.setMain(true);
                 site.setOrd(10);
@@ -152,12 +151,12 @@ final class CreateFestivalExecutor {
                 sif.setSite(site);
                 sif.setItemFamily(KnownItemFamily.AUDIO_RECORDING.getPrimaryKey());
                 // Bookable scheduled items
-                int festivalItemPrimaryKey = FestivalType.getFestivalItemPrimaryKey();
+                EntityId teachingDayTicketItemId = organization.getTeachingsDayTicketItemId();  // Should be Festival for NKT
                 for (LocalDate date = event.getStartDate(); !date.isAfter(event.getEndDate()) ; date = date.plusDays(1)) {
                     ScheduledItem si = updateStore.insertEntity(ScheduledItem.class);
                     si.setEvent(event);
                     si.setSite(site);
-                    si.setItem(festivalItemPrimaryKey);
+                    si.setItem(teachingDayTicketItemId);
                     si.setDate(date);
                 }
                 AsyncSpinner.displayButtonSpinnerDuringAsyncExecution(
