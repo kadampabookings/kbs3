@@ -804,9 +804,10 @@
     <source path="dev/webfx/stack/cloud/deepl/client"/>
     <!--============================< webfx-stack-cloud-image >=============================-->
     <source path="dev/webfx/stack/cloud/image"/>
-    <source path="dev/webfx/stack/cloud/image/impl/fetchbased"/>
-    <!--=========================< webfx-stack-cloud-image-client >=========================-->
-    <source path="dev/webfx/stack/cloud/image/impl/client"/>
+    <source path="dev/webfx/stack/cloud/image/spi"/>
+    <source path="dev/webfx/stack/cloud/image/spi/impl/jsonfetchapi"/>
+    <!--======================< webfx-stack-cloud-image-bunny-plugin >======================-->
+    <source path="dev/webfx/stack/cloud/image/impl/bunny"/>
     <!--==============================< webfx-stack-com-bus >===============================-->
     <source path="dev/webfx/stack/com/bus"/>
     <source path="dev/webfx/stack/com/bus/spi"/>

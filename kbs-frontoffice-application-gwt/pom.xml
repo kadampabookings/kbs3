@@ -1722,7 +1722,7 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-stack-cloud-image-client</artifactId>
+            <artifactId>webfx-stack-cloud-image-bunny-plugin</artifactId>
             <version>0.1.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
