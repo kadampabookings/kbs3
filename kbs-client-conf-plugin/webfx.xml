@@ -11,13 +11,16 @@
     <dependencies>
         <used-by-source-modules/>
 
-        <!-- Allow configuration variables from environment in OpenJFX executable (on dev machines through IDEA config) -->
+        <!-- Allow configuration resolution from environment variables in OpenJFX executable (on dev machines through IDEA config) -->
         <plugin-module executable-target="openjfx">webfx-platform-substitution-var-env-plugin</plugin-module>
         <plugin-module>webfx-platform-substitution-var-conf-plugin</plugin-module> <!-- Ex: BUS_SERVER_HOST -->
 
         <!-- Allow configuration variables from local storage in GWT executables -->
         <plugin-module executable-target="gwt,j2cl">webfx-platform-substitution-var-localstorage-plugin</plugin-module>
         <plugin-module executable-target="gwt,j2cl">webfx-platform-substitution-var-windowlocation-plugin</plugin-module>
+
+        <!-- We use Cloudinary for the images hosting -->
+        <plugin-module>webfx-stack-cloud-image-cloudinary-plugin</plugin-module>
 
     </dependencies>
 
