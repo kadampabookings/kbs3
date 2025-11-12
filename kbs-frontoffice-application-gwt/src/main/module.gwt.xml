@@ -805,6 +805,7 @@
     <!--============================< webfx-stack-cloud-image >=============================-->
     <source path="dev/webfx/stack/cloud/image"/>
     <source path="dev/webfx/stack/cloud/image/spi"/>
+    <source path="dev/webfx/stack/cloud/image/spi/impl"/>
     <source path="dev/webfx/stack/cloud/image/spi/impl/jsonfetchapi"/>
     <!--======================< webfx-stack-cloud-image-bunny-plugin >======================-->
     <source path="dev/webfx/stack/cloud/image/impl/bunny"/>
