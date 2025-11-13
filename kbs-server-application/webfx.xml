@@ -28,5 +28,8 @@
         <!-- Adding config resolutions from environment variables (used in AWS) -->
         <plugin-module>webfx-platform-substitution-var-env-plugin</plugin-module>
 
+        <!-- We use Bunny for the images hosting -->
+        <plugin-module>webfx-stack-cloud-image-bunny-plugin</plugin-module>
+
     </dependencies>
 </project>
