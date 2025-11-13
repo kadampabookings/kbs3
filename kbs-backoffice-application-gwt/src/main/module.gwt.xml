@@ -152,8 +152,8 @@
     <source path="one/modality/base/client/brand"/>
     <resource path="one/modality/base/client/brand"/>
     <public path="" includes="one/modality/base/client/brand/"/>
-    <!--========================< modality-base-client-cloudinary >=========================-->
-    <source path="one/modality/base/client/cloudinary"/>
+    <!--========================< modality-base-client-cloud-image >========================-->
+    <source path="one/modality/base/client/cloud/image"/>
     <!--============================< modality-base-client-css >============================-->
     <source path="one/modality/base/client/css"/>
     <resource path="dev/webfx/kit/css/fonts/montserrat"/>
