@@ -806,9 +806,9 @@
     <source path="dev/webfx/stack/cloud/image"/>
     <source path="dev/webfx/stack/cloud/image/spi"/>
     <source path="dev/webfx/stack/cloud/image/spi/impl"/>
-    <source path="dev/webfx/stack/cloud/image/spi/impl/jsonfetchapi"/>
-    <!--======================< webfx-stack-cloud-image-bunny-plugin >======================-->
-    <source path="dev/webfx/stack/cloud/image/impl/bunny"/>
+    <source path="dev/webfx/stack/cloud/image/spi/impl/fetch"/>
+    <!--===================< webfx-stack-cloud-image-rest-client-plugin >===================-->
+    <source path="dev/webfx/stack/cloud/image/impl/rest/client"/>
     <!--==============================< webfx-stack-com-bus >===============================-->
     <source path="dev/webfx/stack/com/bus"/>
     <source path="dev/webfx/stack/com/bus/spi"/>
