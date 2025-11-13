@@ -1,6 +1,24 @@
 /* @font-face rules listed first, otherwise they are ignored (OpenJFX bug) */
 
 @font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: bold;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-style: normal;
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Vollkorn SC';
+    font-weight: 600; /* semi-bold */
+    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
+}
+
+@font-face {
     font-family: 'Roboto';
     font-weight: bold;
     src: url('webfx-css:fonts/roboto/Roboto-Bold.ttf');
@@ -47,24 +65,6 @@
     font-weight: bold;
     font-style: italic;
     src: url('webfx-css:fonts/montserrat/Montserrat-BoldItalic.ttf');
-}
-
-@font-face {
-    font-family: 'Vollkorn SC';
-    font-weight: bold;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'Vollkorn SC';
-    font-style: normal;
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'Vollkorn SC';
-    font-weight: 600; /* semi-bold */
-    src: url('webfx-css:fonts/vollkornsc/VollkornSC-SemiBold.ttf');
 }
 
 @font-face {
@@ -999,10 +999,6 @@ HtmlText, HtmlTextEditor {
     -brand-main-color: -brand-orange-color;
     -brand-main-background-color: -brand-orange-color;
 }
-/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
-
-/*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
-
 /*===== modality-client-css-import-font-vollkornsc-javafx@main.css from modality-base-client-css =====*/
 
 /*===== modality-client-css-javafx@main.css from modality-base-client-css =====*/
@@ -1039,6 +1035,10 @@ Text, Label, Button, TextField {
     -fx-alignment: center;
     -fx-font-weight: bolder;
 }
+
+/*===== modality-client-css-import-font-roboto-javafx@main.css from modality-base-client-css =====*/
+
+/*===== modality-client-css-import-font-monserrat-javafx@main.css from modality-base-client-css =====*/
 
 /*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
 
@@ -1585,6 +1585,31 @@ Text, Label, Button, TextField {
     -fx-border-color: transparent;
 }
 
+/* Authorization badges for members management */
+.authorization-badge {
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+    -fx-alignment: center;
+}
+
+.authorization-badge-active {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+}
+
+.authorization-badge-pending {
+    -fx-background-color: #fff3cd;
+    -fx-text-fill: #856404;
+}
+
+.authorization-badge-needs-validation {
+    -fx-background-color: #ffd6cc;
+    -fx-text-fill: #d63700;
+    -fx-font-weight: 600;
+}
+
 
 /*===== modality-frontoffice-bookingelements-javafx@main.css from modality-booking-frontoffice-bookingelements =====*/
 
@@ -1993,6 +2018,82 @@ CollapsePane.menu-bar.lang-menu-bar {
     -webfx-aria-toggle-button-background-color-focused: -bootstrap-grey1;
     -webfx-aria-toggle-button-background-color-fired: -brand-blue-color;
 }
+/*===== modality-crm-frontoffice-members-javafx@main.css from modality-crm-frontoffice-activity-members-plugin =====*/
+
+/* Members Activity Styles - JavaFX */
+
+/* Section title styling */
+.section-title-uppercase {
+    -fx-font-size: 14px;
+    -fx-text-transform: uppercase;
+    -fx-text-fill: #4f7cac;
+}
+
+/* Text size utilities */
+.text-size-13 {
+    -fx-font-size: 13px;
+}
+
+/* Text style utilities */
+.text-italic {
+    -fx-font-style: italic;
+}
+
+/* Action button styling */
+.action-button {
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+}
+
+/* Empty state styling */
+.empty-state-title {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 600;
+    -fx-font-size: 20px;
+    -fx-text-fill: #4a4748;
+}
+
+.empty-state-description {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 400;
+    -fx-font-size: 14px;
+    -fx-text-fill: #838788;
+    -fx-line-spacing: 0.6;
+}
+
+/* Item box styling */
+.member-item-box {
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Section divider */
+.section-divider {
+    -fx-background-color: #e0e0e0;
+}
+
+/* Invitation activity styles */
+.invitation-message {
+    -fx-font-size: 18px;
+}
+
+.invitation-details {
+    -fx-font-size: 14px;
+}
+
+/* Color utilities for invitation activities */
+.text-muted {
+    -fx-text-fill: #666;
+}
+
+.text-success {
+    -fx-text-fill: #28a745;
+}
+
+.text-danger {
+    -fx-text-fill: #dc3545;
+}
+
 /*===== one-modality-crm-frontoffice-activities-createaccount-javafx@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */

@@ -1969,6 +1969,31 @@ body, textarea /* because textarea has explicit default monospace font */ {
     border-color: transparent;
 }
 
+/* Authorization badges for members management */
+.authorization-badge {
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+    -fx-alignment: center;
+}
+
+.authorization-badge-active {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+}
+
+.authorization-badge-pending {
+    -fx-background-color: #fff3cd;
+    -fx-text-fill: #856404;
+}
+
+.authorization-badge-needs-validation {
+    -fx-background-color: #ffd6cc;
+    -fx-text-fill: #d63700;
+    -fx-font-weight: 600;
+}
+
 /*===== modality-frontoffice-bookingelements-web@main.css from modality-booking-frontoffice-bookingelements =====*/
 
 .booking-elements {
@@ -2328,6 +2353,83 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     --webfx-aria-toggle-button-background-color-focused: var(--bootstrap-grey1);
     --webfx-aria-toggle-button-background-color-fired: var(--brand-blue-color);
 }
+/*===== modality-crm-frontoffice-members-web@main.css from modality-crm-frontoffice-activity-members-plugin =====*/
+
+/* Members Activity Styles - Web (GWT) */
+
+/* Section title styling */
+.section-title-uppercase {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #4f7cac;
+}
+
+/* Text size utilities */
+.text-size-13 {
+    font-size: 13px;
+}
+
+/* Text style utilities */
+.text-italic {
+    font-style: italic;
+}
+
+/* Action button styling */
+.action-button {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Empty state styling */
+.empty-state-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #4a4748;
+}
+
+.empty-state-description {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #838788;
+    line-height: 1.6;
+}
+
+/* Item box styling */
+.member-item-box {
+    border-color: #e0e0e0;
+    border-width: 0 0 1px 0;
+    border-style: solid;
+}
+
+/* Section divider */
+.section-divider {
+    background-color: #e0e0e0;
+}
+
+/* Invitation activity styles */
+.invitation-message {
+    font-size: 18px;
+}
+
+.invitation-details {
+    font-size: 14px;
+}
+
+/* Color utilities for invitation activities */
+.text-muted {
+    color: #666;
+}
+
+.text-success {
+    color: #28a745;
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
 /*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */
