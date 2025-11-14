@@ -539,6 +539,7 @@
     <source path="dev/webfx/extras/util/alert"/>
     <source path="dev/webfx/extras/util/dialog"/>
     <source path="dev/webfx/extras/util/dialog/builder"/>
+    <source path="dev/webfx/extras/util/dialog/i18n"/>
     <!--============================< webfx-extras-util-layout >============================-->
     <source path="dev/webfx/extras/util/layout"/>
     <!--=========================< webfx-extras-util-masterslave >==========================-->
