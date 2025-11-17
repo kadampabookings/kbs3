@@ -55,6 +55,7 @@
     <source path="dev/webfx/kit/mapper"/>
     <source path="dev/webfx/kit/mapper/peers/javafxgraphics/emul_coupling"/>
     <source path="dev/webfx/kit/mapper/peers/javafxgraphics/emul_coupling/base"/>
+    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/emul_coupling/measurable"/>
     <source path="dev/webfx/kit/mapper/spi"/>
     <source path="dev/webfx/kit/mapper/spi/impl/base"/>
     <source path="javafx/animation"/>
@@ -384,8 +385,8 @@
     <!--============================< webfx-extras-canvas-blob >============================-->
     <source path="dev/webfx/extras/canvas/blob"/>
     <source path="dev/webfx/extras/canvas/blob/spi"/>
-    <!--=======================< webfx-extras-canvas-blob-gwt-j2cl >========================-->
-    <source path="dev/webfx/extras/canvas/blob/spi/impl/gwt"/>
+    <!--======================< webfx-extras-canvas-blob-elemental2 >=======================-->
+    <source path="dev/webfx/extras/canvas/blob/spi/impl/elemental2"/>
     <!--===========================< webfx-extras-canvas-layer >============================-->
     <source path="dev/webfx/extras/canvas/layer"/>
     <source path="dev/webfx/extras/canvas/layer/interact"/>
@@ -406,8 +407,8 @@
     <source path="dev/webfx/extras/filepicker"/>
     <source path="dev/webfx/extras/filepicker/spi"/>
     <source path="dev/webfx/extras/filepicker/spi/impl"/>
-    <!--========================< webfx-extras-filepicker-gwt-j2cl >========================-->
-    <source path="dev/webfx/extras/filepicker/spi/impl/gwtj2cl"/>
+    <!--=======================< webfx-extras-filepicker-elemental2 >=======================-->
+    <source path="dev/webfx/extras/filepicker/spi/impl/elemental2"/>
     <!--=============================< webfx-extras-fxraiser >==============================-->
     <source path="dev/webfx/extras/fxraiser"/>
     <source path="dev/webfx/extras/fxraiser/impl"/>
@@ -469,6 +470,7 @@
     <source path="dev/webfx/extras/player/video/web/youtube"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
+    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->
@@ -547,7 +549,7 @@
     <!--============================< webfx-extras-visual-grid >============================-->
     <source path="dev/webfx/extras/visual/controls/grid"/>
     <source path="dev/webfx/extras/visual/controls/grid/skin"/>
-    <!--====================< webfx-extras-visual-grid-peers-gwt-j2cl >=====================-->
+    <!--===================< webfx-extras-visual-grid-peers-elemental2 >====================-->
     <source path="dev/webfx/extras/visual/controls/grid/peers/gwt/html"/>
     <source path="dev/webfx/extras/visual/controls/grid/registry"/>
     <!--======================< webfx-extras-visual-grid-peers-base >=======================-->
@@ -558,8 +560,8 @@
     <source path="dev/webfx/extras/webtext"/>
     <!--========================< webfx-extras-webtext-peers-base >=========================-->
     <source path="dev/webfx/extras/webtext/peers/base"/>
-    <!--======================< webfx-extras-webtext-peers-gwt-j2cl >=======================-->
-    <source path="dev/webfx/extras/webtext/peers/gwt/html"/>
+    <!--=====================< webfx-extras-webtext-peers-elemental2 >======================-->
+    <source path="dev/webfx/extras/webtext/peers/elemental2/html"/>
     <source path="dev/webfx/extras/webtext/registry"/>
     <!--===========================< webfx-extras-webtext-util >============================-->
     <source path="dev/webfx/extras/webtext/util"/>
@@ -569,42 +571,46 @@
     <public path="" includes="dev/webfx/extras/webview/pane/"/>
     <!--======================< webfx-kit-javafxcontrols-peers-base >=======================-->
     <source path="dev/webfx/kit/mapper/peers/javafxcontrols/base"/>
-    <!--====================< webfx-kit-javafxcontrols-peers-gwt-j2cl >=====================-->
-    <source path="dev/webfx/kit/mapper/peers/javafxcontrols/gwtj2cl/html"/>
-    <!--===================< webfx-kit-javafxcontrols-registry-gwt-j2cl >===================-->
+    <!--===================< webfx-kit-javafxcontrols-peers-elemental2 >====================-->
+    <source path="dev/webfx/kit/mapper/peers/javafxcontrols/elemental2/html"/>
+    <!--==================< webfx-kit-javafxcontrols-registry-elemental2 >==================-->
     <source path="dev/webfx/kit/registry/javafxcontrols"/>
-    <!--=======================< webfx-kit-javafxgraphics-gwt-j2cl >========================-->
-    <source path="dev/webfx/kit/launcher/spi/impl/gwtj2cl"/>
-    <source path="dev/webfx/kit/mapper/spi/impl/gwtj2cl"/>
+    <!--======================< webfx-kit-javafxgraphics-elemental2 >=======================-->
+    <source path="dev/webfx/kit/launcher/spi/impl/elemental2"/>
+    <source path="dev/webfx/kit/mapper/spi/impl/elemental2"/>
     <!--=========================< webfx-kit-javafxgraphics-peers >=========================-->
     <source path="dev/webfx/kit/mapper/peers/javafxgraphics"/>
     <source path="dev/webfx/kit/mapper/peers/javafxgraphics/markers"/>
     <!--======================< webfx-kit-javafxgraphics-peers-base >=======================-->
     <source path="dev/webfx/kit/mapper/peers/javafxgraphics/base"/>
-    <!--====================< webfx-kit-javafxgraphics-peers-gwt-j2cl >=====================-->
-    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/gwtj2cl/html"/>
-    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/gwtj2cl/html/layoutmeasurable"/>
-    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/gwtj2cl/shared"/>
-    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/gwtj2cl/svg"/>
-    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/gwtj2cl/util"/>
-    <!--===================< webfx-kit-javafxgraphics-registry-gwt-j2cl >===================-->
+    <!--===================< webfx-kit-javafxgraphics-peers-elemental2 >====================-->
+    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/elemental2/html"/>
+    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/elemental2/html/layoutmeasurable"/>
+    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/elemental2/shared"/>
+    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/elemental2/svg"/>
+    <source path="dev/webfx/kit/mapper/peers/javafxgraphics/elemental2/util"/>
+    <!--==================< webfx-kit-javafxgraphics-registry-elemental2 >==================-->
     <source path="dev/webfx/kit/registry/javafxgraphics"/>
-    <!--======================< webfx-kit-javafxmedia-peers-gwt-j2cl >======================-->
-    <source path="dev/webfx/kit/mapper/peers/javafxmedia/spi/gwtj2cl"/>
-    <!--====================< webfx-kit-javafxmedia-registry-gwt-j2cl >=====================-->
+    <!--=====================< webfx-kit-javafxmedia-peers-elemental2 >=====================-->
+    <source path="dev/webfx/kit/mapper/peers/javafxmedia/spi/elemental2"/>
+    <!--===================< webfx-kit-javafxmedia-registry-elemental2 >====================-->
     <source path="dev/webfx/kit/registry/javafxmedia"/>
     <!--=========================< webfx-kit-javafxweb-enginepeer >=========================-->
     <source path="dev/webfx/kit/mapper/peers/javafxweb/engine"/>
     <!--=========================< webfx-kit-javafxweb-peers-base >=========================-->
     <source path="dev/webfx/kit/mapper/peers/javafxweb/base"/>
-    <!--=======================< webfx-kit-javafxweb-peers-gwt-j2cl >=======================-->
-    <source path="dev/webfx/kit/mapper/peers/javafxweb/spi/gwt"/>
-    <!--=====================< webfx-kit-javafxweb-registry-gwt-j2cl >======================-->
+    <!--======================< webfx-kit-javafxweb-peers-elemental2 >======================-->
+    <source path="dev/webfx/kit/mapper/peers/javafxweb/spi/elemental2"/>
+    <!--====================< webfx-kit-javafxweb-registry-elemental2 >=====================-->
     <source path="dev/webfx/kit/registry/javafxweb"/>
     <!--===============================< webfx-kit-launcher >===============================-->
     <source path="dev/webfx/kit/launcher"/>
     <source path="dev/webfx/kit/launcher/spi"/>
     <source path="dev/webfx/kit/launcher/spi/impl/base"/>
+    <!--=================< webfx-kit-perfectscrollbar-elemental2-gwt-j2cl >=================-->
+    <source path="dev/webfx/kit/perfectscrollbar/elemental2"/>
+    <resource path="dev/webfx/kit/perfectscrollbar"/>
+    <public path="" includes="dev/webfx/kit/perfectscrollbar/"/>
     <!--=================================< webfx-kit-util >=================================-->
     <source path="dev/webfx/kit/util/properties"/>
     <source path="dev/webfx/kit/util/properties/conversion"/>
@@ -636,8 +642,8 @@
     <!--==============================< webfx-platform-blob >===============================-->
     <source path="dev/webfx/platform/blob"/>
     <source path="dev/webfx/platform/blob/spi"/>
-    <!--==========================< webfx-platform-blob-gwt-j2cl >==========================-->
-    <source path="dev/webfx/platform/blob/spi/impl/gwtj2cl"/>
+    <!--=========================< webfx-platform-blob-elemental2 >=========================-->
+    <source path="dev/webfx/platform/blob/spi/impl/elemental2"/>
     <!--==============================< webfx-platform-boot >===============================-->
     <source path="dev/webfx/platform/boot"/>
     <source path="dev/webfx/platform/boot/spi"/>
@@ -645,8 +651,8 @@
     <!--=============================< webfx-platform-browser >=============================-->
     <source path="dev/webfx/platform/browser"/>
     <source path="dev/webfx/platform/browser/spi"/>
-    <!--========================< webfx-platform-browser-gwt-j2cl >=========================-->
-    <source path="dev/webfx/platform/browser/spi/impl/gwtj2cl"/>
+    <!--=======================< webfx-platform-browser-elemental2 >========================-->
+    <source path="dev/webfx/platform/browser/spi/impl/elemental2"/>
     <!--==============================< webfx-platform-conf >===============================-->
     <source path="dev/webfx/platform/conf"/>
     <source path="dev/webfx/platform/conf/impl"/>
@@ -654,22 +660,22 @@
     <!--=============================< webfx-platform-console >=============================-->
     <source path="dev/webfx/platform/console"/>
     <source path="dev/webfx/platform/console/spi"/>
-    <!--========================< webfx-platform-console-gwt-j2cl >=========================-->
-    <source path="dev/webfx/platform/console/spi/impl/gwtj2cl"/>
+    <!--=======================< webfx-platform-console-elemental2 >========================-->
+    <source path="dev/webfx/platform/console/spi/impl/elemental2"/>
     <!--==============================< webfx-platform-fetch >==============================-->
     <source path="dev/webfx/platform/fetch"/>
     <source path="dev/webfx/platform/fetch/spi"/>
     <source path="dev/webfx/platform/streams"/>
     <!--=========================< webfx-platform-fetch-ast-json >==========================-->
     <source path="dev/webfx/platform/fetch/json"/>
-    <!--=========================< webfx-platform-fetch-gwt-j2cl >==========================-->
-    <source path="dev/webfx/platform/fetch/spi/impl/gwtj2cl"/>
-    <source path="dev/webfx/platform/streams/spi/impl/gwtj2cl"/>
+    <!--========================< webfx-platform-fetch-elemental2 >=========================-->
+    <source path="dev/webfx/platform/fetch/spi/impl/elemental2"/>
+    <source path="dev/webfx/platform/streams/spi/impl/elemental2"/>
     <!--==============================< webfx-platform-file >===============================-->
     <source path="dev/webfx/platform/file"/>
     <source path="dev/webfx/platform/file/spi"/>
-    <!--==========================< webfx-platform-file-gwt-j2cl >==========================-->
-    <source path="dev/webfx/platform/file/spi/impl/gwtj2cl"/>
+    <!--=========================< webfx-platform-file-elemental2 >=========================-->
+    <source path="dev/webfx/platform/file/spi/impl/elemental2"/>
     <!--========================< webfx-platform-javabase-emul-gwt >========================-->
     <super-source includes="java/io/" path=""/>
     <super-source includes="java/lang/ref/" path=""/>
@@ -684,15 +690,19 @@
     <source path="dev/webfx/platform/os"/>
     <source path="dev/webfx/platform/os/spi"/>
     <source path="dev/webfx/platform/os/spi/impl"/>
-    <!--===========================< webfx-platform-os-gwt-j2cl >===========================-->
-    <source path="dev/webfx/platform/os/spi/impl/gwtj2cl"/>
+    <!--==========================< webfx-platform-os-elemental2 >==========================-->
+    <source path="dev/webfx/platform/os/spi/impl/elemental2"/>
+    <!--=========================< webfx-platform-polyfillcompat >==========================-->
+    <source path="dev/webfx/platform/polyfillcompat"/>
     <!--=============================< webfx-platform-reflect >=============================-->
     <source path="dev/webfx/platform/reflect"/>
     <!--============================< webfx-platform-resource >=============================-->
     <source path="dev/webfx/platform/resource"/>
     <source path="dev/webfx/platform/resource/spi"/>
-    <!--==========================< webfx-platform-resource-gwt >===========================-->
-    <source path="dev/webfx/platform/resource/spi/impl/gwt"/>
+    <!--=======================< webfx-platform-resource-elemental2 >=======================-->
+    <source path="dev/webfx/platform/resource/spi/impl/elemental2"/>
+    <!--==========================< webfx-platform-resource-web >===========================-->
+    <source path="dev/webfx/platform/resource/spi/impl/web"/>
     <!--============================< webfx-platform-scheduler >============================-->
     <source path="dev/webfx/platform/scheduler"/>
     <source path="dev/webfx/platform/scheduler/spi"/>
@@ -704,13 +714,13 @@
     <source path="dev/webfx/platform/shutdown"/>
     <source path="dev/webfx/platform/shutdown/spi"/>
     <source path="dev/webfx/platform/shutdown/spi/impl"/>
-    <!--========================< webfx-platform-shutdown-gwt-j2cl >========================-->
-    <source path="dev/webfx/platform/shutdown/spi/impl/gwtj2cl"/>
+    <!--=======================< webfx-platform-shutdown-elemental2 >=======================-->
+    <source path="dev/webfx/platform/shutdown/spi/impl/elemental2"/>
     <!--=============================< webfx-platform-storage >=============================-->
     <source path="dev/webfx/platform/storage"/>
     <source path="dev/webfx/platform/storage/spi"/>
-    <!--========================< webfx-platform-storage-gwt-j2cl >=========================-->
-    <source path="dev/webfx/platform/storage/spi/impl/gwtj2cl"/>
+    <!--=======================< webfx-platform-storage-elemental2 >========================-->
+    <source path="dev/webfx/platform/storage/spi/impl/elemental2"/>
     <!--==========================< webfx-platform-substitution >===========================-->
     <source path="dev/webfx/platform/substitution"/>
     <source path="dev/webfx/platform/substitution/spi"/>
@@ -728,14 +738,14 @@
     <source path="dev/webfx/platform/uischeduler"/>
     <source path="dev/webfx/platform/uischeduler/spi"/>
     <source path="dev/webfx/platform/uischeduler/spi/impl"/>
-    <!--======================< webfx-platform-uischeduler-gwt-j2cl >=======================-->
-    <source path="dev/webfx/platform/uischeduler/spi/impl/gwtj2cl"/>
+    <!--=====================< webfx-platform-uischeduler-elemental2 >======================-->
+    <source path="dev/webfx/platform/uischeduler/spi/impl/elemental2"/>
     <!--============================< webfx-platform-useragent >============================-->
     <source path="dev/webfx/platform/useragent"/>
     <source path="dev/webfx/platform/useragent/spi"/>
     <source path="dev/webfx/platform/useragent/spi/impl"/>
-    <!--=======================< webfx-platform-useragent-gwt-j2cl >========================-->
-    <source path="dev/webfx/platform/useragent/spi/impl/gwtj2cl"/>
+    <!--======================< webfx-platform-useragent-elemental2 >=======================-->
+    <source path="dev/webfx/platform/useragent/spi/impl/elemental2"/>
     <!--==============================< webfx-platform-util >===============================-->
     <source path="dev/webfx/platform/util"/>
     <source path="dev/webfx/platform/util/collection"/>
@@ -743,10 +753,10 @@
     <source path="dev/webfx/platform/util/stopwatch"/>
     <source path="dev/webfx/platform/util/tuples"/>
     <source path="dev/webfx/platform/util/uuid"/>
-    <!--==========================< webfx-platform-util-gwt-j2cl >==========================-->
-    <source path="dev/webfx/platform/util/gwtj2cl"/>
-    <!--=======================< webfx-platform-util-gwt-j2cl-async >=======================-->
-    <source path="dev/webfx/platform/util/gwtj2cl/async"/>
+    <!--=========================< webfx-platform-util-elemental2 >=========================-->
+    <source path="dev/webfx/platform/util/elemental2"/>
+    <!--======================< webfx-platform-util-elemental2-async >======================-->
+    <source path="dev/webfx/platform/util/elemental2/async"/>
     <!--============================< webfx-platform-util-http >============================-->
     <source path="dev/webfx/platform/util/http"/>
     <!--============================< webfx-platform-util-time >============================-->
@@ -755,16 +765,16 @@
     <source path="dev/webfx/platform/windowhistory"/>
     <source path="dev/webfx/platform/windowhistory/spi"/>
     <source path="dev/webfx/platform/windowhistory/spi/impl"/>
-    <!--=====================< webfx-platform-windowhistory-gwt-j2cl >======================-->
-    <source path="dev/webfx/platform/windowhistory/spi/impl/gwtj2cl"/>
+    <!--====================< webfx-platform-windowhistory-elemental2 >=====================-->
+    <source path="dev/webfx/platform/windowhistory/spi/impl/elemental2"/>
     <!--========================< webfx-platform-windowhistory-web >========================-->
     <source path="dev/webfx/platform/windowhistory/spi/impl/web"/>
     <!--=========================< webfx-platform-windowlocation >==========================-->
     <source path="dev/webfx/platform/windowlocation"/>
     <source path="dev/webfx/platform/windowlocation/spi"/>
     <source path="dev/webfx/platform/windowlocation/spi/impl"/>
-    <!--=====================< webfx-platform-windowlocation-gwt-j2cl >=====================-->
-    <source path="dev/webfx/platform/windowlocation/spi/impl/gwtj2cl"/>
+    <!--====================< webfx-platform-windowlocation-elemental2 >====================-->
+    <source path="dev/webfx/platform/windowlocation/spi/impl/elemental2"/>
     <!--===============================< webfx-stack-authn >================================-->
     <source path="dev/webfx/stack/authn"/>
     <source path="dev/webfx/stack/authn/serial"/>
@@ -828,8 +838,8 @@
     <!--===========================< webfx-stack-com-websocket >============================-->
     <source path="dev/webfx/stack/com/websocket"/>
     <source path="dev/webfx/stack/com/websocket/spi"/>
-    <!--===================< webfx-stack-com-websocket-gwt-j2cl-sockjs >====================-->
-    <source path="dev/webfx/stack/com/websocket/spi/impl/gwtj2cl/sockjs"/>
+    <!--==================< webfx-stack-com-websocket-elemental2-sockjs >===================-->
+    <source path="dev/webfx/stack/com/websocket/spi/impl/elemental2/sockjs"/>
     <!--============================< webfx-stack-db-datascope >============================-->
     <source path="dev/webfx/stack/db/datascope"/>
     <source path="dev/webfx/stack/db/datascope/aggregate"/>
@@ -1009,7 +1019,7 @@
     <!--==========================< webfx-stack-shareddata-cache >==========================-->
     <source path="dev/webfx/stack/shareddata/cache"/>
     <source path="dev/webfx/stack/shareddata/cache/spi"/>
-    <!--===============< webfx-stack-shareddata-cache-cachestorage-gwt-j2cl >===============-->
+    <!--==============< webfx-stack-shareddata-cache-cachestorage-elemental2 >==============-->
     <source path="dev/webfx/stack/shareddata/cache/cachestorage/gwtj2cl"/>
     <!--================< webfx-stack-shareddata-cache-localstorage-plugin >================-->
     <source path="dev/webfx/stack/shareddata/cache/localstorage"/>

@@ -4,7 +4,7 @@ package dev.webfx.platform.resource.gwt;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
-import dev.webfx.platform.resource.spi.impl.gwt.GwtResourceBundleBase;
+import dev.webfx.platform.resource.spi.impl.web.WebResourceBundleBase;
 
 public interface GwtEmbedResourcesBundle extends ClientBundle {
 
@@ -41,18 +41,18 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
 
 
 
-    final class ProvidedGwtResourceBundle extends GwtResourceBundleBase {
+    final class ProvidedGwtResourceBundle extends WebResourceBundleBase {
         public ProvidedGwtResourceBundle() {
-            registerResource("dev/webfx/extras/i18n/de.properties", R.r1());
-            registerResource("dev/webfx/extras/i18n/en.json", R.r2());
-            registerResource("dev/webfx/extras/i18n/es.properties", R.r3());
-            registerResource("dev/webfx/extras/i18n/fr.properties", R.r4());
-            registerResource("dev/webfx/extras/i18n/pt.properties", R.r5());
-            registerResource("dev/webfx/extras/i18n/vi.properties", R.r6());
-            registerResource("dev/webfx/extras/i18n/zh.properties", R.r7());
-            registerResource("dev/webfx/platform/conf/src-root.properties", R.r8());
-            registerResource("dev/webfx/platform/meta/exe/exe.properties", R.r9());
-            registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", R.r10());
+            registerResource("dev/webfx/extras/i18n/de.properties", () -> R.r1().getText());
+            registerResource("dev/webfx/extras/i18n/en.json", () -> R.r2().getText());
+            registerResource("dev/webfx/extras/i18n/es.properties", () -> R.r3().getText());
+            registerResource("dev/webfx/extras/i18n/fr.properties", () -> R.r4().getText());
+            registerResource("dev/webfx/extras/i18n/pt.properties", () -> R.r5().getText());
+            registerResource("dev/webfx/extras/i18n/vi.properties", () -> R.r6().getText());
+            registerResource("dev/webfx/extras/i18n/zh.properties", () -> R.r7().getText());
+            registerResource("dev/webfx/platform/conf/src-root.properties", () -> R.r8().getText());
+            registerResource("dev/webfx/platform/meta/exe/exe.properties", () -> R.r9().getText());
+            registerResource("one/modality/base/shared/domainmodel/DomainModelSnapshot.json", () -> R.r10().getText());
 
         }
     }

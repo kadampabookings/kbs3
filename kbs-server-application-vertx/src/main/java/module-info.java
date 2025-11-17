@@ -13,9 +13,9 @@ module kbs.server.application.vertx {
     requires webfx.platform.boot.vertx;
     requires webfx.platform.console.java;
     requires webfx.platform.fetch.vertx;
-    requires webfx.platform.resource.java;
+    requires webfx.platform.resource.jre;
     requires webfx.platform.scheduler.vertx;
-    requires webfx.platform.shutdown.java;
+    requires webfx.platform.shutdown.jre;
     requires webfx.stack.authn.login.server.portal;
     requires webfx.stack.authn.oauth2.vertx;
     requires webfx.stack.authn.server.portal;

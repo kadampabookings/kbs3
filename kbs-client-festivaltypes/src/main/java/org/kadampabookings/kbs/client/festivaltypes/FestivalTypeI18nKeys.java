@@ -3,11 +3,11 @@ package org.kadampabookings.kbs.client.festivaltypes;
 
 public interface FestivalTypeI18nKeys {
 
+    Object Fall = "Fall";
+    Object FallFestival = "FallFestival";
+    Object Spring = "Spring";
     Object SpringFestival = "SpringFestival";
     Object Summer = "Summer";
-    Object Fall = "Fall";
-    Object Spring = "Spring";
     Object SummerFestival = "SummerFestival";
-    Object FallFestival = "FallFestival";
 
 }
