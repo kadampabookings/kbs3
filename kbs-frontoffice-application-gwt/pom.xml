@@ -158,7 +158,7 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-base-client-cloudinary</artifactId>
+            <artifactId>modality-base-client-cloud-image</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -334,6 +334,13 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-shared-knownitems</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-base-shared-util</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -1744,7 +1751,7 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-stack-cloud-image-client</artifactId>
+            <artifactId>webfx-stack-cloud-image-rest-client-plugin</artifactId>
             <version>0.1.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>

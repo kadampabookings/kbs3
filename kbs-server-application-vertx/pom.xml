@@ -104,13 +104,6 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-stack-cloud-image-server-plugin</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
             <artifactId>webfx-stack-com-bus-json-vertx</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>

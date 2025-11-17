@@ -115,6 +115,8 @@
     <source path="one/modality/base/backoffice/activities/operations"/>
     <!--======================< modality-base-backoffice-application >======================-->
     <source path="one/modality/base/backoffice/application"/>
+    <!--=================< modality-base-backoffice-formatters-renderers >==================-->
+    <source path="one/modality/base/backoffice/formattersrenderers"/>
     <!--=====================< modality-base-backoffice-gantt-canvas >======================-->
     <source path="one/modality/base/backoffice/ganttcanvas"/>
     <source path="one/modality/base/backoffice/ganttcanvas/spi"/>
@@ -151,8 +153,8 @@
     <source path="one/modality/base/client/brand"/>
     <resource path="one/modality/base/client/brand"/>
     <public path="" includes="one/modality/base/client/brand/"/>
-    <!--========================< modality-base-client-cloudinary >=========================-->
-    <source path="one/modality/base/client/cloudinary"/>
+    <!--========================< modality-base-client-cloud-image >========================-->
+    <source path="one/modality/base/client/cloud/image"/>
     <!--============================< modality-base-client-css >============================-->
     <source path="one/modality/base/client/css"/>
     <resource path="dev/webfx/kit/css/fonts/montserrat"/>
@@ -241,6 +243,7 @@
     <!--========================< modality-base-client-time-theme >=========================-->
     <source path="one/modality/base/client/time/theme"/>
     <!--===========================< modality-base-client-util >============================-->
+    <source path="one/modality/base/client/util"/>
     <source path="one/modality/base/client/util/dialog"/>
     <source path="one/modality/base/client/util/functions"/>
     <source path="one/modality/base/client/util/log"/>
@@ -290,6 +293,12 @@
     <source path="one/modality/catering/backoffice/activities/kitchen"/>
     <!--=========================< modality-catering-client-i18n >==========================-->
     <source path="one/modality/catering/client/i18n"/>
+    <!--=================< modality-crm-backoffice-activity-admin-plugin >==================-->
+    <source path="one/modality/crm/backoffice/activities/admin"/>
+    <!--===============< modality-crm-backoffice-activity-customers-plugin >================-->
+    <source path="one/modality/crm/backoffice/activities/customers"/>
+    <!--===============< modality-crm-backoffice-activity-superadmin-plugin >===============-->
+    <source path="one/modality/crm/backoffice/activities/superadmin"/>
     <!--==================< modality-crm-backoffice-bookingdetailspanel >===================-->
     <source path="one/modality/crm/backoffice/controls/bookingdetailspanel"/>
     <!--====================< modality-crm-backoffice-operations-mail >=====================-->
@@ -532,6 +541,7 @@
     <source path="dev/webfx/extras/util/alert"/>
     <source path="dev/webfx/extras/util/dialog"/>
     <source path="dev/webfx/extras/util/dialog/builder"/>
+    <source path="dev/webfx/extras/util/dialog/i18n"/>
     <!--============================< webfx-extras-util-layout >============================-->
     <source path="dev/webfx/extras/util/layout"/>
     <!--=========================< webfx-extras-util-masterslave >==========================-->
@@ -809,6 +819,8 @@
     <source path="dev/webfx/stack/authn/spi/impl/remote"/>
     <!--============================< webfx-stack-authz-client >============================-->
     <source path="dev/webfx/stack/authz/client"/>
+    <source path="dev/webfx/stack/authz/client/binder"/>
+    <source path="dev/webfx/stack/authz/client/context"/>
     <source path="dev/webfx/stack/authz/client/factory"/>
     <source path="dev/webfx/stack/authz/client/operation"/>
     <source path="dev/webfx/stack/authz/client/spi"/>
@@ -819,9 +831,11 @@
     <source path="dev/webfx/stack/cloud/deepl/client"/>
     <!--============================< webfx-stack-cloud-image >=============================-->
     <source path="dev/webfx/stack/cloud/image"/>
-    <source path="dev/webfx/stack/cloud/image/impl/fetchbased"/>
-    <!--=========================< webfx-stack-cloud-image-client >=========================-->
-    <source path="dev/webfx/stack/cloud/image/impl/client"/>
+    <source path="dev/webfx/stack/cloud/image/spi"/>
+    <source path="dev/webfx/stack/cloud/image/spi/impl"/>
+    <source path="dev/webfx/stack/cloud/image/spi/impl/fetch"/>
+    <!--===================< webfx-stack-cloud-image-rest-client-plugin >===================-->
+    <source path="dev/webfx/stack/cloud/image/impl/rest/client"/>
     <!--==============================< webfx-stack-com-bus >===============================-->
     <source path="dev/webfx/stack/com/bus"/>
     <source path="dev/webfx/stack/com/bus/spi"/>

@@ -868,36 +868,105 @@ fx-togglebutton.aria-toggle.fired {
 .badge.danger{
     --fx-text-fill: var(--badge-danger-txt);
     background-color: var(--badge-danger-bg);
+    color: var(--badge-danger-txt);
+}
+.badge.danger fx-text {
+    color: var(--badge-danger-txt);
 }
 
 .badge.success{
     --fx-text-fill: var(--badge-success-txt);
     background-color: var(--badge-success-bg);
+    color: var(--badge-success-txt);
+}
+.badge.success fx-text {
+    color: var(--badge-success-txt);
 }
 
 .badge.warning{
     --fx-text-fill: var(--badge-warning-txt);
     background-color: var(--badge-warning-bg);
+    color: var(--badge-warning-txt);
+}
+.badge.warning fx-text {
+    color: var(--badge-warning-txt);
 }
 
 .badge.info{
     --fx-text-fill: var(--badge-info-txt);
     background-color: var(--badge-info-bg);
+    color: var(--badge-info-txt);
+}
+.badge.info fx-text {
+    color: var(--badge-info-txt);
 }
 
 .badge.secondary{
     --fx-text-fill: var(--badge-secondary-txt);
     background-color: var(--badge-secondary-bg);
+    color: var(--badge-secondary-txt);
+}
+.badge.secondary fx-text {
+    color: var(--badge-secondary-txt);
 }
 
 .badge.primary{
     --fx-text-fill: var(--badge-primary-txt);
     background-color: var(--badge-primary-bg);
+    color: var(--badge-primary-txt);
+}
+.badge.primary fx-text {
+    color: var(--badge-primary-txt);
 }
 
 .badge.default{
     --fx-text-fill: var(--badge-default-txt);
     background-color: var(--badge-default-bg);
+    color: var(--badge-default-txt);
+}
+.badge.default fx-text {
+    color: var(--badge-default-txt);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Alert / Info Box Styles - left border only, no full border */
+.alert-info, .info-box {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    border-radius: 4px;
+    color: #1976d2;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    border-radius: 4px;
+    color: #2e7d32;
+}
+
+.alert-warning {
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+    border-radius: 4px;
+    color: #e65100;
+}
+
+.alert-danger {
+    background-color: #ffebee;
+    border-left: 4px solid #f44336;
+    border-radius: 4px;
+    color: #c62828;
 }
 
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
@@ -1211,6 +1280,37 @@ fx-homepane fx-tile * {
     /* Overriding some WebFX Extras CSS variables  */
     --webfx-switch-selected-background-color: var(--brand-main-background-color);
     --webfx-visualgrid-selection-color: #BBBBBB;
+
+    /* Modern Tab Design */
+    --fx-tabheaderarea-background-color: transparent;
+    --fx-tabheaderarea-padding-top: 0;
+    --fx-tabheaderarea-padding-left: 0;
+    --fx-tabheader-background-color: transparent;
+    --fx-tabheader-background-color-selected: transparent;
+    --fx-tabheader-border-width: 0px;
+    --fx-tabheader-border-width-selected: 0 0 3px 0;
+    --fx-tabheader-border-color: #00b8d4;
+    --fx-tabheader-padding-top: 15px;
+    --fx-tabheader-padding-right: 20px;
+    --fx-tabheader-padding-bottom: 15px;
+    --fx-tabheader-padding-left: 20px;
+    --fx-tabheader-text-fill: #666;
+    --fx-tabheader-text-fill-selected: #00b8d4;
+}
+
+fx-tabpane {
+    --fx-background-color: white;
+    --fx-border-width: 1px;
+    --fx-border-style: solid;
+    --fx-border-color: #ddd;
+    --fx-border-radius: 8px;
+    --fx-background-radius: 8px;
+    --fx-border-color-focus: var(--fx-border-color);
+    --fx-border-style-focus: var(--fx-border-style);
+}
+
+fx-tabheaderskin {
+    font-size: 14px;
 }
 
 /* Applying Montserrat as default font for Modality */
@@ -1276,99 +1376,155 @@ body, textarea /* because textarea has explicit default monospace font */ {
   align-items: center;   /* align vertically */
   justify-content: flex-start; /* mimic center-left */
 }
-/*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
+/*===== modality-crm-backoffice-activity-admin-web@main.css from modality-crm-backoffice-activity-admin-plugin =====*/
 
-/* Bootstrap style */
+/* Rights Management Admin Plugin - Web CSS */
+/* Note: This file contains only CSS classes actually used in the admin module Java code */
+
+/* Root variables */
 :root {
-    --bootstrap-white: #fff;
-
-    --bootstrap-grey1: #e6e6e6;
-    --bootstrap-grey2: #d4d4d4;
-    --bootstrap-grey3: #ccc;
-    --bootstrap-grey4: #adadad;
-    --bootstrap-grey5: #8c8c8c;
-    --bootstrap-grey6: #777777;
-    --bootstrap-grey7: #333;
-
-    --bootstrap-blue1: #5bc0de;
-    --bootstrap-blue2: #46b8da;
-    --bootstrap-blue3: #31b0d5;
-    --bootstrap-blue4: #269abc;
-    --bootstrap-blue5: #0096D6; /* New base blue */
-    --bootstrap-blue6: #0478e6;
-    --bootstrap-blue7: #1b6d85;
-    --bootstrap-blue8: #0088d6;
-    --bootstrap-blue9: #204d74;
-    --bootstrap-blue10: #122b40;
-    --bootstrap-blue11: #31708f;
-
-    --bootstrap-green1: #5cb85c;
-    --bootstrap-green2: #4cae4c;
-    --bootstrap-green3: #449d44;
-    --bootstrap-green4: #398439;
-    --bootstrap-green5: #255625;
-    --bootstrap-green6: #41BA4D;
-
-    --bootstrap-orange1: #f0ad4e;
-    --bootstrap-orange2: #eea236;
-    --bootstrap-orange3: #ec971f;
-    --bootstrap-orange4: #d58512;
-    --bootstrap-orange5: #985f0d;
-    --bootstrap-orange6: #8a6d3b;
-
-    --bootstrap-red1: #FF0404;
-    --bootstrap-red2: #d43f3a;
-    --bootstrap-red3: #c9302c;
-    --bootstrap-red4: #ac2925;
-    --bootstrap-red5: #761c19;
-    --bootstrap-red6: #FF0404;
-
-    --badge-default-bg: var(--bootstrap-white);
-    --badge-default-txt: var(--bootstrap-grey7);
-    --badge-primary-bg: #e3f2fd;
-    --badge-primary-txt: #1976d2;
-    --badge-success-bg: #e8f5e8;
-    --badge-success-txt: #2e7d32;
-    --badge-info-bg: var(--bootstrap-blue1);
-    --badge-info-txt: var(--bootstrap-white);
-    --badge-warning-bg: #eceff1;
-    --badge-warning-txt: #546e7a;
-    --badge-danger-bg: #ffebee;
-    --badge-danger-txt: #c62828;
-    --badge-secondary-bg: #fff3e0;
-    --badge-secondary-txt: #f57c00;
+    --admin-primary-color: #00b8d4;
+    --admin-danger-color: #ff5252;
+    --admin-info-bg-color: #e3f2fd;
+    --admin-info-text-color: #1976d2;
+    --admin-info-border-color: #2196f3;
+    --admin-text-secondary: #666;
 }
 
-.h2 {
-    font-size: 40px;
+/* Card styling */
+.admin-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Title and subtitle */
+.admin-title {
+    font-size: 24px;
     font-weight: bold;
 }
 
-.disabled:hover {
-    cursor: not-allowed;
+.admin-subtitle {
+    font-size: 18px;
+    color: var(--admin-text-secondary);
 }
 
-.btn-black {
-    --fx-text-fill: var(--bootstrap-white);
-    --fx-svg-path-fill: var(--fx-text-fill);
-    --fx-background-color: black;
-    --fx-border-color: black;
+.admin-card-title {
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.btn-black:hover:not(.disabled) {
-    --fx-background-color: var(--bootstrap-grey7);
-    --fx-border-color: var(--bootstrap-grey7);
+/* Assign Role Dialog Styles */
+.dialog-title {
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.btn-white {
-    --fx-svg-path-fill: var(--bootstrap-white);
-    --fx-background-color: white;
-    --fx-border-color: black;
+/* Organization Info Box */
+.organization-info-box {
+    background-color: var(--admin-info-bg-color);
+    border-color: var(--admin-info-border-color);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 6px;
 }
 
-.btn-white:hover:not(.disabled) {
-    --fx-text-fill: black;
-    --fx-background-color: var(--bootstrap-grey1);
+.organization-info-prefix {
+    color: var(--admin-text-secondary);
+    font-size: 13px;
+}
+
+.organization-info-name {
+    color: var(--admin-info-text-color);
+    font-size: 14px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.form-description {
+    font-size: 13px;
+    color: #666;
+}
+
+/* Scope Card Styles */
+.scope-card {
+    border-radius: 6px;
+    cursor: pointer;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #e0e0e0;
+    background-color: white;
+}
+
+.scope-card.selected {
+    border-color: #00b8d4;
+    background-color: #e1f5fe;
+}
+
+.scope-card-title {
+    font-weight: 600;
+}
+
+.scope-card-description {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Table header styling */
+.grid-head .grid-col {
+    background-color: #e9ecef;
+}
+
+.grid-head Text,
+.grid-head Label {
+    font-weight: bold;
+    font-size: 13px;
+    fill: #495057;
+    color: #495057;
+}
+
+.dialog-summary {
+    font-size: 14px;
+}
+
+/* Modal Dialog Styles */
+.modal-dialog-pane {
+    background-color: white;
+    border-radius: 8px;
+}
+
+/* Error Dialog Styles */
+.error-dialog-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #dc3545;
+}
+
+.error-dialog-header {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.error-dialog-content {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Delete Dialog Styles */
+.delete-dialog-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.delete-dialog-message {
+    font-size: 14px;
+}
+
+.delete-dialog-confirm {
+    font-size: 14px;
+    color: #666;
 }
 
 /*===== modality-backoffice-bookingdetailspanel-web@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
@@ -1486,6 +1642,988 @@ tr.branch, .grid-row.branch {
     linear-gradient(  90deg, var(--stay-color) 0%, var(--stay-color) 40%, transparent 50%, transparent 100%),
     linear-gradient( 180deg, var(--color-light), var(--color-dark) 100%);
 }
+/*===== modality-crm-customers-web@main.css from modality-crm-backoffice-activity-customers-plugin =====*/
+
+/* Customer Management Styles - Web */
+
+/* Root variables */
+:root {
+    --kbs-primary-color: #00A3FF;
+    --kbs-primary-hover-color: #0088D9;
+    --kbs-danger-color: #F44336;
+    --kbs-text-primary-color: #2C3E50;
+    --kbs-text-secondary-color: #7F8C8D;
+    --kbs-border-color: #E8EAED;
+    --kbs-bg-light-color: #F8F9FA;
+    --kbs-white-color: #FFFFFF;
+}
+
+/* Page Header */
+.page-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--kbs-border-color);
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--kbs-text-primary-color);
+}
+
+.page-subtitle {
+    font-size: 13px;
+    color: var(--kbs-text-secondary-color);
+}
+
+/* Customers container */
+#customers {
+    background-color: transparent;
+}
+
+/* Customers grid styling */
+.customers-grid {
+    background-color: var(--kbs-white-color);
+}
+
+.customers-grid table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--kbs-white-color);
+}
+
+.customers-grid thead {
+    background-color: var(--kbs-bg-light-color);
+    border-bottom: 1px solid var(--kbs-border-color);
+}
+
+.customers-grid th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kbs-text-secondary-color);
+    text-transform: uppercase;
+}
+
+.customers-grid td {
+    border-bottom: 1px solid var(--kbs-border-color);
+    font-size: 14px;
+}
+
+.customers-grid tbody tr:hover {
+    background-color: var(--kbs-bg-light-color);
+}
+
+.customers-grid tbody tr.selected {
+    background-color: #FFF3CD;
+    border-left: 3px solid var(--kbs-primary-color);
+}
+
+/* Customer ID - monospace display */
+.customer-id {
+    font-family: 'Courier New', monospace;
+}
+
+/* Panel header icon */
+.panel-header-icon {
+    font-size: 20px;
+}
+
+/* Role/Link icons and text */
+.role-icon {
+    font-size: 13px;
+}
+
+.role-icon-success {
+    font-size: 13px;
+    color: #2E7D32;
+}
+
+.role-link-text {
+    font-size: 13px;
+    color: var(--kbs-text-secondary-color);
+}
+
+/* Account Type Toggle Buttons */
+.account-type-toggle-container {
+    /* No padding/spacing here - set in Java code */
+    display: flex;
+    align-items: center;
+}
+
+.account-type-toggle {
+    background-color: var(--kbs-white-color);
+    border: 1px solid var(--kbs-border-color);
+    border-radius: 6px;
+    color: var(--kbs-text-secondary-color);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.account-type-toggle:hover {
+    background-color: var(--kbs-bg-light-color);
+    color: var(--kbs-text-primary-color);
+}
+
+.account-type-toggle:selected,
+.account-type-toggle.selected {
+    background-color: var(--kbs-primary-color);
+    color: var(--kbs-white-color);
+    border-color: var(--kbs-primary-color);
+}
+
+.account-type-toggle:selected:hover,
+.account-type-toggle.selected:hover {
+    background-color: var(--kbs-primary-hover-color);
+    border-color: var(--kbs-primary-hover-color);
+}
+
+/* Filter Group Separator */
+.filter-group-separator {
+    background-color: var(--kbs-border-color);
+    width: 1px;
+    opacity: 0.5;
+}
+
+/* Members Box */
+.members-box {
+    background: #F0F8FF;
+    border: 1px solid #B3D9FF;
+    border-radius: 8px;
+}
+
+.members-description {
+    color: var(--kbs-text-secondary-color);
+    font-size: 13px;
+}
+
+.member-items {
+    /* No padding/spacing here - set in Java code */
+}
+
+.member-item {
+    /* No padding/spacing here - set in Java code */
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid var(--kbs-border-color);
+}
+
+.member-check-icon {
+    font-size: 14px;
+    color: #2E7D32;
+}
+
+.member-user-icon {
+    font-size: 20px;
+}
+
+.member-name {
+    font-weight: 600;
+    color: var(--kbs-text-primary-color);
+}
+
+.member-email {
+    flex: 1;
+    font-size: 12px;
+    color: var(--kbs-text-secondary-color);
+}
+
+.member-id {
+    font-size: 11px;
+    color: var(--kbs-text-secondary-color);
+}
+
+
+/*===== modality-crm-backoffice-activity-superadmin-web@main.css from modality-crm-backoffice-activity-superadmin-plugin =====*/
+
+/* Rights Management Super Admin Plugin - Web CSS */
+/* Note: This file contains only CSS classes actually used in the superadmin module Java code */
+
+/* Root variables */
+:root {
+    --admin-primary-color: #00b8d4;
+    --admin-success-color: #4caf50;
+    --admin-warning-color: #ffa726;
+    --admin-danger-color: #ff5252;
+    --admin-info-color: #e1f5fe;
+    --admin-info-bg-color: #e3f2fd;
+    --admin-info-text-color: #1976d2;
+    --admin-info-border-color: #2196f3;
+    --admin-gray-color: #9e9e9e;
+    --admin-border-color: #ddd;
+    --admin-background-white: white;
+    --admin-background-light: #f5f5f5;
+    --admin-text-primary: #333;
+    --admin-text-secondary: #666;
+}
+
+/* Route label (monospace) - used in Operations view */
+.admin-route-label {
+    font-family: 'Courier New', monospace;
+    background-color: var(--admin-background-light);
+    border-radius: 4px;
+    color: var(--admin-text-secondary);
+}
+
+/* Info banner - used in dialogs */
+.admin-info-banner {
+    background-color: var(--admin-info-bg-color);
+    border-left: 3px solid var(--admin-info-border-color);
+    border-radius: 4px;
+}
+
+.admin-info-banner-text {
+    color: var(--admin-info-text-color);
+    font-size: 13px;
+}
+
+/* Role Dialog - Selected Permissions */
+.role-dialog-permissions-title {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.role-dialog-permissions-count {
+    font-size: 12px;
+    color: #666;
+}
+
+.role-dialog-permissions-pane {
+    background-color: #f9f9f9;
+    border-color: #ddd;
+    border-width: 1px;
+    border-radius: 4px;
+    border-style: solid;
+}
+
+.role-dialog-empty-message {
+    color: #999;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* Permission Chip Styles - used in Roles dialog */
+.permission-chip-operation {
+    background-color: #d1ecf1;
+    border: 1px solid rgba(12, 84, 96, 0.13);
+    border-radius: 4px;
+}
+
+.permission-chip-group {
+    background-color: #fff8e1;
+    border: 1px solid rgba(245, 127, 23, 0.13);
+    border-radius: 4px;
+}
+
+.permission-chip-rule {
+    background-color: #e8f5e9;
+    border: 1px solid rgba(46, 125, 50, 0.13);
+    border-radius: 4px;
+}
+
+.permission-chip-label-operation {
+    color: #0c5460;
+    font-size: 13px;
+}
+
+.permission-chip-label-group {
+    color: #f57f17;
+    font-size: 13px;
+}
+
+.permission-chip-label-rule {
+    color: #2e7d32;
+    font-size: 13px;
+}
+
+.permission-chip-remove-btn {
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.permission-chip-remove-btn-operation {
+    color: #0c5460;
+}
+
+.permission-chip-remove-btn-group {
+    color: #f57f17;
+}
+
+.permission-chip-remove-btn-rule {
+    color: #2e7d32;
+}
+
+.permission-chip-remove-btn-operation:hover {
+    color: #dc3545;
+}
+
+.permission-chip-remove-btn-group:hover {
+    color: #dc3545;
+}
+
+.permission-chip-remove-btn-rule:hover {
+    color: #dc3545;
+}
+
+/* Operation Group Selection Panel - used in OperationGroupDialog */
+.operation-selection-panel {
+    background-color: #f9f9f9;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+}
+
+.operation-selection-count-label {
+    font-weight: bold;
+    font-size: 13px;
+    color: #666;
+}
+
+.operation-selection-empty-message {
+    color: #999;
+    font-size: 13px;
+}
+
+/* Operation Selection Chip Styles - used in OperationGroupDialog */
+.operation-selection-chip {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    border-radius: 4px;
+}
+
+.operation-selection-chip-label {
+    color: #0c5460;
+    font-size: 13px;
+}
+
+.operation-selection-chip-remove {
+    color: #0c5460;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.operation-selection-chip-remove:hover {
+    color: #dc3545;
+}
+
+/* Table header styling */
+.grid-head .grid-col {
+    background-color: #e9ecef;
+}
+
+.grid-head Text,
+.grid-head Label {
+    font-weight: bold;
+    font-size: 13px;
+    fill: #495057;
+    color: #495057;
+}
+
+/*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
+
+/* Bootstrap style */
+:root {
+    --bootstrap-white: #fff;
+
+    --bootstrap-grey1: #e6e6e6;
+    --bootstrap-grey2: #d4d4d4;
+    --bootstrap-grey3: #ccc;
+    --bootstrap-grey4: #adadad;
+    --bootstrap-grey5: #8c8c8c;
+    --bootstrap-grey6: #777777;
+    --bootstrap-grey7: #333;
+
+    --bootstrap-blue1: #5bc0de;
+    --bootstrap-blue2: #46b8da;
+    --bootstrap-blue3: #31b0d5;
+    --bootstrap-blue4: #269abc;
+    --bootstrap-blue5: #0096D6; /* New base blue */
+    --bootstrap-blue6: #0478e6;
+    --bootstrap-blue7: #1b6d85;
+    --bootstrap-blue8: #0088d6;
+    --bootstrap-blue9: #204d74;
+    --bootstrap-blue10: #122b40;
+    --bootstrap-blue11: #31708f;
+
+    --bootstrap-green1: #5cb85c;
+    --bootstrap-green2: #4cae4c;
+    --bootstrap-green3: #449d44;
+    --bootstrap-green4: #398439;
+    --bootstrap-green5: #255625;
+    --bootstrap-green6: #41BA4D;
+
+    --bootstrap-orange1: #f0ad4e;
+    --bootstrap-orange2: #eea236;
+    --bootstrap-orange3: #ec971f;
+    --bootstrap-orange4: #d58512;
+    --bootstrap-orange5: #985f0d;
+    --bootstrap-orange6: #8a6d3b;
+
+    --bootstrap-red1: #FF0404;
+    --bootstrap-red2: #d43f3a;
+    --bootstrap-red3: #c9302c;
+    --bootstrap-red4: #ac2925;
+    --bootstrap-red5: #761c19;
+    --bootstrap-red6: #FF0404;
+
+    --badge-default-bg: var(--bootstrap-white);
+    --badge-default-txt: var(--bootstrap-grey7);
+    --badge-primary-bg: #e3f2fd;
+    --badge-primary-txt: #1976d2;
+    --badge-success-bg: #e8f5e8;
+    --badge-success-txt: #2e7d32;
+    --badge-info-bg: var(--bootstrap-blue1);
+    --badge-info-txt: var(--bootstrap-white);
+    --badge-warning-bg: #eceff1;
+    --badge-warning-txt: #546e7a;
+    --badge-danger-bg: #ffebee;
+    --badge-danger-txt: #c62828;
+    --badge-secondary-bg: #fff3e0;
+    --badge-secondary-txt: #f57c00;
+}
+
+.h2 {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.disabled:hover {
+    cursor: not-allowed;
+}
+
+.btn-black {
+    --fx-text-fill: var(--bootstrap-white);
+    --fx-svg-path-fill: var(--fx-text-fill);
+    --fx-background-color: black;
+    --fx-border-color: black;
+}
+
+.btn-black:hover:not(.disabled) {
+    --fx-background-color: var(--bootstrap-grey7);
+    --fx-border-color: var(--bootstrap-grey7);
+}
+
+.btn-white {
+    --fx-svg-path-fill: var(--bootstrap-white);
+    --fx-background-color: white;
+    --fx-border-color: black;
+}
+
+.btn-white:hover:not(.disabled) {
+    --fx-text-fill: black;
+    --fx-background-color: var(--bootstrap-grey1);
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue5);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue5);
+    --fx-border-color: var(--bootstrap-blue5);
+}
+
+.btn.outline-secondary {
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-grey6);
+    --fx-border-color: var(--bootstrap-grey6);
+}
+
+.btn.outline-success {
+    --fx-text-fill: var(--bootstrap-green1);
+    --fx-svg-path-fill: var(--bootstrap-green1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-green1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-green1);
+    --fx-border-color: var(--bootstrap-green1);
+}
+
+.btn.outline-danger {
+    --fx-text-fill: var(--bootstrap-red1);
+    --fx-svg-path-fill: var(--bootstrap-red1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-red1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-red1);
+    --fx-border-color: var(--bootstrap-red1);
+}
+
+.btn.outline-warning {
+    --fx-text-fill: var(--bootstrap-orange1);
+    --fx-svg-path-fill: var(--bootstrap-orange1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-orange1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-orange1);
+    --fx-border-color: var(--bootstrap-orange1);
+}
+
+.btn.outline-info {
+    --fx-text-fill: var(--bootstrap-blue1);
+    --fx-svg-path-fill: var(--bootstrap-blue1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue1);
+    --fx-border-color: var(--bootstrap-blue1);
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    fill: var(--fx-text-fill);
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    --fx-background-color: var(--bootstrap-white);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border-width: 1px;
+    --fx-border-radius: 6px;
+    --fx-background-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    --fx-text-fill: var(--bootstrap-grey7);
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    --fx-hgap: 16px;
+    --fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    --fx-background-color: transparent;
+    --fx-border-color: transparent;
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    cursor: pointer;
+}
+
+.copy-button:hover:not(.disabled) {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+}
+
+/* Copy notification label */
+.copy-notification {
+    --fx-background-color: rgba(0, 0, 0, 0.75);
+    --fx-text-fill: white;
+    --fx-background-radius: 4px;
+    font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.text-field.readonly-field input {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.button.readonly-field button {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue5);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue5);
+    --fx-border-color: var(--bootstrap-blue5);
+}
+
+.btn.outline-secondary {
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-grey6);
+    --fx-border-color: var(--bootstrap-grey6);
+}
+
+.btn.outline-success {
+    --fx-text-fill: var(--bootstrap-green1);
+    --fx-svg-path-fill: var(--bootstrap-green1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-green1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-green1);
+    --fx-border-color: var(--bootstrap-green1);
+}
+
+.btn.outline-danger {
+    --fx-text-fill: var(--bootstrap-red1);
+    --fx-svg-path-fill: var(--bootstrap-red1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-red1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-red1);
+    --fx-border-color: var(--bootstrap-red1);
+}
+
+.btn.outline-warning {
+    --fx-text-fill: var(--bootstrap-orange1);
+    --fx-svg-path-fill: var(--bootstrap-orange1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-orange1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-orange1);
+    --fx-border-color: var(--bootstrap-orange1);
+}
+
+.btn.outline-info {
+    --fx-text-fill: var(--bootstrap-blue1);
+    --fx-svg-path-fill: var(--bootstrap-blue1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue1);
+    --fx-border-color: var(--bootstrap-blue1);
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    fill: var(--fx-text-fill);
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    --fx-background-color: var(--bootstrap-white);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border-width: 1px;
+    --fx-border-radius: 6px;
+    --fx-background-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    --fx-text-fill: var(--bootstrap-grey7);
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    --fx-hgap: 16px;
+    --fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    --fx-background-color: transparent;
+    --fx-border-color: transparent;
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    cursor: pointer;
+}
+
+.copy-button:hover:not(.disabled) {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+}
+
+/* Copy notification label */
+.copy-notification {
+    --fx-background-color: rgba(0, 0, 0, 0.75);
+    --fx-text-fill: white;
+    --fx-background-radius: 4px;
+    font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.text-field.readonly-field input {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.button.readonly-field button {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Badge - Light Pink (for admin/role badges) */
+.badge-light-pink {
+    background-color: #FCE4EC;
+    color: #C2185B;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 3px;
+}
+
+/* Modern Badge Variants (Light backgrounds for better readability) - Moved from Bootstrap */
+.badge-light-info {
+    background-color: #e1f5fe;
+    color: #00b8d4;
+    border-radius: 12px;
+}
+.badge-light-info fx-text {
+    color: #00b8d4;
+}
+
+.badge-light-success {
+    background-color: #e8f5e9;
+    color: #4caf50;
+    border-radius: 12px;
+}
+.badge-light-success fx-text {
+    color: #4caf50;
+}
+
+.badge-light-warning {
+    background-color: #fff3e0;
+    color: #ffa726;
+    border-radius: 12px;
+}
+.badge-light-warning fx-text {
+    color: #ffa726;
+}
+
+.badge-light-danger {
+    background-color: #ffebee;
+    color: #ff5252;
+    border-radius: 12px;
+}
+.badge-light-danger fx-text {
+    color: #ff5252;
+}
+
+.badge-light-gray, .badge-gray {
+    background-color: #f5f5f5;
+    color: #666;
+    border-radius: 12px;
+}
+.badge-light-gray fx-text,
+.badge-gray fx-text {
+    color: #666;
+}
+
+.badge-light-purple, .badge-purple {
+    background-color: #f3e5f5;
+    color: #9c27b0;
+    border-radius: 12px;
+}
+.badge-light-purple fx-text,
+.badge-purple fx-text {
+    color: #9c27b0;
+}
+
+/* Modern Tab Design for Admin Panels */
+.modality-modern-tabs {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.modality-modern-tabs .tab-header-area {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .tab-header-background {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .headers-region {
+    background-color: white;
+    gap: 8px;
+}
+
+.modality-modern-tabs .tab {
+    background-color: transparent;
+    border-radius: 0;
+    border-style: solid;
+    border-color: transparent transparent transparent transparent;
+    border-width: 0 0 3px 0;
+    min-height: 48px;
+    height: 48px;
+}
+
+.modality-modern-tabs .tab-label {
+    color: #666;
+    font-size: 15px;
+}
+
+.modality-modern-tabs .tab:hover .tab-label {
+    color: var(--bootstrap-blue5);
+}
+
+.modality-modern-tabs .tab:selected,
+.modality-modern-tabs .tab.selected {
+    background-color: transparent;
+    border-color: transparent transparent var(--bootstrap-blue5) transparent;
+}
+
+.modality-modern-tabs .tab:selected .tab-label,
+.modality-modern-tabs .tab.selected .tab-label {
+    color: var(--bootstrap-blue5);
+}
+
+.modality-modern-tabs .tab .focus-indicator {
+    border-color: transparent;
+}
+
+.modality-modern-tabs .tab-content-area {
+    background-color: white;
+    border-color: transparent;
+}
+
+/* Authorization badges for members management */
+.authorization-badge {
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+}
+
+.authorization-badge-active {
+    background-color: #d4edda;
+    color: #155724;
+}
+.authorization-badge-active fx-text {
+    color: #155724;
+}
+
+.authorization-badge-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+.authorization-badge-pending fx-text {
+    color: #856404;
+}
+
+.authorization-badge-needs-validation {
+    background-color: #ffd6cc;
+    color: #d63700;
+    font-weight: 600;
+}
+.authorization-badge-needs-validation fx-text {
+    color: #d63700;
+}
+
 /*===== modality-event-client-selecteditemsselector-box-web@main.css from modality-booking-client-scheduleditemsselector-box =====*/
 
 .scheduled-item-box {
@@ -1539,11 +2677,869 @@ tr.branch, .grid-row.branch {
 
 /*===== modality-event-backoffice-activity-medias-web@main.css from modality-event-backoffice-activity-medias-plugin =====*/
 
-/* Media settings section styling */
-.media-settings-section {
-    border: 1px solid #dee2e6;
+/* Media Dashboard Styles */
+
+/* Event Subtitle - discrete display */
+.event-subtitle {
+    font-size: 13px;
+    color: #7f8c8d;
+    font-weight: 400;
+}
+
+/* Livestream Section */
+.livestream-section {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* No Livestream Message */
+.no-livestream-message {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.no-livestream-icon {
+    fill: #95a5a6;
+}
+
+.no-livestream-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.no-livestream-subtitle {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #00ADEF;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.section-title-icon {
+    fill: #00ADEF;
+}
+
+.section-title-text {
+    color: #00ADEF;
+}
+
+/* Session Info Box */
+.session-info-box {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #e74c3c;
+}
+
+.session-name-live {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.session-date-live {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.session-time-live {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.live-badge {
+    background-color: #e74c3c;
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.live-dot {
+    background-color: white;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.live-label {
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* Stat Cards */
+.stat-card {
+    background-color: #3498db;
     border-radius: 5px;
-    box-sizing: border-box;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: white;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+}
+
+.stat-value-live {
+    color: white;
+}
+
+/* Session Details Section */
+.session-details-section {
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.session-selector-label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.session-label {
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+.session-cell {
+    /* Container for session dropdown cells */
+}
+
+.select-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #00ADEF;
+}
+
+.session-select {
+    background-color: white;
+    border: 2px solid #e8e8e8;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.session-select:hover {
+    border-color: #00ADEF;
+    box-shadow: 0 2px 8px rgba(0,173,239,0.1);
+}
+
+.session-select:focus {
+    outline: none;
+    border-color: #00ADEF;
+    box-shadow: 0 0 0 3px rgba(0,173,239,0.1);
+}
+
+.filter-label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+}
+
+/* Filter Buttons */
+.filter-button {
+    cursor: pointer;
+}
+
+.filter-button-active {
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.filter-button-inactive {
+    background-color: #f8f9fa;
+    color: #495057;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.filter-select {
+    background-color: white;
+    border: 2px solid #e8e8e8;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-select:hover {
+    border-color: #00ADEF;
+    box-shadow: 0 2px 8px rgba(0,173,239,0.1);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #00ADEF;
+    box-shadow: 0 0 0 3px rgba(0,173,239,0.1);
+}
+
+/* Stat Boxes */
+.stat-box {
+    border-radius: 5px;
+}
+
+.stat-box-purple {
+    background-color: #9b59b6;
+}
+
+.stat-box-red {
+    background-color: #e74c3c;
+}
+
+.stat-box-green {
+    background-color: #2ecc71;
+}
+
+.stat-box-label {
+    font-size: 13px;
+    color: white;
+}
+
+.stat-box-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Table Styling for Media Dashboard */
+.livestream-section .grid-head,
+.session-details-section .grid-head {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00ADEF;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e8e8e8;
+}
+
+.livestream-section .grid-body,
+.session-details-section .grid-body {
+    font-size: 14px;
+    color: #2c3e50;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.livestream-section .grid-row:hover,
+.session-details-section .grid-row:hover {
+    background-color: #f8fafb;
+}
+
+/*===== modality-backoffice-program-web@main.css from modality-event-backoffice-activity-program-plugin =====*/
+
+/**
+ * CSS styles for Program View - Web version
+ * Colors and visual styling only - NO padding or sizing (those go in Java code)
+ */
+
+/* ========== Step Indicators ========== */
+
+/* Step circle - completed state (green) */
+.program-step-circle-completed {
+    background-color: #10b981;
+    border-radius: 20px;
+    border: 2px solid #10b981;
+}
+
+.program-step-check-completed {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.program-step-check-completed fx-children {
+    --fx-text-fill: white;
+}
+
+.program-step-check-completed fx-children fx-text {
+    color: white;
+}
+
+.program-step-label-completed {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.program-step-label-completed fx-children {
+    --fx-text-fill: #10b981;
+}
+
+.program-step-label-completed fx-children fx-text {
+    color: #10b981;
+}
+
+/* Step circle - active state (blue) */
+.program-step-circle-active {
+    background-color: #0ea5e9;
+    border-radius: 20px;
+    border: 2px solid #0ea5e9;
+}
+
+.program-step-number-active {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.program-step-number-active fx-children {
+    --fx-text-fill: white;
+}
+
+.program-step-number-active fx-children fx-text {
+    color: white;
+}
+
+.program-step-label-active {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.program-step-label-active fx-children {
+    --fx-text-fill: #0ea5e9;
+}
+
+.program-step-label-active fx-children fx-text {
+    color: #0ea5e9;
+}
+
+/* Step circle - inactive state (gray) */
+.program-step-circle-inactive {
+    background-color: white;
+    border-radius: 20px;
+    border: 2px solid #e2e8f0;
+}
+
+.program-step-number-inactive {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.program-step-number-inactive fx-children {
+    --fx-text-fill: #94a3b8;
+}
+
+.program-step-number-inactive fx-children fx-text {
+    color: #94a3b8;
+}
+
+.program-step-label-inactive {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.program-step-label-inactive fx-children {
+    --fx-text-fill: #64748b;
+}
+
+.program-step-label-inactive fx-children fx-text {
+    color: #64748b;
+}
+
+/* Step connector lines */
+.program-step-connector-completed {
+    background-color: #10b981;
+}
+
+.program-step-connector-inactive {
+    background-color: #e2e8f0;
+}
+
+/* ========== Info Boxes ========== */
+
+/* Blue info box */
+.program-info-box {
+    background: linear-gradient(to bottom right, #e0f2fe, #dbeafe);
+    border: 2px solid #0ea5e9;
+    border-radius: 12px;
+}
+
+.program-info-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0c4a6e;
+}
+
+.program-info-content {
+    font-size: 14px;
+    color: #0c4a6e;
+    line-height: 1.6;
+}
+
+.program-info-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0c4a6e;
+}
+
+.program-info-text {
+    font-size: 13px;
+    color: #0c4a6e;
+    line-height: 1.6;
+}
+
+.program-info-separator {
+    background-color: #bae6fd;
+}
+
+/* Warning box (yellow/amber) */
+.program-warning-box {
+    background-color: #fffbeb;
+    border: 2px solid #fbbf24;
+    border-radius: 12px;
+}
+
+.program-warning-title {
+    font-size: 16px;
+    color: #92400e;
+}
+
+.program-warning-message {
+    font-size: 14px;
+    color: #78350f;
+    line-height: 1.6;
+}
+
+/* ========== Language Badges ========== */
+
+.program-language-badge {
+    background-color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #0369a1;
+    font-weight: 500;
+    border: 1px solid #bae6fd;
+}
+
+/* ========== Status Badges ========== */
+
+.program-status-enabled {
+    font-weight: 600;
+    color: #059669;
+}
+
+.program-status-disabled {
+    font-weight: 600;
+    color: #dc2626;
+}
+
+/* ========== Session Cards (Step 3) ========== */
+
+/* No data message */
+.no-data-message {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Day section container */
+.day-section {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Day icon */
+.day-icon {
+    background-color: #0891b2;
+    border-radius: 8px;
+}
+
+/* Day status label */
+.day-status-label {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Session card */
+.session-card {
+    background-color: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+
+/* Session title (active) */
+.session-title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Session title (cancelled) */
+.session-title-cancelled {
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: line-through;
+    color: #999;
+    line-height: 1.5;
+}
+
+/* Time slot labels */
+.time-slot {
+    background-color: #f9fafb;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Time separator */
+.time-separator {
+    color: #999;
+}
+
+/* Participant count display */
+.participant-count {
+    font-size: 14px;
+    font-weight: 500;
+    color: #0891b2;
+}
+
+/* Audio/video count display (available) */
+.media-count-available {
+    font-size: 14px;
+    font-weight: 500;
+    color: #059669;
+}
+
+/* Add session button */
+.add-session-btn {
+    /* Inherits from Bootstrap primary button */
+}
+
+/* ========== Media Toggle Buttons ========== */
+
+.media-toggle-available {
+    background-color: #dcfce7;
+    border: 1.5px solid #10b981;
+    border-radius: 8px;
+}
+
+.media-toggle-unavailable {
+    background-color: #f1f5f9;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.media-toggle-label-available {
+    font-size: 12px;
+    font-weight: 500;
+    color: #065f46;
+}
+
+.media-toggle-label-unavailable {
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+/* ========== Day Template Panel ========== */
+
+.day-template-panel {
+    background-color: white;
+}
+
+/* ========== Timeline Container States ========== */
+
+.timeline-container-default {
+    background-color: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.timeline-container-available {
+    background-color: #dcfce7;
+    border: 2px solid #10b981;
+    border-radius: 6px;
+}
+
+.timeline-container-partial {
+    background-color: #fef3c7;
+    border: 2px solid #f59e0b;
+    border-radius: 6px;
+}
+
+/* ========== Configuration Status ========== */
+
+.config-status-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.config-status-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.config-status-value {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* ========== Alert Box (Red Error) ========== */
+
+.program-alert-box {
+    background-color: #fef2f2;
+    border-radius: 10px;
+    border-left: 4px solid #dc2626;
+}
+
+.program-alert-title {
+    font-size: 15px;
+    color: #991b1b;
+}
+
+.program-alert-message {
+    font-size: 14px;
+    color: #7f1d1d;
+    line-height: 1.6;
+}
+
+/* ========== Warning Box (Amber) ========== */
+
+.program-warning-box-amber {
+    background-color: #fffbeb;
+    border-radius: 10px;
+    border-left: 4px solid #f59e0b;
+}
+
+.program-warning-title-amber {
+    font-size: 15px;
+    color: #92400e;
+}
+
+.program-warning-message-amber {
+    font-size: 14px;
+    color: #78350f;
+}
+
+/* Warning Box (Yellow - Full Border) */
+
+.program-warning-box-yellow {
+    background-color: #fffbeb;
+    border: 2px solid #fbbf24;
+    border-radius: 12px;
+}
+
+.program-warning-title-yellow {
+    font-size: 16px;
+    color: #92400e;
+}
+
+.program-warning-message-yellow {
+    font-size: 14px;
+    color: #78350f;
+    line-height: 1.6;
+}
+
+/* ========== Form Elements ========== */
+
+.program-step-title {
+    font-size: 16px;
+}
+
+.program-form-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #475569;
+}
+
+.program-form-help {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.program-selector-button {
+    border-radius: 8px;
+}
+
+/* ========== Info Box (Blue) ========== */
+
+.program-info-box-blue {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+}
+
+.program-info-title-blue {
+    font-size: 14px;
+    color: #1e40af;
+}
+
+.program-info-content-blue {
+    font-size: 13px;
+    color: #1e3a8a;
+}
+
+/* ========== Button Styles ========== */
+
+.program-generate-button {
+    border-radius: 8px;
+}
+
+/* ========== Step Content Container ========== */
+
+.program-step-content {
+    background-color: #f8fafc;
+    border-radius: 10px;
+}
+
+/* ========== Empty State Styles ========== */
+
+.program-empty-heading {
+    font-weight: 600;
+    color: #333;
+}
+
+.program-empty-description {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ========== Event Image Upload Section ========== */
+
+.event-image-upload-section {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-upload-icon-container {
+    background: linear-gradient(135deg, #0096d6 0%, #00b4ff 100%);
+    border-radius: 8px;
+}
+
+.image-upload-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.image-preview-container {
+    background-color: #f3f4f6;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+}
+
+.image-preview-container:hover {
+    border-color: #0096d6;
+    background-color: #f0f9ff;
+}
+
+.image-preview-has-image {
+    background-color: transparent;
+    border: 2px solid #0096d6;
+    border-radius: 8px;
+}
+
+.image-placeholder-label {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.image-placeholder-hint {
+    font-size: 12px;
+    color: #d1d5db;
+}
+
+.image-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.image-overlay-btn {
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.image-overlay-btn:hover {
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.image-info-card {
+    background-color: #f0f9ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+}
+
+.image-info-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0096d6;
+}
+
+.image-info-card-text {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.btn-upload-primary {
+    --fx-background-image: linear-gradient(to bottom right, #0096d6 0%, #00b4ff 100%);
+    --fx-background-radius: 8px;
+    --fx-border-width: 0;
+    --fx-text-fill: white;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 150, 214, 0.2);
+}
+
+.btn-upload-primary:hover {
+    --fx-background-image: linear-gradient(to bottom right, #0096d6 0%, #00b4ff 100%);
+    --fx-text-fill: white;
+    box-shadow: 0 4px 12px rgba(0, 150, 214, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-upload-secondary {
+    background-color: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-upload-secondary:hover {
+    background-color: #f9fafb;
+    color: #374151;
+    border: 1px solid #9ca3af;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 /*===== modality-backoffice-recurringevents-web@main.css from modality-event-backoffice-activity-recurringevents-plugin =====*/

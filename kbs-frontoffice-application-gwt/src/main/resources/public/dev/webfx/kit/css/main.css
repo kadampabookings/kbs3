@@ -848,36 +848,105 @@ iframe {
 .badge.danger{
     --fx-text-fill: var(--badge-danger-txt);
     background-color: var(--badge-danger-bg);
+    color: var(--badge-danger-txt);
+}
+.badge.danger fx-text {
+    color: var(--badge-danger-txt);
 }
 
 .badge.success{
     --fx-text-fill: var(--badge-success-txt);
     background-color: var(--badge-success-bg);
+    color: var(--badge-success-txt);
+}
+.badge.success fx-text {
+    color: var(--badge-success-txt);
 }
 
 .badge.warning{
     --fx-text-fill: var(--badge-warning-txt);
     background-color: var(--badge-warning-bg);
+    color: var(--badge-warning-txt);
+}
+.badge.warning fx-text {
+    color: var(--badge-warning-txt);
 }
 
 .badge.info{
     --fx-text-fill: var(--badge-info-txt);
     background-color: var(--badge-info-bg);
+    color: var(--badge-info-txt);
+}
+.badge.info fx-text {
+    color: var(--badge-info-txt);
 }
 
 .badge.secondary{
     --fx-text-fill: var(--badge-secondary-txt);
     background-color: var(--badge-secondary-bg);
+    color: var(--badge-secondary-txt);
+}
+.badge.secondary fx-text {
+    color: var(--badge-secondary-txt);
 }
 
 .badge.primary{
     --fx-text-fill: var(--badge-primary-txt);
     background-color: var(--badge-primary-bg);
+    color: var(--badge-primary-txt);
+}
+.badge.primary fx-text {
+    color: var(--badge-primary-txt);
 }
 
 .badge.default{
     --fx-text-fill: var(--badge-default-txt);
     background-color: var(--badge-default-bg);
+    color: var(--badge-default-txt);
+}
+.badge.default fx-text {
+    color: var(--badge-default-txt);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Alert / Info Box Styles - left border only, no full border */
+.alert-info, .info-box {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    border-radius: 4px;
+    color: #1976d2;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    border-radius: 4px;
+    color: #2e7d32;
+}
+
+.alert-warning {
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+    border-radius: 4px;
+    color: #e65100;
+}
+
+.alert-danger {
+    background-color: #ffebee;
+    border-left: 4px solid #f44336;
+    border-radius: 4px;
+    color: #c62828;
 }
 
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
@@ -1293,6 +1362,37 @@ fx-htmltext {
     /* Overriding some WebFX Extras CSS variables  */
     --webfx-switch-selected-background-color: var(--brand-main-background-color);
     --webfx-visualgrid-selection-color: #BBBBBB;
+
+    /* Modern Tab Design */
+    --fx-tabheaderarea-background-color: transparent;
+    --fx-tabheaderarea-padding-top: 0;
+    --fx-tabheaderarea-padding-left: 0;
+    --fx-tabheader-background-color: transparent;
+    --fx-tabheader-background-color-selected: transparent;
+    --fx-tabheader-border-width: 0px;
+    --fx-tabheader-border-width-selected: 0 0 3px 0;
+    --fx-tabheader-border-color: #00b8d4;
+    --fx-tabheader-padding-top: 15px;
+    --fx-tabheader-padding-right: 20px;
+    --fx-tabheader-padding-bottom: 15px;
+    --fx-tabheader-padding-left: 20px;
+    --fx-tabheader-text-fill: #666;
+    --fx-tabheader-text-fill-selected: #00b8d4;
+}
+
+fx-tabpane {
+    --fx-background-color: white;
+    --fx-border-width: 1px;
+    --fx-border-style: solid;
+    --fx-border-color: #ddd;
+    --fx-border-radius: 8px;
+    --fx-background-radius: 8px;
+    --fx-border-color-focus: var(--fx-border-color);
+    --fx-border-style-focus: var(--fx-border-style);
+}
+
+fx-tabheaderskin {
+    font-size: 14px;
 }
 
 /* Applying Montserrat as default font for Modality */
@@ -1405,6 +1505,511 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .btn-white:hover:not(.disabled) {
     --fx-text-fill: black;
     --fx-background-color: var(--bootstrap-grey1);
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue5);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue5);
+    --fx-border-color: var(--bootstrap-blue5);
+}
+
+.btn.outline-secondary {
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-grey6);
+    --fx-border-color: var(--bootstrap-grey6);
+}
+
+.btn.outline-success {
+    --fx-text-fill: var(--bootstrap-green1);
+    --fx-svg-path-fill: var(--bootstrap-green1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-green1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-green1);
+    --fx-border-color: var(--bootstrap-green1);
+}
+
+.btn.outline-danger {
+    --fx-text-fill: var(--bootstrap-red1);
+    --fx-svg-path-fill: var(--bootstrap-red1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-red1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-red1);
+    --fx-border-color: var(--bootstrap-red1);
+}
+
+.btn.outline-warning {
+    --fx-text-fill: var(--bootstrap-orange1);
+    --fx-svg-path-fill: var(--bootstrap-orange1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-orange1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-orange1);
+    --fx-border-color: var(--bootstrap-orange1);
+}
+
+.btn.outline-info {
+    --fx-text-fill: var(--bootstrap-blue1);
+    --fx-svg-path-fill: var(--bootstrap-blue1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue1);
+    --fx-border-color: var(--bootstrap-blue1);
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    fill: var(--fx-text-fill);
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    --fx-background-color: var(--bootstrap-white);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border-width: 1px;
+    --fx-border-radius: 6px;
+    --fx-background-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    --fx-text-fill: var(--bootstrap-grey7);
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    --fx-hgap: 16px;
+    --fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    --fx-background-color: transparent;
+    --fx-border-color: transparent;
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    cursor: pointer;
+}
+
+.copy-button:hover:not(.disabled) {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+}
+
+/* Copy notification label */
+.copy-notification {
+    --fx-background-color: rgba(0, 0, 0, 0.75);
+    --fx-text-fill: white;
+    --fx-background-radius: 4px;
+    font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.text-field.readonly-field input {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.button.readonly-field button {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Outline button styles */
+.btn.outline-primary {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue5);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue5);
+    --fx-border-color: var(--bootstrap-blue5);
+}
+
+.btn.outline-secondary {
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-grey6);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-grey6);
+    --fx-border-color: var(--bootstrap-grey6);
+}
+
+.btn.outline-success {
+    --fx-text-fill: var(--bootstrap-green1);
+    --fx-svg-path-fill: var(--bootstrap-green1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-green1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-green1);
+    --fx-border-color: var(--bootstrap-green1);
+}
+
+.btn.outline-danger {
+    --fx-text-fill: var(--bootstrap-red1);
+    --fx-svg-path-fill: var(--bootstrap-red1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-red1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-red1);
+    --fx-border-color: var(--bootstrap-red1);
+}
+
+.btn.outline-warning {
+    --fx-text-fill: var(--bootstrap-orange1);
+    --fx-svg-path-fill: var(--bootstrap-orange1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-orange1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-orange1);
+    --fx-border-color: var(--bootstrap-orange1);
+}
+
+.btn.outline-info {
+    --fx-text-fill: var(--bootstrap-blue1);
+    --fx-svg-path-fill: var(--bootstrap-blue1);
+    --fx-background-color: transparent;
+    --fx-border-color: var(--bootstrap-blue1);
+    --fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) {
+    --fx-text-fill: white;
+    --fx-svg-path-fill: white;
+    --fx-background-color: var(--bootstrap-blue1);
+    --fx-border-color: var(--bootstrap-blue1);
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon {
+    fill: var(--fx-text-fill);
+}
+
+/* Form section card styling - card-like container */
+.form-section-card {
+    --fx-background-color: var(--bootstrap-white);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-border-width: 1px;
+    --fx-border-radius: 6px;
+    --fx-background-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    --fx-text-fill: var(--bootstrap-grey7);
+}
+
+/* 2-column responsive form grid */
+.form-grid {
+    --fx-hgap: 16px;
+    --fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Copy to clipboard button */
+.copy-button {
+    --fx-background-color: transparent;
+    --fx-border-color: transparent;
+    --fx-text-fill: var(--bootstrap-grey6);
+    --fx-svg-path-fill: var(--bootstrap-grey6);
+    cursor: pointer;
+}
+
+.copy-button:hover:not(.disabled) {
+    --fx-text-fill: var(--bootstrap-blue5);
+    --fx-svg-path-fill: var(--bootstrap-blue5);
+}
+
+/* Copy notification label */
+.copy-notification {
+    --fx-background-color: rgba(0, 0, 0, 0.75);
+    --fx-text-fill: white;
+    --fx-background-radius: 4px;
+    font-size: 12px;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.text-field.readonly-field input {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field {
+    --fx-background-color: var(--bootstrap-grey1);
+    --fx-border-color: var(--bootstrap-grey3);
+    --fx-text-fill: var(--bootstrap-grey7);
+    opacity: 1.0;
+}
+
+.button.readonly-field button {
+    background-color: var(--bootstrap-grey1);
+    border-color: var(--bootstrap-grey3);
+    color: var(--bootstrap-grey7);
+}
+
+/* Badge - Light Pink (for admin/role badges) */
+.badge-light-pink {
+    background-color: #FCE4EC;
+    color: #C2185B;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 3px;
+}
+
+/* Modern Badge Variants (Light backgrounds for better readability) - Moved from Bootstrap */
+.badge-light-info {
+    background-color: #e1f5fe;
+    color: #00b8d4;
+    border-radius: 12px;
+}
+.badge-light-info fx-text {
+    color: #00b8d4;
+}
+
+.badge-light-success {
+    background-color: #e8f5e9;
+    color: #4caf50;
+    border-radius: 12px;
+}
+.badge-light-success fx-text {
+    color: #4caf50;
+}
+
+.badge-light-warning {
+    background-color: #fff3e0;
+    color: #ffa726;
+    border-radius: 12px;
+}
+.badge-light-warning fx-text {
+    color: #ffa726;
+}
+
+.badge-light-danger {
+    background-color: #ffebee;
+    color: #ff5252;
+    border-radius: 12px;
+}
+.badge-light-danger fx-text {
+    color: #ff5252;
+}
+
+.badge-light-gray, .badge-gray {
+    background-color: #f5f5f5;
+    color: #666;
+    border-radius: 12px;
+}
+.badge-light-gray fx-text,
+.badge-gray fx-text {
+    color: #666;
+}
+
+.badge-light-purple, .badge-purple {
+    background-color: #f3e5f5;
+    color: #9c27b0;
+    border-radius: 12px;
+}
+.badge-light-purple fx-text,
+.badge-purple fx-text {
+    color: #9c27b0;
+}
+
+/* Modern Tab Design for Admin Panels */
+.modality-modern-tabs {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.modality-modern-tabs .tab-header-area {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .tab-header-background {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .headers-region {
+    background-color: white;
+    gap: 8px;
+}
+
+.modality-modern-tabs .tab {
+    background-color: transparent;
+    border-radius: 0;
+    border-style: solid;
+    border-color: transparent transparent transparent transparent;
+    border-width: 0 0 3px 0;
+    min-height: 48px;
+    height: 48px;
+}
+
+.modality-modern-tabs .tab-label {
+    color: #666;
+    font-size: 15px;
+}
+
+.modality-modern-tabs .tab:hover .tab-label {
+    color: var(--bootstrap-blue5);
+}
+
+.modality-modern-tabs .tab:selected,
+.modality-modern-tabs .tab.selected {
+    background-color: transparent;
+    border-color: transparent transparent var(--bootstrap-blue5) transparent;
+}
+
+.modality-modern-tabs .tab:selected .tab-label,
+.modality-modern-tabs .tab.selected .tab-label {
+    color: var(--bootstrap-blue5);
+}
+
+.modality-modern-tabs .tab .focus-indicator {
+    border-color: transparent;
+}
+
+.modality-modern-tabs .tab-content-area {
+    background-color: white;
+    border-color: transparent;
+}
+
+/* Authorization badges for members management */
+.authorization-badge {
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+}
+
+.authorization-badge-active {
+    background-color: #d4edda;
+    color: #155724;
+}
+.authorization-badge-active fx-text {
+    color: #155724;
+}
+
+.authorization-badge-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+.authorization-badge-pending fx-text {
+    color: #856404;
+}
+
+.authorization-badge-needs-validation {
+    background-color: #ffd6cc;
+    color: #d63700;
+    font-weight: 600;
+}
+.authorization-badge-needs-validation fx-text {
+    color: #d63700;
 }
 
 /*===== modality-frontoffice-bookingelements-web@main.css from modality-booking-frontoffice-bookingelements =====*/
@@ -1766,6 +2371,83 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     --webfx-aria-toggle-button-background-color-focused: var(--bootstrap-grey1);
     --webfx-aria-toggle-button-background-color-fired: var(--brand-blue-color);
 }
+/*===== modality-crm-frontoffice-members-web@main.css from modality-crm-frontoffice-activity-members-plugin =====*/
+
+/* Members Activity Styles - Web (GWT) */
+
+/* Section title styling */
+.section-title-uppercase {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #4f7cac;
+}
+
+/* Text size utilities */
+.text-size-13 {
+    font-size: 13px;
+}
+
+/* Text style utilities */
+.text-italic {
+    font-style: italic;
+}
+
+/* Action button styling */
+.action-button {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Empty state styling */
+.empty-state-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #4a4748;
+}
+
+.empty-state-description {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #838788;
+    line-height: 1.6;
+}
+
+/* Item box styling */
+.member-item-box {
+    border-color: #e0e0e0;
+    border-width: 0 0 1px 0;
+    border-style: solid;
+}
+
+/* Section divider */
+.section-divider {
+    background-color: #e0e0e0;
+}
+
+/* Invitation activity styles */
+.invitation-message {
+    font-size: 18px;
+}
+
+.invitation-details {
+    font-size: 14px;
+}
+
+/* Color utilities for invitation activities */
+.text-muted {
+    color: #666;
+}
+
+.text-success {
+    color: #28a745;
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
 /*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
 
 /* We don't want the default white background for WebFX Extras material text fields in the login window */
