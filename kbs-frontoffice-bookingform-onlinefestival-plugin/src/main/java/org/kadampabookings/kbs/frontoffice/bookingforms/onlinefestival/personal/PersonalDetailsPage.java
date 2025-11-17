@@ -1,8 +1,8 @@
 package org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.personal;
 
+import dev.webfx.extras.async.AsyncSpinner;
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
-import dev.webfx.extras.async.AsyncSpinner;
 import dev.webfx.extras.operation.OperationDirect;
 import dev.webfx.extras.panes.MonoPane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
@@ -34,19 +34,18 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import one.modality.base.shared.entities.Event;
 import one.modality.base.shared.entities.FrontendAccount;
-import one.modality.base.shared.entities.Organization;
 import one.modality.base.shared.entities.Person;
+import one.modality.booking.client.workingbooking.FXPersonToBook;
+import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.booking.client.workingbooking.WorkingBookingProperties;
+import one.modality.booking.frontoffice.bookingelements.BookingElements;
+import one.modality.booking.frontoffice.bookingform.BookingForm;
+import one.modality.booking.frontoffice.bookingform.multipages.BookingFormPage;
 import one.modality.crm.client.i18n.CrmI18nKeys;
 import one.modality.crm.frontoffice.activities.userprofile.UserProfileI18nKeys;
 import one.modality.crm.frontoffice.activities.userprofile.UserProfileView;
 import one.modality.crm.shared.services.authn.fx.FXUserPerson;
-import one.modality.booking.client.workingbooking.FXPersonToBook;
-import one.modality.booking.client.workingbooking.WorkingBooking;
-import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.ecommerce.document.service.DocumentService;
-import one.modality.booking.frontoffice.bookingelements.BookingElements;
-import one.modality.booking.frontoffice.bookingform.BookingForm;
-import one.modality.booking.frontoffice.bookingform.multipages.BookingFormPage;
 import one.modality.ecommerce.frontoffice.order.OrderActions;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingforms.onlinefestival.OnlineFestivalI18nKeys;
@@ -62,7 +61,7 @@ public final class PersonalDetailsPage implements BookingFormPage {
     private final EntityButtonSelector<Person> personToBookSelector = BookingElements.createPersonToBookSelector(false);
     private final Button personToBookButton = personToBookSelector.getButton();
     private final Label alreadyBookedLabel = Controls.setupTextWrapping(Bootstrap.textDanger(new Label()), true, false);
-    private final Label linkedAccountMessageLabel = Controls.setupTextWrapping(I18nControls.newLabel(OnlineFestivalI18nKeys.LinkedAccountMessage), true, false);
+    private final Label linkedAccountMessageLabel = Controls.setupTextWrapping(I18nControls.newLabel(CrmI18nKeys.LinkedAccountMessage), true, false);
     private final Hyperlink modifyBookingLink = Bootstrap.textPrimary(new Hyperlink());
     private final MonoPane modifyBookingPane = centerInVBoxWithMargin(modifyBookingLink, new Insets(30, 0, 50, 0));
     private final VBox personalDetailsVBox = new VBox(

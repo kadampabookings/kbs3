@@ -58,7 +58,8 @@ public final class PaymentPage implements BookingFormPage {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private final FlipPane flipPane = new FlipPane();
     private final BooleanProperty canGoBackProperty = new SimpleBooleanProperty(true);
-    private final BooleanProperty endReachedProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty canGoForwardProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty endReachedProperty = new SimpleBooleanProperty(false);
     private WorkingBookingProperties workingBookingProperties;
 
     public PaymentPage(BookingForm bookingForm) {
@@ -122,8 +123,8 @@ public final class PaymentPage implements BookingFormPage {
         int minDeposit = workingBookingProperties.getMinDeposit();
         int deposit = workingBookingProperties.getDeposit();
         int balance = total - deposit;
-        int minAmount = Math.max(100, minDeposit - deposit);
-        int maxAmount = balance;
+        int maxAmount = Math.max(0, balance);
+        int minAmount = Math.min(maxAmount, Math.max(100, minDeposit - deposit));
         int initialAmount = deposit < minDeposit ? minAmount : maxAmount;
         String currencySymbol = EventPriceFormatter.getEventCurrencySymbol(event);
         Function<Number, String> priceWithCurrencyFormatter = amount -> EventPriceFormatter.formatWithCurrency(amount, event);
@@ -145,6 +146,7 @@ public final class PaymentPage implements BookingFormPage {
         selectedAmountProperty.set(initialAmount);
         selectedAmountCurrencyLabel.setText(currencySymbol);
         selectedAmountValueTextField.setText(priceWithoutCurrencyFormatter.apply(initialAmount));
+        selectedAmountValueTextField.setDisable(maxAmount == 0);
         BookingFormActivityCallback activityCallback = bookingForm.getActivityCallback();
         // We hide the save button if there are no changes
         Layouts.setManagedAndVisibleProperties(saveButton, workingBookingProperties.hasChanges());
@@ -243,6 +245,11 @@ public final class PaymentPage implements BookingFormPage {
                 growingPane.setContent(null)); // Ensuring the payment form is unloaded
             endReachedProperty.set(true);
         });
+    }
+
+    @Override
+    public ObservableBooleanValue canGoForwardProperty() {
+        return canGoForwardProperty;
     }
 
     @Override
