@@ -11,9 +11,15 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kbs-frontoffice-bookingform-sttp-plugin</artifactId>
+    <artifactId>kbs-frontoffice-bookingform-mkmc-plugin</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>one.modality</groupId>
@@ -35,13 +41,13 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-event-frontoffice-activity-book</artifactId>
+            <artifactId>modality-booking-frontoffice-bookingpage</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-event-frontoffice-bookingform-recurringevent-plugin</artifactId>
+            <artifactId>modality-event-frontoffice-activity-book</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
