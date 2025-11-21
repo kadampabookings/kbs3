@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.frontoffice.bookingform.onlinefestival;
+package org.kadampabookings.kbs.frontoffice.bookingform.nkt.onlinefestival;
 
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
@@ -16,7 +16,7 @@ import one.modality.event.frontoffice.activities.book.event.EventBookingFormSett
 /**
  * @author Bruno Salmon
  */
-final class OnlineFestivalBookingForm extends MultiPageBookingForm {
+final class NKTOnlineFestivalBookingForm extends MultiPageBookingForm {
 
     private final BookingFormPage[] pages = {
         new BookingsClosedPage(),
@@ -28,7 +28,7 @@ final class OnlineFestivalBookingForm extends MultiPageBookingForm {
         new PaymentPage(this)
     };
 
-    public OnlineFestivalBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
+    public NKTOnlineFestivalBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
         super(activity, settings);
     }
 

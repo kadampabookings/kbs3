@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.frontoffice.bookingform.onlinefestival;
+package org.kadampabookings.kbs.frontoffice.bookingform.nkt.onlinefestival;
 
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
@@ -11,7 +11,7 @@ import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 /**
  * @author Bruno Salmon
  */
-public final class OnlineFestivalBookingFormProvider implements BookingFormProvider {
+public final class NKTOnlineFestivalBookingFormProvider implements BookingFormProvider {
 
     @Override
     public boolean acceptEvent(Event event) {
@@ -25,7 +25,7 @@ public final class OnlineFestivalBookingFormProvider implements BookingFormProvi
 
     @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity) {
-        return new OnlineFestivalBookingForm(activity,
+        return new NKTOnlineFestivalBookingForm(activity,
             new EventBookingFormSettingsBuilder(event)
                 .setEventHeader(new EventTitleHeader())
                 .setHeaderMaxTopBottomPadding(62)

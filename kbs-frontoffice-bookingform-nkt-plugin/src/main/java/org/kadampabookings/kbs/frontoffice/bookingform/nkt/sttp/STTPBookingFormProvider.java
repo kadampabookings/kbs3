@@ -1,4 +1,4 @@
-package org.kadampabookings.kbs.frontoffice.bookingforms.sttp;
+package org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp;
 
 import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.Event;
@@ -13,7 +13,7 @@ import one.modality.event.frontoffice.eventheader.MediaEventHeader;
 /**
  * @author Bruno Salmon
  */
-public class SttpBookingFormProvider implements BookingFormProvider {
+public class STTPBookingFormProvider implements BookingFormProvider {
 
     private static final int STTP_EVENT_TYPE_ID = 48;
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <exported-packages>
+        <source-packages/>
+        <resource-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules>
+            <undetected-module>javafx-graphics</undetected-module>
+        </used-by-source-modules>
+    </dependencies>
+
+    <providers>
+        <!-- NKT Online Festivals -->
+        <provider interface="one.modality.booking.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingform.nkt.onlinefestival.NKTOnlineFestivalBookingFormProvider</provider>
+        <!-- STTP -->
+        <provider interface="one.modality.booking.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPBookingFormProvider</provider>
+    </providers>
+
+</project>
