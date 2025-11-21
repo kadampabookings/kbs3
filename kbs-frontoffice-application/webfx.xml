@@ -44,8 +44,8 @@
 
         <!-- Event activities (booking page) -->
         <plugin-module>modality-event-frontoffice-max-plugin</plugin-module>
-        <plugin-module>kbs-frontoffice-bookingform-sttp-plugin</plugin-module>
-        <plugin-module>kbs-frontoffice-bookingform-onlinefestival-plugin</plugin-module>
+        <plugin-module>kbs-frontoffice-bookingform-nkt-plugin</plugin-module>
+        <plugin-module>kbs-frontoffice-bookingform-mkmc-plugin</plugin-module>
 
     </dependencies>
 
