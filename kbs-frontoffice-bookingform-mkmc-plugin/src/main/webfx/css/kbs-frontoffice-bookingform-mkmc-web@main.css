@@ -1,0 +1,709 @@
+/*
+ * Web CSS for MKMC Booking Forms
+ * Based on UX design HTML mockups adapted for WebFX/GWT DOM structure
+ */
+
+/* ============================================
+   STEP PROGRESS NAVIGATION
+   ============================================ */
+
+/* Step progress item container */
+.step-progress-item {
+}
+
+/* Step bubble - the circular number indicators */
+.step-bubble {
+}
+
+.step-bubble > fx-background {
+    background: white;
+    border-radius: 50%;
+}
+
+.step-bubble > fx-border {
+    border: 2px solid #D9D9D9;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.step-number {
+}
+
+.step-number .text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #B8B8B8;
+}
+
+/* Active step bubble */
+.step-progress-item.active .step-bubble > fx-background {
+    background: #0096D6;
+}
+
+.step-progress-item.active .step-bubble > fx-border {
+    border-color: #0096D6;
+    box-shadow: 0 4px 12px rgba(0, 150, 214, 0.3);
+}
+
+.step-progress-item.active .step-number .text {
+    color: white;
+}
+
+/* Completed step bubble */
+.step-progress-item.completed .step-bubble > fx-background {
+    background: white;
+}
+
+.step-progress-item.completed .step-bubble > fx-border {
+    border-color: #0096D6;
+}
+
+.step-progress-item.completed .step-number .text {
+    color: #0096D6;
+}
+
+/* Step progress labels */
+.step-progress-label {
+}
+
+.step-progress-label .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    color: #B8B8B8;
+    font-weight: 500;
+}
+
+.step-progress-item.active .step-progress-label .text {
+    color: #0096D6;
+    font-weight: 600;
+}
+
+.step-progress-item.completed .step-progress-label .text {
+    color: #00A19B;
+    font-weight: 500;
+}
+
+/* ============================================
+   TYPOGRAPHY & TEXT UTILITIES
+   ============================================ */
+
+.section-title-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    color: #292A33;
+}
+
+.form-label-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #292A33;
+}
+
+.package-title-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #292A33;
+}
+
+.package-price-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    color: #0096D6;
+    font-weight: 700;
+}
+
+.package-desc-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+    line-height: 1.6;
+}
+
+.room-name-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #292A33;
+}
+
+.room-desc-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+}
+
+.room-price-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    color: #0096D6;
+    font-weight: 700;
+}
+
+/* ============================================
+   LAYOUT CONTAINERS
+   ============================================ */
+
+/* Section title container with left border accent */
+.section-title-container > fx-background {
+    background: #F8F9FA !important;
+    border-radius: 8px;
+}
+
+.section-title-container > fx-border {
+    border-left: 4px solid #0096D6;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* Package/Option card containers */
+.package-card > fx-background {
+    background: white;
+    border-radius: 12px;
+}
+
+.package-card > fx-border {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+.package-card:hover > fx-border {
+    border-color: #0096D6;
+    box-shadow: 0 4px 12px rgba(0, 150, 214, 0.2);
+}
+
+.package-card.selected > fx-background {
+    background: #f0f8ff;
+}
+
+.package-card.selected > fx-border {
+    border-color: #0096D6;
+}
+
+/* Room card containers */
+.room-card > fx-background {
+    background: white;
+    border-radius: 12px;
+}
+
+.room-card > fx-border {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+.room-card:hover > fx-border {
+    border-color: #0096D6;
+    box-shadow: 0 4px 12px rgba(0, 150, 214, 0.2);
+}
+
+.room-card.selected > fx-background {
+    background: #f0f8ff;
+}
+
+.room-card.selected > fx-border {
+    border-color: #0096D6;
+}
+
+.room-card.soldout > fx-background {
+    background: #f5f5f5;
+    opacity: 0.6;
+}
+
+/* Rate option containers (radio button cards) */
+.rate-option > fx-background {
+    background: white;
+    border-radius: 8px;
+}
+
+.rate-option > fx-border {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+.rate-option:hover > fx-border {
+    border-color: #0096D6;
+}
+
+.rate-option.selected > fx-background {
+    background: #f0f8ff;
+}
+
+.rate-option.selected > fx-border {
+    border-color: #0096D6;
+}
+
+/* ============================================
+   BADGES & STATUS INDICATORS
+   ============================================ */
+
+/* Availability badge - WebFX Label */
+.availability-badge > fx-background {
+    border-radius: 20px;
+}
+
+.availability-badge .text {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.availability-badge.available > fx-background {
+    background: #d4edda;
+}
+
+.availability-badge.available .text {
+    color: #155724;
+}
+
+.availability-badge.soldout > fx-background {
+    background: #f8d7da;
+}
+
+.availability-badge.soldout .text {
+    color: #721c24;
+}
+
+.availability-badge.limited > fx-background {
+    background: #fff3cd;
+}
+
+.availability-badge.limited .text {
+    color: #856404;
+}
+
+/* ============================================
+   INFO BANNERS
+   ============================================ */
+
+.info-banner > fx-background {
+    background: #E7F3FF;
+    border-radius: 8px;
+}
+
+.info-banner > fx-border {
+    border-left: 4px solid #0096D6;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.info-banner-title-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #292A33;
+}
+
+.info-banner-desc-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+    line-height: 1.6;
+}
+
+/* ============================================
+   BOOKING SUMMARY CARDS
+   ============================================ */
+
+.booking-card > fx-background {
+    background: white;
+    border-radius: 12px;
+}
+
+.booking-card > fx-border {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
+
+.booking-card-header > fx-background {
+    background: #F4F4F4;
+    border-radius: 12px 12px 0 0;
+}
+
+.booking-card-header > fx-border {
+    border-bottom: 2px solid #E6E7E7;
+}
+
+/* ============================================
+   COST SUMMARY
+   ============================================ */
+
+.cost-summary > fx-background {
+    background: white;
+    border-radius: 12px;
+}
+
+.cost-summary > fx-border {
+    border: 2px solid #E6E7E7;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.cost-row-label-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #838788;
+}
+
+.cost-row-value-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #292A33;
+}
+
+.cost-total-label-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.cost-total-value-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #0096D6;
+}
+
+.cost-total-container > fx-border {
+    border-top: 2px solid #0096D6;
+}
+
+/* ============================================
+   SEPARATORS
+   ============================================ */
+
+.separator-line > fx-border {
+    border-bottom: 1px solid #E6E7E7;
+}
+
+/* ============================================
+   DATE PICKER BUTTONS
+   ============================================ */
+
+.date-picker-button > fx-background {
+    background: #FFFFFF;
+    border-radius: 9px;
+}
+
+.date-picker-button > fx-border {
+    border: 2px solid #292A33;
+    border-radius: 9px;
+    box-sizing: border-box;
+}
+
+.date-picker-button .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #292A33;
+}
+
+/* ============================================
+   INLINE RADIO/TOGGLE BUTTONS
+   ============================================ */
+
+.inline-radio-button > fx-background {
+    background: #FFFFFF;
+    border-radius: 8px;
+}
+
+.inline-radio-button > fx-border {
+    border: 2px solid #E6E7E7;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.inline-radio-button .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #292A33;
+}
+
+.inline-radio-button.selected > fx-background {
+    background: #F0F8FF;
+}
+
+.inline-radio-button.selected > fx-border {
+    border-color: #0096D6;
+}
+
+.inline-radio-button.selected .text {
+    font-weight: 600;
+    color: #0096D6;
+}
+
+/* ============================================
+   DIET/OPTION SELECTION BUTTONS
+   ============================================ */
+
+.diet-button > fx-background {
+    background: #FFFFFF;
+    border-radius: 9px;
+}
+
+.diet-button > fx-border {
+    border: 2px solid #E6E7E7;
+    border-radius: 9px;
+    box-sizing: border-box;
+}
+
+.diet-button .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #292A33;
+}
+
+.diet-button.selected > fx-background {
+    background: #F0F8FF;
+}
+
+.diet-button.selected > fx-border {
+    border-color: #0096D6;
+}
+
+.diet-button.selected .text {
+    font-weight: 600;
+    color: #0096D6;
+}
+
+/* ============================================
+   MEAL ADJUSTMENT BUTTONS
+   ============================================ */
+
+.meal-adjustment-button > fx-background {
+    background: #FFFFFF;
+    border-radius: 9px;
+}
+
+.meal-adjustment-button > fx-border {
+    border: 2px solid #E6E7E7;
+    border-radius: 9px;
+    box-sizing: border-box;
+}
+
+.meal-adjustment-label .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #292A33;
+}
+
+.meal-adjustment-price-positive .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0096D6;
+}
+
+.meal-adjustment-price-negative .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #28a745;
+}
+
+/* ============================================
+   PARKING BUTTONS
+   ============================================ */
+
+.parking-button > fx-background {
+    background: #FFFFFF;
+    border-radius: 9px;
+}
+
+.parking-button > fx-border {
+    border: 2px solid #E6E7E7;
+    border-radius: 9px;
+    box-sizing: border-box;
+}
+
+.parking-button .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #292A33;
+}
+
+.parking-button.selected > fx-background {
+    background: #F0F8FF;
+}
+
+.parking-button.selected > fx-border {
+    border-color: #0096D6;
+}
+
+.parking-button.selected .text {
+    font-weight: 600;
+    color: #0096D6;
+}
+
+/* ============================================
+   NOTE/DESCRIPTION TEXT
+   ============================================ */
+
+.note-text .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+    line-height: 1.6;
+}
+
+.note-text-italic .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #838788;
+    line-height: 1.6;
+}
+
+.section-label-text .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #292A33;
+}
+
+.section-sublabel-text .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+}
+
+.event-title-text .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #292A33;
+}
+
+.event-dates-text .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+}
+
+.event-price-label .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0096D6;
+}
+
+/* ============================================
+   BOOKING CARD (for confirmation section)
+   ============================================ */
+
+.booking-card-attendee-name .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #292A33;
+}
+
+.booking-card-attendee-email .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+}
+
+.booking-card-number .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0096D6;
+}
+
+.booking-card-event-info > fx-background {
+    background: #F8F9FA;
+    border-radius: 8px;
+}
+
+.booking-card-event-title .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #292A33;
+}
+
+.booking-card-event-dates .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #838788;
+}
+
+.booking-row-label .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #838788;
+}
+
+.booking-row-value .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0096D6;
+}
+
+.booking-row-separator > fx-border {
+    border-top: 2px solid #E6E7E7;
+}
+
+.booking-total-label .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #292A33;
+}
+
+.booking-total-value .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0096D6;
+}
+
+.booking-total-separator > fx-border {
+    border-top: 2px solid #E6E7E7;
+}
+
+.payment-summary-title .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #292A33;
+}
+
+.summary-row-separator > fx-border {
+    border-bottom: 1px solid #F4F4F4;
+}
+
+.payment-summary > fx-background {
+    background: white;
+    border-radius: 12px;
+}
+
+.payment-summary > fx-border {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
+
+.payment-total-label .text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #000000;
+}

@@ -1,0 +1,580 @@
+/*
+ * JavaFX CSS for MKMC Booking Forms
+ * Desktop/JavaFX-specific styling
+ */
+
+/* ============================================
+   STEP PROGRESS NAVIGATION
+   ============================================ */
+
+/* Step bubble - the circular number indicators */
+.step-bubble {
+    -fx-background-color: white;
+    -fx-border-color: #D9D9D9;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+}
+
+.step-number {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #B8B8B8;
+}
+
+/* Active step bubble */
+.step-progress-item.active .step-bubble {
+    -fx-background-color: #0096D6;
+    -fx-border-color: #0096D6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 150, 214, 0.3), 12, 0, 0, 4);
+}
+
+.step-progress-item.active .step-number {
+    -fx-text-fill: white;
+}
+
+/* Completed step bubble */
+.step-progress-item.completed .step-bubble {
+    -fx-background-color: white;
+    -fx-border-color: #0096D6;
+}
+
+.step-progress-item.completed .step-number {
+    -fx-text-fill: #0096D6;
+}
+
+/* Step progress labels */
+.step-progress-label {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 11px;
+    -fx-text-fill: #B8B8B8;
+    -fx-font-weight: 500;
+}
+
+.step-progress-item.active .step-progress-label {
+    -fx-text-fill: #0096D6;
+    -fx-font-weight: 600;
+}
+
+.step-progress-item.completed .step-progress-label {
+    -fx-text-fill: #00A19B;
+    -fx-font-weight: 500;
+}
+
+/* ============================================
+   TYPOGRAPHY & TEXT UTILITIES
+   ============================================ */
+
+.section-title-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 600;
+    -fx-font-size: 18px;
+    -fx-text-fill: #292A33;
+}
+
+.form-label-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 600;
+    -fx-font-size: 16px;
+    -fx-text-fill: #292A33;
+}
+
+.package-title-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #292A33;
+}
+
+.package-price-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 24px;
+    -fx-text-fill: #0096D6;
+    -fx-font-weight: 700;
+}
+
+.package-desc-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.room-name-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #292A33;
+}
+
+.room-desc-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.room-price-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 28px;
+    -fx-text-fill: #0096D6;
+    -fx-font-weight: 700;
+}
+
+/* ============================================
+   LAYOUT CONTAINERS
+   ============================================ */
+
+.section-title-container {
+    -fx-background-color: #F8F9FA;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent transparent transparent #0096D6;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-radius: 8px;
+}
+
+.package-card {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
+.package-card:hover {
+    -fx-border-color: #0096D6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 150, 214, 0.2), 12, 0, 0, 4);
+}
+
+.package-card.selected {
+    -fx-background-color: #f0f8ff;
+    -fx-border-color: #0096D6;
+}
+
+.room-card {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
+.room-card:hover {
+    -fx-border-color: #0096D6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 150, 214, 0.2), 12, 0, 0, 4);
+}
+
+.room-card.selected {
+    -fx-background-color: #f0f8ff;
+    -fx-border-color: #0096D6;
+}
+
+.room-card.soldout {
+    -fx-background-color: #f5f5f5;
+    -fx-opacity: 0.6;
+}
+
+.rate-option {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.rate-option:hover {
+    -fx-border-color: #0096D6;
+}
+
+.rate-option.selected {
+    -fx-background-color: #f0f8ff;
+    -fx-border-color: #0096D6;
+}
+
+/* ============================================
+   BADGES & STATUS INDICATORS
+   ============================================ */
+
+.availability-badge {
+    -fx-background-radius: 20px;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.availability-badge.available {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+}
+
+.availability-badge.soldout {
+    -fx-background-color: #f8d7da;
+    -fx-text-fill: #721c24;
+}
+
+.availability-badge.limited {
+    -fx-background-color: #fff3cd;
+    -fx-text-fill: #856404;
+}
+
+/* ============================================
+   INFO BANNERS
+   ============================================ */
+
+.info-banner {
+    -fx-background-color: #E7F3FF;
+    -fx-border-color: transparent transparent transparent #0096D6;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.info-banner-title-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 600;
+    -fx-font-size: 15px;
+    -fx-text-fill: #292A33;
+}
+
+.info-banner-desc-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+/* ============================================
+   BOOKING SUMMARY CARDS
+   ============================================ */
+
+.booking-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+.booking-card-header {
+    -fx-background-color: #F4F4F4;
+    -fx-border-color: transparent transparent #E6E7E7 transparent;
+    -fx-border-width: 0 0 2px 0;
+}
+
+/* ============================================
+   COST SUMMARY
+   ============================================ */
+
+.cost-summary {
+    -fx-background-color: white;
+    -fx-border-color: #E6E7E7;
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
+.cost-row-label-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #838788;
+}
+
+.cost-row-value-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #292A33;
+}
+
+.cost-total-label-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #000000;
+}
+
+.cost-total-value-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0096D6;
+}
+
+.cost-total-container {
+    -fx-border-color: #0096D6 transparent transparent transparent;
+    -fx-border-width: 2px 0 0 0;
+}
+
+/* ============================================
+   DATE PICKER BUTTONS
+   ============================================ */
+
+.date-picker-button {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #292A33;
+    -fx-border-width: 2px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #292A33;
+}
+
+/* ============================================
+   INLINE RADIO/TOGGLE BUTTONS
+   ============================================ */
+
+.inline-radio-button {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E6E7E7;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #292A33;
+}
+
+.inline-radio-button.selected {
+    -fx-background-color: #F0F8FF;
+    -fx-border-color: #0096D6;
+    -fx-font-weight: 600;
+    -fx-text-fill: #0096D6;
+}
+
+/* ============================================
+   DIET/OPTION SELECTION BUTTONS
+   ============================================ */
+
+.diet-button {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E6E7E7;
+    -fx-border-width: 2px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #292A33;
+    -fx-alignment: center-left;
+}
+
+.diet-button.selected {
+    -fx-background-color: #F0F8FF;
+    -fx-border-color: #0096D6;
+    -fx-font-weight: 600;
+    -fx-text-fill: #0096D6;
+}
+
+/* ============================================
+   MEAL ADJUSTMENT BUTTONS
+   ============================================ */
+
+.meal-adjustment-button {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E6E7E7;
+    -fx-border-width: 2px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+}
+
+.meal-adjustment-label {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #292A33;
+}
+
+.meal-adjustment-price-positive {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #0096D6;
+}
+
+.meal-adjustment-price-negative {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #28a745;
+}
+
+/* ============================================
+   PARKING BUTTONS
+   ============================================ */
+
+.parking-button {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E6E7E7;
+    -fx-border-width: 2px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #292A33;
+    -fx-alignment: center-left;
+}
+
+.parking-button.selected {
+    -fx-background-color: #F0F8FF;
+    -fx-border-color: #0096D6;
+    -fx-font-weight: 600;
+    -fx-text-fill: #0096D6;
+}
+
+/* ============================================
+   NOTE/DESCRIPTION TEXT
+   ============================================ */
+
+.note-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.note-text-italic {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+    -fx-text-fill: #838788;
+}
+
+.section-label-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #292A33;
+}
+
+.section-sublabel-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.event-title-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #292A33;
+}
+
+.event-dates-text {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.event-price-label {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0096D6;
+}
+
+/* ============================================
+   BOOKING CARD (for confirmation section)
+   ============================================ */
+
+.booking-card-attendee-name {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #292A33;
+}
+
+.booking-card-attendee-email {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.booking-card-number {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #0096D6;
+}
+
+.booking-card-event-info {
+    -fx-background-color: #F8F9FA;
+    -fx-background-radius: 8px;
+}
+
+.booking-card-event-title {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #292A33;
+}
+
+.booking-card-event-dates {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.booking-row-label {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #838788;
+}
+
+.booking-row-value {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0096D6;
+}
+
+.booking-row-separator {
+    -fx-border-color: #E6E7E7 transparent transparent transparent;
+    -fx-border-width: 2px 0 0 0;
+}
+
+.booking-total-label {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #292A33;
+}
+
+.booking-total-value {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0096D6;
+}
+
+.booking-total-separator {
+    -fx-border-color: #E6E7E7 transparent transparent transparent;
+    -fx-border-width: 2px 0 0 0;
+}
+
+.payment-summary {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+.payment-summary-title {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #292A33;
+}
+
+.summary-row-separator {
+    -fx-border-color: transparent transparent #F4F4F4 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.payment-total-label {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #000000;
+}
+
+/* ============================================
+   SEPARATORS
+   ============================================ */
+
+.separator-line {
+    -fx-border-color: transparent transparent #E6E7E7 transparent;
+    -fx-border-width: 0 0 1px 0;
+}

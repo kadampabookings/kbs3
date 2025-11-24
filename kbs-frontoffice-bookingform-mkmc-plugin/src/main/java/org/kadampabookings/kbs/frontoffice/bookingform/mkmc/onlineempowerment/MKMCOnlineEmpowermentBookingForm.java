@@ -2,8 +2,7 @@ package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment;
 
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
-import one.modality.booking.frontoffice.bookingpage.BookingFormPage;
-import one.modality.booking.frontoffice.bookingpage.MultiPageBookingForm;
+import one.modality.booking.frontoffice.bookingpage.*;
 import one.modality.booking.frontoffice.bookingpage.pages.audiorecording.AudioRecordingPage;
 import one.modality.booking.frontoffice.bookingpage.pages.closed.BookingsClosedPage;
 import one.modality.booking.frontoffice.bookingpage.pages.payment.PaymentPage;
@@ -13,6 +12,8 @@ import one.modality.booking.frontoffice.bookingpage.pages.summary.SummaryPage;
 import one.modality.booking.frontoffice.bookingpage.pages.teaching.OnlineTeachingPage;
 import one.modality.booking.frontoffice.bookingpage.pages.terms.TermsAndConditionsPage;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
+import one.modality.booking.frontoffice.bookingpage.pages.teaching.OnlineTeachingSection;
+import one.modality.base.shared.knownitems.KnownItemI18nKeys;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 /**
@@ -21,18 +22,20 @@ import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 final class MKMCOnlineEmpowermentBookingForm extends MultiPageBookingForm {
 
     private final BookingFormPage[] pages = {
-        new BookingsClosedPage(),
-        new PrerequisitePage(MKMCI18nKeys.OnlineEmpowermentUKMessage, MKMCI18nKeys.OnlineEmpowermentUKConfirm),
-        new OnlineTeachingPage(),
-        new AudioRecordingPage(),
-        new PersonalDetailsPage(this),
-        new SummaryPage(),
-        new TermsAndConditionsPage(this),
-        new PaymentPage(this)
+            new BookingsClosedPage(),
+            new PrerequisitePage(MKMCI18nKeys.OnlineEmpowermentUKMessage, MKMCI18nKeys.OnlineEmpowermentUKConfirm),
+            new CompositeBookingFormPage(KnownItemI18nKeys.TeachingsOnline, new OnlineTeachingSection()),
+            new AudioRecordingPage(),
+            new PersonalDetailsPage(this),
+            new SummaryPage(),
+            new TermsAndConditionsPage(this),
+            new PaymentPage(this)
     };
 
     public MKMCOnlineEmpowermentBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
         super(activity, settings);
+        setHeader(new StepProgressHeader());
+        setNavigation(new ButtonNavigation());
     }
 
     @Override
@@ -41,7 +44,7 @@ final class MKMCOnlineEmpowermentBookingForm extends MultiPageBookingForm {
     }
 
     @Override
-    protected BookingFormPage[] getPages() {
+    public BookingFormPage[] getPages() {
         return pages;
     }
 
