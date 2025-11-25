@@ -1,0 +1,20 @@
+{
+  "id": "org.kadampabookings.kbs.frontoffice",
+  "name": "Kadampa Bookings",
+  "short_name": "KBS3",
+  "description": "The KBS3 Front-Office",
+  "categories": ["frontoffice"],
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "white",
+  "theme_color": "white",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./frontoffice-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}
