@@ -1,0 +1,20 @@
+{
+  "id": "org.kadampabookings.kbs.backoffice",
+  "name": "KBS3 Back-Office",
+  "short_name": "KBS3",
+  "description": "The Back-Office of KBS3",
+  "categories": ["backoffice"],
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "white",
+  "theme_color": "white",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "./backoffice-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}
