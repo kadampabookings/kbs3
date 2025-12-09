@@ -39,6 +39,9 @@
         <plugin-module>modality-base-frontoffice-max-plugin</plugin-module>
         <!-- <plugin-module>modality-base-client-activity-console-plugin</plugin-module> -->
 
+        <!-- Ecommerce activities -->
+        <plugin-module>modality-ecommerce-frontoffice-max-plugin</plugin-module>
+
         <!-- CRM activities -->
         <plugin-module>modality-crm-frontoffice-max-plugin</plugin-module>
 
