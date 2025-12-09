@@ -125,7 +125,7 @@ public final class BookView {
         if (freeUrl.startsWith("https://tharpa.com")) // issue with Stripe which doesn't allow embed in iFrame
             BrowserUtil.openExternalBrowser(freeUrl);
         else
-            BrowserUtil.openInternalBrowser(freeUrl);
+            BrowserUtil.openInternalBrowser(freeUrl, "/books/freeDownload");
     }
 
     private static void updateLabeled(Labeled labeled, String newContent) {

@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import one.modality.base.client.activity.ModalityButtonFactoryMixin;
 import one.modality.base.frontoffice.mainframe.fx.FXCollapseMenu;
-import one.modality.base.frontoffice.utility.browser.BrowserUtil;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import one.modality.base.shared.entities.Book;
 import one.modality.base.shared.entities.Video;
@@ -77,7 +76,6 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
 
     @Override
     public void onResume() {
-        BrowserUtil.setUiRouter(getUiRouter());
         FullscreenButton.setFullscreenButtonEnabled(false);
         super.onResume();
     }
