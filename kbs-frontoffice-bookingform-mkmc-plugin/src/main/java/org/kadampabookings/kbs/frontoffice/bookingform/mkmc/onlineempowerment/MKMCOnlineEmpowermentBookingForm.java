@@ -66,7 +66,7 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
         // Build the form - all generic logic is handled by StandardBookingForm
         // The color scheme is applied as a CSS theme class to the root container
         this.form = new StandardBookingFormBuilder(activity, settings)
-            .withColorScheme(BookingFormColorScheme.WISDOM_BLUE)  // Applied as CSS theme class
+            .withColorScheme(BookingFormColorScheme.COMPASSION_ROSE)  // Applied as CSS theme class
             .addCustomStep(optionsPage)  // Step 1: Custom Options page
             .withCallbacks(this)         // For form-specific summary updates
             .build();                    // Steps 2-7: Uses default sections automatically

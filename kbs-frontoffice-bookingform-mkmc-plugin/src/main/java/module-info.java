@@ -15,6 +15,7 @@ module kbs.frontoffice.bookingform.mkmc.plugin {
     requires modality.ecommerce.document.service;
     requires modality.event.frontoffice.activity.book;
     requires webfx.extras.i18n.controls;
+    requires webfx.extras.webtext;
     requires webfx.platform.async;
     requires webfx.stack.orm.entity;
 

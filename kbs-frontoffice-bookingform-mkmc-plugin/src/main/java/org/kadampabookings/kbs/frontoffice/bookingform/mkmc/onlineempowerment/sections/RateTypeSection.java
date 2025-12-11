@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Simple pricing section showing programme info and standard rate in a clean card.
@@ -178,7 +179,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
         // Calculate total price
         List<Rate> dailyRates = policyAggregate.getDailyRates().stream()
                 .filter(rate -> Items.isOfFamily(rate.getItem(), KnownItemFamily.TEACHING))
-                .toList();
+                .collect(Collectors.toList());
         List<ScheduledItem> teachingItems = policyAggregate.filterTeachingScheduledItems();
 
         totalPrice = calculateTotalPrice(period, teachingItems, dailyRates);
@@ -217,7 +218,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
                     LocalDate itemDate = item.getDate();
                     return !itemDate.isBefore(periodStartDate) && !itemDate.isAfter(periodEndDate);
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         // Book items into WorkingBooking (addOnly=false to replace any existing selections)
         if (!periodTeachingItems.isEmpty()) {
@@ -244,7 +245,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
                     LocalDate itemDate = item.getDate();
                     return !itemDate.isBefore(periodStartDate) && !itemDate.isAfter(periodEndDate);
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         for (ScheduledItem teachingItem : periodTeachingItems) {
             Rate rate = findRateForScheduledItem(teachingItem, dailyRates);
@@ -301,7 +302,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
 
     private String formatPrice(int priceInCents) {
         double priceValue = priceInCents / 100.0;
-        return String.format("£%.0f", priceValue);
+        return "£" + Math.round(priceValue);
     }
 
     // === HasRateTypeSection interface ===
@@ -367,6 +368,6 @@ public class RateTypeSection extends DefaultRateTypeSection {
                     LocalDate itemDate = item.getDate();
                     return !itemDate.isBefore(periodStartDate) && !itemDate.isAfter(periodEndDate);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 }

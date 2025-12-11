@@ -1,6 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.sections;
 
 import dev.webfx.extras.i18n.controls.I18nControls;
+import dev.webfx.extras.webtext.HtmlText;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Insets;
@@ -9,8 +10,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
@@ -62,7 +61,7 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
     // Dynamic date range for the teaching sessions
     private LocalDate startDate;
     private LocalDate endDate;
-    private Text dateRangeText; // Reference to update when dates change
+    private HtmlText dateBulletHtmlText; // Reference to update when dates change
 
     public PrerequisiteSection() {
         buildUI();
@@ -102,36 +101,32 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
         titleRow.getChildren().addAll(warningIcon, titleLabel);
 
         // Bullet point 1: "This event is livestreamed only - there will be no video recordings..."
-        TextFlow bullet1 = createBulletPoint(
+        HtmlText bullet1 = createBulletPoint(
                 "This event is ",
                 "livestreamed only",
                 " - there will be no video recordings available to watch after the event"
         );
 
         // Bullet point 2: "This booking is for the online teaching sessions only from..." (dynamic dates)
-        TextFlow bullet2 = createDateBulletPoint();
+        HtmlText bullet2 = createDateBulletPoint();
 
         box.getChildren().addAll(titleRow, bullet1, bullet2);
         return box;
     }
 
-    private TextFlow createDateBulletPoint() {
-        Text bullet = new Text("\u2022 ");
-        bullet.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
+    private HtmlText createDateBulletPoint() {
+        // Store reference to HtmlText so we can update it dynamically when dates change
+        dateBulletHtmlText = new HtmlText();
+        updateDateBulletText();
+        dateBulletHtmlText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
+        return dateBulletHtmlText;
+    }
 
-        Text prefixText = new Text("This booking is for the ");
-        prefixText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
-
-        Text bold = new Text("online teaching sessions only");
-        bold.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-warning");
-
-        // Store reference to date range text so we can update it dynamically
-        dateRangeText = new Text(buildDateRangeString());
-        dateRangeText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
-
-        TextFlow flow = new TextFlow(bullet, prefixText, bold, dateRangeText);
-        flow.setLineSpacing(2);
-        return flow;
+    private void updateDateBulletText() {
+        if (dateBulletHtmlText != null) {
+            String html = "\u2022 This booking is for the <b>online teaching sessions only</b>" + buildDateRangeString();
+            dateBulletHtmlText.setText(html);
+        }
     }
 
     private String buildDateRangeString() {
@@ -160,22 +155,11 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
         }
     }
 
-    private TextFlow createBulletPoint(String prefix, String boldText, String suffix) {
-        Text bullet = new Text("\u2022 ");
-        bullet.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
-
-        Text prefixText = new Text(prefix);
-        prefixText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
-
-        Text bold = new Text(boldText);
-        bold.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-warning");
-
-        Text suffixText = new Text(suffix);
-        suffixText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
-
-        TextFlow flow = new TextFlow(bullet, prefixText, bold, suffixText);
-        flow.setLineSpacing(2);
-        return flow;
+    private HtmlText createBulletPoint(String prefix, String boldText, String suffix) {
+        HtmlText htmlText = new HtmlText();
+        htmlText.setText("\u2022 " + prefix + "<b>" + boldText + "</b>" + suffix);
+        htmlText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
+        return htmlText;
     }
 
     private VBox createConfirmationBox() {
@@ -184,19 +168,10 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
         box.getStyleClass().add("bookingpage-card");
         box.setMinWidth(0); // Allow shrinking for responsive design
 
-        // National event notice with bold text
-        TextFlow noticeText = new TextFlow();
-        Text notice1 = new Text("Since this is a national event, ");
-        notice1.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-secondary");
-
-        Text noticeBold = new Text("you must be a resident of the United Kingdom");
-        noticeBold.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-secondary");
-
-        Text notice2 = new Text(" to attend online.");
-        notice2.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-secondary");
-
-        noticeText.getChildren().addAll(notice1, noticeBold, notice2);
-        noticeText.setLineSpacing(2);
+        // National event notice with bold text using HtmlText
+        HtmlText noticeText = new HtmlText();
+        noticeText.setText("Since this is a national event, <b>you must be a resident of the United Kingdom</b> to attend online.");
+        noticeText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-secondary");
 
         // Checkbox row
         HBox checkboxRow = new HBox(12);
@@ -205,18 +180,10 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
         // Use CSS-styled checkbox indicator from BookingPageUIBuilder
         StackPane checkboxIndicator = BookingPageUIBuilder.createCheckboxIndicator(confirmedProperty);
 
-        // Confirmation text with bold part
-        TextFlow confirmText = new TextFlow();
-        Text text1 = new Text("I understand I am booking to join a live-streamed event and confirm I reside in the ");
-        text1.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-dark");
-
-        Text boldText = new Text("United Kingdom");
-        boldText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-dark");
-
-        Text text2 = new Text(".");
-        text2.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-dark");
-
-        confirmText.getChildren().addAll(text1, boldText, text2);
+        // Confirmation text with bold part using HtmlText
+        HtmlText confirmText = new HtmlText();
+        confirmText.setText("I understand I am booking to join a live-streamed event and confirm I reside in the <b>United Kingdom</b>.");
+        confirmText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-dark");
 
         checkboxRow.getChildren().addAll(checkboxIndicator, confirmText);
         HBox.setHgrow(confirmText, Priority.ALWAYS);
@@ -311,8 +278,6 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
     public void setEventDates(LocalDate start, LocalDate end) {
         this.startDate = start;
         this.endDate = end;
-        if (dateRangeText != null) {
-            dateRangeText.setText(buildDateRangeString());
-        }
+        updateDateBulletText();
     }
 }
