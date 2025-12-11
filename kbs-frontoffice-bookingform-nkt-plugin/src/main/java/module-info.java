@@ -1,8 +1,5 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
-import org.kadampabookings.kbs.frontoffice.bookingform.nkt.onlinefestival.NKTOnlineFestivalBookingFormProvider;
-import org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPBookingFormProvider;
-
 module kbs.frontoffice.bookingform.nkt.plugin {
 
     // Direct dependencies modules
@@ -22,6 +19,6 @@ module kbs.frontoffice.bookingform.nkt.plugin {
     exports org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp;
 
     // Provided services
-    provides one.modality.booking.frontoffice.bookingform.BookingFormProvider with NKTOnlineFestivalBookingFormProvider, STTPBookingFormProvider;
+    provides one.modality.booking.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingform.nkt.onlinefestival.NKTOnlineFestivalBookingFormProvider, org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPBookingFormProvider;
 
 }
