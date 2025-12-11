@@ -1,18 +1,14 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.sections;
 
 import dev.webfx.extras.i18n.controls.I18nControls;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import one.modality.base.shared.entities.Event;
@@ -20,9 +16,10 @@ import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
 import one.modality.booking.frontoffice.bookingpage.ResettableSection;
+import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
+import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
-import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.inpersonretreat.components.StyledSectionHeader;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,11 +29,24 @@ import java.util.Locale;
  * Section for displaying and confirming prerequisites for online empowerment.
  * User must confirm they meet the prerequisites to proceed.
  *
- * Layout matches the design mockup:
- * 1. Section header "Prerequisites"
- * 2. Yellow "Important Information" box with bullet points
- * 3. White description box explaining the event
- * 4. Checkbox confirmation row
+ * <p>Uses CSS-based theming. Styling is handled via CSS classes that inherit
+ * theme colors from CSS variables set on the parent container.</p>
+ *
+ * <p>Layout matches the design mockup:</p>
+ * <ol>
+ *   <li>Section header "Prerequisites"</li>
+ *   <li>Yellow "Important Information" box with bullet points</li>
+ *   <li>White description box explaining the event</li>
+ *   <li>Checkbox confirmation row</li>
+ * </ol>
+ *
+ * <p>CSS classes used:</p>
+ * <ul>
+ *   <li>{@code .booking-form-prerequisite-section} - section container</li>
+ *   <li>{@code .bookingpage-warning-box} - important information box</li>
+ *   <li>{@code .bookingpage-card} - confirmation box</li>
+ *   <li>{@code .selected} - added when checkbox is selected</li>
+ * </ul>
  *
  * @author Bruno Salmon
  */
@@ -44,10 +54,9 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
 
     private final VBox container = new VBox(16);
     private final SimpleBooleanProperty validProperty = new SimpleBooleanProperty(false);
-    private final ObjectProperty<BookingFormColorScheme> colorScheme = new SimpleObjectProperty<>(BookingFormColorScheme.DEFAULT);
+    private final SimpleBooleanProperty confirmedProperty = new SimpleBooleanProperty(false);
 
     private StyledSectionHeader header;
-    private CheckBox confirmCheckBox;
     private VBox confirmBox;
 
     // Dynamic date range for the teaching sessions
@@ -60,14 +69,13 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
     }
 
     private void buildUI() {
-        // Section header - "Prerequisites" with check icon
+        // Section header - "Prerequisites" with check icon (styling via CSS)
         header = new StyledSectionHeader(
                 MKMCI18nKeys.Prerequisites,
                 StyledSectionHeader.ICON_CHECK_CIRCLE
         );
-        header.colorSchemeProperty().bind(colorScheme);
 
-        // === Yellow "Important Information" box ===
+        // === Yellow "Important Information" box - styled via CSS ===
         VBox importantInfoBox = createImportantInfoBox();
 
         // === Checkbox confirmation box (includes national event notice) ===
@@ -75,24 +83,22 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
 
         container.getChildren().addAll(header, importantInfoBox, confirmBox);
         container.getStyleClass().add("booking-form-prerequisite-section");
+        container.setMinWidth(0); // Allow shrinking for responsive design
     }
 
     private VBox createImportantInfoBox() {
         VBox box = new VBox(12);
         box.setPadding(new Insets(20));
-        box.setBackground(new Background(new BackgroundFill(
-                Color.web("#FFF9E6"), new CornerRadii(8), null)));
-        box.setBorder(new Border(new BorderStroke(
-                Color.web("#FFE58F"), BorderStrokeStyle.SOLID, new CornerRadii(8), new BorderWidths(1))));
+        box.getStyleClass().add("bookingpage-warning-box");
+        box.setMinWidth(0); // Allow shrinking for responsive design
 
         // Warning icon and "Important Information" title
         HBox titleRow = new HBox(10);
         titleRow.setAlignment(Pos.CENTER_LEFT);
         Label warningIcon = new Label("\u26A0");
-        warningIcon.setStyle("-fx-font-size: 20px;");
+        warningIcon.getStyleClass().add("bookingpage-text-lg");
         Label titleLabel = I18nControls.newLabel(MKMCI18nKeys.ImportantInformation);
-        titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: 600;");
-        titleLabel.setTextFill(Color.web("#856404"));
+        titleLabel.getStyleClass().addAll("bookingpage-text-lg", "bookingpage-font-semibold", "bookingpage-text-warning");
         titleRow.getChildren().addAll(warningIcon, titleLabel);
 
         // Bullet point 1: "This event is livestreamed only - there will be no video recordings..."
@@ -111,21 +117,17 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
 
     private TextFlow createDateBulletPoint() {
         Text bullet = new Text("\u2022 ");
-        bullet.setStyle("-fx-font-size: 14px;");
-        bullet.setFill(Color.web("#856404"));
+        bullet.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
 
         Text prefixText = new Text("This booking is for the ");
-        prefixText.setStyle("-fx-font-size: 14px;");
-        prefixText.setFill(Color.web("#856404"));
+        prefixText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
 
         Text bold = new Text("online teaching sessions only");
-        bold.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-        bold.setFill(Color.web("#856404"));
+        bold.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-warning");
 
         // Store reference to date range text so we can update it dynamically
         dateRangeText = new Text(buildDateRangeString());
-        dateRangeText.setStyle("-fx-font-size: 14px;");
-        dateRangeText.setFill(Color.web("#856404"));
+        dateRangeText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
 
         TextFlow flow = new TextFlow(bullet, prefixText, bold, dateRangeText);
         flow.setLineSpacing(2);
@@ -160,20 +162,16 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
 
     private TextFlow createBulletPoint(String prefix, String boldText, String suffix) {
         Text bullet = new Text("\u2022 ");
-        bullet.setStyle("-fx-font-size: 14px;");
-        bullet.setFill(Color.web("#856404"));
+        bullet.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
 
         Text prefixText = new Text(prefix);
-        prefixText.setStyle("-fx-font-size: 14px;");
-        prefixText.setFill(Color.web("#856404"));
+        prefixText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
 
         Text bold = new Text(boldText);
-        bold.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-        bold.setFill(Color.web("#856404"));
+        bold.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-warning");
 
         Text suffixText = new Text(suffix);
-        suffixText.setStyle("-fx-font-size: 14px;");
-        suffixText.setFill(Color.web("#856404"));
+        suffixText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-warning");
 
         TextFlow flow = new TextFlow(bullet, prefixText, bold, suffixText);
         flow.setLineSpacing(2);
@@ -183,24 +181,19 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
     private VBox createConfirmationBox() {
         VBox box = new VBox(16);
         box.setPadding(new Insets(20));
-        box.setBackground(new Background(new BackgroundFill(
-                Color.WHITE, new CornerRadii(8), null)));
-        box.setBorder(new Border(new BorderStroke(
-                Color.web("#E6E7E7"), BorderStrokeStyle.SOLID, new CornerRadii(8), new BorderWidths(1))));
+        box.getStyleClass().add("bookingpage-card");
+        box.setMinWidth(0); // Allow shrinking for responsive design
 
         // National event notice with bold text
         TextFlow noticeText = new TextFlow();
         Text notice1 = new Text("Since this is a national event, ");
-        notice1.setStyle("-fx-font-size: 14px;");
-        notice1.setFill(Color.web("#495057"));
+        notice1.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-secondary");
 
         Text noticeBold = new Text("you must be a resident of the United Kingdom");
-        noticeBold.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-        noticeBold.setFill(Color.web("#495057"));
+        noticeBold.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-secondary");
 
         Text notice2 = new Text(" to attend online.");
-        notice2.setStyle("-fx-font-size: 14px;");
-        notice2.setFill(Color.web("#495057"));
+        notice2.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-secondary");
 
         noticeText.getChildren().addAll(notice1, noticeBold, notice2);
         noticeText.setLineSpacing(2);
@@ -209,26 +202,23 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
         HBox checkboxRow = new HBox(12);
         checkboxRow.setAlignment(Pos.CENTER_LEFT);
 
-        confirmCheckBox = new CheckBox();
-        confirmCheckBox.setStyle("-fx-cursor: hand;");
+        // Use CSS-styled checkbox indicator from BookingPageUIBuilder
+        StackPane checkboxIndicator = BookingPageUIBuilder.createCheckboxIndicator(confirmedProperty);
 
         // Confirmation text with bold part
         TextFlow confirmText = new TextFlow();
         Text text1 = new Text("I understand I am booking to join a live-streamed event and confirm I reside in the ");
-        text1.setStyle("-fx-font-size: 14px;");
-        text1.setFill(Color.web("#212529"));
+        text1.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-dark");
 
         Text boldText = new Text("United Kingdom");
-        boldText.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-        boldText.setFill(Color.web("#212529"));
+        boldText.getStyleClass().addAll("bookingpage-text-base", "bookingpage-font-bold", "bookingpage-text-dark");
 
         Text text2 = new Text(".");
-        text2.setStyle("-fx-font-size: 14px;");
-        text2.setFill(Color.web("#212529"));
+        text2.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-dark");
 
         confirmText.getChildren().addAll(text1, boldText, text2);
 
-        checkboxRow.getChildren().addAll(confirmCheckBox, confirmText);
+        checkboxRow.getChildren().addAll(checkboxIndicator, confirmText);
         HBox.setHgrow(confirmText, Priority.ALWAYS);
 
         box.getChildren().addAll(noticeText, checkboxRow);
@@ -236,33 +226,22 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
         // Make entire box clickable to toggle checkbox
         box.setCursor(Cursor.HAND);
         box.setOnMouseClicked(e -> {
-            confirmCheckBox.setSelected(!confirmCheckBox.isSelected());
+            confirmedProperty.set(!confirmedProperty.get());
         });
 
         // Bind validity to checkbox
-        validProperty.bind(confirmCheckBox.selectedProperty());
+        validProperty.bind(confirmedProperty);
 
-        // Update styling when confirmed
-        confirmCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            updateConfirmBoxStyle(newVal);
+        // Update CSS class when confirmed (toggle "selected" class)
+        confirmedProperty.addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                box.getStyleClass().add("selected");
+            } else {
+                box.getStyleClass().remove("selected");
+            }
         });
 
         return box;
-    }
-
-    private void updateConfirmBoxStyle(boolean selected) {
-        BookingFormColorScheme scheme = colorScheme.get();
-        if (selected) {
-            confirmBox.setBackground(new Background(new BackgroundFill(
-                    scheme.getSelectedBg(), new CornerRadii(8), null)));
-            confirmBox.setBorder(new Border(new BorderStroke(
-                    scheme.getPrimary(), BorderStrokeStyle.SOLID, new CornerRadii(8), new BorderWidths(2))));
-        } else {
-            confirmBox.setBackground(new Background(new BackgroundFill(
-                    Color.WHITE, new CornerRadii(8), null)));
-            confirmBox.setBorder(new Border(new BorderStroke(
-                    Color.web("#E6E7E7"), BorderStrokeStyle.SOLID, new CornerRadii(8), new BorderWidths(1))));
-        }
     }
 
     // === BookingFormSection interface ===
@@ -299,20 +278,22 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
 
     // === Additional accessors ===
 
-    public ObjectProperty<BookingFormColorScheme> colorSchemeProperty() {
-        return colorScheme;
-    }
-
+    /**
+     * @deprecated Color scheme is now handled via CSS classes on parent container.
+     * Use theme classes like "theme-wisdom-blue" on a parent element instead.
+     * This method is kept for API compatibility but has no effect.
+     */
+    @Deprecated
     public void setColorScheme(BookingFormColorScheme scheme) {
-        this.colorScheme.set(scheme);
+        // No-op: styling is handled via CSS classes
     }
 
     public boolean isConfirmed() {
-        return confirmCheckBox.isSelected();
+        return confirmedProperty.get();
     }
 
     public void setConfirmed(boolean confirmed) {
-        confirmCheckBox.setSelected(confirmed);
+        confirmedProperty.set(confirmed);
     }
 
     /**

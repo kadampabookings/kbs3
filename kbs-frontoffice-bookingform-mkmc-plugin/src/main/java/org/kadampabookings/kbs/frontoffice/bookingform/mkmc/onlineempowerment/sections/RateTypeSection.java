@@ -1,13 +1,12 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.sections;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.shared.entities.BookablePeriod;
 import one.modality.base.shared.entities.Rate;
@@ -15,10 +14,12 @@ import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.base.shared.entities.util.Items;
 import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
+import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultRateTypeSection;
+import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
-import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.inpersonretreat.components.StyledSectionHeader;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
@@ -31,32 +32,48 @@ import java.util.function.Consumer;
  * Simple pricing section showing programme info and standard rate in a clean card.
  * Displays: Rate type badge, Programme title, Date range, Price.
  *
+ * <p>Uses CSS-based theming. Styling is handled via CSS classes that inherit
+ * theme colors from CSS variables set on the parent container.</p>
+ *
+ * <p>CSS classes used:</p>
+ * <ul>
+ *   <li>{@code .booking-form-rate-type-section} - section container</li>
+ *   <li>{@code .booking-form-rate-card} - card styling with hover/selected states</li>
+ *   <li>{@code .booking-form-rate-badge} - rate type badge</li>
+ *   <li>{@code .bookingpage-text-*} - text styling utilities</li>
+ * </ul>
+ *
  * @author Bruno Salmon
  */
-public class RateTypeSection extends DefaultRateTypeSection  {
+public class RateTypeSection extends DefaultRateTypeSection {
 
     private Label programmeTitleLabel;
     private Label dateRangeLabel;
     private int totalPrice;  // Calculated total price for the selected period
     private Consumer<BookablePeriod> onPackageSelected;
     private final ObjectProperty<BookablePeriod> selectedPeriod = new SimpleObjectProperty<>();
+    private SimpleBooleanProperty cardSelected; // Initialized in buildUI() due to parent constructor call order
 
     @Override
     protected void buildUI() {
-        // Section header
-        header = new one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader(
+        // Initialize here due to parent constructor calling buildUI() before subclass fields are initialized
+        cardSelected = new SimpleBooleanProperty(true); // Always selected (single option)
+
+        // Section header - styling handled via CSS
+        header = new StyledSectionHeader(
                 MKMCI18nKeys.YourPricingTier,
                 StyledSectionHeader.ICON_TAG
         );
         header.colorSchemeProperty().bind(colorScheme);
 
-        // Simple card with horizontal layout
+        // Simple card with horizontal layout - using bookingpage-card for proper CSS theming
         card = new VBox(0);
         card.setPadding(new Insets(20, 24, 20, 24));
         card.setAlignment(Pos.CENTER_LEFT);
+        card.getStyleClass().addAll("bookingpage-card", "selected"); // Use standard card class with selected state
 
-        // Horizontal layout: left content + price on right
-        HBox cardContent = new HBox();
+        // Horizontal layout: left content + price + checkmark on right
+        HBox cardContent = new HBox(16);
         cardContent.setAlignment(Pos.CENTER_LEFT);
 
         // Left side: badge, title, dates
@@ -64,42 +81,46 @@ public class RateTypeSection extends DefaultRateTypeSection  {
         leftContent.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(leftContent, Priority.ALWAYS);
 
-        // Rate badge (e.g., "Standard Rate")
+        // Rate badge (e.g., "Standard Rate") - styled via CSS
         rateBadge = new Label("Standard Rate");
-        rateBadge.setStyle("-fx-font-size: 11px; -fx-font-weight: 600;");
-        rateBadge.setTextFill(Color.WHITE);
         rateBadge.setPadding(new Insets(4, 10, 4, 10));
+        rateBadge.getStyleClass().add("booking-form-rate-badge");
 
-        // Programme title (e.g., "Full Weekend")
+        // Programme title (e.g., "Full Weekend") - styled via CSS classes
         programmeTitleLabel = new Label();
-        programmeTitleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: 600;");
-        programmeTitleLabel.setTextFill(Color.web("#212529"));
+        programmeTitleLabel.getStyleClass().addAll("bookingpage-text-xl", "bookingpage-font-semibold", "bookingpage-text-dark");
 
-        // Date range (e.g., "25 - 30 Dec 2025")
+        // Date range (e.g., "25 - 30 Dec 2025") - styled via CSS classes
         dateRangeLabel = new Label();
-        dateRangeLabel.setStyle("-fx-font-size: 14px;");
-        dateRangeLabel.setTextFill(Color.web("#6c757d"));
+        dateRangeLabel.getStyleClass().addAll("bookingpage-text-base", "bookingpage-text-muted");
 
         leftContent.getChildren().addAll(rateBadge, programmeTitleLabel, dateRangeLabel);
 
-        // Right side: Price (e.g., "£75")
-        priceLabel = new Label();
-        priceLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: 700;");
-        priceLabel.setTextFill(Color.web("#2C3E50"));
+        // Right side: Price and checkmark in a vertical stack (checkmark above price)
+        VBox rightContent = new VBox(8);
+        rightContent.setAlignment(Pos.CENTER_RIGHT);
 
-        cardContent.getChildren().addAll(leftContent, priceLabel);
+        // Checkmark badge - uses CSS for theming (inherits --booking-form-primary from parent)
+        StackPane checkmarkBadge = BookingPageUIBuilder.createCheckmarkBadgeCss(28);
+        checkmarkBadge.setVisible(cardSelected.get());
+        cardSelected.addListener((obs, old, val) -> checkmarkBadge.setVisible(val));
+
+        // Price (e.g., "£85") - styled via CSS classes
+        priceLabel = new Label();
+        priceLabel.getStyleClass().addAll("bookingpage-price-large", "bookingpage-text-dark");
+
+        rightContent.getChildren().addAll(checkmarkBadge, priceLabel);
+
+        cardContent.getChildren().addAll(leftContent, rightContent);
         card.getChildren().add(cardContent);
 
         container.getChildren().addAll(header, card);
         container.getStyleClass().add("booking-form-rate-type-section");
-
-        // Apply initial styling
-        applyCardStyles();
-
-        // Update styles when color scheme changes
-        colorScheme.addListener((obs, oldScheme, newScheme) -> applyCardStyles());
+        container.setMinWidth(0); // Allow shrinking for responsive design
+        card.setMinWidth(0); // Allow card to shrink
     }
 
+    @Override
     protected void loadData() {
         if (workingBookingProperties == null) {
             return;

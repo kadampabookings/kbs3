@@ -9,7 +9,6 @@ import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormBuilder;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormCallbacks;
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
-import one.modality.booking.frontoffice.bookingpage.theme.ThemedBookingFormSection;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultAudioRecordingSection;
@@ -36,6 +35,11 @@ import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.se
  *   <li>Sections implementing ResettableSection are auto-reset when registering another person</li>
  * </ul>
  *
+ * <p><b>Theming:</b> This form uses CSS-based theming. The color scheme is passed to the
+ * builder, which applies a theme class (e.g., "theme-wisdom-blue") to the root container.
+ * All sections inherit their styling from CSS variables defined by these theme classes.
+ * No need to pass colorScheme to individual sections.</p>
+ *
  * @author Bruno Salmon
  * @see StandardBookingForm
  * @see StandardBookingFormBuilder
@@ -44,9 +48,6 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
 
     // The form built by the builder
     private final StandardBookingForm form;
-
-    // Color scheme for theming
-    private final BookingFormColorScheme colorScheme;
 
     private RateTypeSection rateTypeSection;
     private DefaultAudioRecordingSection audioRecordingSection;
@@ -59,15 +60,13 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
      * @param settings The event booking form settings
      */
     public MKMCOnlineEmpowermentBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
-        // Initialize color scheme (could be loaded from event configuration)
-        this.colorScheme = BookingFormColorScheme.WISDOM_BLUE;
-
         // Create custom Step 1 (Options page with MKMC-specific sections)
         createCustomStep();
 
         // Build the form - all generic logic is handled by StandardBookingForm
+        // The color scheme is applied as a CSS theme class to the root container
         this.form = new StandardBookingFormBuilder(activity, settings)
-            .withColorScheme(colorScheme)
+            .withColorScheme(BookingFormColorScheme.WISDOM_BLUE)  // Applied as CSS theme class
             .addCustomStep(optionsPage)  // Step 1: Custom Options page
             .withCallbacks(this)         // For form-specific summary updates
             .build();                    // Steps 2-7: Uses default sections automatically
@@ -78,31 +77,28 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
 
     /**
      * Creates the custom Step 1 (Options page) with MKMC-specific sections.
+     * Sections use CSS classes for styling - no need to pass colorScheme.
      */
     private void createCustomStep() {
-        // Event Header - using default implementation
+        // Event Header - styling handled by CSS class .booking-form-event-header
         DefaultEventHeaderSection eventHeaderSection = new DefaultEventHeaderSection();
-        eventHeaderSection.setColorScheme(colorScheme);
 
-        // Prerequisite confirmation (MKMC-specific)
+        // Prerequisite confirmation (MKMC-specific) - styling via CSS
         PrerequisiteSection prerequisiteSection = new PrerequisiteSection();
-        prerequisiteSection.setColorScheme(colorScheme);
 
-        // Combined Programme + Rate Type section (MKMC-specific)
+        // Combined Programme + Rate Type section (MKMC-specific) - styling via CSS
         rateTypeSection = new RateTypeSection();
-        rateTypeSection.setColorScheme(colorScheme);
 
-        // Audio Recording option - using default implementation
+        // Audio Recording option - styling handled by CSS class .booking-form-audio-recording-card
         audioRecordingSection = new DefaultAudioRecordingSection();
-        audioRecordingSection.setColorScheme(colorScheme);
 
-        // Combine into Options page
+        // Combine into Options page - sections inherit theme from CSS variables
         optionsPage = new CompositeBookingFormPage(
                 MKMCI18nKeys.Options,
-                new ThemedBookingFormSection(eventHeaderSection, colorScheme),
-                new ThemedBookingFormSection(prerequisiteSection, colorScheme),
-                new ThemedBookingFormSection(rateTypeSection, colorScheme),
-                new ThemedBookingFormSection(audioRecordingSection, colorScheme))
+                eventHeaderSection,
+                prerequisiteSection,
+                rateTypeSection,
+                audioRecordingSection)
                 .setStep(true)
                 .setHeaderVisible(true);
 
