@@ -14,8 +14,8 @@ import java.util.Objects;
  */
 final class ArticleActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
-    // The article will be displayed in a WebView that will be set as the front-office background node in order to
-    // preserve its state in the web version (otherwise the iFrame will be reloaded each time the user navigates back).
+    // The article will be displayed in a WebView that will be set as the front-office background node to preserve its
+    // state in the web version (otherwise the iFrame will be reloaded each time the user navigates back).
     private final WebView webView = new WebView();
     private String url;
 
@@ -35,8 +35,8 @@ final class ArticleActivity extends ViewDomainActivityBase implements OperationA
 
     @Override
     public Node buildUi() {
-        // We return null as an indication that we want to display the background node (i.e. the WebView) instead.
-        return null; // Checkout ModalityFrontOfficeMainFrameActivity to see how it treats this null value to display the background node.
+        // We return null as an indication that we want to display the background node (i.e., the WebView) instead.
+        return null; // Check out ModalityFrontOfficeMainFrameActivity to see how it treats this null value to display the background node.
     }
 
     @Override
