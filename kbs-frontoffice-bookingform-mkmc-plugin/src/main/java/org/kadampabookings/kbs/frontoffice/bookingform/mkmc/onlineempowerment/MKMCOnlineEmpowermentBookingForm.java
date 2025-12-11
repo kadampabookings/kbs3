@@ -4,6 +4,7 @@ import dev.webfx.platform.async.Future;
 import javafx.beans.binding.Bindings;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
+import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.CompositeBookingFormPage;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormBuilder;
@@ -66,7 +67,7 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
         // Build the form - all generic logic is handled by StandardBookingForm
         // The color scheme is applied as a CSS theme class to the root container
         this.form = new StandardBookingFormBuilder(activity, settings)
-            .withColorScheme(BookingFormColorScheme.COMPASSION_ROSE)  // Applied as CSS theme class
+            .withColorScheme(BookingFormColorScheme.VAJRAYOGINI_RED)  // Applied as CSS theme class
             .addCustomStep(optionsPage)  // Step 1: Custom Options page
             .withCallbacks(this)         // For form-specific summary updates
             .build();                    // Steps 2-7: Uses default sections automatically
@@ -104,7 +105,7 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
 
         // Set up navigation button for custom step
         optionsPage.setButtons(
-            BookingFormButton.async(MKMCI18nKeys.Continue,
+            BookingFormButton.async(BookingPageI18nKeys.Continue,
                 button -> navigateFromOptionsAsync(),
                 "btn-primary booking-form-btn-primary",
                 Bindings.not(optionsPage.validProperty())));

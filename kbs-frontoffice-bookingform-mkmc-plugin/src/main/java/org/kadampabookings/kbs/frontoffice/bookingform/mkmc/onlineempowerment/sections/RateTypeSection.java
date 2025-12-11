@@ -22,10 +22,8 @@ import one.modality.ecommerce.document.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.time.LocalDate;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -172,7 +170,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
             LocalDate endDate = endItem.getDate();
 
             if (startDate != null && endDate != null) {
-                dateRangeLabel.setText(buildDateRangeString(startDate, endDate));
+                dateRangeLabel.setText(BookingPageUIBuilder.formatDateRangeShort(startDate, endDate));
             }
         }
 
@@ -283,21 +281,6 @@ public class RateTypeSection extends DefaultRateTypeSection {
         }
 
         return rates.isEmpty() ? null : rates.get(0);
-    }
-
-    private String buildDateRangeString(LocalDate startDate, LocalDate endDate) {
-        String firstDay = String.valueOf(startDate.getDayOfMonth());
-        String firstMonth = startDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-
-        String lastDay = String.valueOf(endDate.getDayOfMonth());
-        String lastMonth = endDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-        int year = endDate.getYear();
-
-        if (startDate.getMonth() == endDate.getMonth() && startDate.getYear() == endDate.getYear()) {
-            return firstDay + " - " + lastDay + " " + lastMonth + " " + year;
-        } else {
-            return firstDay + " " + firstMonth + " - " + lastDay + " " + lastMonth + " " + year;
-        }
     }
 
     private String formatPrice(int priceInCents) {

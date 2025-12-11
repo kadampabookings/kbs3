@@ -21,8 +21,6 @@ import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 /**
  * Section for displaying and confirming prerequisites for online empowerment.
@@ -134,25 +132,8 @@ public class PrerequisiteSection implements BookingFormSection, ResettableSectio
             return " - the following retreat is not included";
         }
 
-        String dateRange = formatDateRange(startDate, endDate);
+        String dateRange = BookingPageUIBuilder.formatDateRangeFull(startDate, endDate);
         return " from " + dateRange + " - the following retreat is not included";
-    }
-
-    private String formatDateRange(LocalDate start, LocalDate end) {
-        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("d", Locale.ENGLISH);
-        DateTimeFormatter dayMonthFormatter = DateTimeFormatter.ofPattern("d MMMM", Locale.ENGLISH);
-        DateTimeFormatter fullFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH);
-
-        if (start.getMonth() == end.getMonth() && start.getYear() == end.getYear()) {
-            // Same month: "27 - 30 March 2026"
-            return start.format(dayFormatter) + " - " + end.format(fullFormatter);
-        } else if (start.getYear() == end.getYear()) {
-            // Different months, same year: "27 February - 1 March 2026"
-            return start.format(dayMonthFormatter) + " - " + end.format(fullFormatter);
-        } else {
-            // Different years: "27 December 2025 - 1 January 2026"
-            return start.format(fullFormatter) + " - " + end.format(fullFormatter);
-        }
     }
 
     private HtmlText createBulletPoint(String prefix, String boldText, String suffix) {
