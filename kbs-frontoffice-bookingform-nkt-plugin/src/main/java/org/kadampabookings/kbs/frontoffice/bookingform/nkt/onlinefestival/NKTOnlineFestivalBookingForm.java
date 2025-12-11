@@ -38,7 +38,7 @@ final class NKTOnlineFestivalBookingForm extends MultiPageBookingForm {
     }
 
     @Override
-    protected BookingFormPage[] getPages() {
+    public BookingFormPage[] getPages() {
         return pages;
     }
 
