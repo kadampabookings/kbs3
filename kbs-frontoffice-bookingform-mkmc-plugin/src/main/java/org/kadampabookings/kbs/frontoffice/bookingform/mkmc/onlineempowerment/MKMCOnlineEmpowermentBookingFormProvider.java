@@ -6,7 +6,6 @@ import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
 import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
-import one.modality.event.frontoffice.eventheader.EventTitleHeader;
 
 /**
  * @author Bruno Salmon
@@ -28,11 +27,10 @@ public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFo
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity) {
         return new MKMCOnlineEmpowermentBookingForm(activity,
             new EventBookingFormSettingsBuilder(event)
-                .setEventHeader(new EventTitleHeader())
                 .setHeaderMaxTopBottomPadding(62)
                 .setShowNavigationBar(true)
-                .setShowPriceBar(true)
+                .setShowPriceBar(false)
                 .build()
-        );
+        ).getForm();
     }
 }
