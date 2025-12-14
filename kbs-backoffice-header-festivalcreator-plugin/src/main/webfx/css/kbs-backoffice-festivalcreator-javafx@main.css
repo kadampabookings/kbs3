@@ -16,11 +16,14 @@
 
 .event-creator-dialog ToggleButton {
     -fx-cursor: hand;
-    -webfx-aria-toggle-button-background-color-fired: -kbs-festival-color;
-    -webfx-aria-toggle-button-text-fill-fired: white;
+    -fx-background-color: white;
     -fx-text-fill: -kbs-festival-color;
     -fx-effect: dropshadow(three-pass-box, lightgray, 11, 0, 4, 4);
-    -fx-background-color: white;
+}
+
+.event-creator-dialog ToggleButton.fired {
+    -fx-background-color: -kbs-festival-color;
+    -fx-text-fill: white;
 }
 
 .event-creator-dialog ToggleButton:hover { /* Otherwise another CSS rule sets it to transparent somewhere and this prevents the effect */

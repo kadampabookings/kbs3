@@ -19,9 +19,13 @@
     filter: drop-shadow(4px 4px 5px lightgray);
     --fx-border-style: none;
     --fx-border-radius: 0;
-    --fx-button-background-color: white;
-    --webfx-aria-toggle-button-background-color-fired: var(--kbs-festival-color);
+    --fx-background-color: white;
     --fx-text-fill: var(--kbs-festival-color);
+}
+
+.event-creator-dialog fx-togglebutton.fired {
+    --fx-background-color: var(--kbs-festival-color);
+    --fx-text-fill: white;
 }
 
 .event-creator-dialog fx-togglebutton.spring-festival {
