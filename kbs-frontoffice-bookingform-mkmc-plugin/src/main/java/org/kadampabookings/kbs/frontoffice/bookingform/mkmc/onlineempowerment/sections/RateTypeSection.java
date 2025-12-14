@@ -17,7 +17,6 @@ import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultRateTypeSection;
-import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
@@ -58,12 +57,11 @@ public class RateTypeSection extends DefaultRateTypeSection {
         // Initialize here due to parent constructor calling buildUI() before subclass fields are initialized
         cardSelected = new SimpleBooleanProperty(true); // Always selected (single option)
 
-        // Section header - styling handled via CSS
+        // Section header - styling handled by CSS theme classes (e.g., "theme-vajrayogini-red")
         header = new StyledSectionHeader(
                 MKMCI18nKeys.YourPricingTier,
                 StyledSectionHeader.ICON_TAG
         );
-        header.colorSchemeProperty().bind(colorScheme);
 
         // Simple card with horizontal layout - using bookingpage-card for proper CSS theming
         card = new VBox(0);
