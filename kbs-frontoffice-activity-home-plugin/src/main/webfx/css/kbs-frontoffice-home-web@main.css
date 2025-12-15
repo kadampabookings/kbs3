@@ -36,7 +36,7 @@
 .festival-thumbnail fx-button {
     font-weight: 600;
     font-size: 16px;
-    --fx-button-background-color: var(--festival-color);
+    --fx-background-color: var(--festival-color);
     --fx-text-fill: white;
     --fx-border-style: none;
     --fx-border-radius: 8px;
@@ -88,7 +88,7 @@
     font-weight: 600;
     font-size: 16px;
     color: white;
-    --fx-button-background-color: var(--home-header-color);
+    --fx-background-color: var(--home-header-color);
     --fx-border-radius: 8px;
     --fx-border-style: none;
     cursor: pointer;
