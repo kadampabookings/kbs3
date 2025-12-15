@@ -407,6 +407,7 @@ public final class BookingModificationForm {
         payBtn.setCursor(javafx.scene.Cursor.HAND);
         payBtn.getStyleClass().addAll("booking-form-primary-btn", "booking-form-primary-btn-text");
         payBtn.setOnAction(e -> paymentSection.submitPaymentAsync());
+        payBtn.setGraphicTextGap(16);
 
         buttonRow.getChildren().addAll(backBtn, payBtn);
         contentContainer.getChildren().add(buttonRow);
