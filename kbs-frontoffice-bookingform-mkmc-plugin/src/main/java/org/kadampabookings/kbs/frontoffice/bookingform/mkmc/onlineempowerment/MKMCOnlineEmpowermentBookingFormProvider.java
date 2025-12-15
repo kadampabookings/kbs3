@@ -4,18 +4,32 @@ import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
+import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
+import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.modification.BookingModificationForm;
+import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.modification.BookingModificationFormAdapter;
 
 /**
+ * Provider for MKMC Online Empowerment booking forms.
+ * Supports both new bookings and modification of existing bookings (adding audio recordings).
+ *
  * @author Bruno Salmon
  */
 public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFormProvider {
 
+    private static final int EVENT_TYPE_ONLINE_EMPOWERMENT = 24;
+
     @Override
-    public boolean acceptEvent(Event event) {
-        // For now, we use this booking form only for MKMC online empowerment weekends
-        return Entities.samePrimaryKey(event.getType(), 24);
+    public boolean acceptEvent(Event event, BookingFormEntryPoint entryPoint) {
+        if (event == null) {
+            return false;
+        }
+        // Accept both NEW_BOOKING and MODIFY_BOOKING for MKMC Online Empowerment events
+        if (entryPoint == BookingFormEntryPoint.NEW_BOOKING || entryPoint == BookingFormEntryPoint.MODIFY_BOOKING) {
+            return Entities.samePrimaryKey(event.getType(), EVENT_TYPE_ONLINE_EMPOWERMENT);
+        }
+        return false;
     }
 
     @Override
@@ -24,7 +38,14 @@ public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFo
     }
 
     @Override
-    public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity) {
+    public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity, BookingFormEntryPoint entryPoint) {
+        if (entryPoint == BookingFormEntryPoint.MODIFY_BOOKING) {
+            // Create modification form for adding options to existing booking
+            BookingModificationForm modificationForm = BookingModificationForm.create(activity.getWorkingBookingProperties());
+            return new BookingModificationFormAdapter(modificationForm);
+        }
+
+        // Default: create new booking form
         return new MKMCOnlineEmpowermentBookingForm(activity,
             new EventBookingFormSettingsBuilder(event)
                 .setHeaderMaxTopBottomPadding(62)

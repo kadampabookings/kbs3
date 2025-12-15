@@ -1,26 +1,35 @@
-package org.kadampabookings.kbs.frontoffice.bookingform.nkt.onlinefestival;
+package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass;
 
+import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
-import one.modality.event.frontoffice.eventheader.EventTitleHeader;
-import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
 /**
- * @author Bruno Salmon
+ * Provider for the GP Class booking form.
+ * Handles weekly general programme (GP) class bookings where users can select
+ * individual class dates from a series.
+ *
+ * @author Claude
  */
-public final class NKTOnlineFestivalBookingFormProvider implements BookingFormProvider {
+public class GPClassBookingFormProvider implements BookingFormProvider {
+
+    // Event type for GP Classes (configurable - currently set to 22)
+    private static final int EVENT_TYPE_GP_CLASS = 47;
 
     @Override
     public boolean acceptEvent(Event event, BookingFormEntryPoint entryPoint) {
-        // Only supports new bookings for festivals
-        if (entryPoint != BookingFormEntryPoint.NEW_BOOKING) {
+        if (event == null) {
             return false;
         }
-        return event != null && FestivalType.isFestival(event);
+        // Only accept NEW_BOOKING for GP Class events
+        if (entryPoint == BookingFormEntryPoint.NEW_BOOKING) {
+            return Entities.samePrimaryKey(event.getType(), EVENT_TYPE_GP_CLASS);
+        }
+        return false;
     }
 
     @Override
@@ -30,13 +39,12 @@ public final class NKTOnlineFestivalBookingFormProvider implements BookingFormPr
 
     @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity, BookingFormEntryPoint entryPoint) {
-        return new NKTOnlineFestivalBookingForm(activity,
+        return new GPClassBookingForm(activity,
             new EventBookingFormSettingsBuilder(event)
-                .setEventHeader(new EventTitleHeader())
                 .setHeaderMaxTopBottomPadding(62)
                 .setShowNavigationBar(true)
-                .setShowPriceBar(true)
+                .setShowPriceBar(false)
                 .build()
-        );
+        ).getForm();
     }
 }

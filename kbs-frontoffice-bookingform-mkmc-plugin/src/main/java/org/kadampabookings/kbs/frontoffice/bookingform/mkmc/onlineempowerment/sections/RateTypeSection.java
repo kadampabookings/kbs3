@@ -17,15 +17,12 @@ import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultRateTypeSection;
-import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.time.LocalDate;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -60,12 +57,11 @@ public class RateTypeSection extends DefaultRateTypeSection {
         // Initialize here due to parent constructor calling buildUI() before subclass fields are initialized
         cardSelected = new SimpleBooleanProperty(true); // Always selected (single option)
 
-        // Section header - styling handled via CSS
+        // Section header - styling handled by CSS theme classes (e.g., "theme-vajrayogini-red")
         header = new StyledSectionHeader(
                 MKMCI18nKeys.YourPricingTier,
                 StyledSectionHeader.ICON_TAG
         );
-        header.colorSchemeProperty().bind(colorScheme);
 
         // Simple card with horizontal layout - using bookingpage-card for proper CSS theming
         card = new VBox(0);
@@ -172,7 +168,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
             LocalDate endDate = endItem.getDate();
 
             if (startDate != null && endDate != null) {
-                dateRangeLabel.setText(buildDateRangeString(startDate, endDate));
+                dateRangeLabel.setText(BookingPageUIBuilder.formatDateRangeShort(startDate, endDate));
             }
         }
 
@@ -283,21 +279,6 @@ public class RateTypeSection extends DefaultRateTypeSection {
         }
 
         return rates.isEmpty() ? null : rates.get(0);
-    }
-
-    private String buildDateRangeString(LocalDate startDate, LocalDate endDate) {
-        String firstDay = String.valueOf(startDate.getDayOfMonth());
-        String firstMonth = startDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-
-        String lastDay = String.valueOf(endDate.getDayOfMonth());
-        String lastMonth = endDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-        int year = endDate.getYear();
-
-        if (startDate.getMonth() == endDate.getMonth() && startDate.getYear() == endDate.getYear()) {
-            return firstDay + " - " + lastDay + " " + lastMonth + " " + year;
-        } else {
-            return firstDay + " " + firstMonth + " - " + lastDay + " " + lastMonth + " " + year;
-        }
     }
 
     private String formatPrice(int priceInCents) {

@@ -13,18 +13,25 @@ module kbs.frontoffice.bookingform.mkmc.plugin {
     requires modality.booking.frontoffice.bookingform;
     requires modality.booking.frontoffice.bookingpage;
     requires modality.ecommerce.document.service;
+    requires modality.ecommerce.shared.pricecalculator;
     requires modality.event.frontoffice.activity.book;
+    requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;
+    requires webfx.extras.panes;
     requires webfx.extras.webtext;
+    requires webfx.kit.util;
     requires webfx.platform.async;
     requires webfx.stack.orm.entity;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingform.mkmc;
+    exports org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass;
+    exports org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections;
+    exports org.kadampabookings.kbs.frontoffice.bookingform.mkmc.modification;
     exports org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment;
     exports org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.sections;
 
     // Provided services
-    provides one.modality.booking.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.MKMCOnlineEmpowermentBookingFormProvider;
+    provides one.modality.booking.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.MKMCOnlineEmpowermentBookingFormProvider, org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.GPClassBookingFormProvider;
 
 }
