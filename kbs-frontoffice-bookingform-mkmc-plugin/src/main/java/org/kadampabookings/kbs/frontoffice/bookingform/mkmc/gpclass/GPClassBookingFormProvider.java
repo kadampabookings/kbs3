@@ -37,7 +37,8 @@ public final class GPClassBookingFormProvider implements BookingFormProvider {
                 .setHeaderMaxTopBottomPadding(62)
                 .setShowNavigationBar(true)
                 .setShowPriceBar(false)
-                .build()
+                .build(),
+            entryPoint  // Pass entry point for payment resume handling
         ).getForm();
     }
 }

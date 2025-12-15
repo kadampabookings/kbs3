@@ -3,6 +3,7 @@ package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass;
 import dev.webfx.platform.async.Future;
 import javafx.beans.binding.Bindings;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
+import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
 import one.modality.booking.frontoffice.bookingpage.BookingFormPage;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
@@ -60,8 +61,9 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
      *
      * @param activity The activity providing WorkingBookingProperties
      * @param settings The event booking form settings
+     * @param entryPoint The entry point for the booking form (NEW_BOOKING, MODIFY_BOOKING, or RESUME_PAYMENT)
      */
-    public GPClassBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
+    public GPClassBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings, BookingFormEntryPoint entryPoint) {
         this.settings = settings;
 
         // Create custom Step 1 (Select Classes page)
@@ -77,6 +79,7 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
             .withColorScheme(BookingFormColorScheme.PEACE_PURPLE)  // Applied as CSS theme class
             .withShowUserBadge(true)                     // Show user badge in header
             .withCardPaymentOnly(true)                   // GP classes only accept card payment
+            .withEntryPoint(entryPoint)                  // Handle payment resume/modification entry points
             .addCustomStep(selectClassesPage)            // Step 1: Custom date selection page
             .withSummaryPageSupplier(() -> createSummaryPage(summarySection))  // Custom summary page
             .withCallbacks(this)                         // For form-specific callbacks

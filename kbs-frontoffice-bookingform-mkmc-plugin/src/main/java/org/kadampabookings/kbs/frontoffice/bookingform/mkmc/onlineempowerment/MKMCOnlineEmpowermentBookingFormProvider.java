@@ -38,13 +38,14 @@ public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFo
             return new BookingModificationFormAdapter(modificationForm);
         }
 
-        // Default: create new booking form
+        // Default: create new booking form (or handle payment return)
         return new MKMCOnlineEmpowermentBookingForm(activity,
             new EventBookingFormSettingsBuilder(event)
                 .setHeaderMaxTopBottomPadding(62)
                 .setShowNavigationBar(true)
                 .setShowPriceBar(false)
-                .build()
+                .build(),
+            entryPoint
         ).getForm();
     }
 }

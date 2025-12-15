@@ -6,6 +6,7 @@ import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.CompositeBookingFormPage;
+import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormBuilder;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormCallbacks;
@@ -59,8 +60,9 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
      *
      * @param activity The activity providing WorkingBookingProperties
      * @param settings The event booking form settings
+     * @param entryPoint The entry point (NEW_BOOKING, RESUME_PAYMENT, etc.)
      */
-    public MKMCOnlineEmpowermentBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings) {
+    public MKMCOnlineEmpowermentBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings, BookingFormEntryPoint entryPoint) {
         // Create custom Step 1 (Options page with MKMC-specific sections)
         createCustomStep();
 
@@ -68,6 +70,7 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
         // The color scheme is applied as a CSS theme class to the root container
         this.form = new StandardBookingFormBuilder(activity, settings)
             .withColorScheme(BookingFormColorScheme.VAJRAYOGINI_RED)  // Applied as CSS theme class
+            .withEntryPoint(entryPoint)  // Handle payment return redirects
             .addCustomStep(optionsPage)  // Step 1: Custom Options page
             .withCallbacks(this)         // For form-specific summary updates
             .build();                    // Steps 2-7: Uses default sections automatically
