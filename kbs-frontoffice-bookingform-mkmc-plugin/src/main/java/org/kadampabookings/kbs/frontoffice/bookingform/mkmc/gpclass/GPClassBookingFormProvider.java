@@ -15,21 +15,14 @@ import one.modality.event.frontoffice.activities.book.event.EventBookingFormSett
  *
  * @author Claude
  */
-public class GPClassBookingFormProvider implements BookingFormProvider {
+public final class GPClassBookingFormProvider implements BookingFormProvider {
 
     // Event type for GP Classes (configurable - currently set to 22)
     private static final int EVENT_TYPE_GP_CLASS = 47;
 
     @Override
-    public boolean acceptEvent(Event event, BookingFormEntryPoint entryPoint) {
-        if (event == null) {
-            return false;
-        }
-        // Only accept NEW_BOOKING for GP Class events
-        if (entryPoint == BookingFormEntryPoint.NEW_BOOKING) {
-            return Entities.samePrimaryKey(event.getType(), EVENT_TYPE_GP_CLASS);
-        }
-        return false;
+    public boolean acceptEvent(Event event) {
+        return Entities.samePrimaryKey(event.getType(), EVENT_TYPE_GP_CLASS);
     }
 
     @Override

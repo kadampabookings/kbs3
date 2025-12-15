@@ -15,11 +15,7 @@ import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 public final class NKTOnlineFestivalBookingFormProvider implements BookingFormProvider {
 
     @Override
-    public boolean acceptEvent(Event event, BookingFormEntryPoint entryPoint) {
-        // Only supports new bookings for festivals
-        if (entryPoint != BookingFormEntryPoint.NEW_BOOKING) {
-            return false;
-        }
+    public boolean acceptEvent(Event event) {
         return event != null && FestivalType.isFestival(event);
     }
 

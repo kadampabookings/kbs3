@@ -21,15 +21,8 @@ public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFo
     private static final int EVENT_TYPE_ONLINE_EMPOWERMENT = 24;
 
     @Override
-    public boolean acceptEvent(Event event, BookingFormEntryPoint entryPoint) {
-        if (event == null) {
-            return false;
-        }
-        // Accept both NEW_BOOKING and MODIFY_BOOKING for MKMC Online Empowerment events
-        if (entryPoint == BookingFormEntryPoint.NEW_BOOKING || entryPoint == BookingFormEntryPoint.MODIFY_BOOKING) {
-            return Entities.samePrimaryKey(event.getType(), EVENT_TYPE_ONLINE_EMPOWERMENT);
-        }
-        return false;
+    public boolean acceptEvent(Event event) {
+        return Entities.samePrimaryKey(event.getType(), EVENT_TYPE_ONLINE_EMPOWERMENT);
     }
 
     @Override

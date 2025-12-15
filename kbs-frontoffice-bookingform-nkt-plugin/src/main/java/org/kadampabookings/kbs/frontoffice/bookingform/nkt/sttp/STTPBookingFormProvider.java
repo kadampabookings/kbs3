@@ -19,11 +19,7 @@ public class STTPBookingFormProvider implements BookingFormProvider {
     private static final int STTP_EVENT_TYPE_ID = 48;
 
     @Override
-    public boolean acceptEvent(Event event, BookingFormEntryPoint entryPoint) {
-        // Only supports new bookings for STTP events
-        if (entryPoint != BookingFormEntryPoint.NEW_BOOKING) {
-            return false;
-        }
+    public boolean acceptEvent(Event event) {
         return event != null && Entities.samePrimaryKey(event.getType(), STTP_EVENT_TYPE_ID);
     }
 
