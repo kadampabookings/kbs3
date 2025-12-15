@@ -6,14 +6,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import one.modality.base.client.i18n.I18nEntities;
 import one.modality.base.shared.entities.BookablePeriod;
-import one.modality.base.shared.entities.Rate;
 import one.modality.base.shared.entities.ScheduledItem;
-import one.modality.base.shared.entities.util.Items;
 import one.modality.base.shared.knownitems.KnownItemFamily;
-import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.booking.frontoffice.bookingpage.PriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultRateTypeSection;
@@ -21,7 +22,6 @@ import one.modality.ecommerce.document.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -47,7 +47,6 @@ public class RateTypeSection extends DefaultRateTypeSection {
 
     private Label programmeTitleLabel;
     private Label dateRangeLabel;
-    private int totalPrice;  // Calculated total price for the selected period
     private Consumer<BookablePeriod> onPackageSelected;
     private final ObjectProperty<BookablePeriod> selectedPeriod = new SimpleObjectProperty<>();
     private SimpleBooleanProperty cardSelected; // Initialized in buildUI() due to parent constructor call order
@@ -123,8 +122,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
             return;
         }
 
-        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
-        PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
+        PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
 
         if (policyAggregate == null) {
             return;
@@ -132,9 +130,6 @@ public class RateTypeSection extends DefaultRateTypeSection {
 
         // Load programme info
         loadProgramme(policyAggregate);
-
-        // Store current rate for reference
-        currentRate = policyAggregate.getDailyRate();
 
         // Notify rate type selected (always standard for now)
         if (onRateTypeChanged != null) {
@@ -172,19 +167,16 @@ public class RateTypeSection extends DefaultRateTypeSection {
             }
         }
 
-        // Calculate total price
-        List<Rate> dailyRates = policyAggregate.getDailyRates().stream()
-                .filter(rate -> Items.isOfFamily(rate.getItem(), KnownItemFamily.TEACHING))
-                .collect(Collectors.toList());
-        List<ScheduledItem> teachingItems = policyAggregate.filterTeachingScheduledItems();
-
-        totalPrice = calculateTotalPrice(period, teachingItems, dailyRates);
-        priceLabel.setText(formatPrice(totalPrice));
 
         // Book teaching items into WorkingBooking immediately when period is selected
         // This ensures WorkingBooking always has the current selections
-        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
-        bookTeachingItemsForPeriod(workingBooking, period, teachingItems);
+        List<ScheduledItem> teachingItems = policyAggregate.filterTeachingScheduledItems();
+        bookTeachingItemsForPeriod(period, teachingItems);
+
+        // Calculate total price
+        // Calculated total price for the selected period
+        int totalPrice = workingBookingProperties.calculateTotal();
+        priceLabel.setText(formatPrice(totalPrice));
 
         // Notify listener
         if (onPackageSelected != null) {
@@ -196,7 +188,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
      * Books teaching items for the selected period into WorkingBooking.
      * Called automatically when a period is selected.
      */
-    private void bookTeachingItemsForPeriod(WorkingBooking workingBooking, BookablePeriod period, List<ScheduledItem> allTeachingItems) {
+    private void bookTeachingItemsForPeriod(BookablePeriod period, List<ScheduledItem> allTeachingItems) {
         ScheduledItem startItem = period.getStartScheduledItem();
         ScheduledItem endItem = period.getEndScheduledItem();
 
@@ -218,137 +210,19 @@ public class RateTypeSection extends DefaultRateTypeSection {
 
         // Book items into WorkingBooking (addOnly=false to replace any existing selections)
         if (!periodTeachingItems.isEmpty()) {
-            workingBooking.bookScheduledItems(periodTeachingItems, false);
+            workingBookingProperties.getWorkingBooking().bookScheduledItems(periodTeachingItems, false);
         }
-    }
-
-    private int calculateTotalPrice(BookablePeriod period, List<ScheduledItem> teachingItems, List<Rate> dailyRates) {
-        int total = 0;
-
-        ScheduledItem startItem = period.getStartScheduledItem();
-        ScheduledItem endItem = period.getEndScheduledItem();
-
-        if (startItem == null || endItem == null) return total;
-
-        LocalDate periodStartDate = startItem.getDate();
-        LocalDate periodEndDate = endItem.getDate();
-
-        if (periodStartDate == null || periodEndDate == null) return total;
-
-        List<ScheduledItem> periodTeachingItems = teachingItems.stream()
-                .filter(item -> item.getDate() != null)
-                .filter(item -> {
-                    LocalDate itemDate = item.getDate();
-                    return !itemDate.isBefore(periodStartDate) && !itemDate.isAfter(periodEndDate);
-                })
-                .collect(Collectors.toList());
-
-        for (ScheduledItem teachingItem : periodTeachingItems) {
-            Rate rate = findRateForScheduledItem(teachingItem, dailyRates);
-            if (rate != null && rate.getPrice() != null) {
-                total += rate.getPrice();
-            }
-        }
-
-        return total;
-    }
-
-    private Rate findRateForScheduledItem(ScheduledItem scheduledItem, List<Rate> rates) {
-        LocalDate itemDate = scheduledItem.getDate();
-
-        if (itemDate != null) {
-            for (Rate rate : rates) {
-                LocalDate rateStart = rate.getStartDate();
-                LocalDate rateEnd = rate.getEndDate();
-
-                if (rateStart != null && rateEnd != null) {
-                    if (!itemDate.isBefore(rateStart) && !itemDate.isAfter(rateEnd)) {
-                        return rate;
-                    }
-                } else if (rateStart != null && rateStart.equals(itemDate)) {
-                    return rate;
-                }
-            }
-        }
-
-        for (Rate rate : rates) {
-            if (rate.getItem() != null && scheduledItem.getItem() != null &&
-                rate.getItem().getPrimaryKey().equals(scheduledItem.getItem().getPrimaryKey())) {
-                return rate;
-            }
-        }
-
-        return rates.isEmpty() ? null : rates.get(0);
     }
 
     private String formatPrice(int priceInCents) {
-        double priceValue = priceInCents / 100.0;
-        return "£" + Math.round(priceValue);
+        return PriceFormatter.formatPriceWithCurrencyNoDecimals(priceInCents);
     }
 
     // === HasRateTypeSection interface ===
-
-    public BookablePeriod getSelectedPeriod() {
-        return selectedPeriod.get();
-    }
-
-    /**
-     * Returns the total price (in cents) for the selected period.
-     * This is calculated by summing the daily rates for all teaching items
-     * within the period's date range.
-     */
-    public int getTotalPrice() {
-        return totalPrice;
-    }
 
     @Override
     public void setOnPackageSelected(Consumer<BookablePeriod> handler) {
         this.onPackageSelected = handler;
     }
 
-    /**
-     * Returns the list of teaching ScheduledItems within the selected period's date range.
-     * This is used for booking the teaching items in WorkingBooking.
-     */
-    public List<ScheduledItem> getTeachingScheduledItemsForPeriod() {
-        if (workingBookingProperties == null) {
-            return new ArrayList<>();
-        }
-
-        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
-        PolicyAggregate policyAggregate = workingBooking.getPolicyAggregate();
-
-        if (policyAggregate == null) {
-            return new ArrayList<>();
-        }
-
-        BookablePeriod period = selectedPeriod.get();
-        if (period == null) {
-            return new ArrayList<>();
-        }
-
-        ScheduledItem startItem = period.getStartScheduledItem();
-        ScheduledItem endItem = period.getEndScheduledItem();
-
-        if (startItem == null || endItem == null) {
-            return new ArrayList<>();
-        }
-
-        LocalDate periodStartDate = startItem.getDate();
-        LocalDate periodEndDate = endItem.getDate();
-
-        if (periodStartDate == null || periodEndDate == null) {
-            return new ArrayList<>();
-        }
-
-        // Filter teaching items within the period date range
-        List<ScheduledItem> teachingItems = policyAggregate.filterTeachingScheduledItems();
-        return teachingItems.stream()
-                .filter(item -> item.getDate() != null)
-                .filter(item -> {
-                    LocalDate itemDate = item.getDate();
-                    return !itemDate.isBefore(periodStartDate) && !itemDate.isAfter(periodEndDate);
-                })
-                .collect(Collectors.toList());
-    }
 }

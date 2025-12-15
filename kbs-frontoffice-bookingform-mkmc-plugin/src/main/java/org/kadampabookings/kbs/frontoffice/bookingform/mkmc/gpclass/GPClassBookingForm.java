@@ -53,9 +53,6 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
     // Custom page
     private CompositeBookingFormPage selectClassesPage;
 
-    // Settings reference for color scheme
-    private final EventBookingFormSettings settings;
-
     /**
      * Creates the GP Class booking form using the builder pattern.
      *
@@ -64,8 +61,6 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
      * @param entryPoint The entry point for the booking form (NEW_BOOKING, MODIFY_BOOKING, or RESUME_PAYMENT)
      */
     public GPClassBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings, BookingFormEntryPoint entryPoint) {
-        this.settings = settings;
-
         // Create custom Step 1 (Select Classes page)
         createCustomStep();
 
@@ -111,7 +106,7 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
         // Link rate selection to date selection for price updates
         rateSection.setOnRateTypeChanged(rateType -> {
             // Update date selection section with new price per class
-            dateSelectionSection.setPricePerClass(rateSection.getSelectedPricePerClass());
+            dateSelectionSection.setRateType(rateType);
         });
 
         // Combine into Select Classes page
@@ -129,20 +124,6 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
                 button -> navigateFromSelectClassesAsync(),
                 "btn-primary booking-form-btn-primary",
                 Bindings.not(selectClassesPage.validProperty())));
-    }
-
-    /**
-     * Gets the color scheme from event settings.
-     * Defaults to WISDOM_BLUE if not configured.
-     */
-    private BookingFormColorScheme getColorSchemeFromEvent() {
-        // TODO: Read color scheme from event settings
-        // For now, default to WISDOM_BLUE for study programmes
-        if (settings != null && settings.event() != null) {
-            // Could read from event.getColorScheme() or similar field
-            // For now, return default
-        }
-        return BookingFormColorScheme.WISDOM_BLUE;
     }
 
     /**
@@ -168,10 +149,4 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
         return form;
     }
 
-    /**
-     * Returns the date selection section for external access if needed.
-     */
-    public ClassDateSelectionSection getDateSelectionSection() {
-        return dateSelectionSection;
-    }
 }

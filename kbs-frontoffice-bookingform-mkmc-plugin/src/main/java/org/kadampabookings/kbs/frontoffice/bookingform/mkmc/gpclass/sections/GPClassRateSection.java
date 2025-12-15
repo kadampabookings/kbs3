@@ -11,13 +11,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import one.modality.base.shared.entities.Event;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import one.modality.base.shared.entities.Rate;
-import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
+import one.modality.booking.frontoffice.bookingpage.PriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.HasRateTypeSection;
@@ -47,8 +49,6 @@ public class GPClassRateSection implements BookingFormSection, HasRateTypeSectio
     private WorkingBookingProperties workingBookingProperties;
 
     // Rates
-    private Rate standardRate;
-    private Rate memberRate;
     private int standardPrice = 0;
     private int memberPrice = 0;
 
@@ -177,8 +177,6 @@ public class GPClassRateSection implements BookingFormSection, HasRateTypeSectio
         Rate dailyRate = policyAggregate.getDailyRate();
 
         if (dailyRate != null) {
-            standardRate = dailyRate;
-            memberRate = dailyRate;
 
             // Standard price from getPrice()
             if (dailyRate.getPrice() != null) {
@@ -205,45 +203,21 @@ public class GPClassRateSection implements BookingFormSection, HasRateTypeSectio
 
     private void updatePriceLabels() {
         // Update standard rate card price
-        if (standardRateCard != null && standardRateCard.getUserData() instanceof Label) {
-            Label priceLabel = (Label) standardRateCard.getUserData();
+        if (standardRateCard != null && standardRateCard.getUserData() instanceof Label priceLabel) {
             priceLabel.setText(formatPrice(standardPrice) + " per class");
         }
 
         // Update member rate card price
-        if (memberRateCard != null && memberRateCard.getUserData() instanceof Label) {
-            Label priceLabel = (Label) memberRateCard.getUserData();
+        if (memberRateCard != null && memberRateCard.getUserData() instanceof Label priceLabel) {
             priceLabel.setText(formatPrice(memberPrice) + " per class");
         }
     }
 
     private String formatPrice(int priceInCents) {
-        Event event = getEvent();
-        return EventPriceFormatter.formatWithCurrency(priceInCents, event);
-    }
-
-    private Event getEvent() {
-        if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
-            return workingBookingProperties.getWorkingBooking().getEvent();
-        }
-        return null;
+        return PriceFormatter.formatPriceWithCurrencyNoDecimals(priceInCents);
     }
 
     // === Public Accessors ===
-
-    /**
-     * Returns the price per class for the currently selected rate type.
-     */
-    public int getSelectedPricePerClass() {
-        return selectedRateType.get() == RateType.MEMBER ? memberPrice : standardPrice;
-    }
-
-    /**
-     * Returns the selected rate type property for binding.
-     */
-    public ObjectProperty<RateType> selectedRateTypeProperty() {
-        return selectedRateType;
-    }
 
     // === BookingFormSection Implementation ===
 
@@ -283,11 +257,6 @@ public class GPClassRateSection implements BookingFormSection, HasRateTypeSectio
     @Override
     public RateType getSelectedRateType() {
         return selectedRateType.get();
-    }
-
-    @Override
-    public Rate getCurrentRate() {
-        return selectedRateType.get() == RateType.MEMBER ? memberRate : standardRate;
     }
 
     @Override

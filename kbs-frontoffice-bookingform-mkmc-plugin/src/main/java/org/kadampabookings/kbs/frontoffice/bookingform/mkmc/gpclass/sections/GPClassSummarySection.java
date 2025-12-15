@@ -9,8 +9,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import one.modality.base.shared.entities.ScheduledItem;
-import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
+import one.modality.booking.frontoffice.bookingpage.PriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultSummarySection;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class GPClassSummarySection extends DefaultSummarySection {
 
-    private ClassDateSelectionSection dateSelectionSection;
+    private final ClassDateSelectionSection dateSelectionSection;
 
     // UI components for dynamic updates
     private Label datesLabel;
@@ -187,8 +187,8 @@ public class GPClassSummarySection extends DefaultSummarySection {
         }
         subtotalValue.setText(formatPrice(subtotal));
 
-        // Update discount (show only if all selected)
-        if (allSelected && discount > 0) {
+        // Update discount
+        if (discount > 0) {
             discountValue.setText("-" + formatPrice(discount));
             discountRow.setVisible(true);
             discountRow.setManaged(true);
@@ -211,11 +211,7 @@ public class GPClassSummarySection extends DefaultSummarySection {
     }
 
     private String formatPrice(int priceInCents) {
-        // Use the event from parent class (set via setWorkingBookingProperties)
-        if (event != null) {
-            return EventPriceFormatter.formatWithCurrency(priceInCents, event);
-        }
-        return "£" + (priceInCents / 100);
+        return PriceFormatter.formatPriceWithCurrencyNoDecimals(priceInCents);
     }
 
     @Override

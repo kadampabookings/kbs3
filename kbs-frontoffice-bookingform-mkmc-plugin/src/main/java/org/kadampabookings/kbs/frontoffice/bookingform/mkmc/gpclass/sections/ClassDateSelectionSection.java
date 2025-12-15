@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections;
 
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -16,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import one.modality.base.shared.entities.Event;
-import one.modality.base.shared.entities.Rate;
 import one.modality.base.shared.entities.ScheduledItem;
 import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.booking.client.workingbooking.WorkingBooking;
@@ -25,7 +25,7 @@ import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
 import one.modality.booking.frontoffice.bookingpage.ResettableSection;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
-import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
+import one.modality.booking.frontoffice.bookingpage.sections.HasRateTypeSection;
 import one.modality.ecommerce.document.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
@@ -128,7 +128,13 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         selectAllActionButton.getStyleClass().add("bookingpage-btn-small-primary");
 
         // Update message and button based on selection changes
-        selectedItems.addListener((ListChangeListener<ScheduledItem>) change -> updateSelectAllBar());
+        selectedItems.addListener((ListChangeListener<ScheduledItem>) change -> {
+            // Keeping the working booking updated when the user selects/deselects classes
+            if (workingBookingProperties != null) {
+                workingBookingProperties.getWorkingBooking().bookScheduledItems(selectedItems, false);
+            }
+            updateSelectAllBar();
+        });
 
         selectAllActionButton.setOnAction(e -> {
             boolean allSelected = selectedItems.size() == availableItems.size();
@@ -195,7 +201,7 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
     private void setupBindings() {
         // Valid when at least one date is selected
-        validProperty.bind(javafx.beans.binding.Bindings.isNotEmpty(selectedItems));
+        validProperty.bind(Bindings.isNotEmpty(selectedItems));
 
         // Update price summary when selection changes
         selectedItems.addListener((ListChangeListener<ScheduledItem>) change -> {
@@ -390,9 +396,10 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         boolean allSelected = selectedItems.size() == availableItems.size();
 
         // Calculate prices
-        int subtotal = allSelected ? (pricePerClass * availableItems.size()) : (pricePerClass * selectedItems.size());
-        int discount = allSelected ? allClassesDiscount : 0;
-        int total = allSelected ? allClassesPrice : subtotal;
+        workingBookingProperties.updateAll();
+        int subtotal = getSubtotal();
+        int total = getTotalPrice();
+        int discount = subtotal - total;
 
         // Subtotal row
         HBox subtotalRow = new HBox();
@@ -503,13 +510,7 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         availableItems.setAll(scheduledItems);
 
         // Get pricing info
-        List<Rate> rates = policyAggregate.getDailyRates();
-        if (!rates.isEmpty()) {
-            Rate rate = rates.get(0);
-            if (rate.getPrice() != null) {
-                pricePerClass = rate.getPrice();
-            }
-        }
+        pricePerClass = policyAggregate.getDailyRatePrice();
 
         // Calculate all classes price and discount using the pricing API
         // The API applies fixed rate discounts from database if cheaper than daily rate total
@@ -587,56 +588,38 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
      * Returns the total price in cents for the current selection.
      */
     public int getTotalPrice() {
-        boolean allSelected = isAllDatesSelected();
-        return allSelected ? allClassesPrice : (pricePerClass * selectedItems.size());
+        return workingBookingProperties == null ? 0 : workingBookingProperties.getTotal();
     }
 
     /**
      * Returns the subtotal (before discount) in cents for the current selection.
      */
     public int getSubtotal() {
-        return pricePerClass * selectedItems.size();
+        return workingBookingProperties == null ? 0 : workingBookingProperties.calculateNoDiscountTotal();
     }
 
     /**
      * Returns the discount amount in cents (only applies when all classes selected).
      */
     public int getDiscount() {
-        return isAllDatesSelected() ? allClassesDiscount : 0;
+        return getSubtotal() - getTotalPrice();
     }
 
-    /**
-     * Returns the price per individual class in cents.
-     */
-    public int getPricePerClass() {
-        return pricePerClass;
-    }
 
-    /**
-     * Sets the price per individual class in cents.
-     * Recalculates discount and updates UI.
-     */
-    public void setPricePerClass(int price) {
-        this.pricePerClass = price;
-        // Recalculate all classes price and discount using the pricing API
-        // Note: workingBookingProperties may be null during early initialization
+    public void setRateType(HasRateTypeSection.RateType rateType) {
+        // Indicating the working booking if it should apply the facility fee rate
         if (workingBookingProperties != null) {
-            int wholeEventPrice = workingBookingProperties.getWholeEventPrice();
-            int wholeEventNoDiscountPrice = workingBookingProperties.getWholeEventNoDiscountPrice();
-            allClassesDiscount = wholeEventNoDiscountPrice - wholeEventPrice;
-            allClassesPrice = wholeEventPrice;
+            workingBookingProperties.getWorkingBooking().applyFacilityFeeRate(rateType == HasRateTypeSection.RateType.MEMBER);
+            updatePriceSummary();
         }
-        // Update UI
-        updateSelectAllBar();
-        updatePriceSummary();
     }
 
     /**
      * Returns the event for price formatting.
      */
     public Event getEvent() {
-        if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
-            return workingBookingProperties.getWorkingBooking().getEvent();
+        if (workingBookingProperties != null) {
+            return workingBookingProperties.getEvent();
         }
         return null;
     }
