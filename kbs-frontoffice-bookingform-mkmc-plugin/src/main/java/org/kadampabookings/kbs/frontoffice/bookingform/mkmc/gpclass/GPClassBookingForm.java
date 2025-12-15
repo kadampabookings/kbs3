@@ -74,8 +74,9 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
         // The color scheme is applied as a CSS theme class to the root container
         // Note: Full payment only is the default behavior for GP classes
         this.form = new StandardBookingFormBuilder(activity, settings)
-            .withColorScheme(getColorSchemeFromEvent())  // Applied as CSS theme class
+            .withColorScheme(BookingFormColorScheme.PEACE_PURPLE)  // Applied as CSS theme class
             .withShowUserBadge(true)                     // Show user badge in header
+            .withCardPaymentOnly(true)                   // GP classes only accept card payment
             .addCustomStep(selectClassesPage)            // Step 1: Custom date selection page
             .withSummaryPageSupplier(() -> createSummaryPage(summarySection))  // Custom summary page
             .withCallbacks(this)                         // For form-specific callbacks
@@ -144,10 +145,10 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
     /**
      * Handles navigation from the Select Classes step.
      * Uses StandardBookingForm's built-in method to continue to the next step.
+     * Returns the Future from continueFromCustomSteps() so the spinner waits for async loading.
      */
     private Future<?> navigateFromSelectClassesAsync() {
-        form.continueFromCustomSteps();
-        return Future.succeededFuture();
+        return form.continueFromCustomSteps();
     }
 
     // === StandardBookingFormCallbacks Implementation ===

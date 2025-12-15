@@ -90,6 +90,7 @@ public interface MKMCI18nKeys {
     Object GPSave = "GPSave";
     Object GPSaveBySelectingAll = "GPSaveBySelectingAll";
     Object GPSelectAll = "GPSelectAll";
+    Object GPSelectAllClasses = "GPSelectAllClasses";
     Object GPSelectClassDates = "GPSelectClassDates";
     Object GPSelectClasses = "GPSelectClasses";
     Object GPSelectYourClasses = "GPSelectYourClasses";

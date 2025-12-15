@@ -18,6 +18,7 @@ import javafx.scene.layout.*;
 import one.modality.base.shared.entities.Event;
 import one.modality.base.shared.entities.Rate;
 import one.modality.base.shared.entities.ScheduledItem;
+import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
@@ -29,6 +30,8 @@ import one.modality.ecommerce.document.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -106,6 +109,7 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
     private void buildSelectAllBar() {
         selectAllBar.setAlignment(Pos.CENTER_LEFT);
+        selectAllBar.setPadding(new Insets(12, 16, 12, 16));
         selectAllBar.getStyleClass().add("bookingpage-select-all-bar");
         HBox.setHgrow(selectAllBar, Priority.ALWAYS);
 
@@ -157,8 +161,12 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
             if (!selectAllMessageLabel.getStyleClass().contains("all-selected")) {
                 selectAllMessageLabel.getStyleClass().add("all-selected");
             }
-            selectAllMessageLabel.setText("✓ " + I18n.getI18nText(MKMCI18nKeys.GPAllClassesSelected, availableItems.size())
-                    + " — " + I18n.getI18nText(MKMCI18nKeys.GPSave, formatPrice(allClassesDiscount)));
+            // Only show "Save" text if there's actually a discount
+            String messageText = "✓ " + I18n.getI18nText(MKMCI18nKeys.GPAllClassesSelected, availableItems.size());
+            if (allClassesDiscount > 0) {
+                messageText += " — " + I18n.getI18nText(MKMCI18nKeys.GPSave, formatPrice(allClassesDiscount));
+            }
+            selectAllMessageLabel.setText(messageText);
             selectAllActionButton.setText(I18n.getI18nText(MKMCI18nKeys.GPClearAll));
             // Switch to outline button style
             selectAllActionButton.getStyleClass().remove("bookingpage-btn-small-primary");
@@ -168,8 +176,14 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         } else {
             // Not all selected state - muted message, primary button
             selectAllMessageLabel.getStyleClass().remove("all-selected");
-            selectAllMessageLabel.setText(I18n.getI18nText(MKMCI18nKeys.GPSaveBySelectingAll,
-                    availableItems.size(), formatPrice(allClassesPrice), formatPrice(allClassesDiscount)));
+            // Only show discount info if there's actually a discount
+            if (allClassesDiscount > 0) {
+                selectAllMessageLabel.setText(I18n.getI18nText(MKMCI18nKeys.GPSaveBySelectingAll,
+                        availableItems.size(), formatPrice(allClassesPrice), formatPrice(allClassesDiscount)));
+            } else {
+                selectAllMessageLabel.setText(I18n.getI18nText(MKMCI18nKeys.GPSelectAllClasses,
+                        availableItems.size(), formatPrice(allClassesPrice)));
+            }
             selectAllActionButton.setText(I18n.getI18nText(MKMCI18nKeys.GPSelectAll));
             // Switch to primary button style
             selectAllActionButton.getStyleClass().remove("bookingpage-btn-small-outline");
@@ -191,17 +205,38 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
     }
 
     /**
+     * Checks if a scheduled item has passed and is no longer bookable.
+     * A class is considered past if current time is more than 1 hour after its start time.
+     */
+    private boolean isClassPast(ScheduledItem item) {
+        LocalDate date = item.getDate();
+        if (date == null) return true;
+
+        LocalTime startTime = item.getStartTime();
+        LocalDateTime now = LocalDateTime.now();
+
+        if (startTime != null) {
+            // Class is past if current time is 1+ hour after start time
+            LocalDateTime classStart = LocalDateTime.of(date, startTime);
+            return now.isAfter(classStart.plusHours(1));
+        } else {
+            // No time info - just check if date is before today
+            return date.isBefore(LocalDate.now());
+        }
+    }
+
+    /**
      * Creates a date card for a ScheduledItem.
      */
     private Node createDateCard(ScheduledItem item) {
         LocalDate date = item.getDate();
         if (date == null) return null;
 
-        // Detect if this is a past date (displayed but not selectable)
-        boolean isPastDate = date.isBefore(LocalDate.now());
+        // Detect if this class has passed (1 hour after start time) - not selectable
+        boolean isPastDate = isClassPast(item);
 
-        VBox card = new VBox(0);
-        card.setPadding(new Insets(14, 16, 14, 16));
+        // Use AnchorPane for absolute positioning of indicator in top-right corner
+        AnchorPane card = new AnchorPane();
         card.setMinWidth(180);
         card.setPrefWidth(180);
         card.setMaxWidth(200);
@@ -221,13 +256,17 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
             isSelected.set(selectedItems.contains(item));
         });
 
-        // Selection checkmark (top-right corner) - uses CSS-themed helper
-        // Only visible when selected (no circle shown when unselected)
+        // Empty circle indicator (top-right corner) - shown when NOT selected
+        StackPane emptyCircle = BookingPageUIBuilder.createEmptyCircleIndicator(20);
+        emptyCircle.setVisible(!isSelected.get() && !isPastDate);
+
+        // Selection checkmark (top-right corner) - shown when selected
         StackPane checkmark = BookingPageUIBuilder.createCheckmarkBadgeCss(20);
         checkmark.setVisible(isSelected.get());
 
-        // Update checkmark visibility and card styling based on selection
+        // Update indicator visibility and card styling based on selection
         isSelected.addListener((obs, old, selected) -> {
+            emptyCircle.setVisible(!selected && !isPastDate);
             checkmark.setVisible(selected);
             if (selected) {
                 if (!card.getStyleClass().contains("selected")) {
@@ -245,55 +284,54 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         // Date info row
         HBox dateRow = new HBox(12);
         dateRow.setAlignment(Pos.CENTER_LEFT);
+        dateRow.setPadding(new Insets(14, 16, 14, 16));  // Padding on content, not card
 
-        // Date box (day number + month)
+        // Date box (day number + month) - styling via CSS class
         VBox dateBox = new VBox(0);
         dateBox.setMinSize(44, 44);
         dateBox.setMaxSize(44, 44);
         dateBox.setAlignment(Pos.CENTER);
         dateBox.getStyleClass().add("gpclass-date-box");
-        dateBox.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 8;");
 
         Label dayLabel = new Label(String.valueOf(date.getDayOfMonth()));
-        dayLabel.setStyle("-fx-font-size: 16; -fx-font-weight: 700;");
         dayLabel.getStyleClass().add("gpclass-date-day");
 
         Label monthLabel = new Label(date.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase());
-        monthLabel.setStyle("-fx-font-size: 9; -fx-font-weight: 600; -fx-text-fill: #6c757d;");
         monthLabel.getStyleClass().add("gpclass-date-month");
 
         dateBox.getChildren().addAll(dayLabel, monthLabel);
 
-        // Day name and time
+        // Day name and time - styling via CSS classes
         VBox dayTimeBox = new VBox(2);
         dayTimeBox.setAlignment(Pos.CENTER_LEFT);
 
         Label dayNameLabel = new Label(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
-        dayNameLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600;");
         dayNameLabel.getStyleClass().add("gpclass-date-dayname");
 
         // Get time from ScheduledItem if available
         String timeText = item.getStartTime() != null ?
                 item.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) : "";
         Label timeLabel = new Label(timeText);
-        timeLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #6c757d;");
         timeLabel.getStyleClass().add("gpclass-date-time");
 
         dayTimeBox.getChildren().addAll(dayNameLabel, timeLabel);
 
         dateRow.getChildren().addAll(dateBox, dayTimeBox);
 
-        // Stack checkmark in top-right corner using an anchor approach
-        BorderPane cardLayout = new BorderPane();
-        cardLayout.setCenter(dateRow);
+        // Indicator container - positioned absolutely 8px from top-right corner
+        StackPane indicatorContainer = new StackPane(emptyCircle, checkmark);
+        indicatorContainer.setAlignment(Pos.CENTER);
+        AnchorPane.setTopAnchor(indicatorContainer, 8.0);
+        AnchorPane.setRightAnchor(indicatorContainer, 8.0);
 
-        StackPane.setAlignment(checkmark, Pos.TOP_RIGHT);
-        StackPane.setMargin(checkmark, new Insets(0));
+        // Date row fills the card
+        AnchorPane.setTopAnchor(dateRow, 0.0);
+        AnchorPane.setLeftAnchor(dateRow, 0.0);
+        AnchorPane.setBottomAnchor(dateRow, 0.0);
+        AnchorPane.setRightAnchor(dateRow, 0.0);
 
-        StackPane cardWithCheckmark = new StackPane(cardLayout, checkmark);
-        cardWithCheckmark.setAlignment(Pos.TOP_RIGHT);
-
-        card.getChildren().add(cardWithCheckmark);
+        // Add content and indicator to card
+        card.getChildren().addAll(dateRow, indicatorContainer);
 
         // Click handler and hover effects only for selectable (future) dates
         if (!isPastDate) {
@@ -302,16 +340,14 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
                 e.consume();
             });
 
-            // Hover effects (only when not selected)
+            // Hover effects via CSS class (same visual as selected)
             card.setOnMouseEntered(e -> {
                 if (!isSelected.get()) {
-                    card.setStyle("-fx-border-color: var(--booking-form-hover-border, #adb5bd); -fx-background-color: #f8f9fa; -fx-translate-y: -1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);");
+                    card.getStyleClass().add("hovered");
                 }
             });
             card.setOnMouseExited(e -> {
-                if (!isSelected.get()) {
-                    card.setStyle("");
-                }
+                card.getStyleClass().remove("hovered");
             });
         }
 
@@ -348,8 +384,7 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
         // Title
         Label titleLabel = I18nControls.newLabel(MKMCI18nKeys.GPYourSelection);
-        titleLabel.setStyle("-fx-font-size: 16; -fx-font-weight: 600;");
-        titleLabel.getStyleClass().addAll("bookingpage-text-dark");
+        titleLabel.getStyleClass().add("gpclass-price-summary-title");
         VBox.setMargin(titleLabel, new Insets(0, 0, 4, 0)); // 4px extra to achieve 16px total (12px VBox spacing + 4px)
 
         boolean allSelected = selectedItems.size() == availableItems.size();
@@ -405,7 +440,7 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         Region divider = new Region();
         divider.setMinHeight(1);
         divider.setMaxHeight(1);
-        divider.setStyle("-fx-background-color: #dee2e6;");
+        divider.getStyleClass().add("gpclass-price-summary-divider");
         VBox.setMargin(divider, new Insets(4, 0, 4, 0));
 
         // Total row
@@ -414,15 +449,13 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         totalRow.setPadding(new Insets(0, 12, 0, 12)); // Match subtotal row padding for value alignment
 
         Label totalLabel = new Label(I18n.getI18nText(MKMCI18nKeys.Total));
-        totalLabel.setStyle("-fx-font-size: 18; -fx-font-weight: 600;");
-        totalLabel.getStyleClass().add("bookingpage-text-dark");
+        totalLabel.getStyleClass().add("gpclass-price-summary-total-label");
 
         Region totalSpacer = new Region();
         HBox.setHgrow(totalSpacer, Priority.ALWAYS);
 
         Label totalValue = new Label(formatPrice(total));
-        totalValue.setStyle("-fx-font-size: 24; -fx-font-weight: 700;");
-        totalValue.getStyleClass().add("bookingpage-text-primary");
+        totalValue.getStyleClass().addAll("gpclass-price-summary-total-value", "bookingpage-text-primary");
 
         totalRow.getChildren().addAll(totalLabel, totalSpacer, totalValue);
 
@@ -446,8 +479,8 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
     }
 
     private String formatPrice(int priceInCents) {
-        double priceValue = priceInCents / 100.0;
-        return "£" + Math.round(priceValue);
+        Event event = getEvent();
+        return EventPriceFormatter.formatWithCurrency(priceInCents, event);
     }
 
     private void loadData() {
@@ -478,11 +511,12 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
             }
         }
 
-        // Calculate all classes price and discount
-        // For now, assume discount is 10% when all classes are selected
-        int fullPrice = pricePerClass * availableItems.size();
-        allClassesDiscount = (int) (fullPrice * 0.1); // 10% discount
-        allClassesPrice = fullPrice - allClassesDiscount;
+        // Calculate all classes price and discount using the pricing API
+        // The API applies fixed rate discounts from database if cheaper than daily rate total
+        int wholeEventPrice = workingBookingProperties.getWholeEventPrice();
+        int wholeEventNoDiscountPrice = workingBookingProperties.getWholeEventNoDiscountPrice();
+        allClassesDiscount = wholeEventNoDiscountPrice - wholeEventPrice;
+        allClassesPrice = wholeEventPrice;
 
         // Build date cards
         dateCardsContainer.getChildren().clear();
@@ -492,6 +526,12 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
                 dateCardsContainer.getChildren().add(card);
             }
         }
+
+        // Only show "Select All" bar if the first class hasn't started yet
+        // (i.e., all classes can still be booked - using 1 hour grace period)
+        boolean firstClassBookable = !availableItems.isEmpty() && !isClassPast(availableItems.get(0));
+        selectAllBar.setVisible(firstClassBookable);
+        selectAllBar.setManaged(firstClassBookable);
 
         // Update select all bar with correct values now that data is loaded
         updateSelectAllBar();
@@ -578,10 +618,14 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
      */
     public void setPricePerClass(int price) {
         this.pricePerClass = price;
-        // Recalculate all classes price and discount
-        int fullPrice = pricePerClass * availableItems.size();
-        allClassesDiscount = (int) (fullPrice * 0.1); // 10% discount
-        allClassesPrice = fullPrice - allClassesDiscount;
+        // Recalculate all classes price and discount using the pricing API
+        // Note: workingBookingProperties may be null during early initialization
+        if (workingBookingProperties != null) {
+            int wholeEventPrice = workingBookingProperties.getWholeEventPrice();
+            int wholeEventNoDiscountPrice = workingBookingProperties.getWholeEventNoDiscountPrice();
+            allClassesDiscount = wholeEventNoDiscountPrice - wholeEventPrice;
+            allClassesPrice = wholeEventPrice;
+        }
         // Update UI
         updateSelectAllBar();
         updatePriceSummary();

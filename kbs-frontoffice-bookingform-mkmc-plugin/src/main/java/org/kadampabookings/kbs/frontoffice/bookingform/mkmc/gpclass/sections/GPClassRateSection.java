@@ -12,7 +12,9 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import one.modality.base.shared.entities.Event;
 import one.modality.base.shared.entities.Rate;
+import one.modality.base.shared.entities.formatters.EventPriceFormatter;
 import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
@@ -64,8 +66,10 @@ public class GPClassRateSection implements BookingFormSection, HasRateTypeSectio
                 StyledSectionHeader.ICON_TAG
         );
 
-        // Rate cards container (horizontal layout)
-        HBox cardsContainer = new HBox(16);
+        // Rate cards container (FlowPane for responsive wrapping on mobile)
+        FlowPane cardsContainer = new FlowPane();
+        cardsContainer.setHgap(16);
+        cardsContainer.setVgap(12);
         cardsContainer.setAlignment(Pos.TOP_LEFT);
 
         // Standard Rate card
@@ -181,9 +185,9 @@ public class GPClassRateSection implements BookingFormSection, HasRateTypeSectio
                 standardPrice = dailyRate.getPrice();
             }
 
-            // Member price from getResidentPrice() (resident = member in MKMC context)
-            if (dailyRate.getResidentPrice() != null) {
-                memberPrice = dailyRate.getResidentPrice();
+            // Member price from getFacilityFeePrice() (facility fee = member price in MKMC context)
+            if (dailyRate.getFacilityFeePrice() != null) {
+                memberPrice = dailyRate.getFacilityFeePrice();
             } else {
                 // Fallback to standard price if no member price defined
                 memberPrice = standardPrice;
@@ -214,8 +218,15 @@ public class GPClassRateSection implements BookingFormSection, HasRateTypeSectio
     }
 
     private String formatPrice(int priceInCents) {
-        double priceValue = priceInCents / 100.0;
-        return "£" + Math.round(priceValue);
+        Event event = getEvent();
+        return EventPriceFormatter.formatWithCurrency(priceInCents, event);
+    }
+
+    private Event getEvent() {
+        if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
+            return workingBookingProperties.getWorkingBooking().getEvent();
+        }
+        return null;
     }
 
     // === Public Accessors ===
