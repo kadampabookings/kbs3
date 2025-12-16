@@ -12,6 +12,8 @@ module kbs.frontoffice.bookingform.mkmc.plugin {
     requires modality.booking.client.workingbooking;
     requires modality.booking.frontoffice.bookingform;
     requires modality.booking.frontoffice.bookingpage;
+    requires modality.crm.client.authn.fx;
+    requires modality.crm.shared.authn;
     requires modality.ecommerce.document.service;
     requires modality.ecommerce.shared.pricecalculator;
     requires modality.event.frontoffice.activity.book;
@@ -21,6 +23,9 @@ module kbs.frontoffice.bookingform.mkmc.plugin {
     requires webfx.extras.webtext;
     requires webfx.kit.util;
     requires webfx.platform.async;
+    requires webfx.platform.console;
+    requires webfx.platform.uischeduler;
+    requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.entity;
 
     // Exported packages

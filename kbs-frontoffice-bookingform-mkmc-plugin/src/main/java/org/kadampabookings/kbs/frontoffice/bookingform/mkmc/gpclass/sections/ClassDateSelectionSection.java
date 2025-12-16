@@ -35,8 +35,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -65,6 +67,9 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
     private final ObservableList<ScheduledItem> availableItems = FXCollections.observableArrayList();
     private final ObservableList<ScheduledItem> selectedItems = FXCollections.observableArrayList();
     private final BooleanProperty validProperty = new SimpleBooleanProperty(false);
+
+    // Already booked items (from existing booking - locked, cannot be deselected)
+    private final Set<Object> alreadyBookedItemIds = new HashSet<>();
 
     // Working booking reference
     private WorkingBookingProperties workingBookingProperties;
@@ -98,7 +103,7 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
         // Price summary
         priceSummaryBox.setPadding(new Insets(24));
-        priceSummaryBox.getStyleClass().addAll("bookingpage-card", "gpclass-price-summary");
+        priceSummaryBox.getStyleClass().addAll("bookingpage-card-static", "gpclass-price-summary");
         priceSummaryBox.setVisible(false);
         priceSummaryBox.setManaged(false);
 
@@ -200,14 +205,60 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
     }
 
     private void setupBindings() {
-        // Valid when at least one date is selected
+        // Valid when at least one date is selected (for new bookings)
+        // This binding will be updated in updateValidityBinding() for modifications
         validProperty.bind(Bindings.isNotEmpty(selectedItems));
 
         // Update price summary when selection changes
         selectedItems.addListener((ListChangeListener<ScheduledItem>) change -> {
             updatePriceSummary();
             updateWorkingBooking();
+            updateValidityBinding();
         });
+    }
+
+    /**
+     * Updates the validity binding based on whether this is a modification or new booking.
+     * For new bookings: valid when at least one date is selected.
+     * For modifications: valid when at least one NEW date is selected (beyond already-booked).
+     */
+    private void updateValidityBinding() {
+        boolean hasExistingBooking = !alreadyBookedItemIds.isEmpty();
+        if (hasExistingBooking) {
+            // Unbind first, then rebind with new condition for modifications
+            validProperty.unbind();
+            validProperty.bind(Bindings.createBooleanBinding(
+                () -> getNewlySelectedCount() > 0,
+                selectedItems
+            ));
+        }
+        // For new bookings, keep the original binding (isNotEmpty)
+    }
+
+    /**
+     * Checks if a scheduled item is already booked in an existing booking.
+     * Already booked items are locked and cannot be deselected.
+     */
+    private boolean isAlreadyBooked(ScheduledItem item) {
+        return alreadyBookedItemIds.contains(item.getPrimaryKey());
+    }
+
+    /**
+     * Public accessor for checking if a scheduled item is already booked.
+     * Used by GPClassSummarySection for differential pricing display.
+     */
+    public boolean isItemAlreadyBooked(ScheduledItem item) {
+        return isAlreadyBooked(item);
+    }
+
+    /**
+     * Returns the count of newly selected items (excluding already-booked items).
+     * Used for calculating pricing in modification mode.
+     */
+    private int getNewlySelectedCount() {
+        return (int) selectedItems.stream()
+            .filter(item -> !isAlreadyBooked(item))
+            .count();
     }
 
     /**
@@ -241,6 +292,9 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         // Detect if this class has passed (1 hour after start time) - not selectable
         boolean isPastDate = isClassPast(item);
 
+        // Detect if this class is already booked (locked - cannot be deselected)
+        boolean isLocked = isAlreadyBooked(item);
+
         // Use AnchorPane for absolute positioning of indicator in top-right corner
         AnchorPane card = new AnchorPane();
         card.setMinWidth(180);
@@ -251,40 +305,49 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         // Apply past date styling using CSS helper (grayed out, not clickable)
         BookingPageUIBuilder.applyPastDateStyle(card, isPastDate);
 
-        // Only set hand cursor for selectable (future) dates
-        if (!isPastDate) {
+        // Apply locked styling for already booked items
+        if (isLocked) {
+            card.getStyleClass().addAll("selected", "locked");
+        }
+
+        // Only set hand cursor for selectable (future, non-locked) dates
+        if (!isPastDate && !isLocked) {
             card.setCursor(Cursor.HAND);
         }
 
-        // Check if selected
-        BooleanProperty isSelected = new SimpleBooleanProperty(selectedItems.contains(item));
-        selectedItems.addListener((ListChangeListener<ScheduledItem>) change -> {
-            isSelected.set(selectedItems.contains(item));
-        });
+        // Check if selected (locked items are always selected)
+        BooleanProperty isSelected = new SimpleBooleanProperty(isLocked || selectedItems.contains(item));
+        if (!isLocked) {
+            selectedItems.addListener((ListChangeListener<ScheduledItem>) change -> {
+                isSelected.set(selectedItems.contains(item));
+            });
+        }
 
-        // Empty circle indicator (top-right corner) - shown when NOT selected
+        // Empty circle indicator (top-right corner) - shown when NOT selected and not locked
         StackPane emptyCircle = BookingPageUIBuilder.createEmptyCircleIndicator(20);
-        emptyCircle.setVisible(!isSelected.get() && !isPastDate);
+        emptyCircle.setVisible(!isSelected.get() && !isPastDate && !isLocked);
 
-        // Selection checkmark (top-right corner) - shown when selected
+        // Selection checkmark (top-right corner) - shown when selected (including locked)
         StackPane checkmark = BookingPageUIBuilder.createCheckmarkBadgeCss(20);
         checkmark.setVisible(isSelected.get());
 
-        // Update indicator visibility and card styling based on selection
-        isSelected.addListener((obs, old, selected) -> {
-            emptyCircle.setVisible(!selected && !isPastDate);
-            checkmark.setVisible(selected);
-            if (selected) {
-                if (!card.getStyleClass().contains("selected")) {
-                    card.getStyleClass().add("selected");
+        // Update indicator visibility and card styling based on selection (only for non-locked)
+        if (!isLocked) {
+            isSelected.addListener((obs, old, selected) -> {
+                emptyCircle.setVisible(!selected && !isPastDate);
+                checkmark.setVisible(selected);
+                if (selected) {
+                    if (!card.getStyleClass().contains("selected")) {
+                        card.getStyleClass().add("selected");
+                    }
+                } else {
+                    card.getStyleClass().remove("selected");
                 }
-            } else {
-                card.getStyleClass().remove("selected");
+            });
+            // Apply initial selected state
+            if (isSelected.get()) {
+                card.getStyleClass().add("selected");
             }
-        });
-        // Apply initial selected state
-        if (isSelected.get()) {
-            card.getStyleClass().add("selected");
         }
 
         // Date info row
@@ -330,17 +393,31 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         AnchorPane.setTopAnchor(indicatorContainer, 8.0);
         AnchorPane.setRightAnchor(indicatorContainer, 8.0);
 
-        // Date row fills the card
+        // Date row fills the card (with bottom margin to make room for badge if locked)
         AnchorPane.setTopAnchor(dateRow, 0.0);
         AnchorPane.setLeftAnchor(dateRow, 0.0);
-        AnchorPane.setBottomAnchor(dateRow, 0.0);
+        AnchorPane.setBottomAnchor(dateRow, isLocked ? 24.0 : 0.0);
         AnchorPane.setRightAnchor(dateRow, 0.0);
 
         // Add content and indicator to card
         card.getChildren().addAll(dateRow, indicatorContainer);
 
-        // Click handler and hover effects only for selectable (future) dates
-        if (!isPastDate) {
+        // Add "BOOKED" badge at bottom for locked (already booked) items
+        if (isLocked) {
+            Label bookedBadge = I18nControls.newLabel(MKMCI18nKeys.GPBooked);
+            bookedBadge.getStyleClass().add("gpclass-booked-badge");
+            bookedBadge.setPadding(new Insets(2, 6, 2, 6));
+            HBox badgeContainer = new HBox(bookedBadge);
+            badgeContainer.setAlignment(Pos.CENTER);
+            badgeContainer.setPadding(new Insets(0, 0, 6, 0));
+            AnchorPane.setBottomAnchor(badgeContainer, 0.0);
+            AnchorPane.setLeftAnchor(badgeContainer, 0.0);
+            AnchorPane.setRightAnchor(badgeContainer, 0.0);
+            card.getChildren().add(badgeContainer);
+        }
+
+        // Click handler and hover effects only for selectable (future, non-locked) dates
+        if (!isPastDate && !isLocked) {
             card.setOnMouseClicked(e -> {
                 toggleDateSelection(item);
                 e.consume();
@@ -373,7 +450,11 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
     }
 
     private void clearAllDates() {
-        selectedItems.clear();
+        // Clear only non-locked items (keep already booked items selected)
+        List<ScheduledItem> itemsToKeep = selectedItems.stream()
+                .filter(this::isAlreadyBooked)
+                .collect(Collectors.toList());
+        selectedItems.setAll(itemsToKeep);
     }
 
     private void updatePriceSummary() {
@@ -394,6 +475,8 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         VBox.setMargin(titleLabel, new Insets(0, 0, 4, 0)); // 4px extra to achieve 16px total (12px VBox spacing + 4px)
 
         boolean allSelected = selectedItems.size() == availableItems.size();
+        int newlySelectedCount = getNewlySelectedCount();
+        boolean hasExistingBooking = !alreadyBookedItemIds.isEmpty();
 
         // Calculate prices
         workingBookingProperties.updateAll();
@@ -407,7 +490,14 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
         subtotalRow.setPadding(new Insets(0, 12, 0, 12));
 
         Label subtotalLabel = new Label();
-        if (allSelected) {
+        if (hasExistingBooking) {
+            // Modification: show new selections only
+            if (newlySelectedCount == 0) {
+                subtotalLabel.setText(I18n.getI18nText(MKMCI18nKeys.GPNoNewClassesSelected));
+            } else {
+                subtotalLabel.setText(I18n.getI18nText(MKMCI18nKeys.GPNewClassesSelected, newlySelectedCount, formatPrice(pricePerClass)));
+            }
+        } else if (allSelected) {
             subtotalLabel.setText(I18n.getI18nText(MKMCI18nKeys.GPFullTermPrice, availableItems.size()));
         } else {
             subtotalLabel.setText(I18n.getI18nText(MKMCI18nKeys.GPSingleClassPrice, selectedItems.size(), formatPrice(pricePerClass)));
@@ -498,6 +588,13 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
         if (policyAggregate == null) return;
 
+        // Load already booked items from existing booking (for modification flow)
+        alreadyBookedItemIds.clear();
+        List<ScheduledItem> alreadyBookedItems = workingBooking.getAlreadyBookedScheduledItems();
+        for (ScheduledItem bookedItem : alreadyBookedItems) {
+            alreadyBookedItemIds.add(bookedItem.getPrimaryKey());
+        }
+
         // PolicyAggregate.getScheduledItems() already returns only bookable items
         // (server-side filtered by bookableScheduledItem=id in ServerDocumentServiceProvider)
         List<ScheduledItem> scheduledItems = policyAggregate.getScheduledItems().stream()
@@ -508,6 +605,13 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
                 .collect(Collectors.toList());
 
         availableItems.setAll(scheduledItems);
+
+        // Pre-select already booked items (they are locked and cannot be deselected)
+        for (ScheduledItem item : scheduledItems) {
+            if (isAlreadyBooked(item) && !selectedItems.contains(item)) {
+                selectedItems.add(item);
+            }
+        }
 
         // Get pricing info
         pricePerClass = policyAggregate.getDailyRatePrice();
@@ -536,6 +640,9 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
         // Update select all bar with correct values now that data is loaded
         updateSelectAllBar();
+
+        // Update validity binding (for modifications, need new selections to continue)
+        updateValidityBinding();
     }
 
     // === BookingFormSection Implementation ===
@@ -565,7 +672,11 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
     @Override
     public void reset() {
-        selectedItems.clear();
+        // Clear only non-locked items (keep already booked items selected)
+        List<ScheduledItem> itemsToKeep = selectedItems.stream()
+                .filter(this::isAlreadyBooked)
+                .collect(Collectors.toList());
+        selectedItems.setAll(itemsToKeep);
     }
 
     // === Public Accessors ===
