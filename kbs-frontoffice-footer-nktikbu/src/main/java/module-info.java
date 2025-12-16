@@ -5,7 +5,6 @@ module kbs.frontoffice.footer.nktikbu {
     // Direct dependencies modules
     requires javafx.graphics;
     requires modality.base.frontoffice.mainframe.footernode;
-    requires webfx.platform.resource;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.footer.nktikbu;
