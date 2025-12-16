@@ -30,6 +30,7 @@ import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
+import one.modality.booking.frontoffice.bookingpage.PriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.HasMemberSelectionSection.MemberInfo;
@@ -683,8 +684,7 @@ public class ExistingBookingSection implements BookingFormSection {
     }
 
     private String formatCurrency(int amountInCents) {
-        double amount = amountInCents / 100.0;
-        return String.format("£%.2f", amount);
+        return PriceFormatter.formatPriceWithCurrencyWithDecimals(amountInCents);
     }
 
     // === DATA LOADING ===
