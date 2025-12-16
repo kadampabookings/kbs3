@@ -116,7 +116,7 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-base-backoffice-activity-operations-plugin</artifactId>
+            <artifactId>modality-base-backoffice-activity-superadmin-home-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -124,6 +124,13 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-backoffice-application</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-base-backoffice-claude</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -138,6 +145,13 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-backoffice-gantt-canvas</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-base-backoffice-homemenu</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -180,13 +194,6 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-backoffice-min-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>one.modality</groupId>
-            <artifactId>modality-base-backoffice-operations-filters</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -389,6 +396,13 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-booking-backoffice-activity-registration-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-booking-backoffice-bookingeditor</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -459,14 +473,14 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-catering-client-i18n</artifactId>
+            <artifactId>modality-crm-backoffice-activity-admin-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-crm-backoffice-activity-admin-plugin</artifactId>
+            <artifactId>modality-crm-backoffice-activity-administrators-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -480,7 +494,21 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-crm-backoffice-activity-superadmin-plugin</artifactId>
+            <artifactId>modality-crm-backoffice-activity-lettersetup-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-crm-backoffice-activity-operationsandroles-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-crm-backoffice-activity-organizations-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -711,6 +739,13 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-event-backoffice-activity-eventsetup-home-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-event-backoffice-activity-medias-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
@@ -802,14 +837,28 @@
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-hotel-backoffice-activities-accommodation</artifactId>
+            <artifactId>modality-hotel-backoffice-activity-accommodation-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
 
         <dependency>
             <groupId>one.modality</groupId>
-            <artifactId>modality-hotel-backoffice-activities-household</artifactId>
+            <artifactId>modality-hotel-backoffice-activity-household-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-hotel-backoffice-activity-reception-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
+            <artifactId>modality-hotel-backoffice-activity-roomsetup-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -824,13 +873,6 @@
         <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-hotel-backoffice-max-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>one.modality</groupId>
-            <artifactId>modality-hotel-backoffice-operations-documentline</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
@@ -1934,6 +1976,13 @@
         <dependency>
             <groupId>dev.webfx</groupId>
             <artifactId>webfx-stack-com-bus-json-client-websocket-web</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-stack-com-origin-client</artifactId>
             <version>0.1.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>

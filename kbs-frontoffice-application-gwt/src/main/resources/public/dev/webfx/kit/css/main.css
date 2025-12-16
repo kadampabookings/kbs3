@@ -28,23 +28,33 @@
 
     /* CSS variables for text fill and svg path fill */
     --fx-text-fill: black;
-    --fx-svg-path-fill: var(--fx-text-fill);
+
+    --fx-svg-path-fill: var(--fx-fill);
 
     /* CSS variable for focus appearance */
     --fx-focus-color: #0096D6;
-    --fx-background-color-focus: unset;
-    --fx-border-style-focus: dashed;
-    --fx-border-color-focus: var(--fx-focus-color);
-    --fx-border-width-focus: 1px;
-    --fx-text-fill-focus: unset;
 
     --fx-kit-line-height: 1; /* Default variable for text line height managed by the webfx kit. App CSS can't override
     it (because it's set at the text element level), but can set --fx-line-height which precedes --fx-kit-line-height */
 }
 
 .unset-variables { /* Dummy selector used just to list unset CSS variables that can be overridden by App CSS */
+    --fx-padding: 0;
+    --fx-padding-top: 0;
+    --fx-padding-right: 0;
+    --fx-padding-bottom: 0;
+    --fx-padding-left: 0;
     --fx-line-height: 1;
+    --fx-fill: transparent;
+    --fx-stroke: transparent;
+    --fx-stroke-width: 1px;
+    --fx-stroke-style: solid;
+    --fx-stroke-linecap: round;
+    --fx-stroke-linejoin: round;
     --fx-svg-path-stroke: transparent;
+    --fx-svg-path-stroke-width: 1;
+    --fx-svg-path-stroke-linecap: round;
+    --fx-svg-path-stroke-linejoin: round;
 }
 
 /* Mocking some basic JavaFX behaviours */
@@ -93,43 +103,79 @@ body { /* Although we don't want that padding, we apply it initially because thi
     outline: none;
 }
 
-fx-background {
+/* === New: Single-host Region rendering without intermediate fx-* nodes === */
+/* Apply background on the host and draw the border on ::before using the SAME variables */
+[fx-border-overlay] {
+    /* Background from existing variables */
     background-color: var(--fx-background-color);
-    border-radius: var(--fx-background-radius);
     background-image: var(--fx-background-image);
     background-position: var(--fx-background-position);
     background-repeat: var(--fx-background-repeat);
     background-size: var(--fx-background-size);
+    border-radius: var(--fx-background-radius);
+
+    /* Anchor ::before */
+    position: relative;
+    /* Ensure width/height include padding set via variables (outer size stable) */
+    box-sizing: border-box;
+    /* Ensure native border is not used (we overlay instead) */
+    border: none;
+
+    /* WebFX padding: allow CSS to communicate padding to Java without shifting the visual border
+       (the ::before overlay will expand back out to the border box using negative insets) */
+    padding: var(--fx-padding-top, var(--fx-padding, 0px)) var(--fx-padding-right, var(--fx-padding, 0px)) var(--fx-padding-bottom, var(--fx-padding, 0px)) var(--fx-padding-left, var(--fx-padding, 0px));
 }
 
-:focus > fx-background, :focus-visible > fx-background {
-    background-color: var(--fx-background-color-focus, var(--fx-background-color));
-}
+[fx-border-overlay]::before {
+    content: "";
+    position: absolute;
+    /* Draw inside the host padding box to avoid clipping issues */
+    inset: 0;
+    box-sizing: border-box;
+    pointer-events: none;
 
-fx-border {
     border-style: var(--fx-border-style);
     border-color: var(--fx-border-color);
     border-width: var(--fx-border-width);
-    border-radius: var(--fx-border-radius);
+    border-radius: var(--fx-border-radius, inherit);
 }
 
-:focus > fx-border, :focus-visible > fx-border {
-    --fx-border-style: var(--fx-border-style-focus);
-    --fx-border-color: var(--fx-border-color-focus);
-    --fx-border-width: var(--fx-border-width-focus);
+/* Optional: opt-in to draw the border at the outer edge (outside padding) when safe.
+   Use only on elements that are not clipped by ancestors and don’t need the border
+   to be inside padding. */
+[fx-border-overlay][data-fx-border-outside=""]::before {
+    inset: calc(0px - var(--fx-padding-top,    var(--fx-padding, 0px)))
+           calc(0px - var(--fx-padding-right,  var(--fx-padding, 0px)))
+           calc(0px - var(--fx-padding-bottom, var(--fx-padding, 0px)))
+           calc(0px - var(--fx-padding-left,   var(--fx-padding, 0px)));
 }
 
-fx-children { /* Stopping propagation of background and border CSS variables to children */
+/* Prevent parent Region variables from leaking into nested Region hosts.
+   By resetting variables on any descendant host, we break inheritance at each Region boundary.
+   Control/skin/app rules can still override these defaults on the child element. */
+/* Use :where() to keep specificity at 0 so component/control rules can override */
+:where([fx-border-overlay]) :where([fx-border-overlay]),
+/* Stop propagation of background/border variables to non-host children (replacement for fx-children)
+   Do NOT reset variables on child elements that are themselves Region hosts (they carry fx-border-overlay). */
+[fx-border-overlay] > :not([fx-border-overlay]) {
     --fx-background-color: transparent;
     --fx-background-radius: var(--fx-border-radius);
     --fx-background-image: none;
     --fx-background-position: none;
     --fx-background-repeat: none;
     --fx-background-size: none;
-    --fx-border-style: none;
-    --fx-border-color: none;
+    --fx-border-style: solid;
+    --fx-border-color: transparent;
     --fx-border-radius: 0;
     --fx-border-width: 0;
+}
+
+/* Optional fast path: uniform solid border via inset box-shadow */
+[fx-border-overlay][data-fx-border-solid=""] {
+    box-shadow: inset 0 0 0 var(--fx-border-width) var(--fx-border-color);
+}
+[fx-border-overlay][data-fx-border-solid=""]::before {
+    border-width: 0;
 }
 
 /* The default JavaFX behaviour for Text wrapping is equivalent to HTML "break-word", which is not the default in HTML
@@ -147,61 +193,42 @@ fx-text {
     line-height: var(--fx-line-height, var(--fx-kit-line-height));
 }
 
-:focus fx-text, :focus-visible fx-text {
-    color: var(--fx-text-fill-focus, var(--fx-text-fill));
-}
-
-fx-svgpath svg path:not([stroke]) {
-    stroke: var(--fx-svg-path-stroke); /* unset by default */
+fx-circle, fx-rectangle {
+    background-color: var(--fx-fill);
+    border-color: var(--fx-stroke, transparent);
+    border-width: var(--fx-stroke-width, 1px);
+    border-style: var(--fx-stroke-style, solid);
 }
 
 /* Applying the default JavaFX behaviour for SVGPath - Note that CSS fill is prioritized over SVG fill! */
 fx-svgpath svg path:not([fill]):not([stroke]) { /* if the application code didn't set neither fill nor stroke */
-    fill: var(--fx-svg-path-fill);
+    fill: var(--fx-svg-path-fill, var(--fx-fill));
 }
 
 fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the stroke but not the fill */
     --fx-svg-path-fill: transparent; /* then the fill is transparent */
-    fill: var(--fx-svg-path-fill);
+    fill: var(--fx-svg-path-fill, var(--fx-fill));
 }
 
+fx-svgpath svg path:not([stroke]) {
+    stroke: var(--fx-svg-path-stroke, var(--fx-stroke)); /* unset by default */
+}
+
+fx-svgpath svg path:not([stroke-width]) {
+    stroke-width: var(--fx-svg-path-stroke-width, var(--fx-stroke-width));
+}
+
+fx-svgpath svg path:not([stroke-linecap]) {
+    stroke-linecap: var(--fx-svg-path-stroke-linecap, var(--fx-stroke-linecap));
+}
+
+fx-svgpath svg path:not([stroke-linejoin]) {
+    stroke-linejoin: var(--fx-svg-path-stroke-linejoin, var(--fx-stroke-linejoin));
+}
 /*===== webfx-kit-javafxcontrols-web@main.css from webfx-kit-javafxcontrols-peers-elemental2 =====*/
 
 /***** Global variables *****/
 :root {
-    --fx-button-background-color: white;
-    --fx-button-background-image: none;
-    --fx-button-background-radius: var(--fx-button-border-radius);
-    /* Next 3 necessary? (probably never used) */
-    --fx-button-background-position: none;
-    --fx-button-background-repeat: none;
-    --fx-button-background-size: none;
-
-    --fx-button-border-style: solid;
-    --fx-button-border-color: #c0c0c0;
-    --fx-button-border-radius: 5px;
-    --fx-button-border-width: 1px;
-
-    --fx-textfield-background-color: white;
-    --fx-textfield-background-radius: 0;
-    --fx-textfield-border-style: solid;
-    --fx-textfield-border-color: var(--fx-button-border-color);
-    --fx-textfield-border-width: 1px;
-    --fx-textfield-border-radius: var(--fx-button-border-radius);
-
-    --fx-textarea-background-color: var(--fx-textfield-border-style);
-    --fx-textarea-border-style: var(--fx-textfield-border-style);
-    --fx-textarea-border-color: var(--fx-textfield-border-color);
-    --fx-textarea-border-width: var(--fx-textfield-border-width);
-    --fx-textarea-border-radius: var(--fx-textfield-border-radius);
-
-    --fx-button-border-color-focus: var(--fx-border-color-focus);
-
-    --fx-togglebutton-background-color-selected: lightgray;
-    --fx-togglebutton-border-color-selected: darkgray;
-    --fx-togglebutton-background-color-hover: var(--fx-togglebutton-background-color-selected);
-    --fx-togglebutton-border-color-hover: var(--fx-togglebutton-border-color-selected);
-
     --fx-tabheaderarea-background-color: #D3D3D3;
     --fx-tabheaderarea-border-radius: 0;
     --fx-tabheaderarea-padding-top: 5px;
@@ -219,6 +246,7 @@ fx-svgpath svg path:not([fill])[stroke] { /* if the application code set the str
     --fx-tabheader-padding-bottom: 3px;
     --fx-tabheader-padding-left: 10px;
     --fx-tabheader-padding-right: 10px;
+    --fx-tabheader-text-fill: var(--fx-text-fill);
     --fx-tabheader-text-fill-selected: var(--fx-text-fill);
 
     --fx-theme-color: #0095cb;
@@ -244,34 +272,6 @@ fx-scene > * {
 fx-label, fx-button, fx-togglebutton {
     --fx-svg-path-fill: var(--fx-text-fill);
 }
-
-fx-button, fx-togglebutton {
-    --fx-border-style: var(--fx-button-border-style);
-    --fx-border-color: var(--fx-button-border-color);
-    --fx-border-radius: var(--fx-button-border-radius);
-    --fx-border-width: var(--fx-button-border-width);
-    --fx-background-color: var(--fx-button-background-color);
-    --fx-background-radius: var(--fx-button-background-radius);
-    --fx-background-image: var(--fx-button-background-image);
-    --fx-background-position: var(--fx-button-background-position);
-    --fx-background-repeat: var(--fx-button-background-repeat);
-    --fx-background-size: var(--fx-button-background-size);
-}
-
-fx-button:focus-within, fx-togglebutton:focus-within {
-    --fx-button-border-color: var(--fx-button-border-color-focus);
-}
-
-fx-togglebutton:hover {
-    --fx-button-background-color: var(--fx-togglebutton-background-color-hover);
-    --fx-button-border-color: var(--fx-togglebutton-border-color-hover);
-}
-
-fx-togglebutton.pseudo-selected {
-    --fx-button-background-color: var(--fx-togglebutton-background-color-selected);
-    --fx-button-border-color: var(--fx-togglebutton-border-color-selected);
-}
-
 
 fx-hyperlink {
     --fx-text-fill: var(--fx-hyperlink-text-fill);
@@ -301,37 +301,41 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-
-fx-textfield {
-    --fx-border-style: var(--fx-textfield-border-style);
-    --fx-border-color: var(--fx-textfield-border-color);
-    --fx-border-width: var(--fx-textfield-border-width);
-    --fx-border-radius: var(--fx-textfield-border-radius);
-    --fx-background-color: var(--fx-textfield-background-color);
-    --fx-background-radius: var(--fx-textfield-background-radius);
+fx-button, fx-togglebutton {
+    --fx-background-color: white;
+    --fx-border-style: solid;
+    --fx-border-color: #c0c0c0;
+    --fx-border-width: 1px;
+    --fx-border-radius: 5px;
+    --text-user-select: none;
 }
 
-fx-textfield:focus-within {
-    --fx-textfield-border-color: var(--fx-border-color-focus);
+.text-field {
+    --fx-background-color: white;
+    --fx-border-style: solid;
+    --fx-border-color: #c0c0c0;
+    --fx-border-width: 1px;
+    --fx-border-radius: 5px;
 }
 
-textarea {
+textarea.text-field {
     padding: 8px;
     box-sizing: border-box;
     outline: none;
-    background-color: var(--fx-textarea-background-color);
-    border-style: var(--fx-textarea-border-style);
-    border-color: var(--fx-textarea-border-color);
-    border-width: var(--fx-textarea-border-width);
-    border-radius: var(--fx-textarea-border-radius);
+
+    /* :before border doesn't work on textarea for some reason, so we apply to it directly */
+    border-style: var(--fx-border-style);
+    border-color: var(--fx-border-color);
+    border-width: var(--fx-border-width);
+    border-radius: var(--fx-border-radius, inherit);
 }
 
-textarea:focus {
-    --fx-textarea-border-color: var(--fx-border-color-focus);
+textarea.text-field:focus {
+    --fx-border-color: var(--fx-focus-color);
 }
 
-fx-titledpane textarea {
-    --fx-textarea-border-radius: 0 0 5px 5px;
+fx-titledpane textarea.text-field {
+    --fx-border-radius: 0 0 5px 5px;
 }
 
 /* Cross for the tab close button */
@@ -339,9 +343,9 @@ fx-titledpane textarea {
     --fx-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke='%23444' stroke-width='2' stroke-linejoin='round' viewBox=\'0 0 16 16\'%3E%3Cpath d=\'M 4,4 L 12,12 Z M 4,12 L 12,4 Z\'/%3E%3C/svg%3E");
 }
 
-fx-menuitemcontainer {
-    --fx-background-color-focus: var(--fx-focus-color);
-    --fx-text-fill-focus: white;
+fx-menuitemcontainer:focus {
+    --fx-background-color: var(--fx-focus-color);
+    --fx-text-fill: white;
 }
 
 /* Ellipsis management for wrapped text inside a label with restricted height */
@@ -391,8 +395,11 @@ fx-tabheaderarea {
 }
 
 /* Web padding that is read back by WebFX to JavaFX padding */
-fx-tabheaderarea > fx-children {
-    padding: var(--fx-tabheaderarea-padding-top) var(--fx-tabheaderarea-padding-right) var(--fx-tabheaderarea-padding-bottom) var(--fx-tabheaderarea-padding-left);
+fx-tabheaderarea {
+    --fx-padding-top: var(--fx-tabheaderarea-padding-top);
+    --fx-padding-right: var(--fx-tabheaderarea-padding-right);
+    --fx-padding-bottom: var(--fx-tabheaderarea-padding-bottom);
+    --fx-padding-left: var(--fx-tabheaderarea-padding-left);
 }
 
 
@@ -413,8 +420,11 @@ fx-tabheaderskin.selected {
 }
 
 /* Web padding that is read back by WebFX to JavaFX padding */
-fx-tabheaderskin > fx-children {
-    padding: var(--fx-tabheader-padding-top) var(--fx-tabheader-padding-right) var(--fx-tabheader-padding-bottom) var(--fx-tabheader-padding-left);
+fx-tabheaderskin {
+    --fx-padding-top: var(--fx-tabheader-padding-top);
+    --fx-padding-right: var(--fx-tabheader-padding-right);
+    --fx-padding-bottom: var(--fx-tabheader-padding-bottom);
+    --fx-padding-left: var(--fx-tabheader-padding-left);
 }
 
 /*===== webfx-kit-javafxweb-web@main.css from webfx-kit-javafxweb-peers-elemental2 =====*/
@@ -423,6 +433,25 @@ iframe {
     border: none;
 }
 
+/*===== webfx-extras-controls-web@main.css from webfx-extras-util-control =====*/
+
+:root {
+    --fx-spinner-color: var(--fx-theme-color);
+}
+
+.webfx-extras-spinner {
+    animation: webfx-extras-spinner-rotate 1s linear infinite;
+    --fx-svg-path-fill: var(--fx-spinner-color);
+}
+
+@keyframes webfx-extras-spinner-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
 
 :root {
@@ -441,32 +470,30 @@ iframe {
     --webfx-material-focused-line-fill: var(--webfx-material-focused-fill);
 }
 
-/* Applying CSS variables to material components */
+/* Applying CSS variables to material components (new single-host system) */
 
-.material > fx-border {
-    border: none;
-}
-
-.material > fx-background {
-    background-color: var(--webfx-material-background-color);
-    border-radius: 0;
+/* Host with class .material: set background and neutralize border via variables */
+.material {
+    --fx-background-color: var(--webfx-material-background-color);
+    --fx-border-radius: 0;
+    --fx-border-style: none;
+    --fx-border-width: 0;
 }
 
 .material-label {
     color: var(--webfx-material-label-fill);
 }
 
-.material-line > fx-border { /* is actually a JavaFX Region */
-    /* Using a border (not background) because there is a dotted style for the disabled state */
-    border-color: var(--webfx-material-line-fill);
-    border-style: var(--webfx-material-line-border-style);
-    border-width: 0;
-    border-bottom-width: 1px;
+.material-line { /* is actually a JavaFX Region */
+    /* Using the border overlay (via variables) to support dotted style for disabled state */
+    --fx-border-color: var(--webfx-material-line-fill);
+    --fx-border-style: var(--webfx-material-line-border-style);
+    --fx-border-width: 0 0 1px 0; /* only bottom */
 }
 
-.material-focused-line > fx-background { /* is actually a JavaFX Region */
-    /* Using a background is enough (no need for a border) */
-    background-color: var(--webfx-material-focused-line-fill);
+.material-focused-line { /* is actually a JavaFX Region */
+    /* Using background only (no need for a border) */
+    --fx-background-color: var(--webfx-material-focused-line-fill);
 }
 
 /* Changing CSS variables values in dependence of material state */
@@ -490,20 +517,21 @@ iframe {
 /*===== webfx-extras-dropdown-button-web@main.css from webfx-extras-controlfactory =====*/
 
 .drop-down-button {
-    --fx-button-border-color: lightgray;
-    --fx-button-border-width: 1px;
-    --fx-button-border-radius: 6px;
-    --fx-button-background-color: white;
+    --fx-border-color: lightgray;
+    --fx-border-style: solid;
+    --fx-border-width: 1px;
+    --fx-border-radius: 6px;
+    --fx-background-color: white;
+    --fx-background-radius: 6px;
     --fx-svg-path-fill: transparent;
     --fx-svg-path-stroke: lightgray;
 }
 
-/*===== webfx-extras-bootstrap-web@main.css from webfx-extras-styles-bootstrap =====*/
+/*===== webfx-extras-bootstrap-webfx@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
-:root {
+:root  {
     --bootstrap-white: #fff ;
-
     --bootstrap-grey1: #e6e6e6 ;
     --bootstrap-grey2: #d4d4d4 ;
     --bootstrap-grey3: #ccc ;
@@ -511,7 +539,6 @@ iframe {
     --bootstrap-grey5: #8c8c8c ;
     --bootstrap-grey6: #777777 ;
     --bootstrap-grey7: #333 ;
-
     --bootstrap-blue1: #5bc0de ;
     --bootstrap-blue2: #46b8da ;
     --bootstrap-blue3: #31b0d5 ;
@@ -523,28 +550,24 @@ iframe {
     --bootstrap-blue9: #204d74 ;
     --bootstrap-blue10: #122b40 ;
     --bootstrap-blue11: #31708f ;
-
     --bootstrap-green1: #5cb85c ;
     --bootstrap-green2: #4cae4c ;
     --bootstrap-green3: #449d44 ;
     --bootstrap-green4: #398439 ;
     --bootstrap-green5: #255625 ;
     --bootstrap-green6: #3c763d ;
-
     --bootstrap-orange1: #f0ad4e ;
     --bootstrap-orange2: #eea236 ;
     --bootstrap-orange3: #ec971f ;
     --bootstrap-orange4: #d58512 ;
     --bootstrap-orange5: #985f0d ;
     --bootstrap-orange6: #8a6d3b ;
-
     --bootstrap-red1: #d9534f ;
     --bootstrap-red2: #d43f3a ;
     --bootstrap-red3: #c9302c ;
     --bootstrap-red4: #ac2925 ;
     --bootstrap-red5: #761c19 ;
     --bootstrap-red6: #a94442 ;
-
     --badge-default-bg: var(--bootstrap-white);
     --badge-default-txt: var(--bootstrap-grey7);
     --badge-primary-bg: var(--bootstrap-blue5);
@@ -559,395 +582,431 @@ iframe {
     --badge-danger-txt: var(--bootstrap-white);
     --badge-secondary-bg: var(--bootstrap-grey4);
     --badge-secondary-txt: var(--bootstrap-white);
-
     --bootstrap-font-size: 14px; /* default value for buttons */
 }
 
+
 /* Buttons */
 
-.btn {
+.btn  {
     /* Applying the same style as other buttons (same rules as fx-button in javafx-graphics WebFX CSS) */
-    --fx-border-style: var(--fx-button-border-style);
+    /*--fx-border-style: var(--fx-button-border-style);
     --fx-border-color: var(--fx-button-border-color);
     --fx-border-radius: var(--fx-button-border-radius);
-    --fx-border-width: var(--fx-button-border-width);
-    --fx-background-color: var(--fx-button-background-color);
-    --fx-background-radius: var(--fx-button-background-radius);
-    --fx-background-image: var(--fx-button-background-image);
-    --fx-background-position: var(--fx-button-background-position);
+    --fx-border-width: var(--fx-button-border-width);*/
+    /*--fx-background-color: var(--fx-button-background-color);*/
+    /*--fx-background-radius: var(--fx-button-background-radius);*/
+    /*--fx-background-image: var(--fx-button-background-image);*/
+    /*--fx-background-position: var(--fx-button-background-position);
     --fx-background-repeat: var(--fx-button-background-repeat);
-    --fx-background-size: var(--fx-button-background-size);
-
-    --fx-button-border-width: 1px;
-    --fx-button-border-radius: 4px;
-
+    --fx-background-size: var(--fx-button-background-size);*/
+    --fx-border-width: 1px;
+    --fx-border-radius: 4px;
     cursor: pointer;
     font-weight: normal;
     text-align: center;
     font-size: var(--bootstrap-font-size);
     --fx-svg-path-fill: var(--fx-text-fill);
-
-    /* Using the same color as text for the possible progress indicator inside bootstrap buttons */
+    /* Using the same color as text for the possible spinner or progress indicator inside bootstrap buttons */
+    --fx-spinner-color: var(--fx-text-fill);
     --fx-progress-indicator-color: var(--fx-text-fill);
 }
 
-/*.btn:hover:not(.disabled) {
-    --fx-text-fill: var(--bootstrap-grey7);
-}*/
 
-.btn-default, .btn.default, .default .btn {
+/*.btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-grey7);
-    --fx-button-background-color: var(--bootstrap-white);
+}
+*/
+
+.btn-default, .btn.default, .default .btn  {
+    --fx-text-fill: var(--bootstrap-grey7);
+    --fx-background-color: var(--bootstrap-white);
     --fx-border-color: var(--bootstrap-grey3);
 }
 
-.btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled) {
+
+.btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-grey7);
 }
 
-.btn-default:hover, .btn.default:hover, .default .btn:hover {
-    --fx-button-background-color: var(--bootstrap-grey1);
+
+.btn-default:hover, .btn.default:hover, .default .btn:hover  {
+    --fx-background-color: var(--bootstrap-grey1);
     --fx-border-color: var(--bootstrap-grey5);
 }
 
-.btn-primary, .btn.primary, .primary .btn {
+
+.btn-primary, .btn.primary, .primary .btn  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue5);
+    --fx-background-color: var(--bootstrap-blue5);
     --fx-border-color: var(--bootstrap-blue6);
 }
 
-.btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled) {
+
+.btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue8);
+    --fx-background-color: var(--bootstrap-blue8);
     --fx-border-color: var(--bootstrap-blue9);
 }
 
-.btn-secondary, .btn.secondary, .secondary .btn {
+
+.btn-secondary, .btn.secondary, .secondary .btn  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-grey4);
+    --fx-background-color: var(--bootstrap-grey4);
     --fx-border-color: var(--bootstrap-grey5);
 }
 
-.btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled) {
+
+.btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-grey5);
+    --fx-background-color: var(--bootstrap-grey5);
     --fx-border-color: var(--bootstrap-grey6);
 }
 
-.btn-success, .btn.success, .success .btn {
+
+.btn-success, .btn.success, .success .btn  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-green1);
+    --fx-background-color: var(--bootstrap-green1);
     --fx-border-color: var(--bootstrap-green2);
 }
 
-.btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled) {
+
+.btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-green3);
+    --fx-background-color: var(--bootstrap-green3);
     --fx-border-color: var(--bootstrap-green4);
 }
 
-.btn-info, .btn.info, .info .btn {
+
+.btn-info, .btn.info, .info .btn  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue1);
+    --fx-background-color: var(--bootstrap-blue1);
     --fx-border-color: var(--bootstrap-blue2);
 }
 
-.btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled) {
+
+.btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-blue3);
+    --fx-background-color: var(--bootstrap-blue3);
     --fx-border-color: var(--bootstrap-blue4);
 }
 
-.btn-warning, .btn.warning, .warning .btn {
+
+.btn-warning, .btn.warning, .warning .btn  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-orange1);
+    --fx-background-color: var(--bootstrap-orange1);
     --fx-border-color: var(--bootstrap-orange2);
 }
 
-.btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled) {
+
+.btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-orange3);
+    --fx-background-color: var(--bootstrap-orange3);
     --fx-border-color: var(--bootstrap-orange4);
 }
 
-.btn-danger, .btn.danger, .danger .btn {
+
+.btn-danger, .btn.danger, .danger .btn  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-red1);
+    --fx-background-color: var(--bootstrap-red1);
     --fx-border-color: var(--bootstrap-red2);
 }
 
-.btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled) {
+
+.btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-white);
-    --fx-button-background-color: var(--bootstrap-red3);
+    --fx-background-color: var(--bootstrap-red3);
     --fx-border-color: var(--bootstrap-red4);
 }
 
-.btn-lg, .btn.lg, .lg .btn {
+
+.btn-lg, .btn.lg, .lg .btn  {
     /*padding: 10px 16px 10px 16px;*/ /* hardcoded for web support */
     --bootstrap-font-size: 18px;
     --fx-border-radius: 6px;
 }
 
-.btn-sm, .btn.sm, .sm .btn {
+
+.btn-sm, .btn.sm, .sm .btn  {
     /*padding: 5px 10px 5px 10px;*/ /* hardcoded for web support */
     --bootstrap-font-size: 12px;
     --fx-border-radius: 3px;
 }
 
-.btn-xs, .btn.xs, .xs .btn {
+
+.btn-xs, .btn.xs, .xs .btn  {
     /*padding: 1px 5px 1px 5px;*/ /* hardcoded for web support */
     --bootstrap-font-size: 12px;
     --fx-border-radius: 3px;
 }
 
-.lg .btn {
+
+.lg .btn  {
     --bootstrap-font-size: 18px;
 }
 
-.sm .btn {
+
+.sm .btn  {
     --bootstrap-font-size: 12px;
 }
 
-.xs .btn {
+
+.xs .btn  {
     --bootstrap-font-size: 12px;
 }
 
 
-.btn-block {
+
+/*.btn-block  {
     width: 100%;
 }
+*/
 
-.b, .strong {
+.b, .strong  {
     font-weight: bold;
 }
 
-.i, .em, .italic, .dfn {
+
+.i, .em, .italic, .dfn  {
     font-style: italic;
 }
 
-.h1 {
+
+.h1  {
     font-size: 2em;
 }
 
-.small {
+
+.small  {
     font-size: 80%;
 }
 
-.code, .kbd, .pre, .samp {
+
+.code, .kbd, .pre, .samp  {
     font-family: 'monospace';
     font-size: 1em;
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6 {
-    color: inherit;
+
+.h1, .h2, .h3, .h4, .h5, .h6  {
+    --fx-text-fill: inherit;
     /*fill: inherit;*/
 }
 
-.h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
+
+.h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small  {
     font-weight: normal;
-    color: var(--bootstrap-grey6);
+    --fx-text-fill: var(--bootstrap-grey6);
     --fx-svg-path-fill: var(--bootstrap-grey6);
 }
 
-.h1 .small, .h2 .small, .h3 .small {
+
+.h1 .small, .h2 .small, .h3 .small  {
     font-size: 65%;
 }
 
-.h4 .small, .h5 .small, .h6 .small {
+
+.h4 .small, .h5 .small, .h6 .small  {
     font-size: 75%;
 }
 
-.h1 {
+
+.h1  {
     font-size: 36px;
 }
 
-.h2 {
+
+.h2  {
     font-size: 30px;
 }
 
-.h3 {
+
+.h3  {
     font-size: 24px;
 }
 
-.h4 {
+
+.h4  {
     font-size: 18px;
 }
 
-.h5 {
+
+.h5  {
     font-size: 14px;
 }
 
-.h6 {
+
+.h6  {
     font-size: 12px;
 }
 
-.lead {
+
+.lead  {
     font-size: 16px;
     font-weight: 300;
 }
 
-.small {
+
+.small  {
     font-size: 85%;
 }
 
-.txt-left {
+
+.txt-left  {
     text-align: left;
 }
 
-.txt-right {
+
+.txt-right  {
     text-align: right;
 }
 
-.txt-center {
+
+.txt-center  {
     text-align: center;
 }
 
-.txt-justify {
+
+.txt-justify  {
     text-align: justify;
 }
 
-.txt-muted {
+
+.txt-muted  {
     --fx-text-fill: var(--bootstrap-grey6);
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.txt-primary, .txt.primary, .primary .txt {
+
+.txt-primary, .txt.primary, .primary .txt  {
     --fx-text-fill: var(--bootstrap-blue5);
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.txt-secondary, .txt.secondary, .secondary .txt {
+
+.txt-secondary, .txt.secondary, .secondary .txt  {
     --fx-text-fill: var(--bootstrap-grey5);
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.txt-success, .txt.success, .success .txt {
+
+.txt-success, .txt.success, .success .txt  {
     --fx-text-fill: var(--bootstrap-green6);
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.txt-info, .txt.info,  .info .txt {
+
+.txt-info, .txt.info,  .info .txt  {
     --fx-text-fill: var(--bootstrap-blue11);
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.txt-warning, .txt.warning, .warning .txt {
+
+.txt-warning, .txt.warning, .warning .txt  {
     --fx-text-fill: var(--bootstrap-orange6);
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.txt-danger, .txt.danger, .danger .txt {
+
+.txt-danger, .txt.danger, .danger .txt  {
     --fx-text-fill: var(--bootstrap-red6);
     --fx-svg-path-fill: var(--fx-text-fill);
 }
 
-.badge {
-    border-radius: 14px;
+
+.badge  {
+    --fx-border-radius: 14px;
 }
 
-.badge.danger{
+
+.badge.danger  {
     --fx-text-fill: var(--badge-danger-txt);
-    background-color: var(--badge-danger-bg);
-    color: var(--badge-danger-txt);
-}
-.badge.danger fx-text {
-    color: var(--badge-danger-txt);
+    --fx-background-color: var(--badge-danger-bg);
 }
 
-.badge.success{
+
+.badge.success  {
     --fx-text-fill: var(--badge-success-txt);
-    background-color: var(--badge-success-bg);
-    color: var(--badge-success-txt);
-}
-.badge.success fx-text {
-    color: var(--badge-success-txt);
+    --fx-background-color: var(--badge-success-bg);
 }
 
-.badge.warning{
+
+.badge.warning  {
     --fx-text-fill: var(--badge-warning-txt);
-    background-color: var(--badge-warning-bg);
-    color: var(--badge-warning-txt);
-}
-.badge.warning fx-text {
-    color: var(--badge-warning-txt);
+    --fx-background-color: var(--badge-warning-bg);
 }
 
-.badge.info{
+
+.badge.info  {
     --fx-text-fill: var(--badge-info-txt);
-    background-color: var(--badge-info-bg);
-    color: var(--badge-info-txt);
-}
-.badge.info fx-text {
-    color: var(--badge-info-txt);
+    --fx-background-color: var(--badge-info-bg);
 }
 
-.badge.secondary{
+
+.badge.secondary  {
     --fx-text-fill: var(--badge-secondary-txt);
-    background-color: var(--badge-secondary-bg);
-    color: var(--badge-secondary-txt);
-}
-.badge.secondary fx-text {
-    color: var(--badge-secondary-txt);
+    --fx-background-color: var(--badge-secondary-bg);
 }
 
-.badge.primary{
+
+.badge.primary  {
     --fx-text-fill: var(--badge-primary-txt);
-    background-color: var(--badge-primary-bg);
-    color: var(--badge-primary-txt);
-}
-.badge.primary fx-text {
-    color: var(--badge-primary-txt);
+    --fx-background-color: var(--badge-primary-bg);
 }
 
-.badge.default{
+
+.badge.default  {
     --fx-text-fill: var(--badge-default-txt);
-    background-color: var(--badge-default-bg);
-    color: var(--badge-default-txt);
+    --fx-background-color: var(--badge-default-bg);
 }
-.badge.default fx-text {
-    color: var(--badge-default-txt);
-}
-
-
-
-
-
-
-
-
-
-
 
 
 
 /* Alert / Info Box Styles - left border only, no full border */
-.alert-info, .info-box {
-    background-color: #e3f2fd;
+.alert-info, .info-box  {
+    --fx-background-color: #e3f2fd;
+    --fx-background-radius: 4px;
+    --fx-text-fill: #1976d2;
+}
+/* Alert / Info Box Styles - left border only:before, no full border */
+.alert-info:before, .info-box:before {
     border-left: 4px solid #2196f3;
     border-radius: 4px;
-    color: #1976d2;
 }
 
-.alert-success {
-    background-color: #e8f5e9;
+
+.alert-success  {
+    --fx-background-color: #e8f5e9;
+    --fx-background-radius: 4px;
+    --fx-text-fill: #2e7d32;
+}
+.alert-success:before {
     border-left: 4px solid #4caf50;
     border-radius: 4px;
-    color: #2e7d32;
 }
 
-.alert-warning {
-    background-color: #fff3e0;
+
+.alert-warning  {
+    --fx-background-color: #fff3e0;
+    --fx-background-radius: 4px;
+    --fx-text-fill: #e65100;
+}
+.alert-warning:before {
     border-left: 4px solid #ff9800;
     border-radius: 4px;
-    color: #e65100;
 }
 
-.alert-danger {
-    background-color: #ffebee;
+
+.alert-danger  {
+    --fx-background-color: #ffebee;
+    --fx-background-radius: 4px;
+    --fx-text-fill: #c62828;
+}
+.alert-danger:before {
     border-left: 4px solid #f44336;
     border-radius: 4px;
-    color: #c62828;
 }
+
 
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
 
@@ -1047,26 +1106,6 @@ tr.selected, .grid-row.selected {
     background: var(--webfx-visualgrid-selection-color)
 }
 
-/*===== webfx-extras-aria-web@main.css from webfx-extras-aria =====*/
-
-:root {
-    --webfx-aria-toggle-button-background-color-focused: lightgray;
-    --webfx-aria-toggle-button-background-color-hover: var(--webfx-aria-toggle-button-background-color-focused);
-    --webfx-aria-toggle-button-background-color-fired: #0096D6;
-    --webfx-aria-toggle-button-text-fill-fired: white;
-}
-
-
-fx-togglebutton.aria-toggle {
-    --fx-togglebutton-background-color-selected: var(--webfx-aria-toggle-button-background-color-focused);
-    --fx-togglebutton-background-color-hover: var(--webfx-aria-toggle-button-background-color-hover);
-}
-
-fx-togglebutton.aria-toggle.fired {
-    --fx-button-background-color: var(--webfx-aria-toggle-button-background-color-fired);
-    --fx-button-background-color-selected: var(--webfx-aria-toggle-button-background-color-fired);
-    --fx-text-fill: var(--webfx-aria-toggle-button-text-fill-fired);
-}
 /*===== webfx-extras-switches-web@main.css from webfx-extras-switches =====*/
 
 :root {
@@ -1253,7 +1292,6 @@ fx-htmltext {
     --fx-background-position: center;
     --fx-background-size: cover;
     --fx-background-repeat: no-repeat;
-    --fx-border-radius: 21px;
 }
 
 .login input {
@@ -1263,18 +1301,19 @@ fx-htmltext {
 .login-child {
     --fx-background-color: rgba(255, 255, 255, var(--webfx-login-portal-opacity));
     --fx-background-radius: 21px;
+    --fx-border-radius: 21px;
    /* border: 1px solid lightgray;*/
    /* box-shadow: 0px 0px 10px lightgray;*/
     width: 586px; /* Sets the fixed width */
     height: 506px; /* Sets the fixed height */
-}
-
-.login-child > fx-background {
     /* To increase the contrast between the text and the bg */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    /* Optional outer shadow/filter controlled by variable */
     filter: var(--webfx-login-portal-filter);
 }
+
+/* Removed legacy fx-background usage; background now paints on host element */
 
 .login .h2 { /* Login word on top */
     font-family: 'Poppins', sans-serif; /* Sets the font to Poppins, with a fallback to sans-serif */
@@ -1387,8 +1426,6 @@ fx-tabpane {
     --fx-border-color: #ddd;
     --fx-border-radius: 8px;
     --fx-background-radius: 8px;
-    --fx-border-color-focus: var(--fx-border-color);
-    --fx-border-style-focus: var(--fx-border-style);
 }
 
 fx-tabheaderskin {
@@ -1412,12 +1449,11 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-radius: 4px;
 }
 
-/*===== modality-client-bootstrap-web@main.css from modality-base-client-bootstrap =====*/
+/*===== modality-client-bootstrap-webfx@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
-:root {
+:root  {
     --bootstrap-white: #fff;
-
     --bootstrap-grey1: #e6e6e6;
     --bootstrap-grey2: #d4d4d4;
     --bootstrap-grey3: #ccc;
@@ -1425,7 +1461,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --bootstrap-grey5: #8c8c8c;
     --bootstrap-grey6: #777777;
     --bootstrap-grey7: #333;
-
     --bootstrap-blue1: #5bc0de;
     --bootstrap-blue2: #46b8da;
     --bootstrap-blue3: #31b0d5;
@@ -1437,28 +1472,24 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --bootstrap-blue9: #204d74;
     --bootstrap-blue10: #122b40;
     --bootstrap-blue11: #31708f;
-
     --bootstrap-green1: #5cb85c;
     --bootstrap-green2: #4cae4c;
     --bootstrap-green3: #449d44;
     --bootstrap-green4: #398439;
     --bootstrap-green5: #255625;
     --bootstrap-green6: #41BA4D;
-
     --bootstrap-orange1: #f0ad4e;
     --bootstrap-orange2: #eea236;
     --bootstrap-orange3: #ec971f;
     --bootstrap-orange4: #d58512;
     --bootstrap-orange5: #985f0d;
     --bootstrap-orange6: #8a6d3b;
-
     --bootstrap-red1: #FF0404;
     --bootstrap-red2: #d43f3a;
     --bootstrap-red3: #c9302c;
     --bootstrap-red4: #ac2925;
     --bootstrap-red5: #761c19;
     --bootstrap-red6: #FF0404;
-
     --badge-default-bg: var(--bootstrap-white);
     --badge-default-txt: var(--bootstrap-grey7);
     --badge-primary-bg: #e3f2fd;
@@ -1473,42 +1504,50 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --badge-danger-txt: #c62828;
     --badge-secondary-bg: #fff3e0;
     --badge-secondary-txt: #f57c00;
+    --fx-theme-color: var(--bootstrap-blue5);
 }
 
-.h2 {
+
+.h2  {
     font-size: 40px;
     font-weight: bold;
 }
 
-.disabled:hover {
+
+.disabled:hover  {
     cursor: not-allowed;
 }
 
-.btn-black {
+
+.btn-black  {
     --fx-text-fill: var(--bootstrap-white);
     --fx-svg-path-fill: var(--fx-text-fill);
     --fx-background-color: black;
     --fx-border-color: black;
 }
 
-.btn-black:hover:not(.disabled) {
+
+.btn-black:hover:not(.disabled)  {
     --fx-background-color: var(--bootstrap-grey7);
     --fx-border-color: var(--bootstrap-grey7);
 }
 
-.btn-white {
+
+.btn-white  {
     --fx-svg-path-fill: var(--bootstrap-white);
     --fx-background-color: white;
     --fx-border-color: black;
 }
 
-.btn-white:hover:not(.disabled) {
+
+.btn-white:hover:not(.disabled)  {
     --fx-text-fill: black;
     --fx-background-color: var(--bootstrap-grey1);
 }
 
+
 /* Outline button styles */
-.btn.outline-primary {
+.btn.outline-primary  {
     --fx-text-fill: var(--bootstrap-blue5);
     --fx-svg-path-fill: var(--bootstrap-blue5);
     --fx-background-color: transparent;
@@ -1516,14 +1555,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-primary:hover:not(.disabled) {
+
+.btn.outline-primary:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-blue5);
     --fx-border-color: var(--bootstrap-blue5);
 }
 
-.btn.outline-secondary {
+
+.btn.outline-secondary  {
     --fx-text-fill: var(--bootstrap-grey6);
     --fx-svg-path-fill: var(--bootstrap-grey6);
     --fx-background-color: transparent;
@@ -1531,14 +1572,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-secondary:hover:not(.disabled) {
+
+.btn.outline-secondary:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-grey6);
     --fx-border-color: var(--bootstrap-grey6);
 }
 
-.btn.outline-success {
+
+.btn.outline-success  {
     --fx-text-fill: var(--bootstrap-green1);
     --fx-svg-path-fill: var(--bootstrap-green1);
     --fx-background-color: transparent;
@@ -1546,14 +1589,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-success:hover:not(.disabled) {
+
+.btn.outline-success:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-green1);
     --fx-border-color: var(--bootstrap-green1);
 }
 
-.btn.outline-danger {
+
+.btn.outline-danger  {
     --fx-text-fill: var(--bootstrap-red1);
     --fx-svg-path-fill: var(--bootstrap-red1);
     --fx-background-color: transparent;
@@ -1561,14 +1606,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-danger:hover:not(.disabled) {
+
+.btn.outline-danger:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-red1);
     --fx-border-color: var(--bootstrap-red1);
 }
 
-.btn.outline-warning {
+
+.btn.outline-warning  {
     --fx-text-fill: var(--bootstrap-orange1);
     --fx-svg-path-fill: var(--bootstrap-orange1);
     --fx-background-color: transparent;
@@ -1576,14 +1623,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-warning:hover:not(.disabled) {
+
+.btn.outline-warning:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-orange1);
     --fx-border-color: var(--bootstrap-orange1);
 }
 
-.btn.outline-info {
+
+.btn.outline-info  {
     --fx-text-fill: var(--bootstrap-blue1);
     --fx-svg-path-fill: var(--bootstrap-blue1);
     --fx-background-color: transparent;
@@ -1591,20 +1640,23 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-info:hover:not(.disabled) {
+
+.btn.outline-info:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-blue1);
     --fx-border-color: var(--bootstrap-blue1);
 }
 
+
 /* Button icon styling - ensures icons inherit button text color */
-.button-icon {
+.button-icon  {
     fill: var(--fx-text-fill);
 }
 
+
 /* Form section card styling - card-like container */
-.form-section-card {
+.form-section-card  {
     --fx-background-color: var(--bootstrap-white);
     --fx-border-color: var(--bootstrap-grey3);
     --fx-border-width: 1px;
@@ -1613,15 +1665,18 @@ body, textarea /* because textarea has explicit default monospace font */ {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Form section card title */
-.form-section-card-title {
+.form-section-card-title  {
     font-size: 16px;
     font-weight: bold;
     --fx-text-fill: var(--bootstrap-grey7);
 }
 
+
 /* 2-column responsive form grid */
-.form-grid {
+/*
+.form-grid  {
     --fx-hgap: 16px;
     --fx-vgap: 16px;
     display: grid;
@@ -1629,8 +1684,10 @@ body, textarea /* because textarea has explicit default monospace font */ {
     gap: 16px;
 }
 
+*/
+
 /* Copy to clipboard button */
-.copy-button {
+.copy-button  {
     --fx-background-color: transparent;
     --fx-border-color: transparent;
     --fx-text-fill: var(--bootstrap-grey6);
@@ -1638,49 +1695,61 @@ body, textarea /* because textarea has explicit default monospace font */ {
     cursor: pointer;
 }
 
-.copy-button:hover:not(.disabled) {
+
+.copy-button:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-blue5);
     --fx-svg-path-fill: var(--bootstrap-blue5);
 }
 
+
 /* Copy notification label */
-.copy-notification {
+.copy-notification  {
     --fx-background-color: rgba(0, 0, 0, 0.75);
     --fx-text-fill: white;
     --fx-background-radius: 4px;
     font-size: 12px;
 }
 
+
 /* Read-only text field styling - distinct but readable */
-.text-field.readonly-field {
+.text-field.readonly-field  {
     --fx-background-color: var(--bootstrap-grey1);
     --fx-border-color: var(--bootstrap-grey3);
     --fx-text-fill: var(--bootstrap-grey7);
     opacity: 1.0;
 }
 
-.text-field.readonly-field input {
+
+/*
+.text-field.readonly-field input  {
     background-color: var(--bootstrap-grey1);
-    border-color: var(--bootstrap-grey3);
-    color: var(--bootstrap-grey7);
 }
+/*
+.text-field.readonly-field input:before {
+    border-color: var(--bootstrap-grey3);    --fx-text-fill: var(--bootstrap-grey7);
+}
+
+*/
 
 /* Read-only button styling - same as text fields */
-.button.readonly-field {
+.button.readonly-field  {
     --fx-background-color: var(--bootstrap-grey1);
     --fx-border-color: var(--bootstrap-grey3);
     --fx-text-fill: var(--bootstrap-grey7);
     opacity: 1.0;
 }
 
-.button.readonly-field button {
+
+.button.readonly-field button  {
     background-color: var(--bootstrap-grey1);
-    border-color: var(--bootstrap-grey3);
-    color: var(--bootstrap-grey7);
+}
+.button.readonly-field button:before {
+    border-color: var(--bootstrap-grey3);    --fx-text-fill: var(--bootstrap-grey7);
 }
 
+
 /* Outline button styles */
-.btn.outline-primary {
+.btn.outline-primary  {
     --fx-text-fill: var(--bootstrap-blue5);
     --fx-svg-path-fill: var(--bootstrap-blue5);
     --fx-background-color: transparent;
@@ -1688,14 +1757,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-primary:hover:not(.disabled) {
+
+.btn.outline-primary:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-blue5);
     --fx-border-color: var(--bootstrap-blue5);
 }
 
-.btn.outline-secondary {
+
+.btn.outline-secondary  {
     --fx-text-fill: var(--bootstrap-grey6);
     --fx-svg-path-fill: var(--bootstrap-grey6);
     --fx-background-color: transparent;
@@ -1703,14 +1774,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-secondary:hover:not(.disabled) {
+
+.btn.outline-secondary:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-grey6);
     --fx-border-color: var(--bootstrap-grey6);
 }
 
-.btn.outline-success {
+
+.btn.outline-success  {
     --fx-text-fill: var(--bootstrap-green1);
     --fx-svg-path-fill: var(--bootstrap-green1);
     --fx-background-color: transparent;
@@ -1718,14 +1791,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-success:hover:not(.disabled) {
+
+.btn.outline-success:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-green1);
     --fx-border-color: var(--bootstrap-green1);
 }
 
-.btn.outline-danger {
+
+.btn.outline-danger  {
     --fx-text-fill: var(--bootstrap-red1);
     --fx-svg-path-fill: var(--bootstrap-red1);
     --fx-background-color: transparent;
@@ -1733,14 +1808,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-danger:hover:not(.disabled) {
+
+.btn.outline-danger:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-red1);
     --fx-border-color: var(--bootstrap-red1);
 }
 
-.btn.outline-warning {
+
+.btn.outline-warning  {
     --fx-text-fill: var(--bootstrap-orange1);
     --fx-svg-path-fill: var(--bootstrap-orange1);
     --fx-background-color: transparent;
@@ -1748,14 +1825,16 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-warning:hover:not(.disabled) {
+
+.btn.outline-warning:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-orange1);
     --fx-border-color: var(--bootstrap-orange1);
 }
 
-.btn.outline-info {
+
+.btn.outline-info  {
     --fx-text-fill: var(--bootstrap-blue1);
     --fx-svg-path-fill: var(--bootstrap-blue1);
     --fx-background-color: transparent;
@@ -1763,20 +1842,23 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-border-width: 1px;
 }
 
-.btn.outline-info:hover:not(.disabled) {
+
+.btn.outline-info:hover:not(.disabled)  {
     --fx-text-fill: white;
     --fx-svg-path-fill: white;
     --fx-background-color: var(--bootstrap-blue1);
     --fx-border-color: var(--bootstrap-blue1);
 }
 
+
 /* Button icon styling - ensures icons inherit button text color */
-.button-icon {
+.button-icon  {
     fill: var(--fx-text-fill);
 }
 
+
 /* Form section card styling - card-like container */
-.form-section-card {
+.form-section-card  {
     --fx-background-color: var(--bootstrap-white);
     --fx-border-color: var(--bootstrap-grey3);
     --fx-border-width: 1px;
@@ -1785,24 +1867,27 @@ body, textarea /* because textarea has explicit default monospace font */ {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Form section card title */
-.form-section-card-title {
+.form-section-card-title  {
     font-size: 16px;
     font-weight: bold;
     --fx-text-fill: var(--bootstrap-grey7);
 }
 
+
 /* 2-column responsive form grid */
-.form-grid {
+/*.form-grid  {
     --fx-hgap: 16px;
     --fx-vgap: 16px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
+*/
 
 /* Copy to clipboard button */
-.copy-button {
+.copy-button  {
     --fx-background-color: transparent;
     --fx-border-color: transparent;
     --fx-text-fill: var(--bootstrap-grey6);
@@ -1810,214 +1895,397 @@ body, textarea /* because textarea has explicit default monospace font */ {
     cursor: pointer;
 }
 
-.copy-button:hover:not(.disabled) {
+
+.copy-button:hover:not(.disabled)  {
     --fx-text-fill: var(--bootstrap-blue5);
     --fx-svg-path-fill: var(--bootstrap-blue5);
 }
 
+
 /* Copy notification label */
-.copy-notification {
+.copy-notification  {
     --fx-background-color: rgba(0, 0, 0, 0.75);
     --fx-text-fill: white;
     --fx-background-radius: 4px;
     font-size: 12px;
 }
 
-/* Read-only text field styling - distinct but readable */
-.text-field.readonly-field {
-    --fx-background-color: var(--bootstrap-grey1);
-    --fx-border-color: var(--bootstrap-grey3);
-    --fx-text-fill: var(--bootstrap-grey7);
-    opacity: 1.0;
-}
-
-.text-field.readonly-field input {
-    background-color: var(--bootstrap-grey1);
-    border-color: var(--bootstrap-grey3);
-    color: var(--bootstrap-grey7);
-}
-
-/* Read-only button styling - same as text fields */
-.button.readonly-field {
-    --fx-background-color: var(--bootstrap-grey1);
-    --fx-border-color: var(--bootstrap-grey3);
-    --fx-text-fill: var(--bootstrap-grey7);
-    opacity: 1.0;
-}
-
-.button.readonly-field button {
-    background-color: var(--bootstrap-grey1);
-    border-color: var(--bootstrap-grey3);
-    color: var(--bootstrap-grey7);
-}
 
 /* Badge - Light Pink (for admin/role badges) */
-.badge-light-pink {
-    background-color: #FCE4EC;
-    color: #C2185B;
+.badge-light-pink  {
+    background-color: #FCE4EC;    --fx-text-fill: #C2185B;
     font-size: 11px;
     font-weight: 600;
+    --fx-background-radius: 3px;
+    /* New single-host model */
+    --fx-background-color: #FCE4EC;
+    --fx-border-radius: 3px;
+}
+/* Badge - Light Pink (for admin/role badges) */
+.badge-light-pink:before {
     border-radius: 3px;
 }
 
+.badge-light-pink fx-text  {
+    --fx-text-fill: #C2185B;
+}
+
+
 /* Modern Badge Variants (Light backgrounds for better readability) - Moved from Bootstrap */
-.badge-light-info {
-    background-color: #e1f5fe;
-    color: #00b8d4;
-    border-radius: 12px;
+.badge-light-info  {
+    background-color: #e1f5fe;    --fx-text-fill: #00b8d4;
+    --fx-background-radius: 12px;
+    /* New single-host model */
+    --fx-background-color: #e1f5fe;
+    --fx-border-radius: 12px;
 }
-.badge-light-info fx-text {
-    color: #00b8d4;
+/* Modern Badge Variants (Light backgrounds for better readability) - Moved from Bootstrap */
+.badge-light-info:before {
+    border-radius: 12px;
 }
 
-.badge-light-success {
-    background-color: #e8f5e9;
-    color: #4caf50;
-    border-radius: 12px;
-}
-.badge-light-success fx-text {
-    color: #4caf50;
+.badge-light-info fx-text  {
+    --fx-text-fill: #00b8d4;
 }
 
-.badge-light-warning {
-    background-color: #fff3e0;
-    color: #ffa726;
-    border-radius: 12px;
+
+.badge-light-success  {
+    background-color: #e8f5e9;    --fx-text-fill: #4caf50;
+    --fx-background-radius: 12px;
+    /* New single-host model */
+    --fx-background-color: #e8f5e9;
+    --fx-border-radius: 12px;
 }
-.badge-light-warning fx-text {
-    color: #ffa726;
+.badge-light-success:before {
+    border-radius: 12px;
 }
 
-.badge-light-danger {
-    background-color: #ffebee;
-    color: #ff5252;
-    border-radius: 12px;
-}
-.badge-light-danger fx-text {
-    color: #ff5252;
+.badge-light-success fx-text  {
+    --fx-text-fill: #4caf50;
 }
 
-.badge-light-gray, .badge-gray {
-    background-color: #f5f5f5;
-    color: #666;
+
+.badge-light-warning  {
+    background-color: #fff3e0;    --fx-text-fill: #ffa726;
+    --fx-background-radius: 12px;
+    /* New single-host model */
+    --fx-background-color: #fff3e0;
+    --fx-border-radius: 12px;
+}
+.badge-light-warning:before {
     border-radius: 12px;
 }
+
+.badge-light-warning fx-text  {
+    --fx-text-fill: #ffa726;
+}
+
+
+.badge-light-danger  {
+    background-color: #ffebee;    --fx-text-fill: #ff5252;
+    --fx-background-radius: 12px;
+    /* New single-host model */
+    --fx-background-color: #ffebee;
+    --fx-border-radius: 12px;
+}
+.badge-light-danger:before {
+    border-radius: 12px;
+}
+
+.badge-light-danger fx-text  {
+    --fx-text-fill: #ff5252;
+}
+
+
+.badge-light-gray, .badge-gray  {
+    background-color: #f5f5f5;    --fx-text-fill: #666;
+    --fx-background-radius: 12px;
+    /* New single-host model */
+    --fx-background-color: #f5f5f5;
+    --fx-border-radius: 12px;
+}
+.badge-light-gray:before, .badge-gray:before {
+    border-radius: 12px;
+}
+
 .badge-light-gray fx-text,
-.badge-gray fx-text {
-    color: #666;
+.badge-gray fx-text  {
+    --fx-text-fill: #666;
 }
 
-.badge-light-purple, .badge-purple {
-    background-color: #f3e5f5;
-    color: #9c27b0;
+
+.badge-light-purple, .badge-purple  {
+    background-color: #f3e5f5;    --fx-text-fill: #9c27b0;
+    --fx-background-radius: 12px;
+    /* New single-host model */
+    --fx-background-color: #f3e5f5;
+    --fx-border-radius: 12px;
+}
+.badge-light-purple:before, .badge-purple:before {
     border-radius: 12px;
 }
+
 .badge-light-purple fx-text,
-.badge-purple fx-text {
-    color: #9c27b0;
+.badge-purple fx-text  {
+    --fx-text-fill: #9c27b0;
 }
+
 
 /* Modern Tab Design for Admin Panels */
-.modality-modern-tabs {
+.modality-modern-tabs  {
     background-color: white;
+    --fx-background-radius: 8px;
+}
+/* Modern Tab Design for Admin Panels */
+.modality-modern-tabs:before {
     border: 1px solid #ddd;
     border-radius: 8px;
 }
 
-.modality-modern-tabs .tab-header-area {
+
+.modality-modern-tabs .tab-header-area  {
     background-color: white;
+    --fx-background-radius: 8px 8px 0 0;
+}
+.modality-modern-tabs .tab-header-area:before {
     border-radius: 8px 8px 0 0;
 }
 
-.modality-modern-tabs .tab-header-background {
+
+.modality-modern-tabs .tab-header-background  {
     background-color: white;
+    --fx-background-radius: 8px 8px 0 0;
+}
+.modality-modern-tabs .tab-header-background:before {
     border-radius: 8px 8px 0 0;
 }
 
-.modality-modern-tabs .headers-region {
+
+.modality-modern-tabs .headers-region  {
     background-color: white;
-    gap: 8px;
+    /*gap: 8px;*/
 }
 
-.modality-modern-tabs .tab {
+
+.modality-modern-tabs .tab  {
     background-color: transparent;
+    --fx-background-radius: 0;
+    /*min-height: 48px;
+    height: 48px;*/
+}
+.modality-modern-tabs .tab:before {
     border-radius: 0;
     border-style: solid;
     border-color: transparent transparent transparent transparent;
     border-width: 0 0 3px 0;
-    min-height: 48px;
-    height: 48px;
 }
 
-.modality-modern-tabs .tab-label {
-    color: #666;
+
+.modality-modern-tabs .tab-label  {
+    --fx-text-fill: #666;
     font-size: 15px;
 }
 
-.modality-modern-tabs .tab:hover .tab-label {
-    color: var(--bootstrap-blue5);
+
+.modality-modern-tabs .tab:hover .tab-label  {
+    --fx-text-fill: var(--bootstrap-blue5);
 }
 
+
 .modality-modern-tabs .tab:selected,
-.modality-modern-tabs .tab.selected {
+.modality-modern-tabs .tab.selected  {
     background-color: transparent;
+}
+.modality-modern-tabs .tab:selected:before, .modality-modern-tabs .tab.selected:before {
     border-color: transparent transparent var(--bootstrap-blue5) transparent;
 }
 
+
 .modality-modern-tabs .tab:selected .tab-label,
-.modality-modern-tabs .tab.selected .tab-label {
-    color: var(--bootstrap-blue5);
+.modality-modern-tabs .tab.selected .tab-label  {
+    --fx-text-fill: var(--bootstrap-blue5);
 }
-
-.modality-modern-tabs .tab .focus-indicator {
+.modality-modern-tabs .tab .focus-indicator:before {
     border-color: transparent;
 }
 
-.modality-modern-tabs .tab-content-area {
+
+.modality-modern-tabs .tab-content-area  {
     background-color: white;
+}
+.modality-modern-tabs .tab-content-area:before {
     border-color: transparent;
 }
+
 
 /* Authorization badges for members management */
-.authorization-badge {
-    border-radius: 12px;
+.authorization-badge  {
+    --fx-background-radius: 12px;
     font-size: 11px;
     font-weight: 500;
     text-align: center;
-    display: inline-block;
+    /*display: inline-block;*/
+}
+/* Authorization badges for members management */
+.authorization-badge:before {
+    border-radius: 12px;
 }
 
-.authorization-badge-active {
-    background-color: #d4edda;
-    color: #155724;
-}
-.authorization-badge-active fx-text {
-    color: #155724;
+
+.authorization-badge-active  {
+    background-color: #d4edda;    --fx-text-fill: #155724;
 }
 
-.authorization-badge-pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
-.authorization-badge-pending fx-text {
-    color: #856404;
+.authorization-badge-active fx-text  {
+    --fx-text-fill: #155724;
 }
 
-.authorization-badge-needs-validation {
-    background-color: #ffd6cc;
-    color: #d63700;
+
+.authorization-badge-pending  {
+    background-color: #fff3cd;    --fx-text-fill: #856404;
+}
+
+.authorization-badge-pending fx-text  {
+    --fx-text-fill: #856404;
+}
+
+
+.authorization-badge-needs-validation  {
+    background-color: #ffd6cc;    --fx-text-fill: #d63700;
     font-weight: 600;
 }
-.authorization-badge-needs-validation fx-text {
-    color: #d63700;
+
+.authorization-badge-needs-validation fx-text  {
+    --fx-text-fill: #d63700;
 }
+
+
+/* Chip button styles - for filter/toggle button groups */
+.chip-button  {
+    background-color: white;    --fx-text-fill: #78716c;
+    font-weight: 500;
+    --fx-background-radius: 6px;
+    cursor: pointer;
+}
+/* Chip button styles - for filter/toggle button groups */
+.chip-button:before {
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+}
+
+.chip-button:hover:not(.disabled)  {
+    background-color: #fafaf9;
+}
+.chip-button:hover:not(.disabled):before {
+    border-color: #d6d3d1;
+}
+
+
+.chip-button-selected  {
+    background-color: #fef3c7;    --fx-text-fill: #f59e0b;
+    font-weight: 600;
+    --fx-background-radius: 6px;
+}
+.chip-button-selected:before {
+    border: 2px solid #f59e0b;
+    border-radius: 6px;
+}
+
+.chip-button-selected fx-text  {
+    --fx-text-fill: #f59e0b;
+}
+
+
+/* Blue/Primary chip button - unselected state */
+.chip-button-primary  {
+    background-color: white;    --fx-text-fill: #3b82f6;
+    font-weight: 500;
+    --fx-background-radius: 6px;
+    cursor: pointer;
+}
+/* Blue/Primary chip button - unselected state */
+.chip-button-primary:before {
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+}
+
+.chip-button-primary:hover:not(.disabled)  {
+    background-color: #eff6ff;
+}
+.chip-button-primary:hover:not(.disabled):before {
+    border-color: #93c5fd;
+}
+
+.chip-button-primary fx-text  {
+    --fx-text-fill: #3b82f6;
+}
+
+
+/* Blue/Primary chip button selected state */
+.chip-button-primary-selected  {
+    background-color: #dbeafe;    --fx-text-fill: #2563eb;
+    font-weight: 600;
+    --fx-background-radius: 6px;
+}
+/* Blue/Primary chip button selected state */
+.chip-button-primary-selected:before {
+    border: 2px solid #2563eb;
+    border-radius: 6px;
+}
+
+.chip-button-primary-selected fx-text  {
+    --fx-text-fill: #2563eb;
+}
+
+
+/* Warning/Amber button style - solid amber background */
+.btn-warning-solid  {
+    background-color: #f59e0b;    --fx-text-fill: white;
+    font-weight: 600;
+    --fx-background-radius: 8px;
+    cursor: pointer;
+}
+/* Warning/Amber button style - solid amber background */
+.btn-warning-solid:before {
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-warning-solid:hover:not(.disabled)  {
+    background-color: #d97706;
+}
+
+.btn-warning-solid fx-text  {
+    --fx-text-fill: white;
+}
+
+
+/* Info helper box - for contextual tips and explanations */
+.info-helper-box  {
+    background-color: #eff6ff;
+    --fx-background-radius: 10px;
+}
+/* Info helper box - for contextual tips and explanations */
+.info-helper-box:before {
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+}
+
+.info-helper-box fx-text  {
+    --fx-text-fill: #1e40af;
+}
+
 
 /*===== modality-frontoffice-bookingelements-web@main.css from modality-booking-frontoffice-bookingelements =====*/
 
 .booking-elements {
     font-family: "Poppins", sans-serif;
-    --fx-textarea-border-color: black;
-    --fx-textarea-border-radius: 19px;
+}
+
+.booking-elements fx-textarea {
+    --fx-border-color: black;
+    --fx-border-radius: 19px;
+    --fx-background-radius: 19px;
 }
 
 .booking-elements.booking-form {
@@ -2047,15 +2315,22 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 .booking-elements .navigation-bar {
     font-weight: bold;
-    --fx-button-background-color: transparent;
-    --fx-button-border-color: transparent;
     --fx-border-color-focus: transparent;
-    --fx-togglebutton-border-color-hover: transparent;
     --fx-togglebutton-border-color-selected: transparent;
     --webfx-aria-toggle-button-background-color: transparent;
     --webfx-aria-toggle-button-background-color-hover: transparent;
     --webfx-aria-toggle-button-background-color-fired: transparent;
 }
+
+.booking-elements .navigation-bar fx-button {
+    --fx-background-color: transparent;
+    --fx-border-color: transparent;
+}
+
+.booking-elements .navigation-bar fx-button:hover {
+    --fx-border-color: transparent;
+}
+
 
 .booking-elements .navigation-bar .title {
     --fx-background-color: white;
@@ -2094,7 +2369,7 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .booking-elements .price-textfield {
     font-size: 15px;
     font-weight: bold;
-    --fx-textfield-border-style: none;
+    --fx-border-style: none;
 }
 
 .booking-elements .badge { /* badges don't look vertically centered with Poppins font on the web version */
@@ -2289,18 +2564,18 @@ body, textarea /* because textarea has explicit default monospace font */ {
 
 .menu-bar {
     font-family: var(--poppins-font-family), sans-serif;
-    --fx-button-background-color: transparent;
     --fx-border-style: none;
     --fx-text-fill: black;
-    --fx-button-border-style: none;
-    --webfx-aria-toggle-button-background-color-hover: transparent;
-    --webfx-aria-toggle-button-background-color-fired: transparent;
-    --webfx-aria-toggle-button-background-color-focused: transparent;
-    --webfx-aria-toggle-button-text-fill-fired: var(--fx-focus-color);
+}
+
+.menu-bar fx-togglebutton {
+    --fx-background-color: transparent;
+    --fx-border-style: none;
 }
 
 .menu-bar fx-togglebutton.aria-toggle.fired {
     font-weight: bold;
+    --fx-text-fill: #0096D6;
 }
 
 .menu-bar fx-togglebutton.aria-toggle.fired fx-svgpath svg path[fill] {
@@ -2311,22 +2586,24 @@ body, textarea /* because textarea has explicit default monospace font */ {
     stroke: var(--fx-text-fill);
 }
 
-.lang-menu-bar {
-    --fx-button-border-color: #0096D6;
-    --fx-button-border-style: solid;
-    --fx-button-border-radius: 0;
-    --fx-button-border-width: 1px 1px 1px 0;
-    --fx-button-background-radius: 0;
-    --fx-togglebutton-border-color-hover: var(--fx-button-border-color);
-    --webfx-aria-toggle-button-background-color-focused: #F0F0F0;
-    --webfx-aria-toggle-button-background-color-fired: #0096D6;
-    --webfx-aria-toggle-button-text-fill-fired: white;
+.lang-menu-bar fx-togglebutton {
+    --fx-border-color: #0096D6;
+    --fx-border-style: solid;
+    --fx-border-radius: 0;
+    --fx-border-width: 1px 1px 1px 0;
+    --fx-background-radius: 0;
+    --fx-text-fill: #0096D6;
+}
+
+.lang-menu-bar fx-togglebutton.aria-toggle.fired {
+    --fx-background-color: #0096D6;
+    --fx-text-fill: white;
 }
 
 .lang-menu-bar .first-child {
-    --fx-button-border-width: 1px;
-    --fx-button-border-radius: 10px 0px 0px 10px;
-    --fx-button-background-radius: 10px 0px 0px 10px;
+    --fx-border-width: 1px;
+    --fx-border-radius: 10px 0px 0px 10px;
+    --fx-background-radius: 10px 0px 0px 10px;
 }
 
 .lang-menu-bar .last-child {
@@ -2334,23 +2611,24 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-background-radius:  0px 10px 10px 0px;
 }
 
-.main-menu-bar fx-label.brand {
+.main-frame fx-label.brand {
     font-size: 14px;
     font-weight: 500;
     --fx-text-fill: var(--brand-blue-color);
 }
 
-.user-menu-bar fx-label, .user-menu-bar fx-button {
+.user-menu-bar fx-label, .user-menu-bar fx-togglebutton {
     font-size: 12px;
     --fx-text-fill: #838788;
 }
 
-.modality-dialog-area .gold-layout {
+.modality-dialog-area {
+    background-color: rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
 }
 
-fx-collapsepane.menu-bar {
+.menu-bar {
     --fx-background-color: white;
     --fx-border-style: solid;
     --fx-border-color: lightgray;
@@ -2358,7 +2636,7 @@ fx-collapsepane.menu-bar {
     --fx-border-radius: 0;
 }
 
-fx-collapsepane.menu-bar.lang-menu-bar {
+.menu-bar.lang-menu-bar {
     --fx-border-style: none;
 }
 /*===== modality-base-front-office-web@main.css from modality-base-frontoffice-application =====*/
@@ -2446,6 +2724,37 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 
 .text-danger {
     color: #dc3545;
+}
+
+/*===== one-modality-crm-client-activities-unauthorized-web@main.css from modality-crm-client-activity-unauthorized-plugin =====*/
+
+/* Unauthorized Activity - Web styles */
+
+.unauthorized-container {
+    --fx-background-color: white;
+}
+
+.unauthorized-container fx-svgpath.waiting {
+    --fx-svg-path-stroke: rgb(0, 150, 214); /* Blue for waiting */
+    --fx-svg-path-stroke-width: 2.5;
+    --fx-svg-path-fill: rgba(0, 150, 214, 0.1);
+}
+
+.unauthorized-container fx-svgpath.denied {
+    --fx-svg-path-stroke: rgb(220, 53, 69); /* Red for denied */
+    --fx-svg-path-stroke-width: 2.5;
+    --fx-svg-path-fill: rgba(220, 53, 69, 0.1);
+}
+
+.unauthorized-title {
+    font-size: 32px;
+    font-weight: bold;
+    --fx-text-fill: rgb(33, 37, 41);
+}
+
+.unauthorized-message {
+    font-size: 16px;
+    --fx-text-fill: rgb(108, 117, 125);
 }
 
 /*===== one-modality-crm-frontoffice-activities-createaccount-web@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
@@ -2690,55 +2999,1291 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     color: var(--notification-close-hover-color) ;
 }
 
-/*===== modality-event-client-selecteditemsselector-box-web@main.css from modality-booking-client-scheduleditemsselector-box =====*/
+/*===== modality-event-client-selecteditemsselector-box-webfx@main.css from modality-booking-client-scheduleditemsselector-box =====*/
 
-.scheduled-item-box {
+.scheduled-item-box  {
     --fx-border-style: solid;
     --fx-border-color: #cccccc;
     --fx-border-width: 1px;
 }
 
-.scheduled-item-box.date-unselected {
+
+.scheduled-item-box.date-unselected  {
     --fx-text-fill: #444;
 }
 
-.scheduled-item-box .time {
+
+.scheduled-item-box .time  {
     --fx-text-fill: #838788;
 }
 
-.scheduled-item-box.date-unselected {
+
+.scheduled-item-box.date-unselected  {
     --fx-background-color: transparent;
 }
 
-.scheduled-item-box.date-non-selectable {
+
+.scheduled-item-box.date-non-selectable  {
     --fx-background-color: #dddddd;
 }
 
-.scheduled-item-box.date-non-selectable {
+
+.scheduled-item-box.date-non-selectable  {
     --fx-border-style: solid;
     --fx-border-color: #cccccc;
     --fx-border-width: 1px;
 }
 
+
 .scheduled-item-box.date-non-selectable,
-.scheduled-item-box.date-non-selectable .time {
+.scheduled-item-box.date-non-selectable .time  {
     --fx-text-fill: #aaaaaa;
 }
 
+
 .scheduled-item-box.date-selected,
-.scheduled-item-box.date-already-booked {
+.scheduled-item-box.date-already-booked  {
     --fx-background-color: var(--brand-main-color);
     --fx-border-style: none;
 }
 
+
 .scheduled-item-box.date-selected,
-.scheduled-item-box.date-selected .time {
+.scheduled-item-box.date-selected .time  {
     --fx-text-fill: white;
 }
 
+
 .scheduled-item-box.date-already-booked,
-.scheduled-item-box.date-already-booked .time {
+.scheduled-item-box.date-already-booked .time  {
     --fx-text-fill: #eeeeee;
+}
+
+
+/*===== modality-booking-frontoffice-bookingpage-fxweb@main.css from modality-booking-frontoffice-bookingpage =====*/
+
+/* ==========================================
+   Booking Form Theme Variables (JavaFX)
+   ========================================== */
+
+/* Default theme: Journey Green */
+:root { --booking-form-primary: #4CAF50; --booking-form-primary-dark: #2E7D32; --booking-form-selected-bg: #E8F5E9; --booking-form-hover-border: #8DD39E; --booking-form-text-primary: #292A33; --booking-form-text-secondary: #838788; --booking-form-text-on-primary: white;
+}
+
+/* Wisdom Blue theme */
+.theme-wisdom-blue,
+.theme-wisdom-blue * { --booking-form-primary: #1976D2; --booking-form-primary-dark: #0D47A1; --booking-form-selected-bg: #E3F2FD; --booking-form-hover-border: #90CAF9; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* Compassion Rose theme */
+.theme-compassion-rose,
+.theme-compassion-rose * { --booking-form-primary: #D81B60; --booking-form-primary-dark: #880E4F; --booking-form-selected-bg: #FCE4EC; --booking-form-hover-border: #F48FB1; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* Peace Purple theme */
+.theme-peace-purple,
+.theme-peace-purple * { --booking-form-primary: #7B1FA2; --booking-form-primary-dark: #4A148C; --booking-form-selected-bg: #F3E5F5; --booking-form-hover-border: #CE93D8; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* Joy Amber theme */
+.theme-joy-amber,
+.theme-joy-amber * { --booking-form-primary: #F57C00; --booking-form-primary-dark: #E65100; --booking-form-selected-bg: #FFF3E0; --booking-form-hover-border: #FFB74D; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* Calm Teal theme */
+.theme-calm-teal,
+.theme-calm-teal * { --booking-form-primary: #00897B; --booking-form-primary-dark: #004D40; --booking-form-selected-bg: #E0F2F1; --booking-form-hover-border: #80CBC4; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* Clarity Indigo theme */
+.theme-clarity-indigo,
+.theme-clarity-indigo * { --booking-form-primary: #3949AB; --booking-form-primary-dark: #1A237E; --booking-form-selected-bg: #E8EAF6; --booking-form-hover-border: #9FA8DA; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* Vajrayogini Red theme */
+.theme-vajrayogini-red,
+.theme-vajrayogini-red * { --booking-form-primary: #D32F2F; --booking-form-primary-dark: #B71C1C; --booking-form-selected-bg: #FFEBEE; --booking-form-hover-border: #EF5350; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* Vajrasattva White theme */
+.theme-vajrasattva-white,
+.theme-vajrasattva-white * { --booking-form-primary: #455A64; --booking-form-primary-dark: #263238; --booking-form-selected-bg: #FAFAFA; --booking-form-hover-border: #78909C; --footer-logo-color: var(--booking-form-primary);
+}
+
+/* ==========================================
+   Linked Account Message
+   ========================================== */
+
+.linked-account-message { text-align: center; --fx-text-fill: var(--bootstrap-grey5);
+}
+
+/* Step Progress Navigation */
+.step-progress { --fx-border-color: transparent transparent #f0f0f0 transparent; --fx-border-width: 0px 0px 2px 0px;
+}
+
+.step-progress-item {
+}
+
+.step-bubble { --fx-background-radius: 20px;
+    /* 50% */
+ --fx-background-color: white; --fx-border-color: #e0e0e0; --fx-border-width: 2px; --fx-border-radius: 20px; font-weight: bold; font-size: 16px; --fx-text-fill: #999;
+}
+
+.step-progress-item.active .step-bubble { --fx-background-color: var(--booking-form-primary); --fx-border-color: var(--booking-form-primary); --fx-text-fill: var(--booking-form-text-on-primary);  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.step-progress-item.completed .step-bubble { --fx-background-color: white; --fx-border-color: var(--booking-form-primary); --fx-text-fill: var(--booking-form-primary);
+}
+
+.step-progress-label { font-size: 11px; --fx-text-fill: #999; font-weight: 500; text-align: center;
+}
+
+.step-progress-item.active .step-progress-label { --fx-text-fill: var(--booking-form-primary); font-weight: bold;
+}
+
+.step-progress-item.completed .step-progress-label { --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Container */
+.booking-container { --fx-background-color: white; --fx-background-radius: 16px;  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Step Title & Desc */
+.step-title { font-family: 'Poppins'; font-weight: bold; font-size: 24px; --fx-text-fill: #000000;
+}
+
+.step-desc { font-family: 'Poppins'; font-size: 13px; --fx-text-fill: #838788;
+}
+
+/* Section */
+.section-title { font-family: 'Poppins'; font-weight: bold; font-size: 18px; --fx-text-fill: var(--booking-form-text-primary); --fx-background-color: #F8F9FA; --fx-background-radius: 8px; --fx-border-color: transparent transparent transparent var(--booking-form-primary); --fx-border-width: 0px 0px 0px 4px;
+}
+
+/* Package Card */
+.package-card { --fx-border-color: #e0e0e0; --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px; cursor: pointer; --fx-background-color: white;
+}
+
+.package-card:hover { --fx-border-color: var(--booking-form-hover-border);  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.package-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.package-title { font-family: 'Poppins'; font-size: 18px; font-weight: bold; --fx-text-fill: #292A33;
+}
+
+.package-price { font-family: 'Poppins'; font-size: 24px; --fx-text-fill: var(--booking-form-primary); font-weight: bold;
+}
+
+.package-desc { font-family: 'Poppins'; font-size: 13px; --fx-text-fill: #838788;
+}
+
+/* Room Card */
+.room-card { --fx-border-color: #e0e0e0; --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px; cursor: pointer; --fx-background-color: white;
+}
+
+.room-card:hover { --fx-border-color: var(--booking-form-hover-border);  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.room-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.room-card.soldout { opacity: 0.6; cursor: default; --fx-background-color: #f5f5f5;
+}
+
+.room-name { font-family: 'Poppins'; font-size: 16px; font-weight: bold; --fx-text-fill: #292A33;
+}
+
+.room-desc { font-family: 'Poppins'; font-size: 13px; --fx-text-fill: #838788;
+}
+
+.room-price { font-family: 'Poppins'; font-size: 28px; --fx-text-fill: var(--booking-form-primary); font-weight: bold;
+}
+
+/* Badges */
+.availability-badge { --fx-background-radius: 20px; font-size: 12px; font-weight: bold;
+}
+
+.available { --fx-background-color: #d4edda; --fx-text-fill: #155724;
+}
+
+.soldout-badge { --fx-background-color: #f8d7da; --fx-text-fill: #721c24;
+}
+
+.limited { --fx-background-color: #fff3cd; --fx-text-fill: #856404;
+}
+
+/* Buttons */
+.btn-primary, .booking-form-btn-primary { --fx-background-color: var(--booking-form-primary); --fx-text-fill: var(--booking-form-text-on-primary); font-size: 16px; font-weight: bold; --fx-background-radius: 8px;
+}
+
+.btn-primary:hover, .booking-form-btn-primary:hover {  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:disabled, .booking-form-btn-primary:disabled { opacity: 0.5; -fx-effect: none;
+}
+
+/* Back Button */
+.btn-back, .booking-form-btn-back { --fx-background-color: white; --fx-text-fill: var(--booking-form-text-secondary); font-size: 16px; font-weight: 500; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 1px; --fx-border-radius: 8px;
+}
+
+.btn-back:hover, .booking-form-btn-back:hover { --fx-background-color: #f8f9fa; --fx-border-color: #adb5bd;
+}
+
+/* Secondary Action Button */
+.btn-secondary, .booking-form-btn-secondary { --fx-background-color: #f8f9fa; --fx-text-fill: var(--booking-form-text-secondary); font-size: 16px; font-weight: bold; --fx-background-radius: 8px; --fx-border-color: #e0e0e0; --fx-border-width: 2px; --fx-border-radius: 8px;
+}
+
+.btn-secondary:hover, .booking-form-btn-secondary:hover { --fx-border-color: var(--booking-form-primary); --fx-text-fill: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+/* Primary Button (CSS-based theming) */
+.booking-form-primary-btn { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 8px; cursor: pointer;
+}
+
+.booking-form-primary-btn:hover {  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.booking-form-primary-btn:disabled,
+.booking-form-primary-btn.disabled { opacity: 0.5; cursor: default;
+}
+
+.booking-form-primary-btn-text { --fx-text-fill: white; font-weight: bold; font-size: 16px;
+}
+
+/* Async spinner color on primary buttons - white for contrast */
+.booking-form-btn-primary .webfx-extras-spinner,
+.booking-form-primary-btn .webfx-extras-spinner { --fx-spinner-color: white;
+}
+
+/* Back Button (CSS-based theming) */
+.booking-form-back-btn { --fx-background-color: transparent; --fx-border-color: #dee2e6; --fx-border-width: 1px; --fx-border-radius: 8px; --fx-background-radius: 8px; cursor: pointer;
+}
+
+.booking-form-back-btn:hover { --fx-background-color: #f8f9fa;
+}
+
+.booking-form-back-btn-text { --fx-text-fill: #6c757d; font-weight: 500; font-size: 15px;
+}
+
+.booking-form-back-btn:hover .booking-form-back-btn-text { --fx-text-fill: #212529;
+}
+
+/* Date Tabs */
+.date-tabs { --fx-background-color: #E6E7E7; --fx-background-radius: 8px;
+}
+
+.date-tab { --fx-background-color: transparent; --fx-background-radius: 8px; cursor: pointer;
+}
+
+.date-tab.pseudo-selected { --fx-background-color: #FFFFFF;  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.07);
+}
+
+.date-tab-label { font-family: 'Poppins'; font-weight: 500; font-size: 16px; --fx-text-fill: #838788;
+}
+
+.date-tab.pseudo-selected .date-tab-label { --fx-text-fill: var(--booking-form-primary); font-weight: bold;
+}
+
+.date-tab-desc { font-family: 'Poppins'; font-size: 12px; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+.date-tab.pseudo-selected .date-tab-desc { --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Checkbox Item */
+.checkbox-item { cursor: pointer;
+}
+
+.checkbox-label { font-family: 'Poppins'; font-weight: bold; font-size: 16px; --fx-text-fill: #292A33;
+}
+
+/* Toggle Button - scoped to booking containers to avoid affecting menu items */
+.booking-container .toggle-button { --fx-background-color: #FFFFFF; --fx-border-color: #E6E7E7; --fx-border-width: 2px; --fx-border-radius: 9px; font-family: 'Poppins'; font-weight: bold; font-size: 16px; --fx-text-fill: #292A33; cursor: pointer;
+}
+
+.booking-container .toggle-button:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.booking-container .toggle-button.pseudo-selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-primary); --fx-text-fill: var(--booking-form-text-on-primary);
+}
+
+/* Inline Radio Group */
+.inline-radio-group {
+}
+
+.inline-radio-option { --fx-background-color: #FFFFFF; --fx-border-color: #E6E7E7; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer; font-family: 'Poppins'; font-weight: 500; font-size: 14px; --fx-text-fill: #292A33;
+}
+
+.inline-radio-option:hover { --fx-border-color: #0096D6; --fx-background-color: #F0F8FF;
+}
+
+.inline-radio-option.pseudo-selected { --fx-background-color: #F0F8FF; --fx-border-color: #0096D6; --fx-text-fill: #0096D6; font-weight: bold;
+}
+
+/* Input Field */
+.input-field { --fx-background-color: transparent; --fx-border-color: transparent transparent #292A33 transparent; --fx-border-width: 0px 0px 2px 0px; font-family: 'Poppins'; font-size: 13px; --fx-text-fill: #292A33;
+}
+
+.input-field:focused { --fx-border-color: transparent transparent #0096D6 transparent;
+}
+
+/* Button Group */
+.button-group {
+}
+
+.button-option { --fx-background-color: #FFFFFF; --fx-border-color: #E6E7E7; --fx-border-width: 2px; --fx-border-radius: 9px; font-family: 'Poppins'; font-weight: 500; font-size: 14px; --fx-text-fill: #292A33; cursor: pointer;
+}
+
+.button-option:hover { --fx-border-color: #0096D6; --fx-background-color: #F0F8FF;
+}
+
+.button-option.pseudo-selected { --fx-border-color: #0096D6; --fx-background-color: #F0F8FF; --fx-text-fill: #0096D6; font-weight: bold;
+}
+
+/* Accommodation Button */
+.accommodation-grid {
+}
+
+.accommodation-button { --fx-background-color: #FFFFFF; --fx-border-color: #E6E7E7; --fx-border-width: 2px; --fx-border-radius: 9px; cursor: pointer;
+}
+
+.accommodation-button:hover { --fx-border-color: #0096D6; --fx-background-color: #F0F8FF;
+}
+
+.accommodation-button.pseudo-selected { --fx-border-color: #0096D6; --fx-background-color: #0096D6;
+}
+
+.accommodation-button.pseudo-selected .accommodation-name,
+.accommodation-button.pseudo-selected .accommodation-price,
+.accommodation-button.pseudo-selected .accommodation-unit { --fx-text-fill: #FFFFFF;
+}
+
+.accommodation-name { font-family: 'Poppins'; font-weight: 500; font-size: 14px; --fx-text-fill: #292A33;
+}
+
+.accommodation-price { font-family: 'Poppins'; font-weight: bold; font-size: 16px; --fx-text-fill: #0096D6;
+}
+
+.accommodation-unit { font-family: 'Poppins'; font-size: 12px; --fx-text-fill: #838788;
+}
+
+/* ==========================================
+   Booking Form Step Progress Header
+   ========================================== */
+
+.booking-form-step-progress {
+    /* Padding controlled in Java - ResponsiveStepProgressHeader.java */
+}
+
+.booking-form-step-progress-wrapper {
+    /* Padding controlled in Java - ResponsiveStepProgressHeader.java */
+}
+
+.booking-form-step-progress-desktop {
+}
+
+.booking-form-step-progress-tablet {
+}
+
+.booking-form-step-progress-mobile {
+}
+
+.booking-form-step-item {
+}
+
+.booking-form-step-bubble {
+    /* Removed unnecessary gray border already on circle */
+}
+
+.booking-form-step-bubble-tablet {
+    /* Removed unnecessary gray border already on circle */
+}
+
+.booking-form-step-number { font-weight: bold; font-size: 14px;
+}
+
+.booking-form-step-label { font-size: 12px; --fx-text-fill: #6c757d; text-align: center;
+}
+
+.booking-form-step-label-tablet { font-size: 10px; --fx-text-fill: #6c757d; text-align: center;
+}
+
+.booking-form-step-line { --fx-background-color: #dee2e6;
+}
+
+.booking-form-step-dot { --fx-fill: #dee2e6;
+}
+
+.booking-form-step-current-label { font-size: 14px; font-weight: bold;
+}
+
+.booking-form-mobile-progress-bar {
+}
+
+.booking-form-mobile-progress-fill { --fx-background-radius: 2px;
+}
+
+/* ==========================================
+   Booking Form Event Header
+   ========================================== */
+
+.booking-form-event-header { --fx-background-color: #f8f9fa; --fx-background-radius: 12px; --fx-border-width: 0px 0px 0px 4px; --fx-border-color: var(--booking-form-primary); --fx-border-radius: 12px;
+}
+
+.booking-form-event-header-title { font-size: 28px; font-weight: 600; --fx-text-fill: #212529;
+}
+
+/* Mobile-specific title styling - smaller font for narrow screens */
+.booking-form-event-header-title-mobile { font-size: 20px; font-weight: 600; --fx-text-fill: #212529;
+}
+
+/* ==========================================
+   Booking Form Audio Recording Card
+   ========================================== */
+
+.booking-form-audio-recording-section {
+}
+
+.booking-form-audio-recording-cards {
+}
+
+.booking-form-audio-recording-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer;
+}
+
+.booking-form-audio-recording-card:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.booking-form-audio-recording-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+/* ==========================================
+   Booking Page UI Builder Components
+   ========================================== */
+
+/* Selectable Card */
+.booking-form-selectable-card { cursor: pointer;
+}
+
+.booking-form-selectable-card:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.booking-form-selectable-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+/* Toggle Button */
+.booking-form-toggle-button { cursor: pointer;
+}
+
+.booking-form-toggle-button:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.booking-form-toggle-button.selected { --fx-background-color: var(--booking-form-primary); --fx-border-color: var(--booking-form-primary);
+}
+
+/* Toggle Button Text */
+.booking-form-toggle-button-text { --fx-text-fill: #212529; font-weight: 600; font-size: 16px;
+}
+
+.booking-form-toggle-button.selected .booking-form-toggle-button-text { --fx-text-fill: white;
+}
+
+/* Checkbox Option Row */
+.booking-form-checkbox-option { cursor: pointer;
+}
+
+.booking-form-checkbox-option:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.booking-form-checkbox-option.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+/* Radio Option Row */
+.booking-form-radio-option { cursor: pointer;
+}
+
+.booking-form-radio-option:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.booking-form-radio-option.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+/* Note: Info box styling moved to BookingPageUIBuilder section below
+   using .bookingpage-info-box-* classes */
+
+/* Option Row (common base for checkbox/radio options) */
+.booking-form-option-row { cursor: pointer; --fx-background-color: white; --fx-border-color: #e9ecef; --fx-border-width: 2px; --fx-border-radius: 8px; --fx-background-radius: 8px;
+}
+
+.booking-form-option-row:hover { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: var(--booking-form-hover-border);
+}
+
+.booking-form-option-row.selected { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: var(--booking-form-primary);
+}
+
+/* Checkbox Indicator (CSS-based theming) */
+.booking-form-checkbox-indicator { cursor: pointer;
+}
+
+.booking-form-checkbox-rect { --fx-fill: white; --fx-stroke: #dee2e6; --fx-stroke-width: 2px;
+}
+
+/* Hover on container affects the rect child */
+.booking-form-checkbox-indicator:hover .booking-form-checkbox-rect { --fx-stroke: var(--booking-form-primary); --fx-fill: var(--booking-form-selected-bg);
+}
+
+.booking-form-checkbox-rect.selected { --fx-fill: var(--booking-form-primary); --fx-stroke: var(--booking-form-primary);
+}
+
+/* Selected state stays the same on hover */
+.booking-form-checkbox-indicator:hover .booking-form-checkbox-rect.selected { --fx-fill: var(--booking-form-primary); --fx-stroke: var(--booking-form-primary);
+}
+
+.booking-form-checkbox-checkmark { --fx-stroke: white; --fx-stroke-width: 2.5px; --fx-fill: transparent;
+}
+
+/* Radio Indicator (CSS-based theming) */
+.booking-form-radio-indicator { cursor: pointer;
+}
+
+.booking-form-radio-outer { --fx-fill: white; --fx-stroke: #dee2e6; --fx-stroke-width: 2px;
+}
+
+.booking-form-radio-indicator:hover .booking-form-radio-outer { --fx-stroke: var(--booking-form-primary);
+}
+
+.booking-form-radio-outer.selected { --fx-stroke: var(--booking-form-primary);
+}
+
+.booking-form-radio-inner { --fx-fill: transparent;
+}
+
+.booking-form-radio-inner.selected { --fx-fill: var(--booking-form-primary);
+}
+
+/* Checkmark Badge (CSS-based theming for circular badges) */
+.booking-form-checkmark-circle { --fx-fill: var(--booking-form-primary);
+}
+
+.booking-form-checkmark-icon { --fx-stroke: white; --fx-stroke-width: 2.5px; --fx-fill: transparent;
+}
+
+/* ==========================================
+   Booking Form Section Spacing
+   ========================================== */
+
+.booking-form-themed-section {
+}
+
+.booking-form-section-header { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 8px; --fx-border-color: var(--booking-form-primary); --fx-border-width: 0px 0px 0px 4px; --fx-border-radius: 8px 0px 0px 8px;
+}
+
+.booking-form-section-header-title { font-size: 20px; font-weight: 600; --fx-text-fill: #475569;
+}
+
+/* ==========================================
+   Static Bootstrap-Derived Utility Classes
+   These replace hardcoded setStyle() calls
+   ========================================== */
+
+/* Text Colors (static, not theme-dependent) */
+.bookingpage-text-dark { --fx-text-fill: #212529;
+}
+
+.bookingpage-text-muted { --fx-text-fill: #6c757d;
+}
+
+.bookingpage-text-secondary { --fx-text-fill: #495057;
+}
+
+.bookingpage-text-success { --fx-text-fill: #198754;
+}
+
+.bookingpage-text-danger { --fx-text-fill: #dc3545;
+}
+
+.bookingpage-text-warning { --fx-text-fill: #8B6914;
+}
+
+.bookingpage-text-primary { --fx-text-fill: var(--booking-form-primary);
+}
+
+.bookingpage-text-center { text-align: center;
+}
+
+/* Icon Colors (match text colors for SVGPath stroke icons) */
+.bookingpage-icon-dark { --fx-stroke: #212529; --fx-fill: transparent;
+}
+
+.bookingpage-icon-muted { --fx-stroke: #6c757d; --fx-fill: transparent;
+}
+
+.bookingpage-icon-primary { --fx-stroke: var(--booking-form-primary); --fx-fill: transparent;
+}
+
+/* Section header icon - matches dark text */
+.booking-form-section-header-icon { --fx-stroke: #212529; --fx-fill: transparent;
+}
+
+/* Font Sizes */
+.bookingpage-text-xs { font-size: 12px;
+}
+
+.bookingpage-text-sm { font-size: 13px;
+}
+
+.bookingpage-text-base { font-size: 14px;
+}
+
+.bookingpage-text-md { font-size: 15px;
+}
+
+.bookingpage-text-lg { font-size: 16px;
+}
+
+.bookingpage-text-xl { font-size: 18px;
+}
+
+.bookingpage-text-2xl { font-size: 24px;
+}
+
+.bookingpage-text-3xl { font-size: 28px;
+}
+
+/* Font Weights */
+.bookingpage-font-normal { font-weight: normal;
+}
+
+.bookingpage-font-medium { font-weight: 500;
+}
+
+.bookingpage-font-semibold { font-weight: 600;
+}
+
+.bookingpage-font-bold { font-weight: 700;
+}
+
+.bookingpage-font-mono { font-family: monospace;
+}
+
+/* Background Colors (static) */
+.bookingpage-bg-white { --fx-background-color: white;
+}
+
+.bookingpage-bg-light { --fx-background-color: #f8f9fa;
+}
+
+.bookingpage-bg-lighter { --fx-background-color: #F4F4F4;
+}
+
+.bookingpage-bg-success-light { --fx-background-color: #d4edda;
+}
+
+.bookingpage-bg-warning-light { --fx-background-color: #FFF9E6;
+}
+
+.bookingpage-bg-danger-light { --fx-background-color: #f8d7da;
+}
+
+/* Border Colors (static) */
+.bookingpage-border-light { --fx-border-color: #dee2e6;
+}
+
+.bookingpage-border-gray { --fx-border-color: #E6E7E7;
+}
+
+.bookingpage-border-warning { --fx-border-color: #FFE69C;
+}
+
+/* Border Radius */
+.bookingpage-rounded { --fx-background-radius: 8px; --fx-border-radius: 8px;
+}
+
+.bookingpage-rounded-lg { --fx-background-radius: 12px; --fx-border-radius: 12px;
+}
+
+.bookingpage-rounded-full { --fx-background-radius: 50%; --fx-border-radius: 50%;
+}
+
+/* Common Card Styles */
+.bookingpage-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer;
+}
+
+.bookingpage-card:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.bookingpage-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+/* Selected cards don't change on hover */
+.bookingpage-card.selected:hover { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.bookingpage-card.disabled { opacity: 0.7; cursor: default;
+}
+
+.bookingpage-card.disabled:hover { --fx-border-color: #dee2e6; --fx-background-color: white;
+}
+
+/* Static/informative card - no hover effects */
+.bookingpage-card-static { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: default;
+}
+
+.bookingpage-card-light { --fx-background-color: #f8f9fa; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 1px; --fx-border-radius: 8px;
+}
+
+.bookingpage-card-lighter { --fx-background-color: #F4F4F4; --fx-background-radius: 12px;
+}
+
+/* =============================================
+   GENERIC CARD TYPES (by selection pattern)
+   ============================================= */
+
+/* Passive Card - non-interactive, display only (new generic name for card-static) */
+.bookingpage-passive-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: default;
+}
+
+/* Selectable Card - card with checkmark badge in corner when selected */
+.bookingpage-selectable-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer;
+}
+
+.bookingpage-selectable-card:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.bookingpage-selectable-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.bookingpage-selectable-card.selected:hover { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+
+.bookingpage-selectable-card.disabled { opacity: 0.7; cursor: default;
+}
+
+.bookingpage-selectable-card.disabled:hover { --fx-border-color: #dee2e6; --fx-background-color: white;
+}
+
+/* Checkbox Card - card with embedded checkbox on left */
+.bookingpage-checkbox-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer;
+}
+
+.bookingpage-checkbox-card:hover { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+}
+
+.bookingpage-checkbox-card.selected { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+}
+
+/* Radio Card - card with embedded radio on left */
+.bookingpage-radio-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer;
+}
+
+.bookingpage-radio-card:hover { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+}
+
+.bookingpage-radio-card.selected { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+}
+
+/* Warning/Info Box */
+.bookingpage-warning-box { --fx-background-color: #FFF9E6; --fx-background-radius: 8px; --fx-border-color: #FFE58F; --fx-border-width: 1px; --fx-border-radius: 8px;
+}
+
+/* Error Box */
+.bookingpage-error-box { --fx-background-color: #f8d7da; --fx-background-radius: 8px; --fx-border-color: #f5c2c7; --fx-border-width: 1px; --fx-border-radius: 8px;
+}
+
+/* Success Circle (e.g., checkmarks) */
+.bookingpage-success-circle { --fx-background-color: #198754; --fx-background-radius: 50%;
+}
+
+/* Form Input Styling */
+.bookingpage-input { --fx-background-color: white; --fx-border-color: #ced4da; --fx-border-width: 1px; --fx-border-radius: 6px; --fx-background-radius: 6px; font-size: 15px;
+}
+
+.bookingpage-input:focused { --fx-border-color: var(--booking-form-primary);
+}
+
+/* Label Combinations (font-size + weight + color) */
+.bookingpage-label-title { font-size: 16px; font-weight: 700; --fx-text-fill: #212529;
+}
+
+.bookingpage-label-subtitle { font-size: 14px; font-weight: 600; --fx-text-fill: #212529;
+}
+
+.bookingpage-label-body { font-size: 14px; --fx-text-fill: #212529;
+}
+
+.bookingpage-label-caption { font-size: 13px; --fx-text-fill: #6c757d;
+}
+
+.bookingpage-label-small { font-size: 12px; --fx-text-fill: #6c757d;
+}
+
+/* Price Labels */
+.bookingpage-price-large { font-size: 24px; font-weight: 700;
+}
+
+.bookingpage-price-medium { font-size: 18px; font-weight: 700;
+}
+
+/* Section Headers */
+.bookingpage-section-header { --fx-background-color: #f8f9fa; --fx-background-radius: 8px; --fx-border-color: transparent transparent transparent var(--booking-form-primary); --fx-border-width: 0px 0px 0px 4px;
+}
+
+/* Divider/Separator Lines */
+.bookingpage-divider-top { --fx-border-color: #E6E7E7 transparent transparent transparent; --fx-border-width: 2px 0px 0px 0px;
+}
+
+.bookingpage-divider-thin-top { --fx-border-color: #E6E7E7 transparent transparent transparent; --fx-border-width: 1px 0px 0px 0px;
+}
+
+.bookingpage-divider-thin-bottom { --fx-border-color: transparent transparent #F4F4F4 transparent; --fx-border-width: 0px 0px 1px 0px;
+}
+
+/* Gray bottom border divider (2px) - replaces borderBottom(BORDER_GRAY, 2) */
+.bookingpage-divider-bottom-gray { --fx-border-color: transparent transparent #E6E7E7 transparent; --fx-border-width: 0px 0px 2px 0px;
+}
+
+/* ==========================================
+   Input Field Styling (for focus state toggling)
+   ========================================== */
+
+/* Input field with standard border (replaces border(BORDER_LIGHT, 1/2, RADII_8)) */
+.bookingpage-input-bordered { --fx-background-color: white; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; --fx-background-radius: 8px;
+}
+
+/* Focus state for inputs (theme colored border - uses CSS variable) */
+.bookingpage-input-focused { --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-border-radius: 8px; --fx-background-radius: 8px;
+}
+
+/* ==========================================
+   Checkbox Box Styling (square checkbox indicator)
+   ========================================== */
+
+/* Checkbox unchecked state (replaces bg(BG_WHITE, RADII_6) + border(BORDER_MEDIUM, 2, RADII_6)) */
+.bookingpage-checkbox { --fx-background-color: white; --fx-border-color: #adb5bd; --fx-border-width: 2px; --fx-border-radius: 6px; --fx-background-radius: 6px;
+}
+
+/* Checkbox checked state (uses theme CSS variables) */
+.bookingpage-checkbox-selected { --fx-background-color: var(--booking-form-primary); --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-border-radius: 6px; --fx-background-radius: 6px;
+}
+
+/* ==========================================
+   Card Header & Bordered Card Styling
+   ========================================== */
+
+/* Card header with light background (replaces bg(BG_LIGHTER) + borderBottom(BORDER_GRAY, 2)) */
+.bookingpage-card-header { --fx-background-color: #F4F4F4; --fx-border-color: transparent transparent #E6E7E7 transparent; --fx-border-width: 0px 0px 2px 0px; --fx-background-radius: 12px 12px 0px 0px; --fx-border-radius: 12px 12px 0px 0px;
+}
+
+/* Gray bordered card (replaces border(BORDER_GRAY, 2, RADII_12)) */
+.bookingpage-card-bordered { --fx-border-color: #E6E7E7; --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+/* ==========================================
+   Progress Bar Styling
+   ========================================== */
+
+/* Progress track background (static gray - replaces bg(PROGRESS_TRACK)) */
+.bookingpage-progress-track { --fx-background-color: #e0e0e0; --fx-background-radius: 2px;
+}
+
+/* Progress fill (uses theme CSS variable - replaces bg(scheme.getPrimary(), RADII_2)) */
+.bookingpage-progress-fill { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 2px;
+}
+
+/* Gray Background (for dividers) */
+.bookingpage-bg-gray { --fx-background-color: #E6E7E7;
+}
+
+/* Transparent/Link Button Base */
+.bookingpage-btn-link { --fx-background-color: transparent; --fx-border-color: transparent; cursor: pointer;
+}
+
+/* Benefit Tag (semi-transparent pill) */
+.bookingpage-benefit-tag { --fx-background-color: rgba(255,255,255,0.7); --fx-background-radius: 20px;
+}
+
+/* Verification Code Digit Field */
+.bookingpage-digit-field { font-size: 24px; font-weight: 600; --fx-background-color: white; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; --fx-background-radius: 8px;
+}
+
+/* Back Button Styles */
+.bookingpage-btn-back { --fx-border-radius: 8px; --fx-background-radius: 8px; font-size: 16px; font-weight: 500; --fx-border-color: #dee2e6; --fx-border-width: 1px; --fx-background-color: white; --fx-text-fill: #495057;
+}
+
+.bookingpage-btn-back-hover { --fx-border-radius: 8px; --fx-background-radius: 8px; font-size: 16px; font-weight: 500; --fx-border-color: #adb5bd; --fx-border-width: 1px; --fx-background-color: #f8f9fa; --fx-text-fill: #495057;
+}
+
+/* Primary Button Disabled */
+.bookingpage-btn-primary-disabled { --fx-border-radius: 8px; --fx-background-radius: 8px; font-size: 16px; font-weight: 600; --fx-background-color: #adb5bd; --fx-text-fill: white;
+}
+
+/* Disabled Text (grayed out) */
+.bookingpage-text-disabled { --fx-text-fill: #adb5bd;
+}
+
+/* ==========================================
+   BookingPageUIBuilder Info Box Components
+   ========================================== */
+
+/* Info Box Base */
+.bookingpage-info-box { --fx-background-radius: 8px; --fx-border-radius: 8px;
+}
+
+/* Info Box - Success (green) */
+.bookingpage-info-box-success { --fx-background-color: #d4edda; --fx-border-width: 0px 0px 0px 4px; --fx-border-color: #198754;
+}
+
+/* Info Box - Warning (yellow/amber) */
+.bookingpage-info-box-warning { --fx-background-color: #FFF9E6; --fx-border-color: #FFE58F; --fx-border-width: 1px;
+}
+
+/* Info Box - Error (red) */
+.bookingpage-info-box-error { --fx-background-color: #f8d7da; --fx-border-color: #f5c2c7; --fx-border-width: 1px;
+}
+
+/* Info Box - Info (theme colored) */
+.bookingpage-info-box-info { --fx-background-color: var(--booking-form-selected-bg); --fx-border-width: 1px; --fx-border-color: var(--booking-form-primary); --fx-border-radius: 8px; --fx-background-radius: 8px;
+}
+
+/* Info Box Icon */
+.bookingpage-info-box-icon { font-size: 18px;
+}
+
+.bookingpage-info-box-success .bookingpage-info-box-icon { --fx-text-fill: #198754;
+}
+
+.bookingpage-info-box-warning .bookingpage-info-box-icon { --fx-text-fill: #D97706;
+}
+
+.bookingpage-info-box-error .bookingpage-info-box-icon { --fx-text-fill: #dc3545;
+}
+
+.bookingpage-info-box-info .bookingpage-info-box-icon { --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Info Box - Outline Primary (transparent bg, primary color border all around) */
+.bookingpage-info-box-outline-primary { --fx-background-color: transparent; --fx-border-color: var(--booking-form-primary); --fx-border-width: 1px; --fx-border-radius: 8px;
+}
+
+.bookingpage-info-box-outline-primary .bookingpage-info-box-icon { --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Info Box Message */
+.bookingpage-info-box-message { font-size: 14px; --fx-text-fill: #212529;
+}
+
+/* ========================================
+   Loading & Status Indicators
+   ======================================== */
+
+/* Loading Overlay - semi-transparent white background */
+.bookingpage-loading-overlay { --fx-background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Themed Success Circle - uses theme primary color for border */
+.bookingpage-success-circle-themed { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: var(--booking-form-primary); --fx-border-width: 4px; --fx-background-radius: 40px; --fx-border-radius: 40px;
+}
+
+/* Light divider line (1px) */
+.bookingpage-divider-light { --fx-background-color: #f0f0f0;
+}
+
+/* Primary themed text (uses theme primary color) */
+.bookingpage-text-primary { --fx-text-fill: var(--booking-form-primary);
+}
+
+/* ==========================================
+   Status Badges
+   ========================================== */
+
+/* Status badge - upcoming (blue) */
+.booking-form-status-upcoming { --fx-background-color: #DBEAFE; --fx-text-fill: #1D4ED8; --fx-background-radius: 4px;
+}
+
+/* Status badge - in progress (amber) */
+.booking-form-status-in-progress { --fx-background-color: #FEF3C7; --fx-text-fill: #B45309; --fx-background-radius: 4px;
+}
+
+/* Status badge - completed (green) */
+.booking-form-status-completed { --fx-background-color: #D1FAE5; --fx-text-fill: #047857; --fx-background-radius: 4px;
+}
+
+/* Badge - purchased (theme colored) */
+.bookingpage-badge-purchased { --fx-background-color: var(--booking-form-selected-bg); --fx-text-fill: var(--booking-form-primary); --fx-background-radius: 4px;
+}
+
+/* ==========================================
+   Themed Icon Circle (for icon backgrounds)
+   ========================================== */
+
+/* Icon circle with theme colors */
+.bookingpage-icon-circle-themed { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-background-radius: 50%; --fx-border-radius: 50%;
+}
+
+/* Solid primary circle (for checkmarks, success indicators) */
+.bookingpage-icon-circle-primary { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 50%;
+}
+
+/* Large confirmation circle with solid primary background */
+.bookingpage-confirmation-check-circle { --fx-background-color: var(--booking-form-primary); --fx-border-color: var(--booking-form-primary); --fx-border-width: 4px;
+}
+
+/* Checkmark inside confirmation circle should be white for contrast */
+.bookingpage-confirmation-check-circle .bookingpage-icon-primary { --fx-stroke: white;
+}
+
+/* ==========================================
+   Themed Hyperlinks
+   ========================================== */
+
+/* Hyperlink with theme primary color */
+.bookingpage-link-primary { font-size: 13px; font-weight: 500; cursor: pointer; --fx-text-fill: var(--booking-form-primary);
+}
+
+.bookingpage-link-primary:hover { --fx-text-fill: var(--booking-form-primary-dark);
+}
+
+/* ==========================================
+   Generic Status Badges (BookingPageUIBuilder)
+   ========================================== */
+
+/* Base badge styling */
+.bookingpage-badge { font-size: 12px; font-weight: 600; --fx-background-radius: 4px;
+}
+
+/* Badge - success (green) */
+.bookingpage-badge-success { --fx-background-color: #d4edda; --fx-background-radius: 4px; --fx-text-fill: #155724;
+}
+
+/* Badge - warning (yellow/amber) */
+.bookingpage-badge-warning { --fx-background-color: #fff3cd; --fx-background-radius: 4px; --fx-text-fill: #856404;
+}
+
+/* Badge - danger (red) */
+.bookingpage-badge-danger { --fx-background-color: #f8d7da; --fx-background-radius: 4px; --fx-text-fill: #721c24;
+}
+
+/* Badge - info (theme colored) */
+.bookingpage-badge-info { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 4px; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Primary-colored divider for emphasis (uses theme color) */
+.bookingpage-divider-top-primary { --fx-border-color: var(--booking-form-primary) transparent transparent transparent; --fx-border-width: 2px 0px 0px 0px;
+}
+
+/* ==========================================
+   Date Card - Past Date Styling
+   ========================================== */
+
+/* Date Card - Past date styling (displayed but not selectable) */
+.bookingpage-date-card-past { opacity: 0.5; cursor: default;
+}
+
+.bookingpage-date-card-past:hover {
+    /* Override hover effects - keep original styling */
+ --fx-border-color: #dee2e6; --fx-background-color: white;
+}
+
+/* ==========================================
+   Select All Bar
+   ========================================== */
+
+/* Select All Bar container */
+/* Note: Padding is set in Java code (ClassDateSelectionSection.java) */
+.bookingpage-select-all-bar { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 8px; --fx-border-color: var(--booking-form-hover-border); --fx-border-width: 1px; --fx-border-radius: 8px;
+}
+
+/* Select All Bar message - default state */
+.bookingpage-select-all-message { font-size: 13px; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+/* Select All Bar message - all selected state (uses theme primary color) */
+.bookingpage-select-all-message.all-selected { --fx-text-fill: var(--booking-form-primary); font-weight: 500;
+}
+
+/* Discount row styling (uses theme colors) */
+.bookingpage-discount-row { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 6px;
+}
+
+.bookingpage-discount-label { --fx-text-fill: var(--booking-form-primary); font-weight: 500;
+}
+
+.bookingpage-discount-value { --fx-text-fill: var(--booking-form-primary); font-weight: 600;
+}
+
+/* Small primary button (Select All) - uses theme color */
+.bookingpage-btn-small-primary { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; --fx-text-fill: var(--booking-form-text-on-primary);
+}
+
+.bookingpage-btn-small-primary:hover {  box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Small outline button (Clear All) */
+.bookingpage-btn-small-outline { --fx-background-color: transparent; --fx-border-color: var(--booking-form-hover-border); --fx-border-width: 1px; --fx-border-radius: 6px; --fx-background-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+.bookingpage-btn-small-outline:hover { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
+}
+/* ==========================================
+   Empty Circle Indicator (for unselected state)
+   ========================================== */
+
+/* Empty circle - shown when card is not selected */
+.booking-form-empty-circle { --fx-fill: white; --fx-stroke: #dee2e6; --fx-stroke-width: 2px;
+}
+
+/* ==========================================
+   GP Class Date Card Selection Styling
+   (Selected and Hovered have same appearance)
+   ========================================== */
+
+/* Selected, Hovered, and Selected+Hover date card - primary background with white text */
+.gpclass-date-card.selected,
+.gpclass-date-card.hovered,
+.gpclass-date-card.selected:hover { --fx-background-color: var(--booking-form-primary); --fx-border-color: var(--booking-form-primary);
+}
+
+/* Date box inside selected/hovered card - semi-transparent white background */
+.gpclass-date-card.selected .gpclass-date-box,
+.gpclass-date-card.hovered .gpclass-date-box,
+.gpclass-date-card.selected:hover .gpclass-date-box { --fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Text colors in selected/hovered card - white */
+.gpclass-date-card.selected .gpclass-date-day,
+.gpclass-date-card.hovered .gpclass-date-day,
+.gpclass-date-card.selected:hover .gpclass-date-day { --fx-text-fill: white;
+}
+
+.gpclass-date-card.selected .gpclass-date-month,
+.gpclass-date-card.hovered .gpclass-date-month,
+.gpclass-date-card.selected:hover .gpclass-date-month { --fx-text-fill: rgba(255, 255, 255, 0.8);
+}
+
+.gpclass-date-card.selected .gpclass-date-dayname,
+.gpclass-date-card.hovered .gpclass-date-dayname,
+.gpclass-date-card.selected:hover .gpclass-date-dayname { --fx-text-fill: white;
+}
+
+.gpclass-date-card.selected .gpclass-date-time,
+.gpclass-date-card.hovered .gpclass-date-time,
+.gpclass-date-card.selected:hover .gpclass-date-time { --fx-text-fill: rgba(255, 255, 255, 0.8);
+}
+
+/* Checkmark badge in selected state - semi-transparent white circle */
+.gpclass-date-card.selected .booking-form-checkmark-circle { --fx-fill: rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================
+   GP Class Date Card Styling (Base)
+   ========================================== */
+
+/* Date box - default light gray background */
+.gpclass-date-box { --fx-background-color: #f8f9fa; --fx-background-radius: 8px;
+}
+
+/* Day number label */
+.gpclass-date-day { font-size: 16px; font-weight: 700; --fx-text-fill: #212529;
+}
+
+/* Month label */
+.gpclass-date-month { font-size: 9px; font-weight: 600; --fx-text-fill: #6c757d;
+}
+
+/* Day name label */
+.gpclass-date-dayname { font-size: 13px; font-weight: 600; --fx-text-fill: #212529;
+}
+
+/* Time label */
+.gpclass-date-time { font-size: 12px; --fx-text-fill: #6c757d;
+}
+
+/* Note: Hover state styling is in the GP Class Date Card Selection Styling section above
+   (hovered and selected share the same appearance - primary background) */
+
+/* ==========================================
+   GP Class Price Summary Styling
+   ========================================== */
+
+/* Price summary title - "Your Selection" */
+.gpclass-price-summary-title { font-size: 16px; font-weight: 700; --fx-text-fill: #212529;
+}
+
+/* Price summary total label - "Total" */
+.gpclass-price-summary-total-label { font-size: 18px; font-weight: 700; --fx-text-fill: #212529;
+}
+
+/* Price summary total value - the price amount */
+.gpclass-price-summary-total-value { font-size: 24px; font-weight: 700;
+}
+
+/* Price summary divider line */
+.gpclass-price-summary-divider { --fx-background-color: #dee2e6;
+}
+
+/* ==========================================
+   GP Class Date Card - Already Booked Badge
+   ========================================== */
+
+/* Already Booked Badge - Subtle themed style */
+.gpclass-booked-badge { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: var(--booking-form-hover-border); --fx-border-width: 1px; --fx-border-radius: 4px; --fx-background-radius: 4px; font-size: 9px; font-weight: 600; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Locked date card styling - already booked, non-interactive */
+.gpclass-date-card.locked { cursor: default;
+}
+
+/* Locked cards keep selected appearance, no hover changes */
+.gpclass-date-card.locked:hover { --fx-background-color: var(--booking-form-primary); --fx-border-color: var(--booking-form-primary);
+}
+
+/* Badge on selected/locked card - semi-transparent for contrast */
+.gpclass-date-card.selected .gpclass-booked-badge,
+.gpclass-date-card.locked .gpclass-booked-badge { --fx-background-color: rgba(255, 255, 255, 0.2); --fx-border-color: rgba(255, 255, 255, 0.3); --fx-text-fill: white;
+}
+
+/* ==========================================
+   User Badge Component (Step Progress Header)
+   ========================================== */
+
+/* User badge container - pill shape with theme colors */
+.booking-form-user-badge-content { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 22px; --fx-border-color: var(--booking-form-primary); --fx-border-radius: 22px; --fx-border-width: 1px;
+}
+
+/* User badge dropdown container */
+.booking-form-user-dropdown { --fx-background-color: white; --fx-background-radius: 12px; --fx-border-color: #E6E7E7; --fx-border-radius: 12px; --fx-border-width: 1px;  box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+}
+
+/* User info header in dropdown */
+.booking-form-user-dropdown-header { --fx-background-color: #FAFBFC; --fx-background-radius: 12px 12px 0px 0px; --fx-border-color: #E6E7E7; --fx-border-width: 0px 0px 1px 0px;
+}
+
+/* Logout button styling */
+.booking-form-logout-btn { --fx-background-color: transparent; --fx-text-fill: #dc3545; cursor: pointer;
+}
+
+.booking-form-logout-btn:hover { --fx-background-color: #dc3545; --fx-text-fill: white;
+}
+
+/* Progress dot - base styling */
+.booking-form-step-dot { --fx-background-color: #D1D5DB; --fx-background-radius: 5px;
+}
+
+/* Progress dot - active state (wider pill shape, uses theme color) */
+.booking-form-step-dot-active { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 5px;
+}
+
+/* Progress dot - completed state (uses theme color) */
+.booking-form-step-dot-completed { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 5px;
+}
+
+/*===== modality-booking-frontoffice-bookingpage-web@main.css from modality-booking-frontoffice-bookingpage =====*/
+
+/* Translation + shadow effect on booking page cards */
+.booking-form .bookingpage-card:hover, .booking-form fx-button:hover {
+    translate: 0 -1px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    transition: translate 250ms ease-in;
 }
 
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-frontoffice-bookingform-recurringevent-plugin =====*/
@@ -2811,7 +4356,7 @@ fx-collapsepane.menu-bar.lang-menu-bar {
 .festival-thumbnail fx-button {
     font-weight: 600;
     font-size: 16px;
-    --fx-button-background-color: var(--festival-color);
+    --fx-background-color: var(--festival-color);
     --fx-text-fill: white;
     --fx-border-style: none;
     --fx-border-radius: 8px;
@@ -2863,7 +4408,7 @@ fx-collapsepane.menu-bar.lang-menu-bar {
     font-weight: 600;
     font-size: 16px;
     color: white;
-    --fx-button-background-color: var(--home-header-color);
+    --fx-background-color: var(--home-header-color);
     --fx-border-radius: 8px;
     --fx-border-style: none;
     cursor: pointer;
@@ -2921,3 +4466,13 @@ fx-aspectratiopane {
     --brand-main-color: var(--kadampa-org-orange-color);
     --brand-main-background-color: var(--kadampa-org-orange-color);
 }*/
+
+/*===== nkt-footer-logo-web@main.css from kbs-frontoffice-footer-nktikbu =====*/
+
+:root {
+    --footer-logo-color: rgb(74, 71, 72);
+}
+
+.footer-logo {
+    --fx-svg-path-fill: var(--footer-logo-color);
+}
