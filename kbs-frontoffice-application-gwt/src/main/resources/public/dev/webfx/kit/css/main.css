@@ -3766,20 +3766,20 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .bookingpage-checkbox-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer;
 }
 
-.bookingpage-checkbox-card:hover { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+.bookingpage-checkbox-card:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
 }
 
-.bookingpage-checkbox-card.selected { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+.bookingpage-checkbox-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
 }
 
 /* Radio Card - card with embedded radio on left */
 .bookingpage-radio-card { --fx-background-color: white; --fx-background-radius: 8px; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; cursor: pointer;
 }
 
-.bookingpage-radio-card:hover { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+.bookingpage-radio-card:hover { --fx-border-color: var(--booking-form-hover-border); --fx-background-color: var(--booking-form-selected-bg);
 }
 
-.bookingpage-radio-card.selected { --fx-border-color: #0096D6; --fx-background-color: #F0F9FF;
+.bookingpage-radio-card.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg);
 }
 
 /* Warning/Info Box */
@@ -4450,13 +4450,6 @@ fx-aspectratiopane {
 
 .kbs-main-login .help-text a {
     color: white;
-}
-/*===== kbs-frontoffice-onlinefestival-web@main.css from kbs-frontoffice-bookingform-onlinefestival-plugin =====*/
-
-.linked-account-message {
-    text-align: center;
-    --fx-line-height: 1.8;
-    --fx-text-fill: var(--bootstrap-grey5);
 }
 /*===== override@modality-client-brand-web@main.css from kbs-frontoffice-application =====*/
 
