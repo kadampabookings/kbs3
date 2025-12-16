@@ -97,7 +97,7 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
             .withColorScheme(BookingFormColorScheme.PEACE_PURPLE)  // Applied as CSS theme class
             .withShowUserBadge(true)                     // Show user badge in header
             .withCardPaymentOnly(true)                   // GP classes only accept card payment
-            .withEntryPoint(entryPoint);                 // Handle payment resume/modification entry points
+            .withEntryPoint(entryPoint).withNavigationClickable(false);                 // Handle payment resume/modification entry points
 
         // Add existing booking check page first (will auto-skip if not applicable via isApplicableToBooking)
         builder.addCustomStep(existingBookingPage);      // Step 0: Existing booking check (auto-skips for new bookings)
