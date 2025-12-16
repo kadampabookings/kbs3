@@ -1,5 +1,6 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections;
 
+import dev.webfx.extras.i18n.controls.I18nControls;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,11 +10,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import one.modality.base.shared.entities.ScheduledItem;
+import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.PriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultSummarySection;
+import one.modality.ecommerce.document.service.DocumentAggregate;
+import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
+import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,8 +41,15 @@ public class GPClassSummarySection extends DefaultSummarySection {
     private Label subtotalValue;
     private HBox discountRow;
     private Label discountValue;
+    private HBox alreadyPaidRow;
+    private Label alreadyPaidValue;
+    private Label totalLabel;
     private Label totalValue;
     private VBox priceContentBox;
+
+    // Differential pricing state
+    private boolean isModification = false;
+    private int initialBookingPrice = 0;
 
     public GPClassSummarySection(ClassDateSelectionSection dateSelectionSection) {
         super();  // This calls buildUI() -> buildPriceBreakdownSection() before dateSelectionSection is set
@@ -123,6 +135,25 @@ public class GPClassSummarySection extends DefaultSummarySection {
         discountRow.getChildren().addAll(discountLabel, discountSpacer, discountValue);
         content.getChildren().add(discountRow);
 
+        // Already paid row (for modifications - initially hidden)
+        alreadyPaidRow = new HBox();
+        alreadyPaidRow.setAlignment(Pos.CENTER_LEFT);
+        alreadyPaidRow.setPadding(new Insets(0, 0, 8, 0));
+        alreadyPaidRow.setVisible(false);
+        alreadyPaidRow.setManaged(false);
+
+        Label alreadyPaidLabel = I18nControls.newLabel(MKMCI18nKeys.GPAlreadyPaid);
+        alreadyPaidLabel.getStyleClass().addAll("bookingpage-text-base", "bookingpage-label-caption");
+
+        Region alreadyPaidSpacer = new Region();
+        HBox.setHgrow(alreadyPaidSpacer, Priority.ALWAYS);
+
+        alreadyPaidValue = new Label();
+        alreadyPaidValue.getStyleClass().addAll("bookingpage-text-base", "bookingpage-label-caption");
+
+        alreadyPaidRow.getChildren().addAll(alreadyPaidLabel, alreadyPaidSpacer, alreadyPaidValue);
+        content.getChildren().add(alreadyPaidRow);
+
         // Divider before total
         Region totalDivider = new Region();
         totalDivider.setMinHeight(2);
@@ -131,12 +162,12 @@ public class GPClassSummarySection extends DefaultSummarySection {
         VBox.setMargin(totalDivider, new Insets(4, 0, 0, 0));
         content.getChildren().add(totalDivider);
 
-        // Total row
+        // Total row (label text will be updated based on modification state)
         HBox totalRow = new HBox();
         totalRow.setAlignment(Pos.CENTER_LEFT);
         totalRow.setPadding(new Insets(16, 0, 0, 0));
 
-        Label totalLabel = new Label("Total");
+        totalLabel = new Label("Total");  // Use field for dynamic updates
         totalLabel.getStyleClass().addAll("bookingpage-text-lg", "bookingpage-font-bold", "bookingpage-text-dark");
 
         Region totalSpacer = new Region();
@@ -160,32 +191,35 @@ public class GPClassSummarySection extends DefaultSummarySection {
             return;
         }
 
+        // Check if this is a modification and calculate initial price
+        checkIfModification();
+
         List<ScheduledItem> selectedItems = dateSelectionSection.getSelectedItems();
         boolean allSelected = dateSelectionSection.isAllDatesSelected();
         int subtotal = dateSelectionSection.getSubtotal();
         int discount = dateSelectionSection.getDiscount();
         int total = dateSelectionSection.getTotalPrice();
 
-        // Update dates label
-        if (!selectedItems.isEmpty()) {
-            String datesText = formatSelectedDates(selectedItems);
-            datesLabel.setText(datesText);
-            datesLabel.setVisible(true);
-            datesLabel.setManaged(true);
-        } else {
-            datesLabel.setText("No classes selected");
-            datesLabel.setVisible(true);
-            datesLabel.setManaged(true);
-        }
+            // Update dates label
+            if (!selectedItems.isEmpty()) {
+                String datesText = formatSelectedDates(selectedItems);
+                datesLabel.setText(datesText);
+                datesLabel.setVisible(true);
+                datesLabel.setManaged(true);
+            } else {
+                datesLabel.setText("No classes selected");
+                datesLabel.setVisible(true);
+                datesLabel.setManaged(true);
+            }
 
-        // Update subtotal
-        int numSelected = selectedItems.size();
-        if (allSelected) {
-            subtotalLabel.setText("All " + numSelected + " classes (full term)");
-        } else {
-            subtotalLabel.setText(numSelected + " class" + (numSelected != 1 ? "es" : ""));
-        }
-        subtotalValue.setText(formatPrice(subtotal));
+            // Update subtotal
+            int numSelected = selectedItems.size();
+            if (allSelected) {
+                subtotalLabel.setText("All " + numSelected + " classes (full term)");
+            } else {
+                subtotalLabel.setText(numSelected + " class" + (numSelected != 1 ? "es" : ""));
+            }
+            subtotalValue.setText(formatPrice(subtotal));
 
         // Update discount
         if (discount > 0) {
@@ -197,8 +231,41 @@ public class GPClassSummarySection extends DefaultSummarySection {
             discountRow.setManaged(false);
         }
 
-        // Update total
-        totalValue.setText(formatPrice(total));
+            // Hide "Already paid" row for new bookings
+            alreadyPaidRow.setVisible(false);
+            alreadyPaidRow.setManaged(false);
+
+            // Show normal total
+            totalLabel.setText("Total");
+            totalValue.setText(formatPrice(total));
+        }
+
+    /**
+     * Checks if this is a modification of an existing booking and calculates the initial price.
+     */
+    private void checkIfModification() {
+        if (workingBookingProperties == null) {
+            isModification = false;
+            initialBookingPrice = 0;
+            return;
+        }
+
+        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
+        if (workingBooking == null || workingBooking.isNewBooking()) {
+            isModification = false;
+            initialBookingPrice = 0;
+            return;
+        }
+
+        // This is a modification - calculate initial booking price
+        isModification = true;
+        DocumentAggregate initialAggregate = workingBooking.getInitialDocumentAggregate();
+        if (initialAggregate != null) {
+            PriceCalculator initialPriceCalculator = new PriceCalculator(initialAggregate);
+            initialBookingPrice = initialPriceCalculator.calculateTotalPrice();
+        } else {
+            initialBookingPrice = 0;
+        }
     }
 
     private String formatSelectedDates(List<ScheduledItem> items) {

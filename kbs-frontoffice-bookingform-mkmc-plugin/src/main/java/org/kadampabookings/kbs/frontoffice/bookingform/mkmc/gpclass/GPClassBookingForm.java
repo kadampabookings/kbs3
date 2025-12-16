@@ -1,8 +1,11 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass;
 
 import dev.webfx.platform.async.Future;
+import dev.webfx.platform.console.Console;
 import javafx.beans.binding.Bindings;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
+import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.ecommerce.document.service.DocumentAggregate;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
 import one.modality.booking.frontoffice.bookingpage.BookingFormPage;
@@ -13,9 +16,13 @@ import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormCallbacks;
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.booking.frontoffice.bookingpage.sections.DefaultEventHeaderSection;
+import one.modality.booking.frontoffice.bookingpage.sections.HasMemberSelectionSection.MemberInfo;
+import one.modality.base.shared.entities.Person;
+import one.modality.booking.client.workingbooking.FXPersonToBook;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections.ClassDateSelectionSection;
+import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections.ExistingBookingSection;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections.GPClassRateSection;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections.GPClassSummarySection;
 
@@ -49,9 +56,17 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
     private DefaultEventHeaderSection eventHeaderSection;
     private GPClassRateSection rateSection;
     private ClassDateSelectionSection dateSelectionSection;
+    private ExistingBookingSection existingBookingSection;
+    private GPClassSummarySection summarySection;
 
-    // Custom page
+    // Custom pages
     private CompositeBookingFormPage selectClassesPage;
+    private CompositeBookingFormPage existingBookingPage;
+
+    // State
+    private final EventBookingFormSettings settings;
+    private final boolean hasExistingBooking;
+    private boolean modifyingOwnBooking = true; // Default: modifying own booking
 
     /**
      * Creates the GP Class booking form using the builder pattern.
@@ -61,24 +76,40 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
      * @param entryPoint The entry point for the booking form (NEW_BOOKING, MODIFY_BOOKING, or RESUME_PAYMENT)
      */
     public GPClassBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings, BookingFormEntryPoint entryPoint) {
-        // Create custom Step 1 (Select Classes page)
+        this.settings = settings;
+
+        // Note: hasExistingBooking is determined later when WorkingBooking is loaded
+        // At construction time, WorkingBooking may not be available yet
+        // The ExistingBookingSection uses isApplicableToBooking() to auto-skip when not needed
+        this.hasExistingBooking = false; // Will be updated dynamically via isApplicableToBooking()
+
+        // Create custom steps
         createCustomStep();
+        createExistingBookingStep();
 
         // Create custom summary section that shows GP-class-specific pricing
-        GPClassSummarySection summarySection = new GPClassSummarySection(dateSelectionSection);
+        summarySection = new GPClassSummarySection(dateSelectionSection);
 
         // Build the form - all generic logic is handled by StandardBookingForm
         // The color scheme is applied as a CSS theme class to the root container
         // Note: Full payment only is the default behavior for GP classes
-        this.form = new StandardBookingFormBuilder(activity, settings)
+        StandardBookingFormBuilder builder = new StandardBookingFormBuilder(activity, settings)
             .withColorScheme(BookingFormColorScheme.PEACE_PURPLE)  // Applied as CSS theme class
             .withShowUserBadge(true)                     // Show user badge in header
             .withCardPaymentOnly(true)                   // GP classes only accept card payment
-            .withEntryPoint(entryPoint)                  // Handle payment resume/modification entry points
-            .addCustomStep(selectClassesPage)            // Step 1: Custom date selection page
-            .withSummaryPageSupplier(() -> createSummaryPage(summarySection))  // Custom summary page
-            .withCallbacks(this)                         // For form-specific callbacks
-            .build();                                    // Steps 2-7: Uses default sections automatically
+            .withEntryPoint(entryPoint);                 // Handle payment resume/modification entry points
+
+        // Add existing booking check page first (will auto-skip if not applicable via isApplicableToBooking)
+        builder.addCustomStep(existingBookingPage);      // Step 0: Existing booking check (auto-skips for new bookings)
+        builder.addCustomStep(selectClassesPage);        // Step 1: Custom date selection page
+        builder.withSummaryPageSupplier(() -> createSummaryPage(summarySection));  // Custom summary page
+        // Note: Member selection is NOT skipped - for new bookings it shows, for existing bookings
+        // the Your Information and Member Selection pages will be skipped automatically because:
+        // 1. For existing bookings, user is already logged in (Your Information auto-skips)
+        // 2. For existing bookings, member is selected in ExistingBookingSection
+        builder.withCallbacks(this);                     // For form-specific callbacks
+
+        this.form = builder.build();                     // Build the form
     }
 
     /**
@@ -127,6 +158,142 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
     }
 
     /**
+     * Creates the Existing Booking Check step (Step 0) with options to modify or book for another person.
+     * This is only called when there's an existing booking to modify.
+     */
+    private void createExistingBookingStep() {
+        existingBookingSection = new ExistingBookingSection();
+
+        // Handle selection type changes
+        existingBookingSection.setOnSelectionTypeChanged(selectionType -> {
+            modifyingOwnBooking = (selectionType == ExistingBookingSection.SelectionType.MODIFY_EXISTING_BOOKING);
+            // If creating a new booking for another person, we need to re-enable member selection
+            // This is handled by the form's skip logic
+        });
+
+        // Handle DocumentAggregate selection (for existing booking modification)
+        // This is called when user clicks Continue after selecting an existing booking
+        existingBookingSection.setOnDocumentAggregateSelected(docAggregate -> {
+            // Recreate WorkingBooking with the selected person's existing booking data
+            // This avoids triggering FXPersonToBook which would cause a form reload
+            Console.log("Recreating WorkingBooking with selected booking's DocumentAggregate");
+            WorkingBooking newWorkingBooking = new WorkingBooking(
+                form.getWorkingBookingProperties().getPolicyAggregate(),
+                docAggregate,
+                null  // no payOrderDocumentId
+            );
+            // Mark that member was explicitly selected - this skips the member selection page
+            // Set on WorkingBooking BEFORE setWorkingBooking() so it's available during page navigation
+            newWorkingBooking.setMemberExplicitlySelected(true);
+            form.getWorkingBookingProperties().setWorkingBooking(newWorkingBooking);
+
+            // Hide rate section - rate cannot be changed when modifying existing booking
+            rateSection.getView().setVisible(false);
+            rateSection.getView().setManaged(false);
+        });
+
+        // Handle member selection (for new booking - create fresh WorkingBooking)
+        // Uses MemberInfo which has name/email captured when the data was definitely available
+        existingBookingSection.setOnMemberSelected(memberInfo -> {
+            if (memberInfo != null) {
+                // Use the name/email stored in MemberInfo (captured when data was available)
+                String fullName = memberInfo.getName();
+                String email = memberInfo.getEmail();
+                Person person = memberInfo.getPersonEntity();
+
+                // Parse fullName into firstName/lastName
+                String firstName = "";
+                String lastName = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.trim().split("\\s+", 2);
+                    firstName = parts[0];
+                    lastName = parts.length > 1 ? parts[1] : "";
+                }
+
+                Console.log("Creating fresh WorkingBooking for new booking - MemberInfo details:");
+                Console.log("  fullName: " + fullName);
+                Console.log("  firstName (parsed): " + firstName);
+                Console.log("  lastName (parsed): " + lastName);
+                Console.log("  email: " + email);
+
+                WorkingBooking newWorkingBooking = new WorkingBooking(
+                    form.getWorkingBookingProperties().getPolicyAggregate(),  // Keep same PolicyAggregate
+                    null,   // null = brand new booking (not existing)
+                    null    // no payOrderDocumentId
+                );
+                // Mark that member was explicitly selected - this skips the member selection page
+                // Set on WorkingBooking BEFORE setWorkingBooking() so it's available during page navigation
+                newWorkingBooking.setMemberExplicitlySelected(true);
+
+                // Set the person on the fresh document
+                newWorkingBooking.getDocument().setPerson(person);
+
+                // Copy personal details to document (required for summary display)
+                newWorkingBooking.getDocument().setFirstName(firstName);
+                newWorkingBooking.getDocument().setLastName(lastName);
+                newWorkingBooking.getDocument().setEmail(email);
+
+                // Verify the values were set correctly
+                Console.log("  Document firstName after set: " + newWorkingBooking.getDocument().getFirstName());
+                Console.log("  Document lastName after set: " + newWorkingBooking.getDocument().getLastName());
+
+                // Update the form with the new WorkingBooking FIRST
+                // This must happen BEFORE FXPersonToBook.setPersonToBook() to prevent race condition
+                // where BookEventActivity.onPersonToBookChanged() creates a new WorkingBooking that
+                // overwrites our flag-set one
+                form.getWorkingBookingProperties().setWorkingBooking(newWorkingBooking);
+
+                // CRITICAL: Set FXPersonToBook so submission uses correct person
+                // WorkingBooking.submitChanges() reads from FXPersonToBook.getPersonToBook()
+                // to determine the person primary key for the AddDocumentEvent
+                // NOTE: This MUST be called AFTER setWorkingBooking() - if called before,
+                // BookEventActivity.onPersonToBookChanged() triggers loadBookingWithSamePolicy()
+                // which creates a new WorkingBooking without our memberExplicitlySelected flag
+                FXPersonToBook.setPersonToBook(person);
+                Console.log("  Set FXPersonToBook to: " + fullName);
+
+                // IMPORTANT: Also set the attendee name directly on the summary section
+                // This bypasses Document field issues - the name will be reliably displayed
+                summarySection.setAttendeeName(fullName);
+                summarySection.setAttendeeEmail(email);
+                Console.log("  Set attendee name directly on summary section: " + fullName);
+            }
+
+            // Show rate section - user needs to select rate for new booking
+            rateSection.getView().setVisible(true);
+            rateSection.getView().setManaged(true);
+        });
+
+        // Handle continue button
+        existingBookingSection.setOnContinuePressed(() -> {
+            // Navigate to the next step (Select Classes page)
+            form.navigateToNextPage();
+        });
+
+        // Combine into Existing Booking page
+        existingBookingPage = new CompositeBookingFormPage(
+                MKMCI18nKeys.GPExistingBookingTitle,
+                existingBookingSection)
+                .setStep(true)
+                .setHeaderVisible(false)  // Don't show step header for this page
+                .setButtons();  // Empty - section has its own Continue button
+    }
+
+    /**
+     * Gets the color scheme from event settings.
+     * Defaults to WISDOM_BLUE if not configured.
+     */
+    private BookingFormColorScheme getColorSchemeFromEvent() {
+        // TODO: Read color scheme from event settings
+        // For now, default to WISDOM_BLUE for study programmes
+        if (settings != null && settings.event() != null) {
+            // Could read from event.getColorScheme() or similar field
+            // For now, return default
+        }
+        return BookingFormColorScheme.WISDOM_BLUE;
+    }
+
+    /**
      * Handles navigation from the Select Classes step.
      * Uses StandardBookingForm's built-in method to continue to the next step.
      * Returns the Future from continueFromCustomSteps() so the spinner waits for async loading.
@@ -149,4 +316,32 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
         return form;
     }
 
+    /**
+     * Returns the date selection section for external access if needed.
+     */
+    public ClassDateSelectionSection getDateSelectionSection() {
+        return dateSelectionSection;
+    }
+
+    /**
+     * Returns whether the user has an existing booking for this event.
+     */
+    public boolean hasExistingBooking() {
+        return hasExistingBooking;
+    }
+
+    /**
+     * Returns whether the user is modifying their own booking (vs booking for another person).
+     * Only relevant when hasExistingBooking() is true.
+     */
+    public boolean isModifyingOwnBooking() {
+        return modifyingOwnBooking;
+    }
+
+    /**
+     * Returns the existing booking section (only available when hasExistingBooking() is true).
+     */
+    public ExistingBookingSection getExistingBookingSection() {
+        return existingBookingSection;
+    }
 }
