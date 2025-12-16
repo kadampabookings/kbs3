@@ -69,7 +69,7 @@ public final class MKMCOnlineEmpowermentBookingForm implements StandardBookingFo
         // Build the form - all generic logic is handled by StandardBookingForm
         // The color scheme is applied as a CSS theme class to the root container
         this.form = new StandardBookingFormBuilder(activity, settings)
-            .withColorScheme(BookingFormColorScheme.VAJRAYOGINI_RED)  // Applied as CSS theme class
+            .withColorScheme(BookingFormColorScheme.JOY_AMBER)  // Applied as CSS theme class
             .withEntryPoint(entryPoint)  // Handle payment return redirects
             .addCustomStep(optionsPage)  // Step 1: Custom Options page
             .withCallbacks(this)         // For form-specific summary updates
