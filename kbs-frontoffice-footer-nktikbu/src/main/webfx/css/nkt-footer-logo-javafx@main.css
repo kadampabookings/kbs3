@@ -1,0 +1,7 @@
+.root {
+    -footer-logo-color: rgb(74, 71, 72)
+}
+
+.footer-logo SVGPath {
+    -fx-fill: -footer-logo-color;
+}
