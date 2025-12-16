@@ -12,7 +12,7 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
     @Source("dev/webfx/extras/i18n/de.properties")
     TextResource r1();
 
-    @Source("dev/webfx/extras/i18n/en.json")
+    @Source("dev/webfx/extras/i18n/en.properties")
     TextResource r2();
 
     @Source("dev/webfx/extras/i18n/es.properties")
@@ -50,7 +50,7 @@ public interface GwtEmbedResourcesBundle extends ClientBundle {
     final class ProvidedGwtResourceBundle extends WebResourceBundleBase {
         public ProvidedGwtResourceBundle() {
             registerResource("dev/webfx/extras/i18n/de.properties", () -> R.r1().getText());
-            registerResource("dev/webfx/extras/i18n/en.json", () -> R.r2().getText());
+            registerResource("dev/webfx/extras/i18n/en.properties", () -> R.r2().getText());
             registerResource("dev/webfx/extras/i18n/es.properties", () -> R.r3().getText());
             registerResource("dev/webfx/extras/i18n/fr.properties", () -> R.r4().getText());
             registerResource("dev/webfx/extras/i18n/pt.properties", () -> R.r5().getText());

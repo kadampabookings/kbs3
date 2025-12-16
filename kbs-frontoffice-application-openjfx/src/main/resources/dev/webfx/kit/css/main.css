@@ -111,6 +111,16 @@
 }
 
 
+/*===== webfx-extras-controls-javafx@main.css from webfx-extras-util-control =====*/
+
+.root {
+    -fx-spinner-color: -fx-theme-color;
+}
+
+.webfx-extras-spinner {
+    -fx-fill: -fx-spinner-color;
+}
+
 /*===== webfx-extras-material-javafx@main.css from webfx-extras-styles-materialdesign =====*/
 
 .root {
@@ -189,510 +199,248 @@
     -fx-stroke: lightgray;
 }
 
-/*===== webfx-extras-bootstrap-javafx@main.css from webfx-extras-styles-bootstrap =====*/
+/*===== webfx-extras-bootstrap-webfx@main.css from webfx-extras-styles-bootstrap =====*/
 
 /* Bootstrap style */
-.root {
-    -bootstrap-white: #fff ;
-    
-    -bootstrap-grey1: #e6e6e6 ;
-    -bootstrap-grey2: #d4d4d4 ;
-    -bootstrap-grey3: #ccc ;
-    -bootstrap-grey4: #adadad ;
-    -bootstrap-grey5: #8c8c8c ;
-    -bootstrap-grey6: #777777 ;
-    -bootstrap-grey7: #333 ;
-
-    -bootstrap-blue1: #5bc0de ;
-    -bootstrap-blue2: #46b8da ;
-    -bootstrap-blue3: #31b0d5 ;
-    -bootstrap-blue4: #269abc ;
-    -bootstrap-blue5: #337ab7 ;
-    -bootstrap-blue6: #2e6da4 ;
-    -bootstrap-blue7: #1b6d85 ;
-    -bootstrap-blue8: #286090 ;
-    -bootstrap-blue9: #204d74 ;
-    -bootstrap-blue10: #122b40 ;
-    -bootstrap-blue11: #31708f ;
-
-    -bootstrap-green1: #5cb85c ;
-    -bootstrap-green2: #4cae4c ;
-    -bootstrap-green3: #449d44 ;
-    -bootstrap-green4: #398439 ;
-    -bootstrap-green5: #255625 ;
-    -bootstrap-green6: #3c763d ;
-
-    -bootstrap-orange1: #f0ad4e ;
-    -bootstrap-orange2: #eea236 ;
-    -bootstrap-orange3: #ec971f ;
-    -bootstrap-orange4: #d58512 ;
-    -bootstrap-orange5: #985f0d ;
-    -bootstrap-orange6: #8a6d3b ;
-
-    -bootstrap-red1: #d9534f ;
-    -bootstrap-red2: #d43f3a ;
-    -bootstrap-red3: #c9302c ;
-    -bootstrap-red4: #ac2925 ;
-    -bootstrap-red5: #761c19 ;
-    -bootstrap-red6: #a94442 ;
-
-    -badge-default-bg: -bootstrap-white;
-    -badge-default-txt: -bootstrap-grey7;
-    -badge-primary-bg: -bootstrap-blue5;
-    -badge-primary-txt: -bootstrap-white;
-    -badge-success-bg: -bootstrap-green1;
-    -badge-success-txt: -bootstrap-white;
-    -badge-info-bg: -bootstrap-blue1;
-    -badge-info-txt: -bootstrap-white;
-    -badge-warning-bg: -bootstrap-orange1;
-    -badge-warning-txt: -bootstrap-white;
-    -badge-danger-bg: -bootstrap-red1;
-    -badge-danger-txt: -bootstrap-white;
-    -badge-secondary-bg: -bootstrap-grey4;
-    -badge-secondary-txt: -bootstrap-white;
-
-    /*-bootstrap-font-size: 14px;*/ /* default value for buttons */
+.root { -bootstrap-white: #fff ; -bootstrap-grey1: #e6e6e6 ; -bootstrap-grey2: #d4d4d4 ; -bootstrap-grey3: #ccc ; -bootstrap-grey4: #adadad ; -bootstrap-grey5: #8c8c8c ; -bootstrap-grey6: #777777 ; -bootstrap-grey7: #333 ; -bootstrap-blue1: #5bc0de ; -bootstrap-blue2: #46b8da ; -bootstrap-blue3: #31b0d5 ; -bootstrap-blue4: #269abc ; -bootstrap-blue5: #337ab7 ; -bootstrap-blue6: #2e6da4 ; -bootstrap-blue7: #1b6d85 ; -bootstrap-blue8: #286090 ; -bootstrap-blue9: #204d74 ; -bootstrap-blue10: #122b40 ; -bootstrap-blue11: #31708f ; -bootstrap-green1: #5cb85c ; -bootstrap-green2: #4cae4c ; -bootstrap-green3: #449d44 ; -bootstrap-green4: #398439 ; -bootstrap-green5: #255625 ; -bootstrap-green6: #3c763d ; -bootstrap-orange1: #f0ad4e ; -bootstrap-orange2: #eea236 ; -bootstrap-orange3: #ec971f ; -bootstrap-orange4: #d58512 ; -bootstrap-orange5: #985f0d ; -bootstrap-orange6: #8a6d3b ; -bootstrap-red1: #d9534f ; -bootstrap-red2: #d43f3a ; -bootstrap-red3: #c9302c ; -bootstrap-red4: #ac2925 ; -bootstrap-red5: #761c19 ; -bootstrap-red6: #a94442 ; -badge-default-bg: -bootstrap-white; -badge-default-txt: -bootstrap-grey7; -badge-primary-bg: -bootstrap-blue5; -badge-primary-txt: -bootstrap-white; -badge-success-bg: -bootstrap-green1; -badge-success-txt: -bootstrap-white; -badge-info-bg: -bootstrap-blue1; -badge-info-txt: -bootstrap-white; -badge-warning-bg: -bootstrap-orange1; -badge-warning-txt: -bootstrap-white; -badge-danger-bg: -bootstrap-red1; -badge-danger-txt: -bootstrap-white; -badge-secondary-bg: -bootstrap-grey4; -badge-secondary-txt: -bootstrap-white; -bootstrap-font-size: 14px; /* default value for buttons */
 }
 
 /* Buttons */
 
 .btn {
-    -fx-font-weight: normal;
-    -fx-text-alignment: center;
-    -fx-cursor: default;
-    -fx-border-color: transparent;
-    -fx-border-width: 1px;
-    -fx-border-style: solid;
-    -fx-background-insets: 0, 0, -1, 0;
-    /*-fx-padding: 6px 12px 6px 12px;*/ /* hardcoded for web support */
-    /*-fx-font-size: -bootstrap-font-size;*/
-    -fx-font-size: 14px;
-    -fx-border-radius: 4px;
-    -fx-background-radius: 4px;
-    /*-fx-min-width: 80px;*/ /* hardcoded for web support */
+    /* Applying the same style as other buttons (same rules as fx-button in javafx-graphics WebFX CSS) */
+    /*--fx-border-style: -fx-button-border-style; -fx-border-color: -fx-button-border-color; -fx-border-radius: -fx-button-border-radius;
+ -fx-background-radius: -fx-button-border-radius; -fx-border-width: -fx-button-border-width;*/
+    /*--fx-background-color: -fx-button-background-color;*/
+    /*--fx-background-radius: -fx-button-background-radius;*/
+    /*--fx-background-image: -fx-button-background-image;*/
+    /*--fx-background-position: -fx-button-background-position; -fx-background-repeat: -fx-button-background-repeat; -fx-background-size: -fx-button-background-size;*/
+ -fx-border-width: 1px; -fx-border-radius: 4px;
+ -fx-background-radius: 4px; -fx-cursor: hand; -fx-font-weight: normal; -fx-text-alignment: center; -fx-font-size: -bootstrap-font-size; -fx-svg-path-fill: -fx-text-fill;
+
+    /* Using the same color as text for the possible spinner or progress indicator inside bootstrap buttons */
+ -fx-spinner-color: -fx-text-fill; -fx-progress-indicator-color: -fx-text-fill;
 }
 
-.btn:hover {
-    -fx-text-fill: -bootstrap-grey7;
-    -fx-fill: -bootstrap-grey7;
+/*.btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-grey7;
+}*/
+
+.btn-default, .btn.default, .default .btn { -fx-text-fill: -bootstrap-grey7; -fx-background-color: -bootstrap-white; -fx-border-color: -bootstrap-grey3;
 }
 
-.btn-default, .btn.default, .default .btn {
-    -fx-text-fill: -bootstrap-grey7;
-    -fx-fill: -bootstrap-grey7;
-    -fx-background-color: -bootstrap-white;
-    -fx-border-color: -bootstrap-grey3;
+.btn-default:hover:not(.disabled), .btn.default:hover:not(.disabled), .default .btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-grey7;
 }
 
-.btn-default:hover, .btn.default:hover, .default .btn:hover {
-    -fx-text-fill: -bootstrap-grey7;
-    -fx-fill: -bootstrap-grey7;
-    -fx-background-color: -bootstrap-grey1;
-    -fx-border-color: -bootstrap-grey5;
+.btn-default:hover, .btn.default:hover, .default .btn:hover { -fx-background-color: -bootstrap-grey1; -fx-border-color: -bootstrap-grey5;
 }
 
-.btn-primary, .btn.primary, .primary .btn {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-blue5;
-    -fx-border-color: -bootstrap-blue6;
+.btn-primary, .btn.primary, .primary .btn { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-blue5; -fx-border-color: -bootstrap-blue6;
 }
 
-.btn-primary .svg-path, .btn .svg-path {
-    -fx-fill: inherit;  /* Inherit the fill color from the parent (btn-primary) */
+.btn-primary:hover:not(.disabled), .btn.primary:hover:not(.disabled), .primary .btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-blue8; -fx-border-color: -bootstrap-blue9;
 }
 
-.btn-primary .progress-indicator, .btn .progress-indicator {
-    -fx-accent: -bootstrap-white;
+.btn-secondary, .btn.secondary, .secondary .btn { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-grey4; -fx-border-color: -bootstrap-grey5;
 }
 
-.btn-primary:hover, .btn.primary:hover, .primary .btn:hover {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-blue8;
-    -fx-border-color: -bootstrap-blue9;
+.btn-secondary:hover:not(.disabled), .btn.secondary:hover:not(.disabled), .secondary .btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-grey5; -fx-border-color: -bootstrap-grey6;
 }
 
-.txt-secondary, .txt.secondary, .secondary .txt {
-    -fx-text-fill: -bootstrap-grey6;
+.btn-success, .btn.success, .success .btn { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-green1; -fx-border-color: -bootstrap-green2;
 }
 
-.btn-secondary, .btn.secondary, .secondary .btn {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-grey4;
-    -fx-border-color: -bootstrap-grey5;
+.btn-success:hover:not(.disabled), .btn.success:hover:not(.disabled), .success .btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-green3; -fx-border-color: -bootstrap-green4;
 }
 
-.btn-secondary .svg-path {
-    -fx-fill: inherit;  /* Inherit the fill color from the parent (btn-primary) */
+.btn-info, .btn.info, .info .btn { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-blue1; -fx-border-color: -bootstrap-blue2;
 }
 
-.btn-secondary .progress-indicator {
-    -fx-accent: -bootstrap-white;
+.btn-info:hover:not(.disabled), .btn.info:hover:not(.disabled), .info .btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-blue3; -fx-border-color: -bootstrap-blue4;
 }
 
-.btn-secondary:hover, .btn.secondary:hover, .secondary .btn:hover {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-grey5;
-    -fx-border-color: -bootstrap-grey6;
+.btn-warning, .btn.warning, .warning .btn { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-orange1; -fx-border-color: -bootstrap-orange2;
 }
 
-.btn-success, .btn.success, .success .btn {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-green1;
-    -fx-border-color: -bootstrap-green2;
+.btn-warning:hover:not(.disabled), .btn.warning:hover:not(.disabled), .warning .btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-orange3; -fx-border-color: -bootstrap-orange4;
 }
 
-.btn-success .svg-path {
-    -fx-fill: inherit;  /* Inherit the fill color from the parent (btn-primary) */
+.btn-danger, .btn.danger, .danger .btn { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-red1; -fx-border-color: -bootstrap-red2;
 }
 
-.btn-success .progress-indicator {
-    -fx-accent: -bootstrap-white;
+.btn-danger:hover:not(.disabled), .btn.danger:hover:not(.disabled), .danger .btn:hover:not(.disabled) { -fx-text-fill: -bootstrap-white; -fx-background-color: -bootstrap-red3; -fx-border-color: -bootstrap-red4;
 }
 
-.btn-success:hover, .btn.success:hover, .success .btn:hover {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-green3;
-    -fx-border-color: -bootstrap-green4;
+.btn-lg, .btn.lg, .lg .btn {
+    /*padding: 10px 16px 10px 16px;*/ /* hardcoded for web support */
+ -bootstrap-font-size: 18px; -fx-border-radius: 6px;
+ -fx-background-radius: 6px;
 }
 
-.btn-info,  .btn.info, .info .btn {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-blue1;
-    -fx-border-color: -bootstrap-blue2;
+.btn-sm, .btn.sm, .sm .btn {
+    /*padding: 5px 10px 5px 10px;*/ /* hardcoded for web support */
+ -bootstrap-font-size: 12px; -fx-border-radius: 3px;
+ -fx-background-radius: 3px;
 }
 
-.btn-info .progress-indicator {
-    -fx-accent: -bootstrap-white;
+.btn-xs, .btn.xs, .xs .btn {
+    /*padding: 1px 5px 1px 5px;*/ /* hardcoded for web support */
+ -bootstrap-font-size: 12px; -fx-border-radius: 3px;
+ -fx-background-radius: 3px;
 }
 
-.btn-info .svg-path {
-    -fx-fill: inherit;  /* Inherit the fill color from the parent (btn-primary) */
+.lg .btn { -bootstrap-font-size: 18px;
 }
 
-.btn-info:hover, .btn.info:hover, .info .btn:hover {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-blue3;
-    -fx-border-color: -bootstrap-blue4; 
+.sm .btn { -bootstrap-font-size: 12px;
 }
 
-.btn-warning, .btn.warning, .warning .btn {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-orange1;
-    -fx-border-color: -bootstrap-orange2;
-}
-
-.btn-warning .svg-path {
-    -fx-fill: inherit;  /* Inherit the fill color from the parent (btn-primary) */
-}
-
-.btn-warning .progress-indicator {
-    -fx-accent: -bootstrap-white;
+.xs .btn { -bootstrap-font-size: 12px;
 }
 
 
-.btn-warning:hover, .btn.warning:hover, .warning .btn:hover {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-orange3;
-    -fx-border-color: -bootstrap-orange4;
-}
-
-
-.btn-danger, .btn.danger, .danger .btn {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-red1;
-    -fx-border-color: -bootstrap-red2;
-}
-
-.btn-danger .svg-path {
-    -fx-fill: inherit;  /* Inherit the fill color from the parent (btn-primary) */
-}
-
-.btn-danger .progress-indicator {
-    -fx-accent: -bootstrap-white;
-}
-
-.btn-danger:hover, .btn.danger:hover, .danger .btn:hover {
-    -fx-text-fill: -bootstrap-white;
-    -fx-fill: -bootstrap-white;
-    -fx-background-color: -bootstrap-red3;
-    -fx-border-color: -bootstrap-red4;
-}
-
-.lg, .btn-lg, .btn.lg {
-    /*-bootstrap-font-size: 18px;*/
-    -fx-font-size: 18px; /* overriding because OpenJFX CSS variable are globals only */
-}
-
-.btn-lg {
-    /*-fx-padding: 10px 16px 10px 16px;*/ /* hardcoded for web support */
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-}
-
-.sm, .btn-sm, .btn.sm {
-    /*-bootstrap-font-size: 12px;*/
-    -fx-font-size: 12px; /* overriding because OpenJFX CSS variable are globals only */
-}
-
-.btn-sm {
-    /*-fx-padding: 5px 10px 5px 10px;*/ /* hardcoded for web support */
-    -fx-border-radius: 3px;
-    -fx-background-radius: 3px;
-}
-
-.xs, .btn-xs, .btn.xs {
-    /*-bootstrap-font-size: 12px;*/
-    -fx-font-size: 12px; /* overriding because OpenJFX CSS variable are globals only */
-}
-
-.btn-xs {
-    /*-fx-padding: 1px 5px 1px 5px;*/ /* hardcoded for web support */
-    -fx-border-radius: 3px;
-    -fx-background-radius: 3px;
-}
-
-.lg .btn {
-    /*-bootstrap-font-size: 18px;*/
-    -fx-font-size: 18px; /* overriding because OpenJFX CSS variable are globals only */
-}
-
-.sm .btn {
-    /*-bootstrap-font-size: 12px;*/
-    -fx-font-size: 12px; /* overriding because OpenJFX CSS variable are globals only */
-}
-
-.xs .btn {
-    /*-bootstrap-font-size: 12px;*/
-    -fx-font-size: 12px; /* overriding because OpenJFX CSS variable are globals only */
-}
-
-.btn-block {
+/*.btn-block {
     width: 100%;
+}*/
+
+.b, .strong { -fx-font-weight: bold;
 }
 
-/* Text */
-
-.b, .strong {
-    -fx-font-weight: bold;
+.i, .em, .italic, .dfn { -fx-font-style: italic;
 }
 
-.i, .em, .italic, .dfn {
-    -fx-font-style: italic;
+.h1 { -fx-font-size: 2em;
 }
 
-.h1 {
-    -fx-font-size: 2em;
+.small { -fx-font-size: 80%;
 }
 
-.small {
-    -fx-font-size: 80%;
+.code, .kbd, .pre, .samp { -fx-font-family: 'monospace'; -fx-font-size: 1em;
 }
 
-.code, .kbd, .pre, .samp {
-    -fx-font-family: 'monospace';
-    -fx-font-size: 1em;
+.h1, .h2, .h3, .h4, .h5, .h6 { -fx-text-fill: inherit;
+    /*fill: inherit;*/
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6 {
-    -fx-text-fill: inherit;
-    -fx-fill: inherit;
+.h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small { -fx-font-weight: normal; -fx-text-fill: -bootstrap-grey6; -fx-svg-path-fill: -bootstrap-grey6;
 }
 
-.h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
-    -fx-font-weight: normal;
-    -fx-text-fill: -bootstrap-grey6;
-    -fx-fill: -bootstrap-grey6;
+.h1 .small, .h2 .small, .h3 .small { -fx-font-size: 65%;
 }
 
-.h1 .small, .h2 .small, .h3 .small {
-    -fx-font-size: 65%;
+.h4 .small, .h5 .small, .h6 .small { -fx-font-size: 75%;
 }
 
-.h4 .small, .h5 .small, .h6 .small {
-    -fx-font-size: 75%;
+.h1 { -fx-font-size: 36;
 }
 
-.h1 {
-    -fx-font-size: 36px;
+.h2 { -fx-font-size: 30;
 }
 
-.h2 {
-    -fx-font-size: 30px;
+.h3 { -fx-font-size: 24;
 }
 
-.h3 {
-    -fx-font-size: 24px;
+.h4 { -fx-font-size: 18;
 }
 
-.h4 {
-    -fx-font-size: 18px;
+.h5 { -fx-font-size: 14;
 }
 
-.h5 {
-    -fx-font-size: 14px;
+.h6 { -fx-font-size: 12;
 }
 
-.h6 {
-    -fx-font-size: 12px;
+.lead { -fx-font-size: 16; -fx-font-weight: normal;
 }
 
-.lead {
-    -fx-font-size: 16px;
-    -fx-font-weight: 300;
+.small { -fx-font-size: 85%;
 }
 
-.small {
-    -fx-font-size: 85%;
+.txt-left { -fx-text-alignment: left;
 }
 
-.txt-left {
-    -fx-text-alignment: left;
+.txt-right { -fx-text-alignment: right;
 }
 
-.txt-right {
-    -fx-text-alignment: right;
+.txt-center { -fx-text-alignment: center;
 }
 
-.txt-center {
-    -fx-text-alignment: center;
+.txt-justify { -fx-text-alignment: justify;
 }
 
-.txt-justify {
-    -fx-text-alignment: justify;
+.txt-muted { -fx-text-fill: -bootstrap-grey6; -fx-svg-path-fill: -fx-text-fill;
 }
 
-.txt-muted {
-    -fx-text-fill: -bootstrap-grey6;
-    -fx-fill: -bootstrap-grey6;
+.txt-primary, .txt.primary, .primary .txt { -fx-text-fill: -bootstrap-blue5; -fx-svg-path-fill: -fx-text-fill;
 }
 
-.txt-primary, .txt.primary, .primary .txt {
-    -fx-text-fill: -bootstrap-blue5;
-    -fx-fill: -bootstrap-blue5;
+.txt-secondary, .txt.secondary, .secondary .txt { -fx-text-fill: -bootstrap-grey5; -fx-svg-path-fill: -fx-text-fill;
 }
 
-.txt-success, .txt.success, .success .txt {
-    -fx-text-fill: -bootstrap-green6;
-    -fx-fill: -bootstrap-green6;
+.txt-success, .txt.success, .success .txt { -fx-text-fill: -bootstrap-green6; -fx-svg-path-fill: -fx-text-fill;
 }
 
-.txt-info, .txt.info, .info .txt {
-    -fx-text-fill: -bootstrap-blue11;
-    -fx-fill: -bootstrap-blue11;
+.txt-info, .txt.info,  .info .txt { -fx-text-fill: -bootstrap-blue11; -fx-svg-path-fill: -fx-text-fill;
 }
 
-.txt-warning, .txt.warning, .warning .txt {
-    -fx-text-fill: -bootstrap-orange6;
-    -fx-fill: -bootstrap-orange6;
+.txt-warning, .txt.warning, .warning .txt { -fx-text-fill: -bootstrap-orange6; -fx-svg-path-fill: -fx-text-fill;
 }
 
-.txt-danger, .txt.danger, .danger .txt {
-    -fx-text-fill: -bootstrap-red6;
-    -fx-fill: -bootstrap-red6;
+.txt-danger, .txt.danger, .danger .txt { -fx-text-fill: -bootstrap-red6; -fx-svg-path-fill: -fx-text-fill;
 }
 
-.badge {
-    -fx-background-radius: 14px;
+.badge { -fx-border-radius: 14px;
+ -fx-background-radius: 14px;
 }
 
-.badge.danger{
-     -fx-text-fill: -badge-danger-txt;
-     -fx-fill: -badge-danger-txt;
-     -fx-background-color: -badge-danger-bg;
- }
+.badge.danger { -fx-text-fill: -badge-danger-txt; -fx-background-color: -badge-danger-bg;
+}
 
- .badge.success{
-      -fx-text-fill: -badge-success-txt;
-      -fx-fill: -badge-success-txt;
-      -fx-background-color: -badge-success-bg;
-  }
+.badge.success { -fx-text-fill: -badge-success-txt; -fx-background-color: -badge-success-bg;
+}
 
-  .badge.warning{
-        -fx-text-fill: -badge-warning-txt;
-        -fx-fill: -badge-warning-txt;
-        -fx-background-color: -badge-warning-bg;
-   }
+.badge.warning { -fx-text-fill: -badge-warning-txt; -fx-background-color: -badge-warning-bg;
+}
 
-   .badge.info{
-           -fx-text-fill: -badge-info-txt;
-           -fx-fill: -badge-info-txt;
-           -fx-background-color: -badge-info-bg;
-      }
+.badge.info { -fx-text-fill: -badge-info-txt; -fx-background-color: -badge-info-bg;
+}
 
-   .badge.secondary{
-         -fx-text-fill: -badge-secondary-txt;
-         -fx-fill: -badge-secondary-txt;
-         -fx-background-color: -badge-secondary-bg;
-    }
+.badge.secondary { -fx-text-fill: -badge-secondary-txt; -fx-background-color: -badge-secondary-bg;
+}
 
- .badge.primary{
-     -fx-text-fill: -badge-primary-txt;
-     -fx-fill: -badge-primary-txt;
-     -fx-background-color: -badge-primary-bg;
- }
+.badge.primary { -fx-text-fill: -badge-primary-txt; -fx-background-color: -badge-primary-bg;
+}
 
- .badge.default{
-     -fx-text-fill: -badge-default-txt;
-     -fx-fill: -badge-default-txt;
-     -fx-background-color: -badge-default-bg;
- }
-
-
-
-
-
-
-
-
-
-
+.badge.default { -fx-text-fill: -badge-default-txt; -fx-background-color: -badge-default-bg;
+}
 
 
 /* Alert / Info Box Styles - left border only, no full border */
-.alert-info, .info-box {
-    -fx-background-color: #e3f2fd;
-    -fx-border-color: transparent transparent transparent #2196f3;
-    -fx-border-width: 0 0 0 4;
-    -fx-background-radius: 4;
-    -fx-text-fill: #1976d2;
+.alert-info, .info-box { -fx-background-color: #e3f2fd;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-style: none none none solid;
+    -fx-border-color: transparent transparent transparent #2196f3; -fx-border-radius: 4px;
+ -fx-background-radius: 4px; -fx-text-fill: #1976d2;
 }
 
-.alert-success {
-    -fx-background-color: #e8f5e9;
-    -fx-border-color: transparent transparent transparent #4caf50;
-    -fx-border-width: 0 0 0 4;
-    -fx-background-radius: 4;
-    -fx-text-fill: #2e7d32;
+.alert-success { -fx-background-color: #e8f5e9;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-style: none none none solid;
+    -fx-border-color: transparent transparent transparent #4caf50; -fx-border-radius: 4px;
+ -fx-background-radius: 4px; -fx-text-fill: #2e7d32;
 }
 
-.alert-warning {
-    -fx-background-color: #fff3e0;
-    -fx-border-color: transparent transparent transparent #ff9800;
-    -fx-border-width: 0 0 0 4;
-    -fx-background-radius: 4;
-    -fx-text-fill: #e65100;
+.alert-warning { -fx-background-color: #fff3e0;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-style: none none none solid;
+    -fx-border-color: transparent transparent transparent #ff9800; -fx-border-radius: 4px;
+ -fx-background-radius: 4px; -fx-text-fill: #e65100;
 }
 
-.alert-danger {
-    -fx-background-color: #ffebee;
-    -fx-border-color: transparent transparent transparent #f44336;
-    -fx-border-width: 0 0 0 4;
-    -fx-background-radius: 4;
-    -fx-text-fill: #c62828;
+.alert-danger { -fx-background-color: #ffebee;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-style: none none none solid;
+    -fx-border-color: transparent transparent transparent #f44336; -fx-border-radius: 4px;
+ -fx-background-radius: 4px; -fx-text-fill: #c62828;
 }
-
-
 
 /*===== webfx-extras-visual-grid-javafx@main.css from webfx-extras-visual-grid =====*/
 
@@ -760,41 +508,6 @@ VisualGrid {
 .grid-row.selected {
     -fx-background-color: -webfx-visualgrid-selection-color;
 }
-
-/*===== webfx-extras-aria-javafx@main.css from webfx-extras-aria =====*/
-
-.root {
-    -webfx-aria-toggle-button-border-color: transparent;
-    -webfx-aria-toggle-button-background-color: white;
-    -webfx-aria-toggle-button-background-color-focused: lightgray;
-    -webfx-aria-toggle-button-background-color-hover: -webfx-aria-toggle-button-background-focused;
-    -webfx-aria-toggle-button-background-color-fired: blue;
-    -webfx-aria-toggle-button-text-fill-fired: white;
-}
-
-ToggleButton.aria-toggle {
-    -fx-border-color: -webfx-aria-toggle-button-border-color;
-    -fx-background-color: -webfx-aria-toggle-button-background-color;
-}
-
-ToggleButton.aria-toggle:hover {
-    -fx-background-color: -webfx-aria-toggle-button-background-color-hover;
-}
-
-ToggleButton.aria-toggle:selected {
-    -fx-background-color: -webfx-aria-toggle-button-background-color-focused;
-}
-
-ToggleButton.aria-toggle.fired {
-    -fx-background-color: -webfx-aria-toggle-button-background-color-fired;
-    -fx-text-fill: -webfx-aria-toggle-button-text-fill-fired;
-}
-
-/* Automatically applying the same color as the text to SVG icons used inside the toggle buttons. */
-/* Commented as some icons don't have fill but stroke instead => using specific rules in modality-frontoffice-mainframe-javafx@main.css
-ToggleButton.aria-toggle SVGPath { !* TODO: completely remove? *!
-    -fx-fill: -fx-text-fill;
-}*/
 
 /*===== webfx-extras-switches-javafx@main.css from webfx-extras-switches =====*/
 
@@ -1042,571 +755,438 @@ Text, Label, Button, TextField {
 
 /*===== modality-client-css-import-font-poppins-javafx@main.css from modality-base-client-css =====*/
 
-/*===== modality-client-bootstrap-javafx@main.css from modality-base-client-bootstrap =====*/
+/*===== modality-client-bootstrap-webfx@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
-.root {
-    -bootstrap-white: #fff ;
-    
-    -bootstrap-grey1: #e6e6e6 ;
-    -bootstrap-grey2: #d4d4d4 ;
-    -bootstrap-grey3: #ccc ;
-    -bootstrap-grey4: #adadad ;
-    -bootstrap-grey5: #8c8c8c ;
-    -bootstrap-grey6: #777777 ;
-    -bootstrap-grey7: #333 ;
-
-    -bootstrap-blue1: #88c9ff; /* Lightest shade */
-    -bootstrap-blue2: #70c0ff;
-    -bootstrap-blue3: #58b7ff;
-    -bootstrap-blue4: #40afff;
-    -bootstrap-blue5: #0096D6; /* New base blue */
-    -bootstrap-blue6: #0478e6; /* Darker shade */
-    -bootstrap-blue7: #0361cc;
-    -bootstrap-blue8: #0088d6;
-    -bootstrap-blue9: #204d74;
-    -bootstrap-blue10: #003682; /* Darkest shade */
-    -bootstrap-blue11: #00285b;
-
-    -bootstrap-green1: #5cb85c ;
-    -bootstrap-green2: #4cae4c ;
-    -bootstrap-green3: #449d44 ;
-    -bootstrap-green4: #398439 ;
-    -bootstrap-green5: #255625 ;
-    -bootstrap-green6: #41BA4D ;
-
-    -bootstrap-orange1: #f0ad4e ;
-    -bootstrap-orange2: #eea236 ;
-    -bootstrap-orange3: #ec971f ;
-    -bootstrap-orange4: #d58512 ;
-    -bootstrap-orange5: #985f0d ;
-    -bootstrap-orange6: #8a6d3b ;
-
-    -bootstrap-red1: #FF0404 ;
-    -bootstrap-red2: #d43f3a ;
-    -bootstrap-red3: #c9302c ;
-    -bootstrap-red4: #ac2925 ;
-    -bootstrap-red5: #761c19 ;
-    -bootstrap-red6: #FF0404 ;
-
-        -badge-default-bg: -bootstrap-white;
-        -badge-default-txt: -bootstrap-grey7;
-        -badge-primary-bg: #e3f2fd;
-        -badge-primary-txt: #2e7d32;
-        -badge-success-bg: #e8f5e8;
-        -badge-success-txt: #2e7d32;
-        -badge-info-bg: -bootstrap-blue1;
-        -badge-info-txt: -bootstrap-white;
-        -badge-warning-bg: #eceff1;
-        -badge-warning-txt: #546e7a;
-        -badge-danger-bg: #ffebee;
-        -badge-danger-txt: #c62828;
-        -badge-secondary-bg: #eceff1;
-        -badge-secondary-txt: #546e7a;
+.root { -bootstrap-white: #fff; -bootstrap-grey1: #e6e6e6; -bootstrap-grey2: #d4d4d4; -bootstrap-grey3: #ccc; -bootstrap-grey4: #adadad; -bootstrap-grey5: #8c8c8c; -bootstrap-grey6: #777777; -bootstrap-grey7: #333; -bootstrap-blue1: #5bc0de; -bootstrap-blue2: #46b8da; -bootstrap-blue3: #31b0d5; -bootstrap-blue4: #269abc; -bootstrap-blue5: #0096D6; /* New base blue */
+ -bootstrap-blue6: #0478e6; -bootstrap-blue7: #1b6d85; -bootstrap-blue8: #0088d6; -bootstrap-blue9: #204d74; -bootstrap-blue10: #122b40; -bootstrap-blue11: #31708f; -bootstrap-green1: #5cb85c; -bootstrap-green2: #4cae4c; -bootstrap-green3: #449d44; -bootstrap-green4: #398439; -bootstrap-green5: #255625; -bootstrap-green6: #41BA4D; -bootstrap-orange1: #f0ad4e; -bootstrap-orange2: #eea236; -bootstrap-orange3: #ec971f; -bootstrap-orange4: #d58512; -bootstrap-orange5: #985f0d; -bootstrap-orange6: #8a6d3b; -bootstrap-red1: #FF0404; -bootstrap-red2: #d43f3a; -bootstrap-red3: #c9302c; -bootstrap-red4: #ac2925; -bootstrap-red5: #761c19; -bootstrap-red6: #FF0404; -badge-default-bg: -bootstrap-white; -badge-default-txt: -bootstrap-grey7; -badge-primary-bg: #e3f2fd; -badge-primary-txt: #1976d2; -badge-success-bg: #e8f5e8; -badge-success-txt: #2e7d32; -badge-info-bg: -bootstrap-blue1; -badge-info-txt: -bootstrap-white; -badge-warning-bg: #eceff1; -badge-warning-txt: #546e7a; -badge-danger-bg: #ffebee; -badge-danger-txt: #c62828; -badge-secondary-bg: #fff3e0; -badge-secondary-txt: #f57c00; -fx-theme-color: -bootstrap-blue5;
 }
 
-/*.h1 {
-    -fx-font-family: "Roboto"; !*-roboto-font-family *!
-    -fx-font-size: 34px;
-    -fx-font-weight: normal;
-    -fx-line-spacing: 6px; !* Line height in JavaFX is set through line-spacing *!
-    -fx-text-alignment: left;
+.h2 { -fx-font-size: 40; -fx-font-weight: bold;
+}
+
+.disabled:hover { -fx-cursor: disappear;
+}
+
+.btn-black { -fx-text-fill: -bootstrap-white; -fx-svg-path-fill: -fx-text-fill; -fx-background-color: black; -fx-border-color: black;
+}
+
+.btn-black:hover:not(.disabled) { -fx-background-color: -bootstrap-grey7; -fx-border-color: -bootstrap-grey7;
+}
+
+.btn-white { -fx-svg-path-fill: -bootstrap-white; -fx-background-color: white; -fx-border-color: black;
+}
+
+.btn-white:hover:not(.disabled) { -fx-text-fill: black; -fx-background-color: -bootstrap-grey1;
+}
+
+/* Outline button styles */
+.btn.outline-primary { -fx-text-fill: -bootstrap-blue5; -fx-svg-path-fill: -bootstrap-blue5; -fx-background-color: transparent; -fx-border-color: -bootstrap-blue5; -fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-blue5; -fx-border-color: -bootstrap-blue5;
+}
+
+.btn.outline-secondary { -fx-text-fill: -bootstrap-grey6; -fx-svg-path-fill: -bootstrap-grey6; -fx-background-color: transparent; -fx-border-color: -bootstrap-grey6; -fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-grey6; -fx-border-color: -bootstrap-grey6;
+}
+
+.btn.outline-success { -fx-text-fill: -bootstrap-green1; -fx-svg-path-fill: -bootstrap-green1; -fx-background-color: transparent; -fx-border-color: -bootstrap-green1; -fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-green1; -fx-border-color: -bootstrap-green1;
+}
+
+.btn.outline-danger { -fx-text-fill: -bootstrap-red1; -fx-svg-path-fill: -bootstrap-red1; -fx-background-color: transparent; -fx-border-color: -bootstrap-red1; -fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-red1; -fx-border-color: -bootstrap-red1;
+}
+
+.btn.outline-warning { -fx-text-fill: -bootstrap-orange1; -fx-svg-path-fill: -bootstrap-orange1; -fx-background-color: transparent; -fx-border-color: -bootstrap-orange1; -fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-orange1; -fx-border-color: -bootstrap-orange1;
+}
+
+.btn.outline-info { -fx-text-fill: -bootstrap-blue1; -fx-svg-path-fill: -bootstrap-blue1; -fx-background-color: transparent; -fx-border-color: -bootstrap-blue1; -fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-blue1; -fx-border-color: -bootstrap-blue1;
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon { -fx-fill: -fx-text-fill;
+}
+
+/* Form section card styling - card-like container */
+.form-section-card { -fx-background-color: -bootstrap-white; -fx-border-color: -bootstrap-grey3; -fx-border-width: 1px; -fx-border-radius: 6px;
+ -fx-background-radius: 6px; -fx-background-radius: 6px;
+    /* [webfx translator] WARNING: couldn't parse box-shadow, leaving as-is */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title { -fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: -bootstrap-grey7;
+}
+
+/* 2-column responsive form grid */
+/*
+.form-grid { -fx-hgap: 16px; -fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+*/
+
+/* Copy to clipboard button */
+.copy-button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: -bootstrap-grey6; -fx-svg-path-fill: -bootstrap-grey6; -fx-cursor: hand;
+}
+
+.copy-button:hover:not(.disabled) { -fx-text-fill: -bootstrap-blue5; -fx-svg-path-fill: -bootstrap-blue5;
+}
+
+/* Copy notification label */
+.copy-notification { -fx-background-color: rgba(0, 0, 0, 0.75); -fx-text-fill: white; -fx-background-radius: 4px; -fx-font-size: 12;
+}
+
+/* Read-only text field styling - distinct but readable */
+.text-field.readonly-field { -fx-background-color: -bootstrap-grey1; -fx-border-color: -bootstrap-grey3; -fx-text-fill: -bootstrap-grey7; -fx-opacity: 1.0;
+}
+
+/*
+.text-field.readonly-field input { -fx-background-color: -bootstrap-grey1; -fx-border-color: -bootstrap-grey3; -fx-text-fill: -bootstrap-grey7;
+}
+*/
+
+/* Read-only button styling - same as text fields */
+.button.readonly-field { -fx-background-color: -bootstrap-grey1; -fx-border-color: -bootstrap-grey3; -fx-text-fill: -bootstrap-grey7; -fx-opacity: 1.0;
+}
+
+.button.readonly-field button { -fx-background-color: -bootstrap-grey1; -fx-border-color: -bootstrap-grey3; -fx-text-fill: -bootstrap-grey7;
+}
+
+/* Outline button styles */
+.btn.outline-primary { -fx-text-fill: -bootstrap-blue5; -fx-svg-path-fill: -bootstrap-blue5; -fx-background-color: transparent; -fx-border-color: -bootstrap-blue5; -fx-border-width: 1px;
+}
+
+.btn.outline-primary:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-blue5; -fx-border-color: -bootstrap-blue5;
+}
+
+.btn.outline-secondary { -fx-text-fill: -bootstrap-grey6; -fx-svg-path-fill: -bootstrap-grey6; -fx-background-color: transparent; -fx-border-color: -bootstrap-grey6; -fx-border-width: 1px;
+}
+
+.btn.outline-secondary:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-grey6; -fx-border-color: -bootstrap-grey6;
+}
+
+.btn.outline-success { -fx-text-fill: -bootstrap-green1; -fx-svg-path-fill: -bootstrap-green1; -fx-background-color: transparent; -fx-border-color: -bootstrap-green1; -fx-border-width: 1px;
+}
+
+.btn.outline-success:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-green1; -fx-border-color: -bootstrap-green1;
+}
+
+.btn.outline-danger { -fx-text-fill: -bootstrap-red1; -fx-svg-path-fill: -bootstrap-red1; -fx-background-color: transparent; -fx-border-color: -bootstrap-red1; -fx-border-width: 1px;
+}
+
+.btn.outline-danger:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-red1; -fx-border-color: -bootstrap-red1;
+}
+
+.btn.outline-warning { -fx-text-fill: -bootstrap-orange1; -fx-svg-path-fill: -bootstrap-orange1; -fx-background-color: transparent; -fx-border-color: -bootstrap-orange1; -fx-border-width: 1px;
+}
+
+.btn.outline-warning:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-orange1; -fx-border-color: -bootstrap-orange1;
+}
+
+.btn.outline-info { -fx-text-fill: -bootstrap-blue1; -fx-svg-path-fill: -bootstrap-blue1; -fx-background-color: transparent; -fx-border-color: -bootstrap-blue1; -fx-border-width: 1px;
+}
+
+.btn.outline-info:hover:not(.disabled) { -fx-text-fill: white; -fx-svg-path-fill: white; -fx-background-color: -bootstrap-blue1; -fx-border-color: -bootstrap-blue1;
+}
+
+/* Button icon styling - ensures icons inherit button text color */
+.button-icon { -fx-fill: -fx-text-fill;
+}
+
+/* Form section card styling - card-like container */
+.form-section-card { -fx-background-color: -bootstrap-white; -fx-border-color: -bootstrap-grey3; -fx-border-width: 1px; -fx-border-radius: 6px;
+ -fx-background-radius: 6px; -fx-background-radius: 6px;
+    /* [webfx translator] WARNING: couldn't parse box-shadow, leaving as-is */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section card title */
+.form-section-card-title { -fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: -bootstrap-grey7;
+}
+
+/* 2-column responsive form grid */
+/*.form-grid { -fx-hgap: 16px; -fx-vgap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 }*/
 
-.h2 {
-    -fx-font-size: 40px;
-    -fx-font-weight: bold;
-    /*-fx-line-spacing: 20px;
-    -fx-text-alignment: center;*/
-    }
-
-.btn-black {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: black;
-    -fx-border-color: black;
-}
-
-.btn-black:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-grey7;
-    -fx-border-color: -bootstrap-grey7;
-}
-
-.btn-white {
-    -fx-text-fill: black;
-    -fx-fill: black;
-    -fx-background-color: white;
-    -fx-border-color: black;
-}
-
-.btn-white:hover {
-    -fx-text-fill: black;
-    -fx-fill: black;
-    -fx-background-color: -bootstrap-grey1;
-    -fx-border-color: black;
-}
-
-/* Outline button styles */
-.btn.outline-primary {
-    -fx-text-fill: -bootstrap-blue5;
-    -fx-fill: -bootstrap-blue5;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-blue5;
-    -fx-border-width: 1;
-}
-
-.btn.outline-primary:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-blue5;
-    -fx-border-color: -bootstrap-blue5;
-}
-
-.btn.outline-secondary {
-    -fx-text-fill: -bootstrap-grey6;
-    -fx-fill: -bootstrap-grey6;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-grey6;
-    -fx-border-width: 1;
-}
-
-.btn.outline-secondary:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-grey6;
-    -fx-border-color: -bootstrap-grey6;
-}
-
-.btn.outline-success {
-    -fx-text-fill: -bootstrap-green1;
-    -fx-fill: -bootstrap-green1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-green1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-success:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-green1;
-    -fx-border-color: -bootstrap-green1;
-}
-
-.btn.outline-danger {
-    -fx-text-fill: -bootstrap-red1;
-    -fx-fill: -bootstrap-red1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-red1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-danger:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-red1;
-    -fx-border-color: -bootstrap-red1;
-}
-
-.btn.outline-warning {
-    -fx-text-fill: -bootstrap-orange1;
-    -fx-fill: -bootstrap-orange1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-orange1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-warning:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-orange1;
-    -fx-border-color: -bootstrap-orange1;
-}
-
-.btn.outline-info {
-    -fx-text-fill: -bootstrap-blue1;
-    -fx-fill: -bootstrap-blue1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-blue1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-info:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-blue1;
-    -fx-border-color: -bootstrap-blue1;
-}
-
-/* Button icon styling - ensures icons inherit button text color */
-.button-icon {
-    -fx-fill: -fx-text-fill;
-}
-
-/* Form section card styling - card-like container */
-.form-section-card {
-    -fx-background-color: -bootstrap-white;
-    -fx-border-color: -bootstrap-grey3;
-    -fx-border-width: 1;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
-}
-
-/* Form section card title */
-.form-section-card-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -bootstrap-grey7;
-}
-
-/* 2-column responsive form grid */
-.form-grid {
-    -fx-hgap: 16;
-    -fx-vgap: 16;
-}
-
 /* Copy to clipboard button */
-.copy-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-text-fill: -bootstrap-grey6;
-    -fx-fill: -bootstrap-grey6;
-    -fx-cursor: hand;
+.copy-button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: -bootstrap-grey6; -fx-svg-path-fill: -bootstrap-grey6; -fx-cursor: hand;
 }
 
-.copy-button:hover {
-    -fx-text-fill: -bootstrap-blue5;
-    -fx-fill: -bootstrap-blue5;
+.copy-button:hover:not(.disabled) { -fx-text-fill: -bootstrap-blue5; -fx-svg-path-fill: -bootstrap-blue5;
 }
 
 /* Copy notification label */
-.copy-notification {
-    -fx-background-color: rgba(0, 0, 0, 0.75);
-    -fx-text-fill: white;
-    -fx-background-radius: 4;
-    -fx-font-size: 12px;
+.copy-notification { -fx-background-color: rgba(0, 0, 0, 0.75); -fx-text-fill: white; -fx-background-radius: 4px; -fx-font-size: 12;
 }
 
-/* Read-only text field styling - distinct but readable */
-.text-field.readonly-field {
-    -fx-background-color: -bootstrap-grey1;
-    -fx-border-color: -bootstrap-grey3;
-    -fx-text-fill: -bootstrap-grey7;
-    -fx-opacity: 1.0;
-}
-
-.text-field.readonly-field .text {
-    -fx-fill: -bootstrap-grey7;
-}
-
-/* Read-only button styling - same as text fields */
-.button.readonly-field {
-    -fx-background-color: -bootstrap-grey1;
-    -fx-border-color: -bootstrap-grey3;
-    -fx-text-fill: -bootstrap-grey7;
-    -fx-opacity: 1.0;
-}
-
-.button.readonly-field .text {
-    -fx-fill: -bootstrap-grey7;
-}
-
-/* Outline button styles */
-.btn.outline-primary {
-    -fx-text-fill: -bootstrap-blue5;
-    -fx-fill: -bootstrap-blue5;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-blue5;
-    -fx-border-width: 1;
-}
-
-.btn.outline-primary:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-blue5;
-    -fx-border-color: -bootstrap-blue5;
-}
-
-.btn.outline-secondary {
-    -fx-text-fill: -bootstrap-grey6;
-    -fx-fill: -bootstrap-grey6;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-grey6;
-    -fx-border-width: 1;
-}
-
-.btn.outline-secondary:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-grey6;
-    -fx-border-color: -bootstrap-grey6;
-}
-
-.btn.outline-success {
-    -fx-text-fill: -bootstrap-green1;
-    -fx-fill: -bootstrap-green1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-green1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-success:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-green1;
-    -fx-border-color: -bootstrap-green1;
-}
-
-.btn.outline-danger {
-    -fx-text-fill: -bootstrap-red1;
-    -fx-fill: -bootstrap-red1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-red1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-danger:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-red1;
-    -fx-border-color: -bootstrap-red1;
-}
-
-.btn.outline-warning {
-    -fx-text-fill: -bootstrap-orange1;
-    -fx-fill: -bootstrap-orange1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-orange1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-warning:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-orange1;
-    -fx-border-color: -bootstrap-orange1;
-}
-
-.btn.outline-info {
-    -fx-text-fill: -bootstrap-blue1;
-    -fx-fill: -bootstrap-blue1;
-    -fx-background-color: transparent;
-    -fx-border-color: -bootstrap-blue1;
-    -fx-border-width: 1;
-}
-
-.btn.outline-info:hover {
-    -fx-text-fill: white;
-    -fx-fill: white;
-    -fx-background-color: -bootstrap-blue1;
-    -fx-border-color: -bootstrap-blue1;
-}
-
-/* Button icon styling - ensures icons inherit button text color */
-.button-icon {
-    -fx-fill: -fx-text-fill;
-}
-
-/* Form section card styling - card-like container */
-.form-section-card {
-    -fx-background-color: -bootstrap-white;
-    -fx-border-color: -bootstrap-grey3;
-    -fx-border-width: 1;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
-}
-
-/* Form section card title */
-.form-section-card-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -bootstrap-grey7;
-}
-
-/* 2-column responsive form grid */
-.form-grid {
-    -fx-hgap: 16;
-    -fx-vgap: 16;
-}
-
-/* Copy to clipboard button */
-.copy-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-text-fill: -bootstrap-grey6;
-    -fx-fill: -bootstrap-grey6;
-    -fx-cursor: hand;
-}
-
-.copy-button:hover {
-    -fx-text-fill: -bootstrap-blue5;
-    -fx-fill: -bootstrap-blue5;
-}
-
-/* Copy notification label */
-.copy-notification {
-    -fx-background-color: rgba(0, 0, 0, 0.75);
-    -fx-text-fill: white;
-    -fx-background-radius: 4;
-    -fx-font-size: 12px;
-}
-
-/* Read-only text field styling - distinct but readable */
-.text-field.readonly-field {
-    -fx-background-color: -bootstrap-grey1;
-    -fx-border-color: -bootstrap-grey3;
-    -fx-text-fill: -bootstrap-grey7;
-    -fx-opacity: 1.0;
-}
-
-.text-field.readonly-field .text {
-    -fx-fill: -bootstrap-grey7;
-}
-
-/* Read-only button styling - same as text fields */
-.button.readonly-field {
-    -fx-background-color: -bootstrap-grey1;
-    -fx-border-color: -bootstrap-grey3;
-    -fx-text-fill: -bootstrap-grey7;
-    -fx-opacity: 1.0;
-}
-
-.button.readonly-field .text {
-    -fx-fill: -bootstrap-grey7;
-}
 /* Badge - Light Pink (for admin/role badges) */
-.badge-light-pink {
-    -fx-background-color: #FCE4EC;
-    -fx-text-fill: #C2185B;
-    -fx-font-size: 11px;
-    -fx-font-weight: 600;
-    -fx-background-radius: 3px;
+.badge-light-pink { -fx-background-color: #FCE4EC; -fx-text-fill: #C2185B; -fx-font-size: 11; -fx-font-weight: bold; -fx-border-radius: 3px;
+ -fx-background-radius: 3px;
+    /* New single-host model */
+ -fx-background-color: #FCE4EC; -fx-border-radius: 3px;
+ -fx-background-radius: 3px;
+}
+.badge-light-pink Text { -fx-text-fill: #C2185B;
 }
 
 /* Modern Badge Variants (Light backgrounds for better readability) - Moved from Bootstrap */
-.badge-light-info {
-    -fx-background-color: #e1f5fe;
-    -fx-text-fill: #00b8d4;
-    -fx-background-radius: 12;
+.badge-light-info { -fx-background-color: #e1f5fe; -fx-text-fill: #00b8d4; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+    /* New single-host model */
+ -fx-background-color: #e1f5fe; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+}
+.badge-light-info Text { -fx-text-fill: #00b8d4;
 }
 
-.badge-light-success {
-    -fx-background-color: #e8f5e9;
-    -fx-text-fill: #4caf50;
-    -fx-background-radius: 12;
+.badge-light-success { -fx-background-color: #e8f5e9; -fx-text-fill: #4caf50; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+    /* New single-host model */
+ -fx-background-color: #e8f5e9; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+}
+.badge-light-success Text { -fx-text-fill: #4caf50;
 }
 
-.badge-light-warning {
-    -fx-background-color: #fff3e0;
-    -fx-text-fill: #ffa726;
-    -fx-background-radius: 12;
+.badge-light-warning { -fx-background-color: #fff3e0; -fx-text-fill: #ffa726; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+    /* New single-host model */
+ -fx-background-color: #fff3e0; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+}
+.badge-light-warning Text { -fx-text-fill: #ffa726;
 }
 
-.badge-light-danger {
-    -fx-background-color: #ffebee;
-    -fx-text-fill: #ff5252;
-    -fx-background-radius: 12;
+.badge-light-danger { -fx-background-color: #ffebee; -fx-text-fill: #ff5252; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+    /* New single-host model */
+ -fx-background-color: #ffebee; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+}
+.badge-light-danger Text { -fx-text-fill: #ff5252;
 }
 
-.badge-light-gray, .badge-gray {
-    -fx-background-color: #f5f5f5;
-    -fx-text-fill: #666;
-    -fx-background-radius: 12;
+.badge-light-gray, .badge-gray { -fx-background-color: #f5f5f5; -fx-text-fill: #666; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+    /* New single-host model */
+ -fx-background-color: #f5f5f5; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+}
+.badge-light-gray Text,
+.badge-gray Text { -fx-text-fill: #666;
 }
 
-.badge-light-purple, .badge-purple {
-    -fx-background-color: #f3e5f5;
-    -fx-text-fill: #9c27b0;
-    -fx-background-radius: 12;
+.badge-light-purple, .badge-purple { -fx-background-color: #f3e5f5; -fx-text-fill: #9c27b0; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+    /* New single-host model */
+ -fx-background-color: #f3e5f5; -fx-border-radius: 12px;
+ -fx-background-radius: 12px;
+}
+.badge-light-purple Text,
+.badge-purple Text { -fx-text-fill: #9c27b0;
 }
 
 /* Modern Tab Design for Admin Panels */
-.modality-modern-tabs {
-    -fx-background-color: white;
-    -fx-border-color: #ddd;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+.modality-modern-tabs { -fx-background-color: white;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color: #ddd; -fx-border-radius: 8px;
+ -fx-background-radius: 8px;
 }
 
-.modality-modern-tabs .tab-header-area {
+.modality-modern-tabs .tab-header-area { -fx-background-color: white; -fx-border-radius: 8px 8px 0 0;
+ -fx-background-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .tab-header-background { -fx-background-color: white; -fx-border-radius: 8px 8px 0 0;
+ -fx-background-radius: 8px 8px 0 0;
+}
+
+.modality-modern-tabs .headers-region { -fx-background-color: white;
+    /*gap: 8px;*/
+}
+
+.modality-modern-tabs .tab { -fx-background-color: transparent; -fx-border-radius: 0;
+ -fx-background-radius: 0; -fx-border-style: solid; -fx-border-color: transparent transparent transparent transparent; -fx-border-width: 0 0 3px 0;
+    /*min-height: 48px;
+    height: 48px;*/
+}
+
+.modality-modern-tabs .tab-label { -fx-text-fill: #666; -fx-font-size: 15;
+}
+
+.modality-modern-tabs .tab:hover .tab-label { -fx-text-fill: -bootstrap-blue5;
+}
+
+.modality-modern-tabs .tab:selected,
+.modality-modern-tabs .tab.selected { -fx-background-color: transparent; -fx-border-color: transparent transparent -bootstrap-blue5 transparent;
+}
+
+.modality-modern-tabs .tab:selected .tab-label,
+.modality-modern-tabs .tab.selected .tab-label { -fx-text-fill: -bootstrap-blue5;
+}
+
+.modality-modern-tabs .tab .focus-indicator { -fx-border-color: transparent;
+}
+
+.modality-modern-tabs .tab-content-area { -fx-background-color: white; -fx-border-color: transparent;
+}
+
+/* Authorization badges for members management */
+.authorization-badge { -fx-border-radius: 12px;
+ -fx-background-radius: 12px; -fx-font-size: 11; -fx-font-weight: bold; -fx-text-alignment: center;
+    /*display: inline-block;*/
+}
+
+.authorization-badge-active { -fx-background-color: #d4edda; -fx-text-fill: #155724;
+}
+.authorization-badge-active Text { -fx-text-fill: #155724;
+}
+
+.authorization-badge-pending { -fx-background-color: #fff3cd; -fx-text-fill: #856404;
+}
+.authorization-badge-pending Text { -fx-text-fill: #856404;
+}
+
+.authorization-badge-needs-validation { -fx-background-color: #ffd6cc; -fx-text-fill: #d63700; -fx-font-weight: bold;
+}
+.authorization-badge-needs-validation Text { -fx-text-fill: #d63700;
+}
+
+/* Chip button styles - for filter/toggle button groups */
+.chip-button { -fx-background-color: white; -fx-text-fill: #78716c; -fx-font-weight: bold;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color: #e5e5e5; -fx-border-radius: 6px;
+ -fx-background-radius: 6px; -fx-cursor: hand;
+}
+.chip-button:hover:not(.disabled) { -fx-background-color: #fafaf9; -fx-border-color: #d6d3d1;
+}
+
+.chip-button-selected { -fx-background-color: #fef3c7; -fx-text-fill: #f59e0b; -fx-font-weight: bold;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-border-color: #f59e0b; -fx-border-radius: 6px;
+ -fx-background-radius: 6px;
+}
+.chip-button-selected Text { -fx-text-fill: #f59e0b;
+}
+
+/* Blue/Primary chip button - unselected state */
+.chip-button-primary { -fx-background-color: white; -fx-text-fill: #3b82f6; -fx-font-weight: bold;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color: #bfdbfe; -fx-border-radius: 6px;
+ -fx-background-radius: 6px; -fx-cursor: hand;
+}
+.chip-button-primary:hover:not(.disabled) { -fx-background-color: #eff6ff; -fx-border-color: #93c5fd;
+}
+.chip-button-primary Text { -fx-text-fill: #3b82f6;
+}
+
+/* Blue/Primary chip button selected state */
+.chip-button-primary-selected { -fx-background-color: #dbeafe; -fx-text-fill: #2563eb; -fx-font-weight: bold;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-border-color: #2563eb; -fx-border-radius: 6px;
+ -fx-background-radius: 6px;
+}
+.chip-button-primary-selected Text { -fx-text-fill: #2563eb;
+}
+
+/* Warning/Amber button style - solid amber background */
+.btn-warning-solid { -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: bold;
+    -fx-border-width: 0;
+    -fx-border-style: none; -fx-border-radius: 8px;
+ -fx-background-radius: 8px; -fx-cursor: hand;
+}
+.btn-warning-solid:hover:not(.disabled) { -fx-background-color: #d97706;
+}
+.btn-warning-solid Text { -fx-text-fill: white;
+}
+
+/* Info helper box - for contextual tips and explanations */
+.info-helper-box { -fx-background-color: #eff6ff;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color: #bfdbfe; -fx-border-radius: 10px;
+ -fx-background-radius: 10px;
+}
+.info-helper-box Text { -fx-text-fill: #1e40af;
+}
+
+/*===== modality-client-tabpane-moderndesign-javafx@main.css from modality-base-client-bootstrap =====*/
+
+/* Modern Tab Design for Super Admin Sub-Tabs */
+.tab-header-area {
+    -fx-background-color: white;
+    -fx-padding: 0;
+    -fx-border-radius: 8 8 0 0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.tab-header-background {
     -fx-background-color: white;
     -fx-border-radius: 8 8 0 0;
     -fx-background-radius: 8 8 0 0;
 }
 
-.modality-modern-tabs .tab-header-background {
+.headers-region {
     -fx-background-color: white;
-    -fx-border-radius: 8 8 0 0;
-    -fx-background-radius: 8 8 0 0;
 }
 
-.modality-modern-tabs .headers-region {
-    -fx-background-color: white;
-    -fx-spacing: 8;
-}
-
-.modality-modern-tabs .tab {
+.tab {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
     -fx-border-color: transparent transparent transparent transparent;
     -fx-border-width: 0 0 3 0;
-    -fx-min-height: 48;
-    -fx-pref-height: 48;
+    -fx-padding: 12 24 12 24;
 }
 
-.modality-modern-tabs .tab-label {
+.tab-label {
     -fx-text-fill: #666;
-    -fx-font-size: 15;
+    -fx-font-size: 14;
 }
 
-.modality-modern-tabs .tab:hover .tab-label {
-    -fx-text-fill: -bootstrap-blue5;
+.tab:hover .tab-label {
+    -fx-text-fill: #00b8d4;
 }
 
-.modality-modern-tabs .tab:selected {
+.tab:selected {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent -bootstrap-blue5 transparent;
+    -fx-border-color: transparent transparent #00b8d4 transparent;
 }
 
-.modality-modern-tabs .tab:selected .tab-label {
-    -fx-text-fill: -bootstrap-blue5;
+.tab:selected .tab-label {
+    -fx-text-fill: #00b8d4;
 }
 
-.modality-modern-tabs .tab .focus-indicator {
+.tab .focus-indicator {
     -fx-border-color: transparent;
 }
 
-.modality-modern-tabs .tab-content-area {
+.tab-content-area {
     -fx-background-color: white;
     -fx-border-color: transparent;
-}
-
-/* Authorization badges for members management */
-.authorization-badge {
-    -fx-background-radius: 12px;
-    -fx-font-size: 11px;
-    -fx-font-weight: 500;
-    -fx-alignment: center;
-}
-
-.authorization-badge-active {
-    -fx-background-color: #d4edda;
-    -fx-text-fill: #155724;
-}
-
-.authorization-badge-pending {
-    -fx-background-color: #fff3cd;
-    -fx-text-fill: #856404;
-}
-
-.authorization-badge-needs-validation {
-    -fx-background-color: #ffd6cc;
-    -fx-text-fill: #d63700;
-    -fx-font-weight: 600;
 }
 
 
@@ -1925,10 +1505,6 @@ so replaced by the following:
 
 .menu-bar {
     -fx-font-family: "Poppins";
-    -webfx-aria-toggle-button-background-color-hover: transparent;
-    -webfx-aria-toggle-button-background-color-fired: transparent;
-    -webfx-aria-toggle-button-background-color-focused: transparent;
-    -webfx-aria-toggle-button-text-fill-fired: -brand-blue-color;
 }
 
 .menu-bar ToggleButton {
@@ -1943,39 +1519,34 @@ so replaced by the following:
 /* Highlighting the selected menu items (those with the class "fired") by making them bold (in addition to being colored
    already with the rule defined in .menu-bar { -webfx-aria-toggle-button-text-fill-fired: -brand-blue-color; }). */
 .main-menu-bar ToggleButton.fired, .user-menu-bar ToggleButton.fired {
+    -fx-text-fill: #0096D6;
     -fx-font-weight: bold;
 }
 
-/* Applying also the same blue color to the SVG icons used in those selected menu items. This is done by setting their
-   SVG fill and/or stroke, but only if required (some icons have no fill or no stroke). The presence of a fill or a
-   stroke are detected by the class "hasFill" and "hasStroke" set by ModalityFrontOfficeMainFrameActivity due to the
-   absence of [fill] and [stroke] support in JavaFX CSS. */
-.main-menu-bar ToggleButton.fired.hasFill SVGPath, .user-menu-bar ToggleButton.fired.hasFill SVGPath {
-    -fx-fill: -webfx-aria-toggle-button-text-fill-fired;
+.main-menu-bar ToggleButton.fired SVGPath, .user-menu-bar ToggleButton.fired SVGPath {
+    -fx-fill: #0096D6;
 }
 
-.main-menu-bar ToggleButton.fired.hasStroke SVGPath, .user-menu-bar ToggleButton.fired.hasStroke SVGPath {
-    -fx-stroke: -webfx-aria-toggle-button-text-fill-fired;
-}
 
 .user-menu-bar Label, .user-menu-bar ToggleButton {
     -fx-font-size: 12px;
     -fx-text-fill: #838788;
 }
 
-.main-menu-bar Label.brand {
+.main-frame Label.brand {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-text-fill: -brand-blue-color;
 }
 
-.main-menu-bar Label.brand SVGPath {
+.main-frame Label.brand SVGPath {
     -fx-fill: -brand-blue-color;
 }
 
 .lang-menu-bar ToggleButton {
     -fx-border-color: #0096D6;
     -fx-border-width: 1px 1px 1px 0;
+    -fx-text-fill: #0096D6;;
 }
 
 .lang-menu-bar ToggleButton.first-child {
@@ -1989,13 +1560,10 @@ so replaced by the following:
     -fx-background-radius:  0px 10px 10px 0px;
 }
 
-.lang-menu-bar ToggleButton:selected {
-    -fx-background-color: #F0F0F0;
-}
-
 .lang-menu-bar ToggleButton.fired {
     -fx-background-color: #0096D6;
     -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 CollapsePane.menu-bar.non-mobile {
@@ -2091,6 +1659,37 @@ CollapsePane.menu-bar.lang-menu-bar {
 
 .text-danger {
     -fx-text-fill: #dc3545;
+}
+
+/*===== one-modality-crm-client-activities-unauthorized-javafx@main.css from modality-crm-client-activity-unauthorized-plugin =====*/
+
+/* Unauthorized Activity - JavaFX styles */
+
+.unauthorized-container {
+    -fx-background-color: white;
+}
+
+.unauthorized-container SVGPath.waiting {
+    -fx-stroke: rgb(0, 150, 214); /* Blue for waiting */
+    -fx-stroke-width: 2.5;
+    -fx-fill: rgba(0, 150, 214, 0.1);
+}
+
+.unauthorized-container SVGPath.denied {
+    -fx-stroke: rgb(220, 53, 69); /* Red for denied */
+    -fx-stroke-width: 2.5;
+    -fx-fill: rgba(220, 53, 69, 0.1);
+}
+
+.unauthorized-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-fill: rgb(33, 37, 41);
+}
+
+.unauthorized-message {
+    -fx-font-size: 16px;
+    -fx-text-fill: rgb(108, 117, 125);
 }
 
 /*===== one-modality-crm-frontoffice-activities-createaccount-javafx@main.css from modality-crm-frontoffice-activity-createaccount-plugin =====*/
@@ -2332,46 +1931,40 @@ CollapsePane.menu-bar.lang-menu-bar {
 .notification-bar Button.notification-close:hover {
     -fx-text-fill: -notification-close-hover-color;
 }
-/*===== modality-event-client-selecteditemsselector-box-javafx@main.css from modality-booking-client-scheduleditemsselector-box =====*/
+/*===== modality-event-client-selecteditemsselector-box-webfx@main.css from modality-booking-client-scheduleditemsselector-box =====*/
 
-.scheduled-item-box {
-    -fx-border-color: #cccccc;
+.scheduled-item-box { -fx-border-style: solid; -fx-border-color: #cccccc; -fx-border-width: 1px;
 }
 
-.scheduled-item-box.date-unselected Text {
-    -fx-fill: #444;
+.scheduled-item-box.date-unselected { -fx-text-fill: #444;
 }
 
-.scheduled-item-box Text.time {
-    -fx-fill: #838788;
+.scheduled-item-box .time { -fx-text-fill: #838788;
 }
 
-.scheduled-item-box.date-unselected {
-    -fx-background-color: none;
+.scheduled-item-box.date-unselected { -fx-background-color: transparent;
 }
 
-.scheduled-item-box.date-non-selectable {
-    -fx-border-color: #cccccc;
-    -fx-background-color: #dddddd;
+.scheduled-item-box.date-non-selectable { -fx-background-color: #dddddd;
 }
 
-.scheduled-item-box.date-non-selectable Text,
-.scheduled-item-box.date-non-selectable Text.time {
-    -fx-fill: #aaaaaa;
+.scheduled-item-box.date-non-selectable { -fx-border-style: solid; -fx-border-color: #cccccc; -fx-border-width: 1px;
+}
+
+.scheduled-item-box.date-non-selectable,
+.scheduled-item-box.date-non-selectable .time { -fx-text-fill: #aaaaaa;
 }
 
 .scheduled-item-box.date-selected,
-.scheduled-item-box.date-already-booked {
-    -fx-border-color: none;
-    -fx-background-color: -brand-main-color;
+.scheduled-item-box.date-already-booked { -fx-background-color: -brand-main-color; -fx-border-style: none;
 }
 
-.scheduled-item-box.date-selected Text {
-    -fx-fill: white;
+.scheduled-item-box.date-selected,
+.scheduled-item-box.date-selected .time { -fx-text-fill: white;
 }
 
-.scheduled-item-box.date-already-booked Text {
-    -fx-fill: #eeeeee;
+.scheduled-item-box.date-already-booked,
+.scheduled-item-box.date-already-booked .time { -fx-text-fill: #eeeeee;
 }
 
 /*===== modality-event-client-recurringevents-javafx@main.css from modality-event-frontoffice-bookingform-recurringevent-plugin =====*/
@@ -2558,3 +2151,13 @@ CollapsePane.menu-bar.lang-menu-bar {
     -brand-main-color: -kadampa-org-orange-color;
     -brand-main-background-color: -kadampa-org-orange-color;
 }*/
+
+/*===== nkt-footer-logo-javafx@main.css from kbs-frontoffice-footer-nktikbu =====*/
+
+.root {
+    -footer-logo-color: rgb(74, 71, 72);
+}
+
+SVGPath.footer-logo {
+    -fx-fill: -footer-logo-color;
+}
