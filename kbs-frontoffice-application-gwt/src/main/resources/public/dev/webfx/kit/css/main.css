@@ -4286,6 +4286,10 @@ body, textarea /* because textarea has explicit default monospace font */ {
     transition: translate 250ms ease-in;
 }
 
+.booking-form-event-header {
+    overflow: hidden;
+}
+
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-frontoffice-bookingform-recurringevent-plugin =====*/
 
 :root {
