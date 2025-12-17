@@ -699,6 +699,7 @@ public class ExistingBookingSection implements BookingFormSection {
         }
 
         ownerPersonId = userPerson.getPrimaryKey();
+        String ownerEmail = userPerson.getEmail();  // Capture owner's email for validation bypass
         Event event = workingBookingProperties.getEvent();
         if (event == null) {
             Console.log("ExistingBookingSection: No event, skipping data load");
@@ -722,10 +723,10 @@ public class ExistingBookingSection implements BookingFormSection {
         selectedAction.set(null);
 
         // Start async loading
-        loadHouseholdMembersAndBookings(userPerson, event, accountId);
+        loadHouseholdMembersAndBookings(userPerson, event, accountId, ownerEmail);
     }
 
-    private void loadHouseholdMembersAndBookings(Person userPerson, Event event, Object accountId) {
+    private void loadHouseholdMembersAndBookings(Person userPerson, Event event, Object accountId, String ownerEmail) {
         EntityStore entityStore = EntityStore.create(DataSourceModelService.getDefaultDataSourceModel());
         Object personId = userPerson.getPrimaryKey();
 
@@ -736,7 +737,7 @@ public class ExistingBookingSection implements BookingFormSection {
                 loadAccountMembers(entityStore, accountId, pendingInviteeIds))
             .compose(context ->
                 // Step 3: Load bookings for all members
-                loadBookingsForMembers(entityStore, event, context, userPerson))
+                loadBookingsForMembers(entityStore, event, context, userPerson, ownerEmail))
             .onFailure(error -> {
                 Console.log("Error loading household members: " + error);
             });
@@ -818,7 +819,8 @@ public class ExistingBookingSection implements BookingFormSection {
             EntityStore entityStore,
             Event event,
             MemberLoadContext context,
-            Person userPerson) {
+            Person userPerson,
+            String ownerEmail) {
 
         List<Person> allMembers = context.allMembers;
         Set<Object> pendingInviteeIds = context.pendingInviteeIds;
@@ -878,7 +880,7 @@ public class ExistingBookingSection implements BookingFormSection {
                     } else {
                         // No booking yet - determine the correct status
                         MemberStatus status = determineMemberStatus(
-                            person, isPrimary, pendingInviteeIds, emailsWithAccounts);
+                            person, isPrimary, pendingInviteeIds, emailsWithAccounts, ownerEmail);
 
                         MemberInfo memberInfo = new MemberInfo(
                                 person.getPrimaryKey(),
@@ -912,12 +914,19 @@ public class ExistingBookingSection implements BookingFormSection {
 
     /**
      * Determines the correct MemberStatus for a person.
+     *
+     * @param person The person to check
+     * @param isPrimary Whether this is the primary account owner
+     * @param pendingInviteeIds Set of person IDs with pending invitations
+     * @param emailsWithAccounts Set of emails that have created their own accounts
+     * @param ownerEmail The logged-in account owner's email (for validation bypass)
      */
     private MemberStatus determineMemberStatus(
             Person person,
             boolean isPrimary,
             Set<Object> pendingInviteeIds,
-            Set<String> emailsWithAccounts) {
+            Set<String> emailsWithAccounts,
+            String ownerEmail) {
 
         // Primary user is always OWNER
         if (isPrimary) {
@@ -935,8 +944,13 @@ public class ExistingBookingSection implements BookingFormSection {
         }
 
         // Check if member has created their own account (NEEDS_VALIDATION)
+        // Exception: if member's email matches the account owner's email, auto-authorize
         String email = person.getEmail();
         if (email != null && emailsWithAccounts.contains(email.toLowerCase())) {
+            // Auto-authorize if the member's email matches the logged-in account owner's email
+            if (ownerEmail != null && email.equalsIgnoreCase(ownerEmail)) {
+                return MemberStatus.ACTIVE;
+            }
             return MemberStatus.NEEDS_VALIDATION;
         }
 
