@@ -15,6 +15,7 @@
         <head>
             <title>KBS3 Back-Office</title>
             <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+            <meta name="description" content="KBS3 Back-Office application"/>
         </head>
     </html>
 

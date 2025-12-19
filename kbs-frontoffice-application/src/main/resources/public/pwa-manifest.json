@@ -3,7 +3,7 @@
   "lang": "en",
   "name": "Kadampa Bookings",
   "short_name": "Kadampa Bookings",
-  "description": "Book your Kadampa events with ease, access your livestream and audio recordings",
+  "description": "Book Kadampa events and access teachings via livestreams and audio recordings",
   "categories": ["lifestyle"],
   "scope": "/",
   "start_url": "/",
