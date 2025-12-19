@@ -868,8 +868,8 @@
     <!--===========================< webfx-stack-com-websocket >============================-->
     <source path="dev/webfx/stack/com/websocket"/>
     <source path="dev/webfx/stack/com/websocket/spi"/>
-    <!--==================< webfx-stack-com-websocket-elemental2-sockjs >===================-->
-    <source path="dev/webfx/stack/com/websocket/spi/impl/elemental2/sockjs"/>
+    <!--==================< webfx-stack-com-websocket-elemental2-native >===================-->
+    <source path="dev/webfx/stack/com/websocket/spi/impl/elemental2/nativ"/>
     <!--============================< webfx-stack-db-datascope >============================-->
     <source path="dev/webfx/stack/db/datascope"/>
     <source path="dev/webfx/stack/db/datascope/aggregate"/>
