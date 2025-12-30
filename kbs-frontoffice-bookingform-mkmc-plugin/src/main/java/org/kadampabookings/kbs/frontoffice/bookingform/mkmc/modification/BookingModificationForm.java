@@ -17,17 +17,12 @@ import javafx.scene.shape.Line;
 import one.modality.base.shared.entities.Document;
 import one.modality.base.shared.entities.Item;
 import one.modality.base.shared.entities.Person;
-import one.modality.booking.client.workingbooking.WorkingBooking;
+import one.modality.base.shared.entities.markers.HasPersonalDetails;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultAudioRecordingSection;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultExistingBookingSummarySection;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultPaymentSection;
-import one.modality.booking.frontoffice.bookingpage.sections.HasConfirmationSection;
-import one.modality.booking.frontoffice.bookingpage.sections.HasPaymentSection;
+import one.modality.booking.frontoffice.bookingpage.sections.*;
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
-import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.util.Set;
@@ -65,7 +60,6 @@ public final class BookingModificationForm {
     // State
     private final IntegerProperty currentStep = new SimpleIntegerProperty(STEP_OPTIONS);
     private final BooleanProperty isLoading = new SimpleBooleanProperty(false);
-    private final DoubleProperty totalPrice = new SimpleDoubleProperty(0);
     private final BooleanProperty hasNewSelectionsProperty = new SimpleBooleanProperty(false);
 
     // Default sections from modality-booking module
@@ -161,24 +155,7 @@ public final class BookingModificationForm {
         hasNewSelectionsProperty.set(hasNew);
 
         // Update price calculation
-        updateTotalPrice();
-    }
-
-    private void updateTotalPrice() {
-        if (workingBookingProperties == null) return;
-
-        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
-        // Get price from working booking's latest aggregate using PriceCalculator
-        PriceCalculator latestPriceCalculator = new PriceCalculator(workingBooking.getLastestDocumentAggregate());
-        int priceNet = latestPriceCalculator.calculateTotalPrice();
-        int initialPrice = 0;
-        if (workingBooking.getInitialDocumentAggregate() != null) {
-            PriceCalculator initialPriceCalculator = new PriceCalculator(workingBooking.getInitialDocumentAggregate());
-            initialPrice = initialPriceCalculator.calculateTotalPrice();
-        }
-        // Additional price is the difference
-        int additionalPrice = priceNet - initialPrice;
-        totalPrice.set(additionalPrice / 100.0);
+        workingBookingProperties.updateAll();
     }
 
     private void buildUI() {
@@ -425,20 +402,11 @@ public final class BookingModificationForm {
             attendeeName = "Additional Options";
         }
 
-        // Calculate total price for new selections (stored as double but represents value)
-        updateTotalPrice();
-        // Convert to cents (int) - totalPrice is already calculated in updateTotalPrice()
-        int totalInCents = (int) (totalPrice.get() * 100);
-
-        // Get the document from working booking
-        Document document = null;
-        if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
-            document = workingBookingProperties.getWorkingBooking().getDocument();
-        }
+        int totalInCents = workingBookingProperties.getBalance();
 
         // Add a single booking item representing the additional options
         paymentSection.addBookingItem(new HasPaymentSection.PaymentBookingItem(
-            document,
+            workingBookingProperties.getWorkingBooking().getDocument(),
             attendeeName,
             "Audio Recording Options",
             totalInCents
@@ -467,37 +435,7 @@ public final class BookingModificationForm {
      * Gets the attendee name from the working booking's document.
      */
     private String getAttendeeName() {
-        if (workingBookingProperties == null) {
-            return null;
-        }
-        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
-        if (workingBooking == null) {
-            return null;
-        }
-        Document document = workingBooking.getDocument();
-        if (document == null) {
-            return null;
-        }
-        Person person = document.getPerson();
-        if (person == null) {
-            return null;
-        }
-        String firstName = person.getFirstName();
-        String lastName = person.getLastName();
-        if (firstName == null && lastName == null) {
-            return null;
-        }
-        StringBuilder name = new StringBuilder();
-        if (firstName != null) {
-            name.append(firstName);
-        }
-        if (lastName != null) {
-            if (name.length() > 0) {
-                name.append(" ");
-            }
-            name.append(lastName);
-        }
-        return name.toString();
+        return getAttendeePersonalDetails().getFullName();
     }
 
     // === Step 3: Confirmation ===
@@ -528,7 +466,7 @@ public final class BookingModificationForm {
         }
 
         // Set payment amounts (convert to cents)
-        int totalInCents = (int) (totalPrice.get() * 100);
+        int totalInCents = workingBookingProperties.getBalance();
         confirmationSection.setPaymentAmounts(totalInCents, totalInCents); // Full payment
 
         // Add the confirmation view
@@ -551,26 +489,17 @@ public final class BookingModificationForm {
         contentContainer.getChildren().add(buttonRow);
     }
 
+    HasPersonalDetails getAttendeePersonalDetails() {
+        Document document = workingBookingProperties.getWorkingBooking().getDocument();
+        Person person = document.getPerson();
+        return person != null ? person : document;
+    }
+
     /**
      * Gets the attendee email from the working booking's document.
      */
     private String getAttendeeEmail() {
-        if (workingBookingProperties == null) {
-            return null;
-        }
-        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
-        if (workingBooking == null) {
-            return null;
-        }
-        Document document = workingBooking.getDocument();
-        if (document == null) {
-            return null;
-        }
-        Person person = document.getPerson();
-        if (person == null) {
-            return null;
-        }
-        return person.getEmail();
+        return getAttendeePersonalDetails().getEmail();
     }
 
     // === Public API ===
@@ -632,12 +561,6 @@ public final class BookingModificationForm {
         return isLoading;
     }
 
-    /**
-     * Returns the total price property for the additional options.
-     */
-    public ReadOnlyDoubleProperty totalPriceProperty() {
-        return totalPrice;
-    }
 
     /**
      * Returns the WorkingBookingProperties for this form.

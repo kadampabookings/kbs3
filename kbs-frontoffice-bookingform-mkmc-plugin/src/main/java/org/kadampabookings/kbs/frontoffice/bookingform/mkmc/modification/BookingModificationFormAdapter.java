@@ -1,7 +1,5 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.modification;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.Node;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
 import one.modality.booking.frontoffice.bookingform.BookingFormActivityCallback;
@@ -34,18 +32,8 @@ public class BookingModificationFormAdapter implements BookingForm {
     }
 
     @Override
-    public Node getView() {
-        return form.getView();
-    }
-
-    @Override
     public void onWorkingBookingLoaded() {
         // Already loaded when form is created
-    }
-
-    @Override
-    public ObservableBooleanValue transitingProperty() {
-        return form.loadingProperty();
     }
 
     @Override

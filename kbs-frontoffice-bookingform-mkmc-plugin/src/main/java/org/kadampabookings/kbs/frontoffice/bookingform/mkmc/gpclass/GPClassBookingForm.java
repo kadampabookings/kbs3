@@ -3,22 +3,20 @@ package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass;
 import dev.webfx.platform.async.Future;
 import dev.webfx.platform.console.Console;
 import javafx.beans.binding.Bindings;
+import one.modality.base.shared.entities.Person;
+import one.modality.booking.client.workingbooking.FXPersonToBook;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.client.workingbooking.WorkingBooking;
-import one.modality.ecommerce.document.service.DocumentAggregate;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
 import one.modality.booking.frontoffice.bookingpage.BookingFormPage;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.CompositeBookingFormPage;
+import one.modality.booking.frontoffice.bookingpage.sections.DefaultEventHeaderSection;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormBuilder;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormCallbacks;
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultEventHeaderSection;
-import one.modality.booking.frontoffice.bookingpage.sections.HasMemberSelectionSection.MemberInfo;
-import one.modality.base.shared.entities.Person;
-import one.modality.booking.client.workingbooking.FXPersonToBook;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.gpclass.sections.ClassDateSelectionSection;
@@ -96,18 +94,18 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
         StandardBookingFormBuilder builder = new StandardBookingFormBuilder(activity, settings)
             .withColorScheme(BookingFormColorScheme.PEACE_PURPLE)  // Applied as CSS theme class
             .withShowUserBadge(true)                     // Show user badge in header
-            .withCardPaymentOnly(true)                   // GP classes only accept card payment
-            .withEntryPoint(entryPoint).withNavigationClickable(false);                 // Handle payment resume/modification entry points
-
-        // Add existing booking check page first (will auto-skip if not applicable via isApplicableToBooking)
-        builder.addCustomStep(existingBookingPage);      // Step 0: Existing booking check (auto-skips for new bookings)
-        builder.addCustomStep(selectClassesPage);        // Step 1: Custom date selection page
-        builder.withSummaryPageSupplier(() -> createSummaryPage(summarySection));  // Custom summary page
+            .withCardPaymentOnly(true)          // GP classes only accept card payment
+            .withEntryPoint(entryPoint)                  // Handle payment resume/modification entry points
+            .withNavigationClickable(false)              // Can be set to true in debug mode only
+            // Add existing booking check page first (will auto-skip if not applicable via isApplicableToBooking)
+            .addCustomStep(existingBookingPage)          // Step 0: Existing booking check (auto-skips for new bookings)
+            .addCustomStep(selectClassesPage)            // Step 1: Custom date selection page
+            .withSummaryPageSupplier(() -> createSummaryPage(summarySection))  // Custom summary page
         // Note: Member selection is NOT skipped - for new bookings it shows, for existing bookings
         // the Your Information and Member Selection pages will be skipped automatically because:
         // 1. For existing bookings, user is already logged in (Your Information auto-skips)
         // 2. For existing bookings, member is selected in ExistingBookingSection
-        builder.withCallbacks(this);                     // For form-specific callbacks
+            .withCallbacks(this);                        // For form-specific callbacks
 
         this.form = builder.build();                     // Build the form
     }
