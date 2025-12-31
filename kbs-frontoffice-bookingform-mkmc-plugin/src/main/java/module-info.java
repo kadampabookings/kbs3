@@ -24,7 +24,6 @@ module kbs.frontoffice.bookingform.mkmc.plugin {
     requires webfx.kit.util;
     requires webfx.platform.async;
     requires webfx.platform.console;
-    requires webfx.platform.uischeduler;
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.entity;
 
