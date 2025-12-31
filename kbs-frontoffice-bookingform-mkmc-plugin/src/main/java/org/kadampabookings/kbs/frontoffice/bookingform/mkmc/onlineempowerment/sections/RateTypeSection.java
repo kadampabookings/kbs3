@@ -175,7 +175,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
 
         // Calculate total price
         // Calculated total price for the selected period
-        int totalPrice = workingBookingProperties.calculateTotal();
+        int totalPrice = workingBookingProperties.getTotal();
         priceLabel.setText(formatPrice(totalPrice));
 
         // Notify listener

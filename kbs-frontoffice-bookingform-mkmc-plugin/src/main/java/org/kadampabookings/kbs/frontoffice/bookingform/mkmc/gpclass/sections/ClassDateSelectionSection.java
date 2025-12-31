@@ -618,8 +618,8 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
 
         // Calculate all classes price and discount using the pricing API
         // The API applies fixed rate discounts from database if cheaper than daily rate total
-        int wholeEventPrice = workingBookingProperties.getWholeEventPrice();
-        int wholeEventNoDiscountPrice = workingBookingProperties.getWholeEventNoDiscountPrice();
+        int wholeEventPrice = workingBooking.getWholeEventPrice();
+        int wholeEventNoDiscountPrice = workingBooking.getWholeEventNoDiscountPrice();
         allClassesDiscount = wholeEventNoDiscountPrice - wholeEventPrice;
         allClassesPrice = wholeEventPrice;
 
@@ -706,7 +706,7 @@ public class ClassDateSelectionSection implements BookingFormSection, Resettable
      * Returns the subtotal (before discount) in cents for the current selection.
      */
     public int getSubtotal() {
-        return workingBookingProperties == null ? 0 : workingBookingProperties.calculateNoDiscountTotal();
+        return workingBookingProperties == null ? 0 : workingBookingProperties.getNoDiscountTotal();
     }
 
     /**

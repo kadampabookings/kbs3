@@ -5,10 +5,11 @@ import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.platform.async.Future;
 import dev.webfx.platform.async.Promise;
 import dev.webfx.platform.console.Console;
-import dev.webfx.platform.uischeduler.UiScheduler;
 import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
 import dev.webfx.stack.orm.entity.EntityStore;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +23,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
-import one.modality.base.shared.entities.Document;
 import one.modality.base.shared.entities.Event;
 import one.modality.base.shared.entities.Invitation;
 import one.modality.base.shared.entities.Person;
@@ -845,8 +845,9 @@ public class ExistingBookingSection implements BookingFormSection {
         Promise<Void> resultPromise = Promise.promise();
 
         // Wait for all futures to complete
-        Future.all(futures).onComplete(ar -> {
-            UiScheduler.runInUiThread(() -> {
+        Future.all(futures)
+            .inUiThread()
+            .onComplete(ar -> {
                 List<BookingInfo> withBookings = new ArrayList<>();
                 List<MemberInfo> withoutBookings = new ArrayList<>();
 
@@ -861,8 +862,9 @@ public class ExistingBookingSection implements BookingFormSection {
                         DocumentAggregate docAgg = policyAndDoc.getDocumentAggregate();
 
                         int classesBooked = docAgg.getAttendances() != null ? docAgg.getAttendances().size() : 0;
-                        int amountPaid = docAgg.getDeposit();
-                        int amountTotal = new PriceCalculator(docAgg).calculateTotalPrice();
+                        PriceCalculator priceCalculator = new PriceCalculator(docAgg);
+                        int amountTotal = priceCalculator.calculateTotalPrice();
+                        int amountPaid = priceCalculator.calculateDeposit();
 
                         BookingInfo bookingInfo = new BookingInfo(
                                 person.getPrimaryKey(),
@@ -907,7 +909,6 @@ public class ExistingBookingSection implements BookingFormSection {
                 rebuildCards();
                 resultPromise.complete();
             });
-        });
 
         return resultPromise.future();
     }
