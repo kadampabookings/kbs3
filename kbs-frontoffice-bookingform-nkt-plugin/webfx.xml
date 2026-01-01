@@ -19,4 +19,6 @@
         <provider interface="one.modality.booking.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPBookingFormProvider</provider>
     </providers>
 
+    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPI18nKeys"/>
+
 </project>

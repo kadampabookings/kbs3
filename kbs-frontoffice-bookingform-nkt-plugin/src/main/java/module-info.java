@@ -9,9 +9,10 @@ module kbs.frontoffice.bookingform.nkt.plugin {
     requires modality.booking.client.workingbooking;
     requires modality.booking.frontoffice.bookingform;
     requires modality.booking.frontoffice.bookingpage;
+    requires modality.crm.client.authn.fx;
     requires modality.event.frontoffice.activity.book;
-    requires modality.event.frontoffice.bookingform.recurringevent.plugin;
     requires modality.event.frontoffice.eventheader;
+    requires webfx.platform.console;
     requires webfx.stack.orm.entity;
 
     // Exported packages
