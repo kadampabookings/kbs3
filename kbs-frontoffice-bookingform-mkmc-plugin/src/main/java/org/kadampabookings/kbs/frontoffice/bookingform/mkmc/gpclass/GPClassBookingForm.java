@@ -79,14 +79,7 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
         // Note: hasExistingBooking is determined later when WorkingBooking is loaded
         // At construction time, WorkingBooking may not be available yet
         // The ExistingBookingSection uses isApplicableToBooking() to auto-skip when not needed
-        this.hasExistingBooking = false; // Will be updated dynamically via isApplicableToBooking()
-
-        // Create custom steps
-        createCustomStep();
-        createExistingBookingStep();
-
-        // Create custom summary section that shows GP-class-specific pricing
-        summarySection = new GPClassSummarySection(dateSelectionSection);
+        hasExistingBooking = false; // Will be updated dynamically via isApplicableToBooking()
 
         // Build the form - all generic logic is handled by StandardBookingForm
         // The color scheme is applied as a CSS theme class to the root container
@@ -97,15 +90,25 @@ public final class GPClassBookingForm implements StandardBookingFormCallbacks {
             .withCardPaymentOnly(true)          // GP classes only accept card payment
             .withEntryPoint(entryPoint)                  // Handle payment resume/modification entry points
             .withNavigationClickable(false)              // Can be set to true in debug mode only
-            // Add existing booking check page first (will auto-skip if not applicable via isApplicableToBooking)
-            .addCustomStep(existingBookingPage)          // Step 0: Existing booking check (auto-skips for new bookings)
-            .addCustomStep(selectClassesPage)            // Step 1: Custom date selection page
-            .withSummaryPageSupplier(() -> createSummaryPage(summarySection))  // Custom summary page
-        // Note: Member selection is NOT skipped - for new bookings it shows, for existing bookings
-        // the Your Information and Member Selection pages will be skipped automatically because:
-        // 1. For existing bookings, user is already logged in (Your Information auto-skips)
-        // 2. For existing bookings, member is selected in ExistingBookingSection
             .withCallbacks(this);                        // For form-specific callbacks
+
+        // We skip the custom steps when the entry point is for paying a booking (no need for previous steps in this case)
+        if (entryPoint != BookingFormEntryPoint.PAY_BOOKING) {
+            // Create custom steps
+            createCustomStep();
+            createExistingBookingStep();
+            // Create custom summary section that shows GP-class-specific pricing
+            summarySection = new GPClassSummarySection(dateSelectionSection);
+            builder
+                // Add existing booking check page first (will auto-skip if not applicable via isApplicableToBooking)
+                .addCustomStep(existingBookingPage)          // Step 0: Existing booking check (auto-skips for new bookings)
+                .addCustomStep(selectClassesPage)            // Step 1: Custom date selection page
+                .withSummaryPageSupplier(() -> createSummaryPage(summarySection));  // Custom summary page
+            // Note: Member selection is NOT skipped - for new bookings it shows, for existing bookings
+            // the Your Information and Member Selection pages will be skipped automatically because:
+            // 1. For existing bookings, user is already logged in (Your Information auto-skips)
+            // 2. For existing bookings, member is selected in ExistingBookingSection
+        }
 
         this.form = builder.build();                     // Build the form
     }
