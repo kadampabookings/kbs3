@@ -1,10 +1,10 @@
 package org.kadampabookings.kbs.backoffice.festivalcreator;
 
 import dev.webfx.extras.aria.AriaToggleGroup;
+import dev.webfx.extras.async.AsyncSpinner;
 import dev.webfx.extras.exceptions.UserCancellationException;
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
-import dev.webfx.extras.async.AsyncSpinner;
 import dev.webfx.extras.panes.ColumnsPane;
 import dev.webfx.extras.panes.ScalePane;
 import dev.webfx.extras.styles.bootstrap.Bootstrap;
@@ -20,10 +20,6 @@ import dev.webfx.extras.validation.ValidationSupport;
 import dev.webfx.kit.util.properties.FXProperties;
 import dev.webfx.platform.async.Future;
 import dev.webfx.platform.async.Promise;
-import dev.webfx.platform.console.Console;
-import dev.webfx.platform.windowhistory.WindowHistory;
-import dev.webfx.stack.orm.datasourcemodel.service.DataSourceModelService;
-import dev.webfx.stack.orm.entity.EntityId;
 import dev.webfx.stack.orm.entity.UpdateStore;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -34,15 +30,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import one.modality.base.client.i18n.BaseI18nKeys;
 import one.modality.base.client.mainframe.fx.FXMainFrameDialogArea;
-import one.modality.base.shared.entities.*;
-import one.modality.base.shared.knownitems.KnownItemFamily;
-import one.modality.crm.backoffice.organization.fx.FXOrganization;
-import one.modality.event.backoffice.activities.pricing.EventPricingRouting;
-import one.modality.event.client.event.fx.FXEventId;
+import one.modality.base.shared.entities.Event;
+import one.modality.base.shared.entities.Site;
+import one.modality.event.backoffice.eventcreator.EventCreator;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
-
-import java.time.LocalDate;
 
 /**
  * @author Bruno Salmon
@@ -116,68 +108,14 @@ final class CreateFestivalExecutor {
         cancelButton.setOnAction(e -> dialogCallback.closeDialog());
         createButton.setOnAction(e -> {
             if (validationSupport.isValid()) {
-                Organization organization = FXOrganization.getOrganization();
-                // Getting the festival type selected by the user (was stored in the toggle button user data)
                 FestivalType festivalType = getSelectedFestivalType();
                 int year = startDateField.getDate().getYear();
-                // Creating the festival event
-                UpdateStore updateStore = UpdateStore.create(DataSourceModelService.getDefaultDataSourceModel());
-                Event event = updateStore.insertEntity(Event.class);
                 // For now (2025) we do only Online Festivals with KBS3 (in 2026 the same event will be for both in-person & online)
-                event.setName(I18n.getI18nText("[{0}] Festival {1} Online", festivalType.getShortI18nKey(), year));
-                event.setOrganization(organization);
-                event.setCorporation(1); // TODO: remove this from database
-                event.setType(festivalType.getTypeId());
-                event.setStartDate(startDateField.getDate());
-                event.setEndDate(endDateField.getDate());
-                event.setKbs3(true);
-                event.setTeachingsDayTicket(true);
-                event.setAudioRecordingsDayTicket(true);
-                // Main site
-                Site site = updateStore.insertEntity(Site.class);
-                site.setName("Online");
-                site.setEvent(event);
-                site.setOrganization(organization);
-                site.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
-                site.setMain(true);
-                site.setOrd(10);
-                //event.setVenue(site); // cyclic reference issue => postponed below
-                // Creating SiteItemFamily for teachings & audio recordings (so we can see the rates in KBS2
-                // back-office, but probably not necessary for KBS3).
-                SiteItemFamily sif = updateStore.insertEntity(SiteItemFamily.class);
-                sif.setSite(site);
-                sif.setItemFamily(KnownItemFamily.TEACHING.getPrimaryKey());
-                sif = updateStore.insertEntity(SiteItemFamily.class);
-                sif.setSite(site);
-                sif.setItemFamily(KnownItemFamily.AUDIO_RECORDING.getPrimaryKey());
-                // Bookable scheduled items
-                EntityId teachingDayTicketItemId = organization.getTeachingsDayTicketItemId();  // Should be Festival for NKT
-                for (LocalDate date = event.getStartDate(); !date.isAfter(event.getEndDate()) ; date = date.plusDays(1)) {
-                    ScheduledItem si = updateStore.insertEntity(ScheduledItem.class);
-                    si.setEvent(event);
-                    si.setSite(site);
-                    si.setItem(teachingDayTicketItemId);
-                    si.setDate(date);
-                }
+                String eventName = I18n.getI18nText("[{0}] Festival {1} Online", festivalType.getShortI18nKey(), year);
+                UpdateStore updateStore = UpdateStore.create();
+                Site venue = EventCreator.insertNewVenue("Online", true, updateStore);
                 AsyncSpinner.displayButtonSpinnerDuringAsyncExecution(
-                    updateStore.submitChanges()
-                        // Setting venue afterwards TODO: Improve EntityChangesToSubmitBatchGenerator to solve cyclic references
-                        .compose(ignored -> {
-                            event.setVenue(site);
-                            return updateStore.submitChanges();
-                        })
-                        .onFailure(Console::log)
-                        .onSuccess(ignored -> {
-                            // Automatically selecting this new event
-                            EntityId eventId = event.getId();
-                            FXEventId.setEventId(eventId);
-                            // Automatically routing to the pricing activity
-                            new EventPricingRouting.RouteToEventPricingRequest(eventId, WindowHistory.getProvider()).execute();
-                            promise.complete();
-                            // Closing the dialog
-                            dialogCallback.closeDialog();
-                        })
-                    ,
+                    EventCreator.createEvent(eventName, festivalType.getTypeId(), venue, startDateField.getDate(), endDateField.getDate(), updateStore),
                     createButton, cancelButton
                 );
             }

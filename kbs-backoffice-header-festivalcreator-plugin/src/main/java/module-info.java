@@ -42,6 +42,7 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
+    requires modality.event.backoffice.eventcreator;
 
     // Exported packages
     exports org.kadampabookings.kbs.backoffice.festivalcreator;
