@@ -97,7 +97,8 @@ final class CreateFestivalExecutor {
         dialogCallback.addCloseHook(() -> promise.tryFail(new UserCancellationException())); // do nothing if the promise is already completed
         ValidationSupport validationSupport = new ValidationSupport();
         validationSupport.addRequiredInput(toggleGroup.firedToggleButtonProperty(), eventTypeBar);
-        //validationSupport.addRequiredInput(eventNameTextField);
+        validationSupport.addRequiredInput(startDateField.dateProperty(), startDateField.getTextField());
+        validationSupport.addRequiredInput(endDateField.dateProperty(), endDateField.getTextField());
         cancelButton.setOnAction(e -> dialogCallback.closeDialog());
         createButton.setOnAction(e -> {
             if (validationSupport.isValid()) {
@@ -108,8 +109,13 @@ final class CreateFestivalExecutor {
                 UpdateStore updateStore = UpdateStore.create();
                 Site venue = EventCreator.insertNewVenue("Online", true, updateStore);
                 AsyncSpinner.displayButtonSpinnerDuringAsyncExecution(
-                    EventCreator.createEvent(eventName, festivalType.getTypeId(), venue, startDateField.getDate(), endDateField.getDate(), updateStore),
-                    createButton, cancelButton
+                    EventCreator.createEvent(eventName, festivalType.getTypeId(), venue, startDateField.getDate(), endDateField.getDate(), updateStore)
+                        .onSuccess(v -> {
+                            promise.complete();
+                            // Closing the dialog
+                            dialogCallback.closeDialog();
+                        })
+                    , createButton, cancelButton
                 );
             }
         });
