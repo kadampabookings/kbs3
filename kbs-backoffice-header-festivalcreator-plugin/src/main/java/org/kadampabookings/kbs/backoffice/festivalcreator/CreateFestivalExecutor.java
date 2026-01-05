@@ -58,14 +58,11 @@ final class CreateFestivalExecutor {
             createButton
         ));
         buttonBar.setAlignment(Pos.CENTER);
-        //TextField eventNameTextField = new TextField();
-        DateField startDateField = createDateField(FestivalCreatorI18nKeys.StartDate);
-        DateField endDateField = createDateField(FestivalCreatorI18nKeys.EndDate);
+        DateField startDateField = createDateField(BaseI18nKeys.StartDate);
+        DateField endDateField = createDateField(BaseI18nKeys.EndDate);
         VBox mainContent = new VBox(80,
             I18nControls.newLabel(FestivalCreatorI18nKeys.SelectFestivalType),
             eventTypeBar,
-            /*I18nControls.newLabel(EventCreatorI18nKeys.NameEvent),
-            MaterialUtil.makeMaterial(eventNameTextField),*/
             new ColumnsPane(80, startDateField.getView(), endDateField.getView())
         );
         mainContent.setAlignment(Pos.CENTER);
@@ -74,11 +71,7 @@ final class CreateFestivalExecutor {
             new ScalePane(mainContent),
             new ScalePane(buttonBar)
         );
-        //container.spacingProperty().bind(container.heightProperty().multiply(0.1)); // multiply not yet supported by webfx
-        container.spacingProperty().bind(container.heightProperty().map(height -> height.doubleValue() * 0.1));
-        /*MaterialTextField materialTextField = MaterialUtil.getMaterialTextField(eventNameTextField);
-        I18n.bindI18nTextProperty(materialTextField.labelTextProperty(), EventCreatorI18nKeys.NameEventTextField);
-        materialTextField.setAnimateLabel(false);*/
+        container.spacingProperty().bind(container.heightProperty().multiply(0.1)); // multiply not yet supported by webfx
         container.getStyleClass().add("event-creator-dialog");
         container.setMaxWidth(700);
 
@@ -155,8 +148,6 @@ final class CreateFestivalExecutor {
         MaterialTextField startDateMaterialTextField = MaterialUtil.getMaterialTextField(dateField.getTextField());
         I18n.bindI18nTextProperty(startDateMaterialTextField.labelTextProperty(), i18nKey);
         startDateMaterialTextField.setAnimateLabel(false);
-        /*dateField.getView().setBorder(BorderFactory.newBorder(Color.GRAY, 10));
-        LayoutUtil.setPadding(dateField.getView(), 10);*/
         return dateField;
     }
 

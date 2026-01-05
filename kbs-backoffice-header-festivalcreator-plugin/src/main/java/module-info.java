@@ -15,10 +15,8 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires modality.base.client.i18n;
     requires modality.base.client.mainframe.fx;
     requires modality.base.shared.entities;
-    requires modality.base.shared.knownitems;
     requires modality.crm.backoffice.organization.fx;
-    requires modality.event.backoffice.activity.pricing.plugin;
-    requires modality.event.client.event.fx;
+    requires modality.event.backoffice.eventcreator;
     requires webfx.extras.action;
     requires webfx.extras.aria;
     requires webfx.extras.async;
@@ -37,12 +35,8 @@ module kbs.backoffice.header.festivalcreator.plugin {
     requires webfx.extras.validation;
     requires webfx.kit.util;
     requires webfx.platform.async;
-    requires webfx.platform.console;
-    requires webfx.platform.windowhistory;
-    requires webfx.stack.orm.datasourcemodel.service;
     requires webfx.stack.orm.domainmodel;
     requires webfx.stack.orm.entity;
-    requires modality.event.backoffice.eventcreator;
 
     // Exported packages
     exports org.kadampabookings.kbs.backoffice.festivalcreator;
