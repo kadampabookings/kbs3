@@ -49,6 +49,7 @@
         <plugin-module>modality-event-frontoffice-max-plugin</plugin-module>
         <plugin-module>kbs-frontoffice-bookingform-nkt-plugin</plugin-module>
         <plugin-module>kbs-frontoffice-bookingform-mkmc-plugin</plugin-module>
+        <plugin-module>kbs-frontoffice-bookingform-kmcny-plugin</plugin-module>
 
     </dependencies>
 
