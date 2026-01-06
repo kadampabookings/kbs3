@@ -857,9 +857,9 @@ public class ExistingBookingSection implements BookingFormSection {
                     PolicyAndDocumentAggregates policyAndDoc = result.policyAndDoc;
                     boolean isPrimary = person.getPrimaryKey().equals(userPerson.getPrimaryKey());
 
-                    if (policyAndDoc != null && policyAndDoc.getDocumentAggregate() != null) {
+                    if (policyAndDoc != null && policyAndDoc.documentAggregate() != null) {
                         // Has existing booking
-                        DocumentAggregate docAgg = policyAndDoc.getDocumentAggregate();
+                        DocumentAggregate docAgg = policyAndDoc.documentAggregate();
 
                         int classesBooked = docAgg.getAttendances() != null ? docAgg.getAttendances().size() : 0;
                         PriceCalculator priceCalculator = new PriceCalculator(docAgg);
