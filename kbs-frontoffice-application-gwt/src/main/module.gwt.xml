@@ -111,6 +111,8 @@
     <public path="" includes="images/organizations/"/>
     <resource path="org/kadampabookings/kbs/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/kbs/frontoffice/booking/"/>
+    <!--====================< kbs-frontoffice-bookingform-kmcny-plugin >====================-->
+    <source path="org/kadampabookings/kbs/frontoffice/bookingform/kmcny/usfestival"/>
     <!--====================< kbs-frontoffice-bookingform-mkmc-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/gpclass"/>
@@ -367,6 +369,14 @@
     <source path="one/modality/ecommerce/payment/client"/>
     <!--=======================< modality-ecommerce-payment-remote >========================-->
     <source path="one/modality/ecommerce/payment/spi/impl/remote"/>
+    <!--=======================< modality-ecommerce-policy-service >========================-->
+    <source path="one/modality/ecommerce/policy/service"/>
+    <source path="one/modality/ecommerce/policy/service/spi"/>
+    <!--===================< modality-ecommerce-policy-service-buscall >====================-->
+    <source path="one/modality/ecommerce/policy/service/buscall"/>
+    <source path="one/modality/ecommerce/policy/service/buscall/serial"/>
+    <!--====================< modality-ecommerce-policy-service-remote >====================-->
+    <source path="one/modality/ecommerce/policy/service/spi/impl/remote"/>
     <!--===================< modality-ecommerce-shared-pricecalculator >====================-->
     <source path="one/modality/ecommerce/shared/pricecalculator"/>
     <!--=========================< modality-event-client-event-fx >=========================-->
