@@ -6,8 +6,20 @@ import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
+import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
+import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
 
 /**
+ * Provider for the US Festival booking form (event type 38).
+ *
+ * <p>This provider creates the USFestivalBookingForm which features:</p>
+ * <ul>
+ *   <li>Registration type selection (In-Person / Online)</li>
+ *   <li>Accommodation selection</li>
+ *   <li>Festival day selection with meals and options</li>
+ *   <li>Standard checkout flow</li>
+ * </ul>
+ *
  * @author Bruno Salmon
  */
 public final class USFestivalBookingFormProvider implements BookingFormProvider {
@@ -26,6 +38,14 @@ public final class USFestivalBookingFormProvider implements BookingFormProvider 
 
     @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity, BookingFormEntryPoint entryPoint) {
-        return null;
+        // Build settings using the builder - event info is shown inside the form
+        EventBookingFormSettings settings = new EventBookingFormSettingsBuilder(event)
+            .setHeaderMaxTopBottomPadding(62)
+            .setShowNavigationBar(true)
+            .setShowPriceBar(false)
+            .setPartialEventAllowed(true)  // Festival allows partial attendance
+            .build();
+        USFestivalBookingForm bookingForm = new USFestivalBookingForm(activity, settings, entryPoint);
+        return bookingForm.getForm();
     }
 }
