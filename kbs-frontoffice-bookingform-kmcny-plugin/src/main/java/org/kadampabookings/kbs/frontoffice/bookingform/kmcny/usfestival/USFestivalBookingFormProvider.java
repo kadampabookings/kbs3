@@ -34,7 +34,7 @@ public final class USFestivalBookingFormProvider implements BookingFormProvider 
     @Override
     public int getPriority() {
         return APP_PRIORITY;
-    }
+    } //comment
 
     @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity, BookingFormEntryPoint entryPoint) {
