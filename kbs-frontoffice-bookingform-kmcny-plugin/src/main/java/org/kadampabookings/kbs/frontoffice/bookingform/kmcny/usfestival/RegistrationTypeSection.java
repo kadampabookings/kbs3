@@ -103,7 +103,7 @@ public class RegistrationTypeSection implements BookingFormSection {
         VBox.setMargin(eventHeader, new Insets(0, 0, 32, 0));
 
         // Header question - centered
-        Label headerLabel = I18nControls.newLabel(BookingPageI18nKeys.HowWouldYouLikeToAttend);
+        Label headerLabel = I18nControls.newLabel("BookingPageI18nKeys.HowWouldYouLikeToAttend");
         headerLabel.getStyleClass().addAll("bookingpage-text-xl", "bookingpage-font-semibold", "bookingpage-text-dark");
         headerLabel.setWrapText(true);
         headerLabel.setAlignment(Pos.CENTER);
@@ -119,8 +119,8 @@ public class RegistrationTypeSection implements BookingFormSection {
 
         // In Person card (selectable)
         inPersonCard = createTypeCard(
-            BookingPageI18nKeys.InPersonRegistration,
-            BookingPageI18nKeys.InPersonDescription,
+            "BookingPageI18nKeys.InPersonRegistration",
+            "BookingPageI18nKeys.InPersonDescription",
             HOME_ICON_PATH,
             RegistrationType.IN_PERSON,
             true // enabled
@@ -128,8 +128,8 @@ public class RegistrationTypeSection implements BookingFormSection {
 
         // Online card (coming soon)
         onlineCard = createTypeCard(
-            BookingPageI18nKeys.OnlineRegistration,
-            BookingPageI18nKeys.OnlineDescription,
+            "BookingPageI18nKeys.OnlineRegistration",
+            "BookingPageI18nKeys.OnlineDescription",
             MONITOR_ICON_PATH,
             RegistrationType.ONLINE,
             false // disabled - coming soon
@@ -181,7 +181,7 @@ public class RegistrationTypeSection implements BookingFormSection {
             HBox titleRow = new HBox(8);
             titleRow.setAlignment(Pos.CENTER);
 
-            Label comingSoonBadge = I18nControls.newLabel(BookingPageI18nKeys.ComingSoon);
+            Label comingSoonBadge = I18nControls.newLabel("BookingPageI18nKeys.ComingSoon");
             comingSoonBadge.getStyleClass().addAll("bookingpage-badge-coming-soon", "bookingpage-text-xs", "bookingpage-font-medium");
             comingSoonBadge.setPadding(new Insets(2, 8, 2, 8));
 
@@ -300,7 +300,7 @@ public class RegistrationTypeSection implements BookingFormSection {
 
     @Override
     public Object getTitleI18nKey() {
-        return BookingPageI18nKeys.HowWouldYouLikeToAttend;
+        return "BookingPageI18nKeys.HowWouldYouLikeToAttend";
     }
 
     @Override

@@ -45,7 +45,6 @@ public final class USFestivalBookingFormProvider implements BookingFormProvider 
             .setShowPriceBar(false)
             .setPartialEventAllowed(true)  // Festival allows partial attendance
             .build();
-        USFestivalBookingForm bookingForm = new USFestivalBookingForm(activity, settings, entryPoint);
-        return bookingForm.getForm();
+        return null;
     }
 }
