@@ -34,7 +34,7 @@ public final class USFestivalBookingFormProvider implements BookingFormProvider 
     @Override
     public int getPriority() {
         return APP_PRIORITY;
-    } //comment
+    }
 
     @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity, BookingFormEntryPoint entryPoint) {
@@ -45,6 +45,7 @@ public final class USFestivalBookingFormProvider implements BookingFormProvider 
             .setShowPriceBar(false)
             .setPartialEventAllowed(true)  // Festival allows partial attendance
             .build();
-        return null;
+        USFestivalBookingForm bookingForm = new USFestivalBookingForm(activity, settings, entryPoint);
+        return bookingForm.getForm();
     }
 }
