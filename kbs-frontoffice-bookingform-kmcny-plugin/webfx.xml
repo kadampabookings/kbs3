@@ -9,6 +9,7 @@
     <dependencies>
         <used-by-source-modules>
             <undetected-module>javafx-graphics</undetected-module>
+            <undetected-module>modality-ecommerce-shared-pricecalculator</undetected-module>
         </used-by-source-modules>
     </dependencies>
 
