@@ -82,6 +82,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private DefaultFestivalDaySelectionSection festivalDaySection;
     private DefaultMealsSelectionSection mealsSection;
     private DefaultAudioRecordingPhaseCoverageSection audioRecordingPhaseSection;
+    private DefaultTransportSection transportSection;  // Combined parking and shuttle section
     private DefaultAdditionalOptionsSection additionalOptionsSection;
     private DefaultRoommateInfoSection roommateInfoSection;
 
@@ -182,6 +183,8 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             populateMealsOptions();
             populateAudioRecordingPhaseOptions();
             populateAdditionalOptions();
+            // Set terms URL from event
+            setupTermsUrl();
         });
 
         // Bind stickyPriceHeader's totalPrice to WorkingBookingProperties.totalProperty()
@@ -299,6 +302,12 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         audioRecordingPhaseSection.setColorScheme(BookingFormColorScheme.WISDOM_BLUE);
         audioRecordingPhaseSection.setVisible(false);  // Hidden until populated
 
+        // Transport section - combines parking and shuttle options in one section
+        // Only visible when transport or parking options exist, shuttles enabled when dates match
+        transportSection = new DefaultTransportSection();
+        transportSection.setColorScheme(BookingFormColorScheme.WISDOM_BLUE);
+        transportSection.setVisible(false);  // Hidden until transport options populated
+
         additionalOptionsSection = new DefaultAdditionalOptionsSection();
         additionalOptionsSection.setColorScheme(BookingFormColorScheme.WISDOM_BLUE);
 
@@ -312,6 +321,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             festivalDaySection,
             mealsSection,
             audioRecordingPhaseSection,
+            transportSection,           // Transport section (parking + shuttle) before additional options
             additionalOptionsSection,
             roommateInfoSection)
             .setStep(true);
@@ -510,6 +520,29 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 if (mealsSection != null) {
                     mealsSection.setArrivalDate(arrival);
                     mealsSection.setDepartureDate(departure);
+                    // Also sync arrival/departure times - they may already be set in festivalDaySection
+                    // but not yet synced to mealsSection if dates changed before times were modified
+                    mealsSection.setArrivalTime(festivalDaySection.arrivalTimeProperty().get());
+                    mealsSection.setDepartureTime(festivalDaySection.departureTimeProperty().get());
+
+                    // Enable/disable early arrival and late departure pricing display
+                    // based on whether selected dates fall within those periods
+                    boolean hasEarlyArrival = arrival != null && eventStartDate != null && arrival.isBefore(eventStartDate);
+                    boolean hasLateDeparture = departure != null && eventEndDate != null && departure.isAfter(eventEndDate);
+
+                    // Track if state changed to determine if we need to rebuild cards
+                    boolean wasShowingEarly = mealsSection.isShowEarlyArrivalPricing();
+                    boolean wasShowingLate = mealsSection.isShowLateDeparturePricing();
+                    boolean stateChanged = (hasEarlyArrival != wasShowingEarly) || (hasLateDeparture != wasShowingLate);
+
+                    mealsSection.setShowEarlyArrivalPricing(hasEarlyArrival);
+                    mealsSection.setShowLateDeparturePricing(hasLateDeparture);
+
+                    // Rebuild meal cards when state changes (showing or hiding secondary prices)
+                    if (stateChanged) {
+                        mealsSection.rebuildMealCards();
+                        Console.log("USFestivalBookingForm: Updated meal cards - earlyArrival=" + hasEarlyArrival + ", lateDeparture=" + hasLateDeparture);
+                    }
                 }
             });
 
@@ -521,6 +554,8 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 }
                 // Re-book items to update meal counts based on new arrival time
                 bookSelectedItemsIntoWorkingBooking();
+                // Rebuild meal cards to ensure early/late pricing display is correct
+                rebuildMealCardsIfNeeded();
             });
 
             // Listen for departure time changes
@@ -531,24 +566,80 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 }
                 // Re-book items to update meal counts based on new departure time
                 bookSelectedItemsIntoWorkingBooking();
+                // Rebuild meal cards to ensure early/late pricing display is correct
+                rebuildMealCardsIfNeeded();
             });
         }
 
-        // Set up audio recording phase selection callback
-        if (audioRecordingPhaseSection != null) {
-            audioRecordingPhaseSection.setOnOptionSelected(option -> {
-                Console.log("USFestivalBookingForm: Audio recording phase selected - " +
-                    (option != null ? option.getName() : "None"));
-                // Re-book items to update audio recording selection
-                bookSelectedItemsIntoWorkingBooking();
-            });
-        }
+        // Set up audio recording phase section callbacks and date binding
+        setupAudioRecordingCallbacks();
 
         // Set up meals section callbacks for meal and dietary selection changes
         setupMealsCallbacks();
 
+        // Set up transport section callbacks and date binding (parking + shuttle)
+        setupTransportCallbacks();
+
         // Set up additional options section callbacks
         setupAdditionalOptionsCallbacks();
+    }
+
+    /**
+     * Sets up callbacks for the audio recording phase section to:
+     * - Listen for date changes from festivalDaySection to update option availability
+     * - Listen for option selection changes to re-book items
+     */
+    private void setupAudioRecordingCallbacks() {
+        if (audioRecordingPhaseSection == null || festivalDaySection == null) return;
+
+        // Bind arrival date to audio recording section (for availability)
+        festivalDaySection.arrivalDateProperty().addListener((obs, old, newDate) -> {
+            Console.log("USFestivalBookingForm: Updating audio recording arrival date - " + newDate);
+            audioRecordingPhaseSection.setArrivalDate(newDate);
+        });
+
+        // Bind departure date to audio recording section (for availability)
+        festivalDaySection.departureDateProperty().addListener((obs, old, newDate) -> {
+            Console.log("USFestivalBookingForm: Updating audio recording departure date - " + newDate);
+            audioRecordingPhaseSection.setDepartureDate(newDate);
+        });
+
+        // Listen for option selection changes
+        audioRecordingPhaseSection.setOnOptionSelected(option -> {
+            Console.log("USFestivalBookingForm: Audio recording phase selected - " +
+                (option != null ? option.getName() : "None"));
+            // Re-book items to update audio recording selection
+            bookSelectedItemsIntoWorkingBooking();
+        });
+    }
+
+    /**
+     * Sets up callbacks for the transport section (parking + shuttle) to:
+     * - Listen for date changes from festivalDaySection to update shuttle availability
+     * - Listen for parking and shuttle selection changes to re-book items
+     */
+    private void setupTransportCallbacks() {
+        if (transportSection == null || festivalDaySection == null) return;
+
+        // Bind arrival date to transport section (for shuttle availability)
+        festivalDaySection.arrivalDateProperty().addListener((obs, old, newDate) -> {
+            Console.log("USFestivalBookingForm: Updating transport arrival date - " + newDate);
+            transportSection.setArrivalDate(newDate);
+        });
+
+        // Bind departure date to transport section (for shuttle availability)
+        festivalDaySection.departureDateProperty().addListener((obs, old, newDate) -> {
+            Console.log("USFestivalBookingForm: Updating transport departure date - " + newDate);
+            transportSection.setDepartureDate(newDate);
+        });
+
+        // Listen for any transport selection changes (parking or shuttle)
+        transportSection.setOnSelectionChanged(() -> {
+            Console.log("USFestivalBookingForm: Transport selection changed - parking=" +
+                transportSection.getSelectedParkingOptions().size() + " options, shuttle=" +
+                transportSection.getSelectedShuttleOptions().size() + " options");
+            bookSelectedItemsIntoWorkingBooking();
+        });
     }
 
     /**
@@ -563,18 +654,24 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         mealsSection.wantsBreakfastProperty().addListener((obs, old, newVal) -> {
             Console.log("USFestivalBookingForm: Breakfast selection changed - " + newVal);
             bookSelectedItemsIntoWorkingBooking();
+            // Rebuild meal cards to ensure proper display with early/late pricing
+            rebuildMealCardsIfNeeded();
         });
 
         // Listen for lunch selection changes
         mealsSection.wantsLunchProperty().addListener((obs, old, newVal) -> {
             Console.log("USFestivalBookingForm: Lunch selection changed - " + newVal);
             bookSelectedItemsIntoWorkingBooking();
+            // Rebuild meal cards to ensure proper display with early/late pricing
+            rebuildMealCardsIfNeeded();
         });
 
         // Listen for dinner selection changes
         mealsSection.wantsDinnerProperty().addListener((obs, old, newVal) -> {
             Console.log("USFestivalBookingForm: Dinner selection changed - " + newVal);
             bookSelectedItemsIntoWorkingBooking();
+            // Rebuild meal cards to ensure proper display with early/late pricing
+            rebuildMealCardsIfNeeded();
         });
 
         // Listen for dietary preference changes (API-driven - selectedDietaryItem)
@@ -590,6 +687,20 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 (newVal != null ? newVal.name() : "None"));
             bookSelectedItemsIntoWorkingBooking();
         });
+    }
+
+    /**
+     * Rebuilds meal cards if early arrival or late departure pricing is enabled.
+     * This ensures the cards reflect the correct pricing state after meal selection changes.
+     */
+    private void rebuildMealCardsIfNeeded() {
+        if (mealsSection == null) return;
+
+        // Only rebuild if we have early/late pricing enabled
+        if (mealsSection.isShowEarlyArrivalPricing() || mealsSection.isShowLateDeparturePricing()) {
+            Console.log("USFestivalBookingForm: Rebuilding meal cards to update early/late pricing display");
+            mealsSection.rebuildMealCards();
+        }
     }
 
     /**
@@ -986,53 +1097,98 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         // Meals breakdown - split by meal type (Breakfast, Lunch, Dinner)
-        List<DocumentLine> mealsLines = tempBooking.getFamilyDocumentLines(KnownItemFamily.MEALS);
-        if (!mealsLines.isEmpty()) {
-            // Get meal Items from PolicyAggregate timelines
-            one.modality.base.shared.entities.Timeline breakfastTimeline = policyAggregate.getBreakfastTimeline();
-            one.modality.base.shared.entities.Timeline lunchTimeline = policyAggregate.getLunchTimeline();
-            one.modality.base.shared.entities.Timeline dinnerTimeline = policyAggregate.getDinnerTimeline();
+        // Get original meal ScheduledItems from PolicyAggregate (they have Timeline loaded)
+        List<ScheduledItem> originalMealsItems = policyAggregate.filterScheduledItemsOfFamily(KnownItemFamily.MEALS);
 
-            Item breakfastItem = breakfastTimeline != null ? breakfastTimeline.getItem() : null;
-            Item lunchItem = lunchTimeline != null ? lunchTimeline.getItem() : null;
-            Item dinnerItem = dinnerTimeline != null ? dinnerTimeline.getItem() : null;
+        // Get meal Items from PolicyAggregate timelines
+        one.modality.base.shared.entities.Timeline breakfastTimeline = policyAggregate.getBreakfastTimeline();
+        one.modality.base.shared.entities.Timeline lunchTimeline = policyAggregate.getLunchTimeline();
+        one.modality.base.shared.entities.Timeline dinnerTimeline = policyAggregate.getDinnerTimeline();
 
-            Console.log("USFestivalBookingForm: Meal items from timelines - breakfast=" +
-                (breakfastItem != null ? breakfastItem.getName() : "null") + ", lunch=" +
-                (lunchItem != null ? lunchItem.getName() : "null") + ", dinner=" +
-                (dinnerItem != null ? dinnerItem.getName() : "null"));
+        Item breakfastItem = breakfastTimeline != null ? breakfastTimeline.getItem() : null;
+        Item lunchItem = lunchTimeline != null ? lunchTimeline.getItem() : null;
+        Item dinnerItem = dinnerTimeline != null ? dinnerTimeline.getItem() : null;
 
-            // Categorize meal lines by matching Item entity
-            List<DocumentLine> breakfastLines = new ArrayList<>();
-            List<DocumentLine> lunchLines = new ArrayList<>();
-            List<DocumentLine> dinnerLines = new ArrayList<>();
+        Console.log("USFestivalBookingForm: Meal items from PolicyAggregate - breakfast=" +
+            (breakfastItem != null ? breakfastItem.getName() + " (id=" + breakfastItem.getPrimaryKey() + ")" : "null") +
+            ", lunch=" + (lunchItem != null ? lunchItem.getName() + " (id=" + lunchItem.getPrimaryKey() + ")" : "null") +
+            ", dinner=" + (dinnerItem != null ? dinnerItem.getName() + " (id=" + dinnerItem.getPrimaryKey() + ")" : "null"));
 
-            for (DocumentLine line : mealsLines) {
-                Item item = line.getItem();
-                if (item == null) continue;
+        // Categorize meal attendances by matching with ORIGINAL ScheduledItems (which have Timeline loaded)
+        List<one.modality.base.shared.entities.Attendance> breakfastAttendances = new ArrayList<>();
+        List<one.modality.base.shared.entities.Attendance> lunchAttendances = new ArrayList<>();
+        List<one.modality.base.shared.entities.Attendance> dinnerAttendances = new ArrayList<>();
 
-                // Match by Item entity (using primary key comparison)
-                if (breakfastItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(item, breakfastItem)) {
-                    breakfastLines.add(line);
-                } else if (lunchItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(item, lunchItem)) {
-                    lunchLines.add(line);
-                } else if (dinnerItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(item, dinnerItem)) {
-                    dinnerLines.add(line);
-                } else {
-                    Console.log("USFestivalBookingForm: Unknown meal type - item=" + item.getName());
+        List<one.modality.base.shared.entities.Attendance> bookedAttendances = tempBooking.getBookedAttendances();
+        Console.log("USFestivalBookingForm: Processing " + bookedAttendances.size() + " booked attendances for meal categorization");
+
+        int mealsAttendanceCount = 0;
+        for (one.modality.base.shared.entities.Attendance attendance : bookedAttendances) {
+            ScheduledItem attendanceSi = attendance.getScheduledItem();
+            if (attendanceSi == null) {
+                Console.log("USFestivalBookingForm: Attendance has null ScheduledItem");
+                continue;
+            }
+
+            // Find the ORIGINAL ScheduledItem from PolicyAggregate by primary key
+            // This ensures we have the Timeline loaded correctly
+            ScheduledItem originalSi = null;
+            for (ScheduledItem origItem : originalMealsItems) {
+                if (dev.webfx.stack.orm.entity.Entities.samePrimaryKey(origItem, attendanceSi)) {
+                    originalSi = origItem;
+                    break;
                 }
             }
 
-            Console.log("USFestivalBookingForm: Meal breakdown - breakfast=" + breakfastLines.size() +
-                ", lunch=" + lunchLines.size() + ", dinner=" + dinnerLines.size());
+            if (originalSi == null) {
+                // Not a meals ScheduledItem, skip
+                continue;
+            }
 
-            // Add breakdown for each meal type
-            addMealTypeBreakdown(breakdown, calc, "Breakfast", breakfastLines);
-            addMealTypeBreakdown(breakdown, calc, "Lunch", lunchLines);
-            addMealTypeBreakdown(breakdown, calc, "Dinner", dinnerLines);
+            mealsAttendanceCount++;
+
+            // Get the Timeline from the ORIGINAL ScheduledItem (which has it loaded)
+            one.modality.base.shared.entities.Timeline siTimeline = originalSi.getTimeline();
+            Item timelineItem = siTimeline != null ? siTimeline.getItem() : null;
+
+            Console.log("USFestivalBookingForm: Meal attendance - date=" + attendance.getDate() +
+                ", originalSi=" + (originalSi != null ? originalSi.getName() : "null") +
+                ", timeline=" + (siTimeline != null ? "id=" + siTimeline.getPrimaryKey() + ", startTime=" + siTimeline.getStartTime() : "null") +
+                ", timelineItem=" + (timelineItem != null ? timelineItem.getName() + " (id=" + timelineItem.getPrimaryKey() + ")" : "null"));
+
+            // Match by Timeline's Item (using primary key comparison)
+            if (breakfastItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, breakfastItem)) {
+                breakfastAttendances.add(attendance);
+                Console.log("USFestivalBookingForm: -> Matched BREAKFAST");
+            } else if (lunchItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, lunchItem)) {
+                lunchAttendances.add(attendance);
+                Console.log("USFestivalBookingForm: -> Matched LUNCH");
+            } else if (dinnerItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, dinnerItem)) {
+                dinnerAttendances.add(attendance);
+                Console.log("USFestivalBookingForm: -> Matched DINNER");
+            } else {
+                Console.log("USFestivalBookingForm: -> NO MATCH (breakfastItem=" +
+                    (breakfastItem != null ? breakfastItem.getPrimaryKey() : "null") +
+                    ", lunchItem=" + (lunchItem != null ? lunchItem.getPrimaryKey() : "null") +
+                    ", dinnerItem=" + (dinnerItem != null ? dinnerItem.getPrimaryKey() : "null") + ")");
+            }
         }
 
-        return new AccommodationPriceResult(totalPrice, breakdown);
+        Console.log("USFestivalBookingForm: Found " + mealsAttendanceCount + " meals attendances out of " + bookedAttendances.size() + " total");
+        Console.log("USFestivalBookingForm: Meal breakdown - breakfast=" + breakfastAttendances.size() +
+            ", lunch=" + lunchAttendances.size() + ", dinner=" + dinnerAttendances.size());
+
+        // Add breakdown for each meal type using attendance count and rate
+        addMealAttendanceBreakdown(breakdown, policyAggregate, "Breakfast", breakfastAttendances, breakfastTimeline);
+        addMealAttendanceBreakdown(breakdown, policyAggregate, "Lunch", lunchAttendances, lunchTimeline);
+        addMealAttendanceBreakdown(breakdown, policyAggregate, "Dinner", dinnerAttendances, dinnerTimeline);
+
+        // Calculate total from breakdown to ensure card price matches breakdown
+        // (tempBooking.calculateTotal() might include items not shown in breakdown due to categorization)
+        int breakdownTotal = breakdown.stream().mapToInt(item -> item.getPrice()).sum();
+        Console.log("USFestivalBookingForm: Breakdown total: " + breakdownTotal + " (tempBooking total was: " + totalPrice + ")");
+
+        return new AccommodationPriceResult(breakdownTotal, breakdown);
     }
 
     /**
@@ -1132,37 +1288,64 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         // Meals breakdown - split by meal type (Breakfast, Lunch, Dinner)
-        List<DocumentLine> mealsLines = tempBooking.getFamilyDocumentLines(KnownItemFamily.MEALS);
-        if (!mealsLines.isEmpty()) {
-            // Categorize meal lines by type using item name
-            List<DocumentLine> breakfastLines = new ArrayList<>();
-            List<DocumentLine> lunchLines = new ArrayList<>();
-            List<DocumentLine> dinnerLines = new ArrayList<>();
+        // Get original meal ScheduledItems from PolicyAggregate (they have Timeline loaded)
+        List<ScheduledItem> originalMealsItems = policyAggregate.filterScheduledItemsOfFamily(KnownItemFamily.MEALS);
 
-            for (DocumentLine line : mealsLines) {
-                Item item = line.getItem();
-                if (item == null) continue;
+        // Get meal Items from PolicyAggregate timelines
+        one.modality.base.shared.entities.Timeline breakfastTimeline = policyAggregate.getBreakfastTimeline();
+        one.modality.base.shared.entities.Timeline lunchTimeline = policyAggregate.getLunchTimeline();
+        one.modality.base.shared.entities.Timeline dinnerTimeline = policyAggregate.getDinnerTimeline();
 
-                String itemName = item.getName() != null ? item.getName() : "";
-                String itemNameLower = itemName.toLowerCase();
+        Item breakfastItem = breakfastTimeline != null ? breakfastTimeline.getItem() : null;
+        Item lunchItem = lunchTimeline != null ? lunchTimeline.getItem() : null;
+        Item dinnerItem = dinnerTimeline != null ? dinnerTimeline.getItem() : null;
 
-                if (itemNameLower.equals("breakfast") || itemNameLower.contains("breakfast")) {
-                    breakfastLines.add(line);
-                } else if (itemNameLower.equals("lunch") || itemNameLower.contains("lunch")) {
-                    lunchLines.add(line);
-                } else if (itemNameLower.equals("dinner") || itemNameLower.equals("supper") ||
-                           itemNameLower.contains("dinner") || itemNameLower.contains("supper")) {
-                    dinnerLines.add(line);
+        // Categorize meal attendances by matching with ORIGINAL ScheduledItems (which have Timeline loaded)
+        List<one.modality.base.shared.entities.Attendance> breakfastAttendances = new ArrayList<>();
+        List<one.modality.base.shared.entities.Attendance> lunchAttendances = new ArrayList<>();
+        List<one.modality.base.shared.entities.Attendance> dinnerAttendances = new ArrayList<>();
+
+        List<one.modality.base.shared.entities.Attendance> bookedAttendances = tempBooking.getBookedAttendances();
+
+        for (one.modality.base.shared.entities.Attendance attendance : bookedAttendances) {
+            ScheduledItem attendanceSi = attendance.getScheduledItem();
+            if (attendanceSi == null) continue;
+
+            // Find the ORIGINAL ScheduledItem from PolicyAggregate by primary key
+            ScheduledItem originalSi = null;
+            for (ScheduledItem origItem : originalMealsItems) {
+                if (dev.webfx.stack.orm.entity.Entities.samePrimaryKey(origItem, attendanceSi)) {
+                    originalSi = origItem;
+                    break;
                 }
             }
 
-            // Add breakdown for each meal type
-            addMealTypeBreakdown(breakdown, calc, "Breakfast", breakfastLines);
-            addMealTypeBreakdown(breakdown, calc, "Lunch", lunchLines);
-            addMealTypeBreakdown(breakdown, calc, "Dinner", dinnerLines);
+            if (originalSi == null) continue;
+
+            // Get the Timeline from the ORIGINAL ScheduledItem (which has it loaded)
+            one.modality.base.shared.entities.Timeline siTimeline = originalSi.getTimeline();
+            Item timelineItem = siTimeline != null ? siTimeline.getItem() : null;
+
+            // Match by Timeline's Item (using primary key comparison)
+            if (breakfastItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, breakfastItem)) {
+                breakfastAttendances.add(attendance);
+            } else if (lunchItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, lunchItem)) {
+                lunchAttendances.add(attendance);
+            } else if (dinnerItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, dinnerItem)) {
+                dinnerAttendances.add(attendance);
+            }
         }
 
-        return new AccommodationPriceResult(totalPrice, breakdown);
+        // Add breakdown for each meal type using attendance count and rate
+        addMealAttendanceBreakdown(breakdown, policyAggregate, "Breakfast", breakfastAttendances, breakfastTimeline);
+        addMealAttendanceBreakdown(breakdown, policyAggregate, "Lunch", lunchAttendances, lunchTimeline);
+        addMealAttendanceBreakdown(breakdown, policyAggregate, "Dinner", dinnerAttendances, dinnerTimeline);
+
+        // Calculate total from breakdown to ensure card price matches breakdown
+        int breakdownTotal = breakdown.stream().mapToInt(item -> item.getPrice()).sum();
+        Console.log("USFestivalBookingForm: Share Accommodation breakdown total: " + breakdownTotal + " (calculated total was: " + totalPrice + ")");
+
+        return new AccommodationPriceResult(breakdownTotal, breakdown);
     }
 
     /**
@@ -1183,112 +1366,91 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     }
 
     /**
-     * Adds a meal type breakdown item if there are lines for that type.
-     * Shows the date range from the document lines.
+     * Adds a meal type breakdown item based on Attendances.
+     * Uses the rate from PolicyAggregate to calculate the price.
      */
-    private void addMealTypeBreakdown(List<USFestivalAccommodationSelectionSection.PriceBreakdownItem> breakdown,
-                                       PriceCalculator calc,
-                                       String mealType, List<DocumentLine> mealLines) {
-        if (mealLines.isEmpty()) return;
+    private void addMealAttendanceBreakdown(List<USFestivalAccommodationSelectionSection.PriceBreakdownItem> breakdown,
+                                             PolicyAggregate policyAggregate,
+                                             String mealType,
+                                             List<one.modality.base.shared.entities.Attendance> attendances,
+                                             one.modality.base.shared.entities.Timeline timeline) {
+        if (attendances.isEmpty() || timeline == null) return;
 
-        int price = calc.calculateDocumentLinesPrice(mealLines);
-        if (price <= 0) return;
+        // Get the rate for this meal type from PolicyAggregate
+        Item mealItem = timeline.getItem();
+        if (mealItem == null) return;
 
-        // Get date range from document lines
+        // Get daily rate for this meal item - use same approach as DefaultMealsSelectionSection
+        int pricePerMeal = policyAggregate.filterDailyRatesStreamOfSiteAndItem(null, mealItem)
+            .findFirst()
+            .map(one.modality.base.shared.entities.Rate::getPrice)
+            .orElseGet(() -> {
+                // Fallback: search all daily rates for this item regardless of site
+                return policyAggregate.getDailyRatesStream()
+                    .filter(r -> r.getItem() != null && r.getItem().getPrimaryKey() != null
+                        && r.getItem().getPrimaryKey().equals(mealItem.getPrimaryKey()))
+                    .findFirst()
+                    .map(one.modality.base.shared.entities.Rate::getPrice)
+                    .orElse(0);
+            });
+
+        int totalPrice = pricePerMeal * attendances.size();
+
+        Console.log("USFestivalBookingForm: " + mealType + " - " + attendances.size() +
+            " attendances x $" + (pricePerMeal / 100.0) + " = $" + (totalPrice / 100.0));
+
+        // Show item in breakdown even if price is $0 (e.g., included breakfast)
+        // Get date range from attendances
         LocalDate minDate = null;
         LocalDate maxDate = null;
-        for (DocumentLine line : mealLines) {
-            LocalDate start = line.getStartDate();
-            LocalDate end = line.getEndDate();
-            if (start != null) {
-                if (minDate == null || start.isBefore(minDate)) minDate = start;
-                if (maxDate == null || start.isAfter(maxDate)) maxDate = start;
-            }
-            if (end != null) {
-                if (maxDate == null || end.isAfter(maxDate)) maxDate = end;
+        for (one.modality.base.shared.entities.Attendance attendance : attendances) {
+            LocalDate date = attendance.getDate();
+            if (date != null) {
+                if (minDate == null || date.isBefore(minDate)) minDate = date;
+                if (maxDate == null || date.isAfter(maxDate)) maxDate = date;
             }
         }
 
         String dateRange = formatDateRange(minDate, maxDate);
         breakdown.add(new USFestivalAccommodationSelectionSection.PriceBreakdownItem(
-            mealType, dateRange, price));
+            mealType, dateRange, totalPrice));
     }
 
     /**
      * Books meals into a temporary WorkingBooking for price calculation.
-     * Uses EventPart boundaries to determine which meals to include - all ScheduledItems
-     * between the start boundary scheduledItem and end boundary scheduledItem.
+     * Uses main EventPart boundaries to filter meals (excludes early arrival/late departure).
      *
      * @param workingBooking the temporary WorkingBooking
      * @param policyAggregate the policy data
-     * @param arrivalDate the arrival date (used for fallback if no boundaries)
-     * @param departureDate the departure date (used for fallback if no boundaries)
+     * @param arrivalDate the booking arrival date (for accommodation nights calculation)
+     * @param departureDate the booking departure date (for accommodation nights calculation)
      * @param hasAccommodation true if booking includes accommodation (for breakfast calculation)
      */
     private void bookMealsForPriceCalculation(WorkingBooking workingBooking, PolicyAggregate policyAggregate,
                                                LocalDate arrivalDate, LocalDate departureDate, boolean hasAccommodation) {
         List<ScheduledItem> mealsItems = policyAggregate.filterScheduledItemsOfFamily(KnownItemFamily.MEALS);
         if (mealsItems.isEmpty()) {
-            Console.log("USFestivalBookingForm: No meals items for price calculation");
+            Console.log("USFestivalBookingForm: No meals ScheduledItems found");
             return;
         }
 
-        // Get the main EventPart to find boundaries
+        Console.log("USFestivalBookingForm: Found " + mealsItems.size() + " total meal ScheduledItems");
+
+        // Get the main EventPart to find boundaries (including time)
         one.modality.base.shared.entities.EventPart mainEventPart = findMainEventPart(policyAggregate);
 
-        // Get boundary ScheduledItems - these define the first and last meals of the event
-        ScheduledItem startBoundaryMeal = null;
-        ScheduledItem endBoundaryMeal = null;
-
         if (mainEventPart != null) {
-            one.modality.base.shared.entities.ScheduledBoundary startBoundary = mainEventPart.getStartBoundary();
-            one.modality.base.shared.entities.ScheduledBoundary endBoundary = mainEventPart.getEndBoundary();
-
-            if (startBoundary != null) {
-                startBoundaryMeal = startBoundary.getScheduledItem();
-            }
-            if (endBoundary != null) {
-                endBoundaryMeal = endBoundary.getScheduledItem();
-            }
-
-            Console.log("USFestivalBookingForm: Main EventPart boundaries - start: " +
-                (startBoundaryMeal != null ? startBoundaryMeal.getPrimaryKey() + " (" + (startBoundaryMeal.getItem() != null ? startBoundaryMeal.getItem().getName() : "null") + ")" : "null") +
-                ", end: " +
-                (endBoundaryMeal != null ? endBoundaryMeal.getPrimaryKey() + " (" + (endBoundaryMeal.getItem() != null ? endBoundaryMeal.getItem().getName() : "null") + ")" : "null"));
+            Console.log("USFestivalBookingForm: Main EventPart: " + mainEventPart.getName() +
+                " (" + mainEventPart.getStartDate() + " " + mainEventPart.getStartTime() +
+                " to " + mainEventPart.getEndDate() + " " + mainEventPart.getEndTime() + ")");
         }
 
-        // Get boundary date/time for comparison
-        LocalDate startDate = null;
-        LocalTime startTime = null;
-        LocalDate endDate = null;
-        LocalTime endTime = null;
+        // Get meal Items from PolicyAggregate timelines for breakfast detection
+        final one.modality.base.shared.entities.Timeline breakfastTimeline = policyAggregate.getBreakfastTimeline();
+        final Item breakfastItem = breakfastTimeline != null ? breakfastTimeline.getItem() : null;
 
-        if (startBoundaryMeal != null) {
-            startDate = startBoundaryMeal.getDate();
-            startTime = startBoundaryMeal.getStartTime();
-            if (startTime == null && startBoundaryMeal.getTimeline() != null) {
-                startTime = startBoundaryMeal.getTimeline().getStartTime();
-            }
-        }
-        if (endBoundaryMeal != null) {
-            endDate = endBoundaryMeal.getDate();
-            endTime = endBoundaryMeal.getStartTime();
-            if (endTime == null && endBoundaryMeal.getTimeline() != null) {
-                endTime = endBoundaryMeal.getTimeline().getStartTime();
-            }
-        }
-
-        // Fallback to arrival/departure dates if no boundary info
-        if (startDate == null) startDate = arrivalDate;
-        if (endDate == null) endDate = departureDate;
-
-        Console.log("USFestivalBookingForm: Meal boundaries - start: " + startDate + " " + startTime +
-            ", end: " + endDate + " " + endTime);
-
-        final LocalDate finalStartDate = startDate;
-        final LocalTime finalStartTime = startTime;
-        final LocalDate finalEndDate = endDate;
-        final LocalTime finalEndTime = endTime;
+        Console.log("USFestivalBookingForm: Breakfast item from PolicyAggregate: " +
+            (breakfastItem != null ? breakfastItem.getName() + " (id=" + breakfastItem.getPrimaryKey() + ")" : "null"));
 
         // Build accommodation nights set for breakfast calculation
         java.util.Set<LocalDate> accommodationNights = new java.util.HashSet<>();
@@ -1300,39 +1462,48 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             }
         }
 
-        // Get breakfast Item from PolicyAggregate timeline for comparison
-        one.modality.base.shared.entities.Timeline breakfastTimeline = policyAggregate.getBreakfastTimeline();
-        final Item breakfastItem = breakfastTimeline != null ? breakfastTimeline.getItem() : null;
+        // Use ScheduledItems.filterOverPeriod() which properly handles time-based boundary checks
+        // This uses the Period interface implemented by EventPart (via BoundaryPeriod)
+        List<ScheduledItem> mealsWithinBoundaries;
+        if (mainEventPart != null) {
+            mealsWithinBoundaries = one.modality.base.shared.entities.util.ScheduledItems.filterOverPeriod(mealsItems, mainEventPart);
+            Console.log("USFestivalBookingForm: After filterOverPeriod: " + mealsWithinBoundaries.size() + " meals within EventPart boundaries");
 
-        // Filter meals that fall within the boundary range
-        List<ScheduledItem> mealsToBook = mealsItems.stream()
-            .filter(msi -> {
-                LocalDate mealDate = msi.getDate();
-                if (mealDate == null) return false;
-
-                // Get meal time for comparison
-                LocalTime mealTime = msi.getStartTime();
-                if (mealTime == null && msi.getTimeline() != null) {
-                    mealTime = msi.getTimeline().getStartTime();
+            // Debug: log which meals were excluded
+            for (ScheduledItem msi : mealsItems) {
+                if (!mealsWithinBoundaries.contains(msi)) {
+                    LocalDate mealDate = msi.getDate();
+                    one.modality.base.shared.entities.Timeline mealTimeline = msi.getTimeline();
+                    String mealType = mealTimeline != null && mealTimeline.getItem() != null ? mealTimeline.getItem().getName() : "Unknown";
+                    LocalTime mealTime = one.modality.base.shared.entities.util.ScheduledItems.getSessionStartTime(msi);
+                    Console.log("USFestivalBookingForm: Excluded " + mealType + " on " + mealDate + " at " + mealTime +
+                        " (outside EventPart boundaries)");
                 }
+            }
+        } else {
+            // Fallback: use all meals if no EventPart found
+            mealsWithinBoundaries = mealsItems;
+            Console.log("USFestivalBookingForm: No EventPart found, using all meals");
+        }
 
-                // Check if meal is within boundary range
-                return isWithinBoundaries(mealDate, mealTime, finalStartDate, finalStartTime, finalEndDate, finalEndTime);
-            })
+        // Filter meals by arrival/departure dates and breakfast accommodation rule
+        final one.modality.base.shared.entities.EventPart finalMainEventPart = mainEventPart;
+        List<ScheduledItem> mealsToBook = mealsWithinBoundaries.stream()
             .filter(msi -> {
                 // For breakfast with accommodation, only include if guest stayed overnight
                 if (!hasAccommodation) return true;
 
-                // Determine if this is a breakfast by matching Item entity
-                Item item = msi.getItem();
-                if (item == null) return true;
+                // Check if this is a breakfast by comparing Timeline's Item with PolicyAggregate's breakfast Item
+                one.modality.base.shared.entities.Timeline msiTimeline = msi.getTimeline();
+                Item timelineItem = msiTimeline != null ? msiTimeline.getItem() : null;
 
-                boolean isBreakfast = breakfastItem != null &&
-                    dev.webfx.stack.orm.entity.Entities.samePrimaryKey(item, breakfastItem);
+                boolean isBreakfast = breakfastItem != null && timelineItem != null &&
+                    dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, breakfastItem);
 
                 if (isBreakfast) {
                     LocalDate mealDate = msi.getDate();
                     if (mealDate == null) return false;
+                    // Breakfast is only included if guest stayed the night before
                     LocalDate nightBefore = mealDate.minusDays(1);
                     return accommodationNights.contains(nightBefore);
                 }
@@ -1340,63 +1511,232 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             })
             .collect(java.util.stream.Collectors.toList());
 
-        Console.log("USFestivalBookingForm: Booking " + mealsToBook.size() + " meal items within boundaries for price calculation");
+        Console.log("USFestivalBookingForm: Booking " + mealsToBook.size() + " meal ScheduledItems within EventPart time boundaries");
 
+        // Book all meals
         if (!mealsToBook.isEmpty()) {
             workingBooking.bookScheduledItems(mealsToBook, false);
         }
     }
 
     /**
-     * Finds the main EventPart (the one matching the event's start/end dates).
+     * Finds the main EventPart (the one that is neither early arrival nor late departure).
+     * Uses PolicyAggregate's getEarlyArrivalPart() and getLateDeparturePart() to identify
+     * which EventParts to exclude, then returns the remaining "main" EventPart.
      */
     private one.modality.base.shared.entities.EventPart findMainEventPart(PolicyAggregate policyAggregate) {
-        one.modality.base.shared.entities.Event event = policyAggregate.getEvent();
-        if (event == null) return null;
-
-        LocalDate eventStart = event.getStartDate();
-        LocalDate eventEnd = event.getEndDate();
-        if (eventStart == null || eventEnd == null) return null;
-
         dev.webfx.stack.orm.entity.EntityList<one.modality.base.shared.entities.EventPart> eventParts = policyAggregate.getEventParts();
-        if (eventParts == null) return null;
+        if (eventParts == null || eventParts.isEmpty()) {
+            Console.log("USFestivalBookingForm: No EventParts found");
+            return null;
+        }
+
+        // First try PolicyAggregate's methods
+        one.modality.base.shared.entities.EventPart earlyArrivalPart = policyAggregate.getEarlyArrivalPart();
+        one.modality.base.shared.entities.EventPart lateDeparturePart = policyAggregate.getLateDeparturePart();
+
+        Console.log("USFestivalBookingForm: PolicyAggregate early arrival part: " + (earlyArrivalPart != null ? earlyArrivalPart.getName() : "none"));
+        Console.log("USFestivalBookingForm: PolicyAggregate late departure part: " + (lateDeparturePart != null ? lateDeparturePart.getName() : "none"));
+
+        // If PolicyAggregate methods work, use them to find the main part
+        if (earlyArrivalPart != null || lateDeparturePart != null) {
+            for (one.modality.base.shared.entities.EventPart part : eventParts) {
+                boolean isEarlyArrival = earlyArrivalPart != null &&
+                    dev.webfx.stack.orm.entity.Entities.samePrimaryKey(part, earlyArrivalPart);
+                boolean isLateDeparture = lateDeparturePart != null &&
+                    dev.webfx.stack.orm.entity.Entities.samePrimaryKey(part, lateDeparturePart);
+
+                if (!isEarlyArrival && !isLateDeparture) {
+                    Console.log("USFestivalBookingForm: Found main EventPart: " + part.getName() +
+                        " (" + part.getStartDate() + " " + part.getStartTime() +
+                        " to " + part.getEndDate() + " " + part.getEndTime() + ")");
+                    return part;
+                }
+            }
+        }
+
+        // If PolicyAggregate methods return null, identify parts by their dates
+        // The main event is typically the longest part (most days)
+        Console.log("USFestivalBookingForm: PolicyAggregate methods returned null, identifying parts by dates");
+        one.modality.base.shared.entities.EventPart longestPart = null;
+        long longestDuration = -1;
 
         for (one.modality.base.shared.entities.EventPart part : eventParts) {
             LocalDate partStart = part.getStartDate();
             LocalDate partEnd = part.getEndDate();
-            if (partStart != null && partEnd != null &&
-                partStart.equals(eventStart) && partEnd.equals(eventEnd)) {
-                Console.log("USFestivalBookingForm: Found main EventPart: " + part.getName());
-                return part;
+            if (partStart != null && partEnd != null) {
+                long duration = ChronoUnit.DAYS.between(partStart, partEnd);
+                Console.log("USFestivalBookingForm: EventPart " + part.getName() +
+                    " (" + partStart + " to " + partEnd + ") duration: " + duration + " days");
+                if (duration > longestDuration) {
+                    longestDuration = duration;
+                    longestPart = part;
+                }
             }
         }
 
-        Console.log("USFestivalBookingForm: No main EventPart found matching event dates");
-        return null;
+        if (longestPart != null) {
+            Console.log("USFestivalBookingForm: Identified main EventPart by longest duration: " + longestPart.getName() +
+                " (" + longestPart.getStartDate() + " " + longestPart.getStartTime() +
+                " to " + longestPart.getEndDate() + " " + longestPart.getEndTime() + ")");
+        } else {
+            Console.log("USFestivalBookingForm: No main EventPart found");
+        }
+
+        return longestPart;
     }
 
     /**
-     * Checks if a meal (date + time) falls within the boundary range.
-     * A meal is included if it's >= start boundary and <= end boundary.
+     * Determines which meal boundary (BREAKFAST, LUNCH, DINNER) corresponds to a given time.
+     * Used to identify which meal marks the start/end of the main event period.
+     *
+     * Time ranges:
+     * - BREAKFAST: before 10:00 (typically 7:00-9:00)
+     * - LUNCH: 10:00 to 15:00 (typically 12:00-13:30)
+     * - DINNER: after 15:00 (typically 18:00-19:00)
+     *
+     * @param time the time to classify
+     * @return the corresponding MealBoundary
      */
-    private boolean isWithinBoundaries(LocalDate mealDate, LocalTime mealTime,
-                                        LocalDate startDate, LocalTime startTime,
-                                        LocalDate endDate, LocalTime endTime) {
-        if (mealDate == null || startDate == null || endDate == null) return false;
-
-        // Check start boundary (meal must be >= start)
-        if (mealDate.isBefore(startDate)) return false;
-        if (mealDate.equals(startDate) && startTime != null && mealTime != null) {
-            if (mealTime.isBefore(startTime)) return false;
+    private DefaultMealsSelectionSection.MealBoundary determineMealFromTime(LocalTime time) {
+        if (time == null) {
+            return DefaultMealsSelectionSection.MealBoundary.BREAKFAST; // Default to breakfast (start of day)
         }
 
-        // Check end boundary (meal must be <= end)
-        if (mealDate.isAfter(endDate)) return false;
-        if (mealDate.equals(endDate) && endTime != null && mealTime != null) {
-            if (mealTime.isAfter(endTime)) return false;
+        LocalTime lunchStart = LocalTime.of(10, 0);   // Lunch starts at 10:00
+        LocalTime dinnerStart = LocalTime.of(15, 0);  // Dinner starts at 15:00
+
+        if (time.isBefore(lunchStart)) {
+            return DefaultMealsSelectionSection.MealBoundary.BREAKFAST;
+        } else if (time.isBefore(dinnerStart)) {
+            return DefaultMealsSelectionSection.MealBoundary.LUNCH;
+        } else {
+            return DefaultMealsSelectionSection.MealBoundary.DINNER;
+        }
+    }
+
+    /**
+     * Determines which meal boundary corresponds to a ScheduledBoundary.
+     * Uses the actual ScheduledItem from the boundary to identify the meal type.
+     * Falls back to time-based detection if the boundary item is not a meal.
+     *
+     * @param boundary the ScheduledBoundary from an EventPart
+     * @param fallbackTime the time to use if the boundary item is not a meal
+     * @return the corresponding MealBoundary
+     */
+    private DefaultMealsSelectionSection.MealBoundary determineMealFromBoundary(
+            one.modality.base.shared.entities.ScheduledBoundary boundary, LocalTime fallbackTime) {
+        if (boundary == null) {
+            Console.log("USFestivalBookingForm: ScheduledBoundary is null, falling back to time-based detection");
+            return determineMealFromTime(fallbackTime);
         }
 
-        return true;
+        one.modality.base.shared.entities.ScheduledItem scheduledItem = boundary.getScheduledItem();
+        if (scheduledItem == null) {
+            Console.log("USFestivalBookingForm: Boundary ScheduledItem is null, falling back to time-based detection");
+            return determineMealFromTime(fallbackTime);
+        }
+
+        // Check if the boundary item is a meal
+        boolean isMeal = one.modality.base.shared.entities.util.ScheduledItems.isOfFamily(
+            scheduledItem, one.modality.base.shared.knownitems.KnownItemFamily.MEALS);
+
+        if (!isMeal) {
+            Console.log("USFestivalBookingForm: Boundary item '" + scheduledItem.getName() +
+                "' is not a meal, falling back to time-based detection");
+            return determineMealFromTime(fallbackTime);
+        }
+
+        // Determine meal type from item name
+        String itemName = scheduledItem.getName();
+        if (itemName == null) {
+            // Try to get from the Item entity
+            one.modality.base.shared.entities.Item item = scheduledItem.getItem();
+            if (item != null) {
+                itemName = item.getName();
+            }
+        }
+
+        if (itemName != null) {
+            String lowerName = itemName.toLowerCase();
+            Console.log("USFestivalBookingForm: Boundary meal item name: '" + itemName + "'");
+
+            if (lowerName.contains("breakfast") || lowerName.contains("morning")) {
+                return DefaultMealsSelectionSection.MealBoundary.BREAKFAST;
+            } else if (lowerName.contains("lunch") || lowerName.contains("midday")) {
+                return DefaultMealsSelectionSection.MealBoundary.LUNCH;
+            } else if (lowerName.contains("dinner") || lowerName.contains("supper") || lowerName.contains("evening")) {
+                return DefaultMealsSelectionSection.MealBoundary.DINNER;
+            }
+        }
+
+        // If we couldn't determine from name, fall back to time-based detection
+        Console.log("USFestivalBookingForm: Could not determine meal type from item name '" + itemName +
+            "', falling back to time-based detection");
+        return determineMealFromTime(fallbackTime);
+    }
+
+    /**
+     * Creates a Period with actual times derived from the boundary ScheduledItems.
+     * The EventPart's times may be null (defaulting to MIN/MAX), so we derive the actual
+     * times from the boundary ScheduledItems which reference specific meals.
+     *
+     * @param eventPart the main EventPart
+     * @param startBoundary the start ScheduledBoundary
+     * @param endBoundary the end ScheduledBoundary
+     * @param mealItems list of meal ScheduledItems for fallback lookup
+     * @return a Period with actual boundary times
+     */
+    private one.modality.base.shared.entities.Period createMainEventPeriodWithBoundaryTimes(
+            one.modality.base.shared.entities.EventPart eventPart,
+            one.modality.base.shared.entities.ScheduledBoundary startBoundary,
+            one.modality.base.shared.entities.ScheduledBoundary endBoundary,
+            java.util.List<one.modality.base.shared.entities.ScheduledItem> mealItems) {
+
+        // Get dates from the EventPart
+        LocalDate startDate = eventPart.getStartDate();
+        LocalDate endDate = eventPart.getEndDate();
+
+        // Get times from the boundary ScheduledItems using the utility
+        LocalTime startTime = one.modality.base.shared.entities.util.ScheduledBoundaries.getTime(startBoundary, false);
+        LocalTime endTime = one.modality.base.shared.entities.util.ScheduledBoundaries.getTime(endBoundary, true);
+
+        // Debug logging to understand what data is available
+        Console.log("USFestivalBookingForm: Creating main event period with boundary times:");
+        if (startBoundary != null) {
+            one.modality.base.shared.entities.ScheduledItem startItem = startBoundary.getScheduledItem();
+            Console.log("  startBoundary: scheduledItem=" + (startItem != null ? startItem.getName() : "null") +
+                ", atStartTime=" + startBoundary.isAtStartTime());
+            if (startItem != null) {
+                Console.log("    startItem times: start=" + startItem.getStartTime() + ", end=" + startItem.getEndTime());
+            }
+        } else {
+            Console.log("  startBoundary: null");
+        }
+        if (endBoundary != null) {
+            one.modality.base.shared.entities.ScheduledItem endItem = endBoundary.getScheduledItem();
+            Console.log("  endBoundary: scheduledItem=" + (endItem != null ? endItem.getName() : "null") +
+                ", atStartTime=" + endBoundary.isAtStartTime());
+            if (endItem != null) {
+                Console.log("    endItem times: start=" + endItem.getStartTime() + ", end=" + endItem.getEndTime());
+            }
+        } else {
+            Console.log("  endBoundary: null");
+        }
+        Console.log("  Derived times: startTime=" + startTime + ", endTime=" + endTime);
+
+        // Create final variables for the anonymous class
+        LocalDate finalStartDate = startDate;
+        LocalTime finalStartTime = startTime;
+        LocalDate finalEndDate = endDate;
+        LocalTime finalEndTime = endTime;
+
+        return new one.modality.base.shared.entities.Period() {
+            @Override public LocalDate getStartDate() { return finalStartDate; }
+            @Override public LocalTime getStartTime() { return finalStartTime; }
+            @Override public LocalDate getEndDate() { return finalEndDate; }
+            @Override public LocalTime getEndTime() { return finalEndTime; }
+        };
     }
 
     /**
@@ -1531,6 +1871,70 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         Console.log("USFestivalBookingForm: Populating festival days from PolicyAggregate");
 
+        // Find the main EventPart to get accurate boundary dates
+        // The main EventPart excludes early arrival and late departure periods
+        one.modality.base.shared.entities.EventPart mainEventPart = findMainEventPart(policyAggregate);
+
+        // Set main event boundaries on festival day section for correct time option filtering
+        // This must be done BEFORE populateFromPolicyAggregate so the time options are correct
+        if (mainEventPart != null) {
+            LocalDate mainStartDate = mainEventPart.getStartDate();
+            LocalDate mainEndDate = mainEventPart.getEndDate();
+
+            Console.log("USFestivalBookingForm: Setting festival day section main event boundaries: " +
+                mainStartDate + " to " + mainEndDate);
+
+            if (mainStartDate != null) {
+                festivalDaySection.setMainEventStartDate(mainStartDate);
+            }
+            if (mainEndDate != null) {
+                festivalDaySection.setMainEventEndDate(mainEndDate);
+            }
+        }
+
+        // Check if there's a late departure part
+        one.modality.base.shared.entities.EventPart lateDeparturePart = policyAggregate.getLateDeparturePart();
+        // Also check manually by comparing EventPart dates to main event dates
+        // (PolicyAggregate.getLateDeparturePart() may not work if event dates include early/late)
+        if (lateDeparturePart == null && mainEventPart != null) {
+            // Find EventPart that starts AFTER the main event ends (late departure)
+            dev.webfx.stack.orm.entity.EntityList<one.modality.base.shared.entities.EventPart> eventParts = policyAggregate.getEventParts();
+            LocalDate mainEndDate = mainEventPart.getEndDate();
+            if (eventParts != null && mainEndDate != null) {
+                for (one.modality.base.shared.entities.EventPart part : eventParts) {
+                    // Skip the main event part
+                    boolean isMainPart = dev.webfx.stack.orm.entity.Entities.samePrimaryKey(part, mainEventPart);
+                    if (isMainPart) {
+                        continue;
+                    }
+
+                    // Check if this part's start date is after the main event's end date
+                    // This identifies it as a late departure part
+                    LocalDate partStartDate = part.getStartDate();
+                    if (partStartDate != null && !partStartDate.isBefore(mainEndDate)) {
+                        lateDeparturePart = part;
+                        Console.log("USFestivalBookingForm: Found late departure part by date: " + part.getName() +
+                            " (starts " + partStartDate + " which is on or after main event end " + mainEndDate + ")");
+                        break;
+                    }
+                }
+            }
+        }
+
+        festivalDaySection.setHasLateDeparturePart(lateDeparturePart != null);
+
+        // Set the late departure end date so the calendar includes those days
+        if (lateDeparturePart != null) {
+            LocalDate lateDepartureEndDate = lateDeparturePart.getEndDate();
+            if (lateDepartureEndDate != null) {
+                festivalDaySection.setLateDepartureEndDate(lateDepartureEndDate);
+                Console.log("USFestivalBookingForm: Late departure end date: " + lateDepartureEndDate);
+            }
+        }
+
+        Console.log("USFestivalBookingForm: Late departure part: " +
+            (lateDeparturePart != null ? lateDeparturePart.getName() : "none"));
+
         // Populate festival days from PolicyAggregate
         festivalDaySection.populateFromPolicyAggregate(policyAggregate);
 
@@ -1578,6 +1982,74 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         Console.log("USFestivalBookingForm: Populating meals options from PolicyAggregate");
+
+        // Find the main EventPart to get accurate boundary dates and times
+        // The main EventPart excludes early arrival and late departure periods
+        one.modality.base.shared.entities.EventPart mainEventPart = findMainEventPart(policyAggregate);
+
+        // Set event boundary dates and meal boundaries on meals section for early arrival/late departure pricing
+        // This must be done BEFORE populating from PolicyAggregate so rates can be classified correctly
+        if (mainEventPart != null) {
+            LocalDate mainStartDate = mainEventPart.getStartDate();
+            LocalDate mainEndDate = mainEventPart.getEndDate();
+            LocalTime mainStartTime = mainEventPart.getStartTime();
+            LocalTime mainEndTime = mainEventPart.getEndTime();
+
+            Console.log("USFestivalBookingForm: Main EventPart boundaries - " +
+                "start: " + mainStartDate + " " + mainStartTime +
+                ", end: " + mainEndDate + " " + mainEndTime);
+
+            if (mainStartDate != null) {
+                mealsSection.setEventBoundaryStartDate(mainStartDate);
+                Console.log("USFestivalBookingForm: Set meals section event boundary start date: " + mainStartDate);
+            }
+            if (mainEndDate != null) {
+                mealsSection.setEventBoundaryEndDate(mainEndDate);
+                Console.log("USFestivalBookingForm: Set meals section event boundary end date: " + mainEndDate);
+            }
+
+            // Get meal ScheduledItems for isInPeriod checks (needed before creating period)
+            java.util.List<one.modality.base.shared.entities.ScheduledItem> mealItems =
+                policyAggregate.filterScheduledItemsOfFamily(one.modality.base.shared.knownitems.KnownItemFamily.MEALS);
+            mealsSection.setMealScheduledItems(mealItems);
+            Console.log("USFestivalBookingForm: Set meals section meal ScheduledItems: " + mealItems.size() + " items");
+
+            // Determine which meal marks the start of the main event from the ScheduledBoundary
+            // The boundary's ScheduledItem tells us exactly what item marks the boundary
+            one.modality.base.shared.entities.ScheduledBoundary startBoundary = mainEventPart.getStartBoundary();
+            DefaultMealsSelectionSection.MealBoundary startMeal = determineMealFromBoundary(startBoundary, mainStartTime);
+            mealsSection.setEventBoundaryStartMeal(startMeal);
+            Console.log("USFestivalBookingForm: Set meals section event boundary start meal: " + startMeal);
+
+            // Determine which meal marks the end of the main event from the ScheduledBoundary
+            one.modality.base.shared.entities.ScheduledBoundary endBoundary = mainEventPart.getEndBoundary();
+            DefaultMealsSelectionSection.MealBoundary endMeal = determineMealFromBoundary(endBoundary, mainEndTime);
+            mealsSection.setEventBoundaryEndMeal(endMeal);
+            Console.log("USFestivalBookingForm: Set meals section event boundary end meal: " + endMeal);
+
+            // Create a Period with actual times from the boundary ScheduledItems
+            // The EventPart's times may be null, so we derive times from the boundary meals
+            one.modality.base.shared.entities.Period mainEventPeriodWithTimes = createMainEventPeriodWithBoundaryTimes(
+                mainEventPart, startBoundary, endBoundary, mealItems);
+            mealsSection.setMainEventPeriod(mainEventPeriodWithTimes);
+            Console.log("USFestivalBookingForm: Set meals section main event period with boundary times");
+        } else {
+            // Fallback to event dates if no main EventPart found
+            Console.log("USFestivalBookingForm: No main EventPart found, using event dates as boundaries");
+            if (eventStartDate != null) {
+                mealsSection.setEventBoundaryStartDate(eventStartDate);
+                Console.log("USFestivalBookingForm: Set meals section event boundary start: " + eventStartDate);
+            }
+            if (eventEndDate != null) {
+                mealsSection.setEventBoundaryEndDate(eventEndDate);
+                Console.log("USFestivalBookingForm: Set meals section event boundary end: " + eventEndDate);
+            }
+            // Pass meal ScheduledItems for isInPeriod checks (fallback case)
+            java.util.List<one.modality.base.shared.entities.ScheduledItem> mealItems =
+                policyAggregate.filterScheduledItemsOfFamily(one.modality.base.shared.knownitems.KnownItemFamily.MEALS);
+            mealsSection.setMealScheduledItems(mealItems);
+            Console.log("USFestivalBookingForm: Set meals section meal ScheduledItems: " + mealItems.size() + " items");
+        }
 
         // Populate meals options from PolicyAggregate
         mealsSection.populateFromPolicyAggregate(policyAggregate);
@@ -1696,6 +2168,19 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         Console.log("USFestivalBookingForm: Populating additional options from PolicyAggregate");
+
+        // Populate transport section first (parking + shuttle items)
+        if (transportSection != null) {
+            transportSection.populateFromPolicyAggregate(policyAggregate);
+            boolean hasTransport = transportSection.hasAnyOptions();
+            transportSection.setVisible(hasTransport);
+            Console.log("USFestivalBookingForm: Transport options populated - hasAnyOptions=" + hasTransport +
+                " (parking=" + transportSection.hasParkingOptions() + ", shuttle=" + transportSection.hasShuttleOptions() + ")");
+
+            // Exclude parking and transport items from additional options (handled by transport section)
+            additionalOptionsSection.setExcludeParkingAndTransport(hasTransport);
+            Console.log("USFestivalBookingForm: Parking and transport excluded from additional options: " + hasTransport);
+        }
 
         // Exclude audio recording items if they're handled by the dedicated phase section
         boolean audioPhaseVisible = audioRecordingPhaseSection != null && audioRecordingPhaseSection.getView().isVisible();
@@ -2549,6 +3034,9 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
      * - Non-temporal items: creates only DocumentLine without any Attendance records
      */
     private void bookAdditionalOptionsItems(WorkingBooking workingBooking, PolicyAggregate policyAggregate) {
+        // Book selected shuttle options first (from dedicated shuttle section)
+        bookTransportOptions(workingBooking, policyAggregate);
+
         if (additionalOptionsSection == null) return;
 
         // Get all selected additional options
@@ -2610,7 +3098,71 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     }
 
     /**
+     * Books selected transport options (parking + shuttle) from the dedicated transport section.
+     * For shuttles, only books those whose scheduled date matches the user's arrival/departure date.
+     */
+    private void bookTransportOptions(WorkingBooking workingBooking, PolicyAggregate policyAggregate) {
+        if (transportSection == null) return;
+
+        // First, collect ALL transport scheduled items (parking + shuttle) to unbook
+        List<ScheduledItem> allTransportItems = new ArrayList<>();
+        for (HasTransportSection.ParkingOption parking : transportSection.getParkingOptions()) {
+            if (parking.getScheduledItems() != null) {
+                allTransportItems.addAll(parking.getScheduledItems());
+            }
+        }
+        for (HasTransportSection.ShuttleOption shuttle : transportSection.getShuttleOptions()) {
+            if (shuttle.getScheduledItems() != null) {
+                allTransportItems.addAll(shuttle.getScheduledItems());
+            }
+        }
+
+        // Unbook all transport items first (to handle deselection)
+        if (!allTransportItems.isEmpty()) {
+            Console.log("USFestivalBookingForm: Unbooking " + allTransportItems.size() + " transport scheduled items before rebooking selected ones");
+            workingBooking.unbookScheduledItems(allTransportItems);
+        }
+
+        // Book selected parking options
+        List<HasTransportSection.ParkingOption> selectedParking = transportSection.getSelectedParkingOptions();
+        if (!selectedParking.isEmpty()) {
+            Console.log("USFestivalBookingForm: Booking " + selectedParking.size() + " selected parking options");
+            for (HasTransportSection.ParkingOption parking : selectedParking) {
+                List<ScheduledItem> scheduledItems = parking.getScheduledItems();
+                if (scheduledItems != null && !scheduledItems.isEmpty()) {
+                    Console.log("USFestivalBookingForm: Booking parking '" + parking.getName() +
+                        "' - " + scheduledItems.size() + " scheduled items");
+                    workingBooking.bookScheduledItems(scheduledItems, true);
+                } else {
+                    Console.log("USFestivalBookingForm: Parking '" + parking.getName() + "' has no scheduled items to book");
+                }
+            }
+        }
+
+        // Book selected shuttle options
+        List<HasTransportSection.ShuttleOption> selectedShuttles = transportSection.getSelectedShuttleOptions();
+        if (!selectedShuttles.isEmpty()) {
+            Console.log("USFestivalBookingForm: Booking " + selectedShuttles.size() + " selected shuttle options");
+            for (HasTransportSection.ShuttleOption shuttle : selectedShuttles) {
+                List<ScheduledItem> scheduledItems = shuttle.getScheduledItems();
+                if (scheduledItems != null && !scheduledItems.isEmpty()) {
+                    Console.log("USFestivalBookingForm: Booking shuttle '" + shuttle.getName() +
+                        "' (" + shuttle.getDirection() + ") - " + scheduledItems.size() + " scheduled items");
+                    workingBooking.bookScheduledItems(scheduledItems, true);
+                } else {
+                    Console.log("USFestivalBookingForm: Shuttle '" + shuttle.getName() + "' has no scheduled items to book");
+                }
+            }
+        }
+
+        if (selectedParking.isEmpty() && selectedShuttles.isEmpty()) {
+            Console.log("USFestivalBookingForm: No transport options selected");
+        }
+    }
+
+    /**
      * Books transport/shuttle items with special handling for outbound/return directions.
+     * @deprecated Use transportSection for transport items instead.
      */
     private void bookTransportOption(WorkingBooking workingBooking, PolicyAggregate policyAggregate, Item transportItem) {
         String itemName = transportItem.getName() != null ? transportItem.getName().toLowerCase() : "";
@@ -2721,6 +3273,26 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Only update room name and days - price is bound to WorkingBookingProperties.totalProperty()
         stickyPriceHeader.setRoomName(roomName);
         stickyPriceHeader.setSelectedDays(daysCount);
+    }
+
+    /**
+     * Sets up the terms and conditions URL from the Event's termsUrlEn field.
+     * This URL is displayed as a clickable link in the terms section.
+     */
+    private void setupTermsUrl() {
+        if (workingBookingProperties == null) return;
+
+        PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
+        if (policyAggregate == null) return;
+
+        Event event = policyAggregate.getEvent();
+        if (event == null) return;
+
+        String termsUrl = event.getTermsUrlEn();
+        if (termsUrl != null && !termsUrl.isEmpty()) {
+            form.setTermsUrl(termsUrl);
+            Console.log("USFestivalBookingForm: Set terms URL to: " + termsUrl);
+        }
     }
 
     /**
