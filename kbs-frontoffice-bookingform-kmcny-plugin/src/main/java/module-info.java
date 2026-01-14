@@ -14,6 +14,7 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires modality.booking.frontoffice.bookingpage;
     requires modality.crm.client.authn.fx;
     requires modality.ecommerce.policy.service;
+    requires modality.ecommerce.shared.pricecalculator;
     requires modality.event.frontoffice.activity.book;
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;

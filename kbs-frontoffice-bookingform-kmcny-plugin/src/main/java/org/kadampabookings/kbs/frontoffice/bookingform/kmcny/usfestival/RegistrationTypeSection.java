@@ -103,7 +103,7 @@ public class RegistrationTypeSection implements BookingFormSection {
         VBox.setMargin(eventHeader, new Insets(0, 0, 32, 0));
 
         // Header question - centered
-        Label headerLabel = I18nControls.newLabel("BookingPageI18nKeys.HowWouldYouLikeToAttend");
+        Label headerLabel = I18nControls.newLabel(BookingPageI18nKeys.HowWouldYouLikeToAttend);
         headerLabel.getStyleClass().addAll("bookingpage-text-xl", "bookingpage-font-semibold", "bookingpage-text-dark");
         headerLabel.setWrapText(true);
         headerLabel.setAlignment(Pos.CENTER);
@@ -119,8 +119,8 @@ public class RegistrationTypeSection implements BookingFormSection {
 
         // In Person card (selectable)
         inPersonCard = createTypeCard(
-            "BookingPageI18nKeys.InPersonRegistration",
-            "BookingPageI18nKeys.InPersonDescription",
+            BookingPageI18nKeys.InPersonRegistration,
+            BookingPageI18nKeys.InPersonDescription,
             HOME_ICON_PATH,
             RegistrationType.IN_PERSON,
             true // enabled
@@ -128,8 +128,8 @@ public class RegistrationTypeSection implements BookingFormSection {
 
         // Online card (coming soon)
         onlineCard = createTypeCard(
-            "BookingPageI18nKeys.OnlineRegistration",
-            "BookingPageI18nKeys.OnlineDescription",
+            BookingPageI18nKeys.OnlineRegistration,
+            BookingPageI18nKeys.OnlineDescription,
             MONITOR_ICON_PATH,
             RegistrationType.ONLINE,
             false // disabled - coming soon
@@ -176,21 +176,8 @@ public class RegistrationTypeSection implements BookingFormSection {
         title.setMaxWidth(Double.MAX_VALUE);
         VBox.setMargin(title, new Insets(0, 0, 12, 0));
 
-        // "Coming Soon" badge for disabled cards
-        if (!enabled) {
-            HBox titleRow = new HBox(8);
-            titleRow.setAlignment(Pos.CENTER);
-
-            Label comingSoonBadge = I18nControls.newLabel("BookingPageI18nKeys.ComingSoon");
-            comingSoonBadge.getStyleClass().addAll("bookingpage-badge-coming-soon", "bookingpage-text-xs", "bookingpage-font-medium");
-            comingSoonBadge.setPadding(new Insets(2, 8, 2, 8));
-
-            titleRow.getChildren().addAll(title, comingSoonBadge);
-            VBox.setMargin(titleRow, new Insets(0, 0, 12, 0));
-            card.getChildren().addAll(iconContainer, titleRow);
-        } else {
-            card.getChildren().addAll(iconContainer, title);
-        }
+        // Always add icon and title directly (same for enabled and disabled)
+        card.getChildren().addAll(iconContainer, title);
 
         // Description
         Label description = I18nControls.newLabel(descriptionKey);
@@ -201,19 +188,21 @@ public class RegistrationTypeSection implements BookingFormSection {
         VBox.setMargin(description, new Insets(0, 0, 20, 0));
         card.getChildren().add(description);
 
-        // Select button for enabled cards
+        // Select button for enabled cards, "Coming Soon" placeholder for disabled cards
         if (enabled) {
             Button selectButton = new Button();
-            selectButton.getStyleClass().addAll("bookingpage-btn", "bookingpage-btn-primary");
+            selectButton.getStyleClass().add("bookingpage-btn-select-type");
+            selectButton.setPadding(new Insets(12, 24, 12, 24));
 
             // Button content with text and arrow
             HBox buttonContent = new HBox(8);
             buttonContent.setAlignment(Pos.CENTER);
 
             Label buttonText = I18nControls.newLabel(USFestivalI18nKeys.SelectInPerson);
+            buttonText.getStyleClass().add("bookingpage-btn-select-type-text");
 
-            SVGPath arrowIcon = SvgIcons.createStrokeSVGPath(ARROW_ICON_PATH, Color.WHITE, 2.5);
-            arrowIcon.setFill(null);
+            SVGPath arrowIcon = SvgIcons.createStrokeSVGPath(ARROW_ICON_PATH, null, 2.5);
+            arrowIcon.getStyleClass().add("bookingpage-btn-select-type-icon");
 
             buttonContent.getChildren().addAll(buttonText, arrowIcon);
             selectButton.setGraphic(buttonContent);
@@ -221,6 +210,19 @@ public class RegistrationTypeSection implements BookingFormSection {
             selectButton.setOnAction(e -> handleTypeSelection(type));
             VBox.setMargin(selectButton, new Insets(8, 0, 0, 0));
             card.getChildren().add(selectButton);
+        } else {
+            // "Coming Soon" placeholder styled like a disabled button
+            HBox comingSoonContainer = new HBox(8);
+            comingSoonContainer.setAlignment(Pos.CENTER);
+            comingSoonContainer.getStyleClass().add("bookingpage-btn-coming-soon");
+            comingSoonContainer.setPadding(new Insets(12, 24, 12, 24));
+
+            Label comingSoonText = I18nControls.newLabel(BookingPageI18nKeys.ComingSoon);
+            comingSoonText.getStyleClass().add("bookingpage-btn-coming-soon-text");
+
+            comingSoonContainer.getChildren().add(comingSoonText);
+            VBox.setMargin(comingSoonContainer, new Insets(8, 0, 0, 0));
+            card.getChildren().add(comingSoonContainer);
         }
 
         // Click handler for entire card (only if enabled)
@@ -300,7 +302,7 @@ public class RegistrationTypeSection implements BookingFormSection {
 
     @Override
     public Object getTitleI18nKey() {
-        return "BookingPageI18nKeys.HowWouldYouLikeToAttend";
+        return BookingPageI18nKeys.HowWouldYouLikeToAttend;
     }
 
     @Override
