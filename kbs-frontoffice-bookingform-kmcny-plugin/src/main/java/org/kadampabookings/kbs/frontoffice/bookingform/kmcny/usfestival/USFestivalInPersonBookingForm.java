@@ -41,11 +41,10 @@ import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
 import org.kadampabookings.kbs.frontoffice.bookingform.kmcny.KMCNY18nKeys;
 
 /**
- * US Festival Booking Form - Implementation for US Festival (event type 38) bookings.
+ * US Festival In-Person Booking Form - Implementation for in-person US Festival (event type 38) bookings.
  *
- * <p>This is a comprehensive booking form with multiple custom steps:</p>
+ * <p>This form handles in-person registration with multiple custom steps:</p>
  * <ul>
- *   <li>Preliminary: Registration Type selection (In-Person / Online)</li>
  *   <li>Step 1: Accommodation selection (room options)</li>
  *   <li>Step 2: Booking Details (festival days, meals, additional options)</li>
  *   <li>Standard flow: Your Information → Member Selection → Summary → Payment → Confirmation</li>
@@ -53,24 +52,23 @@ import org.kadampabookings.kbs.frontoffice.bookingform.kmcny.KMCNY18nKeys;
  *
  * <p>Features:</p>
  * <ul>
- *   <li>In-Person vs Online registration (Online shows "Coming Soon")</li>
  *   <li>Room/accommodation selection with availability status</li>
  *   <li>Festival day selection with arrival/departure dates</li>
  *   <li>Meal options (lunch/dinner) with dietary preferences</li>
  *   <li>Additional options (parking, shuttle, assisted listening)</li>
  * </ul>
  *
+ * <p>Note: This form is created by {@link USFestivalEntryForm} when user selects In-Person registration.</p>
+ *
  * @author Bruno Salmon
+ * @see USFestivalEntryForm
  * @see StandardBookingForm
  * @see StandardBookingFormBuilder
  */
-public final class USFestivalBookingForm implements StandardBookingFormCallbacks {
+public final class USFestivalInPersonBookingForm implements StandardBookingFormCallbacks {
 
     // The form built by the builder
     private final StandardBookingForm form;
-
-    // Custom sections - Preliminary
-    private RegistrationTypeSection registrationTypeSection;
 
     // Custom sections - Step 1: Accommodation
     private CompositeBookingFormPage accommodationPage;
@@ -109,13 +107,13 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private LocalDate lateDepartureDate;   // End date of late departure period (from LateDeparturePart)
 
     /**
-     * Creates the US Festival booking form using the builder pattern.
+     * Creates the US Festival in-person booking form using the builder pattern.
      *
      * @param activity   The activity providing WorkingBookingProperties
      * @param settings   The event booking form settings
      * @param entryPoint The entry point for the booking form (NEW_BOOKING, MODIFY_BOOKING, or RESUME_PAYMENT)
      */
-    public USFestivalBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings, BookingFormEntryPoint entryPoint) {
+    public USFestivalInPersonBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings, BookingFormEntryPoint entryPoint) {
         this.settings = settings;
         this.workingBookingProperties = activity.getWorkingBookingProperties();
 
@@ -132,7 +130,6 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             .withNavigationClickable(false)                       // Navigation only via buttons
             .withStickyHeader(stickyPriceHeader)                  // Sticky price header at top
             // Custom steps (before Your Information)
-            .addCustomStep(createRegistrationTypePage())          // Preliminary: In-Person vs Online
             .addCustomStep(createAccommodationPage())             // Step 1: Your Room
             .addCustomStep(createBookingDetailsPage())            // Step 2: Festival Days, Meals, Options
             // Custom Your Information page with event header
@@ -144,7 +141,6 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         this.form = builder.build();
 
         // Wire up section callbacks
-        setupRegistrationTypeCallbacks();
         setupAccommodationCallbacks();
         setupAccommodationButtons();
         setupBookingDetailsCallbacks();
@@ -165,35 +161,49 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
     /**
      * Sets up a listener to populate accommodation options when the WorkingBooking becomes available.
-     * This is needed because the form is created before the WorkingBooking is initialized.
-     * The totalProperty fires when WorkingBooking calculates prices (after setWorkingBooking is called).
+     * Also checks if the WorkingBooking is already available (e.g., when swapped from entry form).
      */
     private void setupWorkingBookingListener() {
         if (workingBookingProperties == null) {
-            Console.log("USFestivalBookingForm: WorkingBookingProperties not available, cannot set up listener");
+            Console.log("USFestivalInPersonBookingForm: WorkingBookingProperties not available, cannot set up listener");
             return;
         }
 
         // Listen to total property changes as an indicator that WorkingBooking has been initialized
         workingBookingProperties.totalProperty().addListener((obs, oldValue, newValue) -> {
-            Console.log("USFestivalBookingForm: Total changed, attempting to populate options");
-            // First populate event boundary dates from EventSelection/EventPart (needed by other methods)
-            populateEventBoundaries();
-            populateAccommodationOptions();
-            populateFestivalDays();
-            populateMealsOptions();
-            populateAudioRecordingPhaseOptions();
-            populateAdditionalOptions();
-            // Set terms URL from event
-            setupTermsUrl();
+            Console.log("USFestivalInPersonBookingForm: Total changed, attempting to populate options");
+            populateAllOptions();
         });
 
         // Bind stickyPriceHeader's totalPrice to WorkingBookingProperties.totalProperty()
         // This ensures the header shows the actual booking total from WorkingBooking
         if (stickyPriceHeader != null) {
             stickyPriceHeader.totalPriceProperty().bind(workingBookingProperties.totalProperty());
-            Console.log("USFestivalBookingForm: Bound stickyPriceHeader.totalPrice to workingBookingProperties.totalProperty");
+            Console.log("USFestivalInPersonBookingForm: Bound stickyPriceHeader.totalPrice to workingBookingProperties.totalProperty");
         }
+
+        // Check if WorkingBooking is already available (e.g., when swapped from entry form)
+        // In this case, the listener won't fire because the total was already set
+        if (workingBookingProperties.getWorkingBooking() != null) {
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking already available, populating options immediately");
+            populateAllOptions();
+        }
+    }
+
+    /**
+     * Populates all booking form options (accommodation, meals, days, etc.).
+     * Called when WorkingBooking becomes available or when form is swapped to.
+     */
+    private void populateAllOptions() {
+        // First populate event boundary dates from EventSelection/EventPart (needed by other methods)
+        populateEventBoundaries();
+        populateAccommodationOptions();
+        populateFestivalDays();
+        populateMealsOptions();
+        populateAudioRecordingPhaseOptions();
+        populateAdditionalOptions();
+        // Set terms URL from event
+        setupTermsUrl();
     }
 
     /**
@@ -230,7 +240,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         EventPart earlyArrivalPart = policyAggregate.getEarlyArrivalPart();
         if (earlyArrivalPart != null) {
             earlyArrivalDate = earlyArrivalPart.getStartDate();
-            Console.log("USFestivalBookingForm: Early arrival part found - " +
+            Console.log("USFestivalInPersonBookingForm: Early arrival part found - " +
                 earlyArrivalPart.getStartDate() + " to " + earlyArrivalPart.getEndDate());
         }
 
@@ -238,11 +248,11 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         EventPart lateDeparturePart = policyAggregate.getLateDeparturePart();
         if (lateDeparturePart != null) {
             lateDepartureDate = lateDeparturePart.getEndDate();
-            Console.log("USFestivalBookingForm: Late departure part found - " +
+            Console.log("USFestivalInPersonBookingForm: Late departure part found - " +
                 lateDeparturePart.getStartDate() + " to " + lateDeparturePart.getEndDate());
         }
 
-        Console.log("USFestivalBookingForm: Event boundaries populated - " +
+        Console.log("USFestivalInPersonBookingForm: Event boundaries populated - " +
             "mainEvent=" + eventStartDate + " to " + eventEndDate +
             ", earlyArrival=" + earlyArrivalDate + ", lateDeparture=" + lateDepartureDate);
     }
@@ -250,20 +260,6 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     // ========================================
     // Page Creation Methods
     // ========================================
-
-    /**
-     * Creates the Registration Type page (preliminary step).
-     * Shows "In Person" (selectable) and "Online" (coming soon) options.
-     */
-    private CompositeBookingFormPage createRegistrationTypePage() {
-        registrationTypeSection = new RegistrationTypeSection();
-        registrationTypeSection.setColorScheme(BookingFormColorScheme.WISDOM_BLUE);
-
-        return new CompositeBookingFormPage(BookingPageI18nKeys.HowWouldYouLikeToAttend, registrationTypeSection)
-            .setStep(false)  // Not a numbered step (preliminary)
-            .setHeaderVisible(false)  // Hide step navigation on preliminary page
-            .setShowingOwnSubmitButton(true);  // Has its own selection buttons
-    }
 
     /**
      * Creates the Accommodation page (Step 1: Your Room).
@@ -377,25 +373,16 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     // Callback Setup Methods
     // ========================================
 
-    private void setupRegistrationTypeCallbacks() {
-        if (registrationTypeSection == null) return;
-
-        registrationTypeSection.setOnContinuePressed(() -> {
-            // When in-person is selected, navigate to accommodation
-            form.navigateToNextPage();
-        });
-    }
-
     private void setupAccommodationCallbacks() {
         if (accommodationSection == null) return;
 
         accommodationSection.setOnOptionSelected(option -> {
-            Console.log("USFestivalBookingForm: Accommodation selected - " + option.getName());
+            Console.log("USFestivalInPersonBookingForm: Accommodation selected - " + option.getName());
 
             // Reset WorkingBooking to clear previous selections when accommodation type changes
             // This ensures the booking doesn't keep items from a previous accommodation selection
             if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
-                Console.log("USFestivalBookingForm: Resetting WorkingBooking due to accommodation change");
+                Console.log("USFestivalInPersonBookingForm: Resetting WorkingBooking due to accommodation change");
                 workingBookingProperties.getWorkingBooking().cancelChanges();
             }
 
@@ -406,14 +393,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 festivalDaySection.setIsDayVisitor(option.isDayVisitor());
                 // Reset dates when accommodation changes (user needs to re-select dates)
                 festivalDaySection.reset();
-                Console.log("USFestivalBookingForm: Festival day section reset - isDayVisitor=" + option.isDayVisitor() + ", minNights=" + option.getMinNights());
+                Console.log("USFestivalInPersonBookingForm: Festival day section reset - isDayVisitor=" + option.isDayVisitor() + ", minNights=" + option.getMinNights());
             }
             // Sync breakfast with accommodation selection
             // Day visitors don't get breakfast, overnight guests do
             if (mealsSection != null && option != null) {
                 boolean hasAccommodation = !option.isDayVisitor();
                 mealsSection.setHasAccommodation(hasAccommodation);
-                Console.log("USFestivalBookingForm: Set hasAccommodation=" + hasAccommodation + " for meals section");
+                Console.log("USFestivalInPersonBookingForm: Set hasAccommodation=" + hasAccommodation + " for meals section");
             }
             // Configure roommate section based on accommodation selection
             if (roommateInfoSection != null && option != null) {
@@ -427,7 +414,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     // Share Accommodation: single roommate field (person is sharing someone else's room)
                     roommateInfoSection.setIsRoomBooker(false);
                     roommateInfoSection.setVisible(true);
-                    Console.log("USFestivalBookingForm: Roommate section visible for Share Accommodation");
+                    Console.log("USFestivalInPersonBookingForm: Roommate section visible for Share Accommodation");
                 } else if (!isDayVisitor && option.getItemEntity() != null) {
                     // Room booking: check capacity for multi-person rooms
                     Item item = option.getItemEntity();
@@ -446,16 +433,16 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                         roommateInfoSection.setMinOccupancy(minOccupancy);
                         roommateInfoSection.setIsRoomBooker(true);
                         roommateInfoSection.setVisible(true);
-                        Console.log("USFestivalBookingForm: Roommate section visible for multi-person room - capacity=" + capacity + ", minOccupancy=" + minOccupancy);
+                        Console.log("USFestivalInPersonBookingForm: Roommate section visible for multi-person room - capacity=" + capacity + ", minOccupancy=" + minOccupancy);
                     } else {
                         // Single-person room or no capacity info: hide roommate section
                         roommateInfoSection.setVisible(false);
-                        Console.log("USFestivalBookingForm: Roommate section hidden (single-person room)");
+                        Console.log("USFestivalInPersonBookingForm: Roommate section hidden (single-person room)");
                     }
                 } else {
                     // Day Visitor or no item entity: hide roommate section
                     roommateInfoSection.setVisible(false);
-                    Console.log("USFestivalBookingForm: Roommate section hidden (day visitor or no item)");
+                    Console.log("USFestivalInPersonBookingForm: Roommate section hidden (day visitor or no item)");
                 }
             }
             // Update sticky price header (room name and days)
@@ -495,11 +482,8 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Add the warning zone as footer content (persists through setWorkingBookingProperties)
         accommodationPage.setFooterContent(accommodationWarningZone);
 
-        // Set up buttons with validation binding for Continue button
+        // Set up buttons - no Back button on first page (entry form handles going back)
         accommodationPage.setButtons(
-            new BookingFormButton(BookingPageI18nKeys.Back,
-                e -> form.navigateToPreviousPage(),
-                "btn-back booking-form-btn-back"),
             new BookingFormButton(BookingPageI18nKeys.Continue,
                 e -> form.navigateToNextPage(),
                 "btn-primary booking-form-btn-primary",
@@ -510,7 +494,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void setupBookingDetailsCallbacks() {
         if (festivalDaySection != null) {
             festivalDaySection.setOnDatesChanged((arrival, departure) -> {
-                Console.log("USFestivalBookingForm: Dates changed - " + arrival + " to " + departure);
+                Console.log("USFestivalInPersonBookingForm: Dates changed - " + arrival + " to " + departure);
                 // Check if extended stay (early arrival or late departure)
                 updateExtendedStayStatus(arrival, departure);
                 // Update sticky price header with new days count
@@ -542,14 +526,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     // Rebuild meal cards when state changes (showing or hiding secondary prices)
                     if (stateChanged) {
                         mealsSection.rebuildMealCards();
-                        Console.log("USFestivalBookingForm: Updated meal cards - earlyArrival=" + hasEarlyArrival + ", lateDeparture=" + hasLateDeparture);
+                        Console.log("USFestivalInPersonBookingForm: Updated meal cards - earlyArrival=" + hasEarlyArrival + ", lateDeparture=" + hasLateDeparture);
                     }
                 }
             });
 
             // Listen for arrival time changes
             festivalDaySection.arrivalTimeProperty().addListener((obs, old, newTime) -> {
-                Console.log("USFestivalBookingForm: Arrival time changed - " + newTime);
+                Console.log("USFestivalInPersonBookingForm: Arrival time changed - " + newTime);
                 if (mealsSection != null) {
                     mealsSection.setArrivalTime(newTime);
                 }
@@ -561,7 +545,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
             // Listen for departure time changes
             festivalDaySection.departureTimeProperty().addListener((obs, old, newTime) -> {
-                Console.log("USFestivalBookingForm: Departure time changed - " + newTime);
+                Console.log("USFestivalInPersonBookingForm: Departure time changed - " + newTime);
                 if (mealsSection != null) {
                     mealsSection.setDepartureTime(newTime);
                 }
@@ -595,19 +579,19 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Bind arrival date to audio recording section (for availability)
         festivalDaySection.arrivalDateProperty().addListener((obs, old, newDate) -> {
-            Console.log("USFestivalBookingForm: Updating audio recording arrival date - " + newDate);
+            Console.log("USFestivalInPersonBookingForm: Updating audio recording arrival date - " + newDate);
             audioRecordingPhaseSection.setArrivalDate(newDate);
         });
 
         // Bind departure date to audio recording section (for availability)
         festivalDaySection.departureDateProperty().addListener((obs, old, newDate) -> {
-            Console.log("USFestivalBookingForm: Updating audio recording departure date - " + newDate);
+            Console.log("USFestivalInPersonBookingForm: Updating audio recording departure date - " + newDate);
             audioRecordingPhaseSection.setDepartureDate(newDate);
         });
 
         // Listen for option selection changes
         audioRecordingPhaseSection.setOnOptionSelected(option -> {
-            Console.log("USFestivalBookingForm: Audio recording phase selected - " +
+            Console.log("USFestivalInPersonBookingForm: Audio recording phase selected - " +
                 (option != null ? option.getName() : "None"));
             // Re-book items to update audio recording selection
             bookSelectedItemsIntoWorkingBooking();
@@ -624,19 +608,19 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Bind arrival date to transport section (for shuttle availability)
         festivalDaySection.arrivalDateProperty().addListener((obs, old, newDate) -> {
-            Console.log("USFestivalBookingForm: Updating transport arrival date - " + newDate);
+            Console.log("USFestivalInPersonBookingForm: Updating transport arrival date - " + newDate);
             transportSection.setArrivalDate(newDate);
         });
 
         // Bind departure date to transport section (for shuttle availability)
         festivalDaySection.departureDateProperty().addListener((obs, old, newDate) -> {
-            Console.log("USFestivalBookingForm: Updating transport departure date - " + newDate);
+            Console.log("USFestivalInPersonBookingForm: Updating transport departure date - " + newDate);
             transportSection.setDepartureDate(newDate);
         });
 
         // Listen for any transport selection changes (parking or shuttle)
         transportSection.setOnSelectionChanged(() -> {
-            Console.log("USFestivalBookingForm: Transport selection changed - parking=" +
+            Console.log("USFestivalInPersonBookingForm: Transport selection changed - parking=" +
                 transportSection.getSelectedParkingOptions().size() + " options, shuttle=" +
                 transportSection.getSelectedShuttleOptions().size() + " options");
             bookSelectedItemsIntoWorkingBooking();
@@ -653,7 +637,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Listen for breakfast selection changes
         mealsSection.wantsBreakfastProperty().addListener((obs, old, newVal) -> {
-            Console.log("USFestivalBookingForm: Breakfast selection changed - " + newVal);
+            Console.log("USFestivalInPersonBookingForm: Breakfast selection changed - " + newVal);
             bookSelectedItemsIntoWorkingBooking();
             // Rebuild meal cards to ensure proper display with early/late pricing
             rebuildMealCardsIfNeeded();
@@ -661,7 +645,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Listen for lunch selection changes
         mealsSection.wantsLunchProperty().addListener((obs, old, newVal) -> {
-            Console.log("USFestivalBookingForm: Lunch selection changed - " + newVal);
+            Console.log("USFestivalInPersonBookingForm: Lunch selection changed - " + newVal);
             bookSelectedItemsIntoWorkingBooking();
             // Rebuild meal cards to ensure proper display with early/late pricing
             rebuildMealCardsIfNeeded();
@@ -669,7 +653,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Listen for dinner selection changes
         mealsSection.wantsDinnerProperty().addListener((obs, old, newVal) -> {
-            Console.log("USFestivalBookingForm: Dinner selection changed - " + newVal);
+            Console.log("USFestivalInPersonBookingForm: Dinner selection changed - " + newVal);
             bookSelectedItemsIntoWorkingBooking();
             // Rebuild meal cards to ensure proper display with early/late pricing
             rebuildMealCardsIfNeeded();
@@ -677,14 +661,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Listen for dietary preference changes (API-driven - selectedDietaryItem)
         mealsSection.selectedDietaryItemProperty().addListener((obs, old, newVal) -> {
-            Console.log("USFestivalBookingForm: Dietary preference (API) changed - " +
+            Console.log("USFestivalInPersonBookingForm: Dietary preference (API) changed - " +
                 (newVal != null ? newVal.getName() : "None"));
             bookSelectedItemsIntoWorkingBooking();
         });
 
         // Listen for legacy dietary preference changes (enum-based - dietaryPreference)
         mealsSection.dietaryPreferenceProperty().addListener((obs, old, newVal) -> {
-            Console.log("USFestivalBookingForm: Dietary preference (legacy) changed - " +
+            Console.log("USFestivalInPersonBookingForm: Dietary preference (legacy) changed - " +
                 (newVal != null ? newVal.name() : "None"));
             bookSelectedItemsIntoWorkingBooking();
         });
@@ -699,7 +683,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Only rebuild if we have early/late pricing enabled
         if (mealsSection.isShowEarlyArrivalPricing() || mealsSection.isShowLateDeparturePricing()) {
-            Console.log("USFestivalBookingForm: Rebuilding meal cards to update early/late pricing display");
+            Console.log("USFestivalInPersonBookingForm: Rebuilding meal cards to update early/late pricing display");
             mealsSection.rebuildMealCards();
         }
     }
@@ -712,7 +696,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Listen for any option selection changes (parking, assisted listening, etc.)
         additionalOptionsSection.setOnSelectionChanged(() -> {
-            Console.log("USFestivalBookingForm: Additional option selection changed");
+            Console.log("USFestivalInPersonBookingForm: Additional option selection changed");
             bookSelectedItemsIntoWorkingBooking();
         });
     }
@@ -731,7 +715,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Use event boundary dates from EventSelection/EventPart (loaded from PolicyAggregate)
         if (eventStartDate == null || eventEndDate == null) {
-            Console.log("USFestivalBookingForm: Event boundary dates not yet populated, skipping extended stay check");
+            Console.log("USFestivalInPersonBookingForm: Event boundary dates not yet populated, skipping extended stay check");
             return;
         }
 
@@ -740,7 +724,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         boolean isLateDeparture = departure.isAfter(eventEndDate);
         boolean hasExtendedStay = isEarlyArrival || isLateDeparture;
 
-        Console.log("USFestivalBookingForm: Extended stay check - event: " + eventStartDate + " to " + eventEndDate +
+        Console.log("USFestivalInPersonBookingForm: Extended stay check - event: " + eventStartDate + " to " + eventEndDate +
             ", selected: " + arrival + " to " + departure + ", extended: " + hasExtendedStay);
 
         mealsSection.setHasExtendedStay(hasExtendedStay);
@@ -824,13 +808,13 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void setupLogoutListener() {
         FXUserPerson.userPersonProperty().addListener((obs, oldPerson, newPerson) -> {
             if (oldPerson != null && newPerson == null) {
-                Console.log("USFestivalBookingForm: User logged out");
+                Console.log("USFestivalInPersonBookingForm: User logged out");
                 // Only navigate if WorkingBooking is initialized to avoid NPE
                 if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
-                    Console.log("USFestivalBookingForm: Navigating to Your Information");
+                    Console.log("USFestivalInPersonBookingForm: Navigating to Your Information");
                     form.navigateToYourInformation();
                 } else {
-                    Console.log("USFestivalBookingForm: WorkingBooking not initialized, skipping navigation");
+                    Console.log("USFestivalInPersonBookingForm: WorkingBooking not initialized, skipping navigation");
                 }
             }
         });
@@ -839,7 +823,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void loadMembersIfLoggedIn() {
         Person person = FXUserPerson.getUserPerson();
         if (person != null && memberSelectionSection != null) {
-            Console.log("USFestivalBookingForm: Loading household members at construction time");
+            Console.log("USFestivalInPersonBookingForm: Loading household members at construction time");
             HouseholdMemberLoader.loadMembersAsync(person, memberSelectionSection, settings.event());
         }
     }
@@ -856,48 +840,48 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void populateAccommodationOptions() {
         // Skip if already populated
         if (accommodationOptionsPopulated) {
-            Console.log("USFestivalBookingForm: Accommodation options already populated, skipping");
+            Console.log("USFestivalInPersonBookingForm: Accommodation options already populated, skipping");
             return;
         }
 
         if (accommodationSection == null) {
-            Console.log("USFestivalBookingForm: accommodationSection is null, skipping population");
+            Console.log("USFestivalInPersonBookingForm: accommodationSection is null, skipping population");
             return;
         }
 
         if (workingBookingProperties == null) {
-            Console.log("USFestivalBookingForm: WorkingBookingProperties not available yet");
+            Console.log("USFestivalInPersonBookingForm: WorkingBookingProperties not available yet");
             return;
         }
 
         // Check if WorkingBooking is initialized before accessing PolicyAggregate
         if (workingBookingProperties.getWorkingBooking() == null) {
-            Console.log("USFestivalBookingForm: WorkingBooking not initialized yet, will populate later");
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking not initialized yet, will populate later");
             return;
         }
 
         PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         if (policyAggregate == null) {
-            Console.log("USFestivalBookingForm: PolicyAggregate not available yet");
+            Console.log("USFestivalInPersonBookingForm: PolicyAggregate not available yet");
             return;
         }
 
         // Debug: log what we're working with
         int scheduledItemsCount = policyAggregate.getScheduledItems() != null ? policyAggregate.getScheduledItems().size() : 0;
         int accommodationItemsCount = policyAggregate.filterAccommodationScheduledItems().size();
-        Console.log("USFestivalBookingForm: PolicyAggregate has " + scheduledItemsCount + " total scheduled items, " + accommodationItemsCount + " accommodation items");
+        Console.log("USFestivalInPersonBookingForm: PolicyAggregate has " + scheduledItemsCount + " total scheduled items, " + accommodationItemsCount + " accommodation items");
 
-        Console.log("USFestivalBookingForm: Populating accommodation options with WorkingBooking-based pricing");
+        Console.log("USFestivalInPersonBookingForm: Populating accommodation options with WorkingBooking-based pricing");
 
         // Use event boundary dates for price calculation
         LocalDate arrivalDate = eventStartDate;
         LocalDate departureDate = eventEndDate;
         if (arrivalDate == null || departureDate == null) {
-            Console.log("USFestivalBookingForm: Event boundary dates not available, cannot calculate prices");
+            Console.log("USFestivalInPersonBookingForm: Event boundary dates not available, cannot calculate prices");
             return;
         }
 
-        Console.log("USFestivalBookingForm: Event boundaries for price calculation: " + arrivalDate + " to " + departureDate);
+        Console.log("USFestivalInPersonBookingForm: Event boundaries for price calculation: " + arrivalDate + " to " + departureDate);
 
         // Clear existing options and breakdowns
         accommodationSection.clearOptions();
@@ -918,7 +902,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             Item item = entry.getKey();
             List<ScheduledItem> scheduledItems = entry.getValue();
 
-            Console.log("USFestivalBookingForm: Processing accommodation: " + item.getName());
+            Console.log("USFestivalInPersonBookingForm: Processing accommodation: " + item.getName());
 
             // Calculate availability (null means unlimited, so we filter those out)
             // Only consider items with defined availability for the minimum calculation
@@ -969,7 +953,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
             // Calculate total price and breakdown using WorkingBooking
             AccommodationPriceResult priceResult = calculateAccommodationPriceWithWorkingBooking(policyAggregate, item, arrivalDate, departureDate, minAvailability);
-            Console.log("USFestivalBookingForm: Calculated price for " + item.getName() + ": " + priceResult.totalPrice);
+            Console.log("USFestivalInPersonBookingForm: Calculated price for " + item.getName() + ": " + priceResult.totalPrice);
 
             // Store the breakdown for this option
             accommodationSection.setBreakdownForOption(item.getPrimaryKey(), priceResult.breakdown);
@@ -1002,7 +986,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Mark as populated to avoid re-populating
         accommodationOptionsPopulated = true;
-        Console.log("USFestivalBookingForm: Accommodation options populated successfully with WorkingBooking prices");
+        Console.log("USFestivalInPersonBookingForm: Accommodation options populated successfully with WorkingBooking prices");
     }
 
     /**
@@ -1035,7 +1019,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Create a temporary WorkingBooking for price calculation
         WorkingBooking tempBooking = new WorkingBooking(policyAggregate, null);
 
-        Console.log("USFestivalBookingForm: Creating temp WorkingBooking for " +
+        Console.log("USFestivalInPersonBookingForm: Creating temp WorkingBooking for " +
             (accommodationItem != null ? accommodationItem.getName() : "Day Visitor/Share"));
 
         // Track dates for breakdown display
@@ -1048,7 +1032,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             .filter(si -> si.getDate() != null)
             .filter(si -> !si.getDate().isBefore(arrivalDate) && !si.getDate().isAfter(departureDate))
             .collect(java.util.stream.Collectors.toList());
-        Console.log("USFestivalBookingForm: Booking " + teachingItems.size() + " teaching items for price calculation");
+        Console.log("USFestivalInPersonBookingForm: Booking " + teachingItems.size() + " teaching items for price calculation");
         if (!teachingItems.isEmpty()) {
             tempBooking.bookScheduledItems(teachingItems, false);
             // Calculate date range for teachings
@@ -1067,7 +1051,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 .filter(si -> si.getDate() != null)
                 .filter(si -> !si.getDate().isBefore(arrivalDate) && si.getDate().isBefore(departureDate)) // accommodation nights
                 .collect(java.util.stream.Collectors.toList());
-            Console.log("USFestivalBookingForm: Booking " + accommodationScheduledItems.size() + " accommodation items for " + accommodationItem.getName());
+            Console.log("USFestivalInPersonBookingForm: Booking " + accommodationScheduledItems.size() + " accommodation items for " + accommodationItem.getName());
             if (!accommodationScheduledItems.isEmpty()) {
                 tempBooking.bookScheduledItems(accommodationScheduledItems, false);
                 accommodationNightsCount = accommodationScheduledItems.size();
@@ -1081,7 +1065,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Calculate total price
         int totalPrice = tempBooking.calculateTotal();
-        Console.log("USFestivalBookingForm: Total price calculated: " + totalPrice + " for " +
+        Console.log("USFestivalInPersonBookingForm: Total price calculated: " + totalPrice + " for " +
             (accommodationItem != null ? accommodationItem.getName() : "Day Visitor/Share"));
 
         // Build price breakdown by category
@@ -1119,7 +1103,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         Item lunchItem = lunchTimeline != null ? lunchTimeline.getItem() : null;
         Item dinnerItem = dinnerTimeline != null ? dinnerTimeline.getItem() : null;
 
-        Console.log("USFestivalBookingForm: Meal items from PolicyAggregate - breakfast=" +
+        Console.log("USFestivalInPersonBookingForm: Meal items from PolicyAggregate - breakfast=" +
             (breakfastItem != null ? breakfastItem.getName() + " (id=" + breakfastItem.getPrimaryKey() + ")" : "null") +
             ", lunch=" + (lunchItem != null ? lunchItem.getName() + " (id=" + lunchItem.getPrimaryKey() + ")" : "null") +
             ", dinner=" + (dinnerItem != null ? dinnerItem.getName() + " (id=" + dinnerItem.getPrimaryKey() + ")" : "null"));
@@ -1130,13 +1114,13 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         List<one.modality.base.shared.entities.Attendance> dinnerAttendances = new ArrayList<>();
 
         List<one.modality.base.shared.entities.Attendance> bookedAttendances = tempBooking.getBookedAttendances();
-        Console.log("USFestivalBookingForm: Processing " + bookedAttendances.size() + " booked attendances for meal categorization");
+        Console.log("USFestivalInPersonBookingForm: Processing " + bookedAttendances.size() + " booked attendances for meal categorization");
 
         int mealsAttendanceCount = 0;
         for (one.modality.base.shared.entities.Attendance attendance : bookedAttendances) {
             ScheduledItem attendanceSi = attendance.getScheduledItem();
             if (attendanceSi == null) {
-                Console.log("USFestivalBookingForm: Attendance has null ScheduledItem");
+                Console.log("USFestivalInPersonBookingForm: Attendance has null ScheduledItem");
                 continue;
             }
 
@@ -1161,7 +1145,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             one.modality.base.shared.entities.Timeline siTimeline = originalSi.getTimeline();
             Item timelineItem = siTimeline != null ? siTimeline.getItem() : null;
 
-            Console.log("USFestivalBookingForm: Meal attendance - date=" + attendance.getDate() +
+            Console.log("USFestivalInPersonBookingForm: Meal attendance - date=" + attendance.getDate() +
                 ", originalSi=" + (originalSi != null ? originalSi.getName() : "null") +
                 ", timeline=" + (siTimeline != null ? "id=" + siTimeline.getPrimaryKey() + ", startTime=" + siTimeline.getStartTime() : "null") +
                 ", timelineItem=" + (timelineItem != null ? timelineItem.getName() + " (id=" + timelineItem.getPrimaryKey() + ")" : "null"));
@@ -1169,23 +1153,23 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             // Match by Timeline's Item (using primary key comparison)
             if (breakfastItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, breakfastItem)) {
                 breakfastAttendances.add(attendance);
-                Console.log("USFestivalBookingForm: -> Matched BREAKFAST");
+                Console.log("USFestivalInPersonBookingForm: -> Matched BREAKFAST");
             } else if (lunchItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, lunchItem)) {
                 lunchAttendances.add(attendance);
-                Console.log("USFestivalBookingForm: -> Matched LUNCH");
+                Console.log("USFestivalInPersonBookingForm: -> Matched LUNCH");
             } else if (dinnerItem != null && dev.webfx.stack.orm.entity.Entities.samePrimaryKey(timelineItem, dinnerItem)) {
                 dinnerAttendances.add(attendance);
-                Console.log("USFestivalBookingForm: -> Matched DINNER");
+                Console.log("USFestivalInPersonBookingForm: -> Matched DINNER");
             } else {
-                Console.log("USFestivalBookingForm: -> NO MATCH (breakfastItem=" +
+                Console.log("USFestivalInPersonBookingForm: -> NO MATCH (breakfastItem=" +
                     (breakfastItem != null ? breakfastItem.getPrimaryKey() : "null") +
                     ", lunchItem=" + (lunchItem != null ? lunchItem.getPrimaryKey() : "null") +
                     ", dinnerItem=" + (dinnerItem != null ? dinnerItem.getPrimaryKey() : "null") + ")");
             }
         }
 
-        Console.log("USFestivalBookingForm: Found " + mealsAttendanceCount + " meals attendances out of " + bookedAttendances.size() + " total");
-        Console.log("USFestivalBookingForm: Meal breakdown - breakfast=" + breakfastAttendances.size() +
+        Console.log("USFestivalInPersonBookingForm: Found " + mealsAttendanceCount + " meals attendances out of " + bookedAttendances.size() + " total");
+        Console.log("USFestivalInPersonBookingForm: Meal breakdown - breakfast=" + breakfastAttendances.size() +
             ", lunch=" + lunchAttendances.size() + ", dinner=" + dinnerAttendances.size());
 
         // Add breakdown for each meal type using attendance count and rate
@@ -1196,7 +1180,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Calculate total from breakdown to ensure card price matches breakdown
         // (tempBooking.calculateTotal() might include items not shown in breakdown due to categorization)
         int breakdownTotal = breakdown.stream().mapToInt(item -> item.getPrice()).sum();
-        Console.log("USFestivalBookingForm: Breakdown total: " + breakdownTotal + " (tempBooking total was: " + totalPrice + ")");
+        Console.log("USFestivalInPersonBookingForm: Breakdown total: " + breakdownTotal + " (tempBooking total was: " + totalPrice + ")");
 
         return new AccommodationPriceResult(breakdownTotal, breakdown);
     }
@@ -1217,7 +1201,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Create a temporary WorkingBooking for teachings and meals (which have ScheduledItems)
         WorkingBooking tempBooking = new WorkingBooking(policyAggregate, null);
 
-        Console.log("USFestivalBookingForm: Calculating Share Accommodation price with item: " +
+        Console.log("USFestivalInPersonBookingForm: Calculating Share Accommodation price with item: " +
             (sharingAccommodationItem != null ? sharingAccommodationItem.getName() : "null"));
 
         // Track dates for breakdown display
@@ -1229,7 +1213,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             .filter(si -> si.getDate() != null)
             .filter(si -> !si.getDate().isBefore(arrivalDate) && !si.getDate().isAfter(departureDate))
             .collect(java.util.stream.Collectors.toList());
-        Console.log("USFestivalBookingForm: Booking " + teachingItems.size() + " teaching items for share accommodation price calculation");
+        Console.log("USFestivalInPersonBookingForm: Booking " + teachingItems.size() + " teaching items for share accommodation price calculation");
         if (!teachingItems.isEmpty()) {
             tempBooking.bookScheduledItems(teachingItems, false);
             // Calculate date range for teachings
@@ -1262,7 +1246,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
             int pricePerNight = itemRate != null && itemRate.getPrice() != null ? itemRate.getPrice() : 0;
             sharingAccommodationPrice = pricePerNight * accommodationNightsCount;
-            Console.log("USFestivalBookingForm: Sharing accommodation price: " + pricePerNight + " x " + accommodationNightsCount + " nights = " + sharingAccommodationPrice);
+            Console.log("USFestivalInPersonBookingForm: Sharing accommodation price: " + pricePerNight + " x " + accommodationNightsCount + " nights = " + sharingAccommodationPrice);
         }
 
         // 3. Book all meals within event boundaries (they have ScheduledItems)
@@ -1271,11 +1255,11 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Calculate teachings + meals price from WorkingBooking
         int teachingsAndMealsPrice = tempBooking.calculateTotal();
-        Console.log("USFestivalBookingForm: Teachings + meals price: " + teachingsAndMealsPrice);
+        Console.log("USFestivalInPersonBookingForm: Teachings + meals price: " + teachingsAndMealsPrice);
 
         // Total = teachings + meals + sharing accommodation
         int totalPrice = teachingsAndMealsPrice + sharingAccommodationPrice;
-        Console.log("USFestivalBookingForm: Share Accommodation total price calculated: " + totalPrice);
+        Console.log("USFestivalInPersonBookingForm: Share Accommodation total price calculated: " + totalPrice);
 
         // Build price breakdown by category
         List<USFestivalAccommodationSelectionSection.PriceBreakdownItem> breakdown = new ArrayList<>();
@@ -1353,7 +1337,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Calculate total from breakdown to ensure card price matches breakdown
         int breakdownTotal = breakdown.stream().mapToInt(item -> item.getPrice()).sum();
-        Console.log("USFestivalBookingForm: Share Accommodation breakdown total: " + breakdownTotal + " (calculated total was: " + totalPrice + ")");
+        Console.log("USFestivalInPersonBookingForm: Share Accommodation breakdown total: " + breakdownTotal + " (calculated total was: " + totalPrice + ")");
 
         return new AccommodationPriceResult(breakdownTotal, breakdown);
     }
@@ -1406,7 +1390,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         int totalPrice = pricePerMeal * attendances.size();
 
-        Console.log("USFestivalBookingForm: " + mealType + " - " + attendances.size() +
+        Console.log("USFestivalInPersonBookingForm: " + mealType + " - " + attendances.size() +
             " attendances x $" + (pricePerMeal / 100.0) + " = $" + (totalPrice / 100.0));
 
         // Show item in breakdown even if price is $0 (e.g., included breakfast)
@@ -1440,17 +1424,17 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                                                LocalDate arrivalDate, LocalDate departureDate, boolean hasAccommodation) {
         List<ScheduledItem> mealsItems = policyAggregate.filterScheduledItemsOfFamily(KnownItemFamily.MEALS);
         if (mealsItems.isEmpty()) {
-            Console.log("USFestivalBookingForm: No meals ScheduledItems found");
+            Console.log("USFestivalInPersonBookingForm: No meals ScheduledItems found");
             return;
         }
 
-        Console.log("USFestivalBookingForm: Found " + mealsItems.size() + " total meal ScheduledItems");
+        Console.log("USFestivalInPersonBookingForm: Found " + mealsItems.size() + " total meal ScheduledItems");
 
         // Get the main EventPart to find boundaries (including time)
         one.modality.base.shared.entities.EventPart mainEventPart = findMainEventPart(policyAggregate);
 
         if (mainEventPart != null) {
-            Console.log("USFestivalBookingForm: Main EventPart: " + mainEventPart.getName() +
+            Console.log("USFestivalInPersonBookingForm: Main EventPart: " + mainEventPart.getName() +
                 " (" + mainEventPart.getStartDate() + " " + mainEventPart.getStartTime() +
                 " to " + mainEventPart.getEndDate() + " " + mainEventPart.getEndTime() + ")");
         }
@@ -1459,7 +1443,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         final one.modality.base.shared.entities.Timeline breakfastTimeline = policyAggregate.getBreakfastTimeline();
         final Item breakfastItem = breakfastTimeline != null ? breakfastTimeline.getItem() : null;
 
-        Console.log("USFestivalBookingForm: Breakfast item from PolicyAggregate: " +
+        Console.log("USFestivalInPersonBookingForm: Breakfast item from PolicyAggregate: " +
             (breakfastItem != null ? breakfastItem.getName() + " (id=" + breakfastItem.getPrimaryKey() + ")" : "null"));
 
         // Build accommodation nights set for breakfast calculation
@@ -1477,7 +1461,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         List<ScheduledItem> mealsWithinBoundaries;
         if (mainEventPart != null) {
             mealsWithinBoundaries = one.modality.base.shared.entities.util.ScheduledItems.filterOverPeriod(mealsItems, mainEventPart);
-            Console.log("USFestivalBookingForm: After filterOverPeriod: " + mealsWithinBoundaries.size() + " meals within EventPart boundaries");
+            Console.log("USFestivalInPersonBookingForm: After filterOverPeriod: " + mealsWithinBoundaries.size() + " meals within EventPart boundaries");
 
             // Debug: log which meals were excluded
             for (ScheduledItem msi : mealsItems) {
@@ -1486,14 +1470,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     one.modality.base.shared.entities.Timeline mealTimeline = msi.getTimeline();
                     String mealType = mealTimeline != null && mealTimeline.getItem() != null ? mealTimeline.getItem().getName() : "Unknown";
                     LocalTime mealTime = one.modality.base.shared.entities.util.ScheduledItems.getSessionStartTime(msi);
-                    Console.log("USFestivalBookingForm: Excluded " + mealType + " on " + mealDate + " at " + mealTime +
+                    Console.log("USFestivalInPersonBookingForm: Excluded " + mealType + " on " + mealDate + " at " + mealTime +
                         " (outside EventPart boundaries)");
                 }
             }
         } else {
             // Fallback: use all meals if no EventPart found
             mealsWithinBoundaries = mealsItems;
-            Console.log("USFestivalBookingForm: No EventPart found, using all meals");
+            Console.log("USFestivalInPersonBookingForm: No EventPart found, using all meals");
         }
 
         // Filter meals by arrival/departure dates and breakfast accommodation rule
@@ -1521,7 +1505,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             })
             .collect(java.util.stream.Collectors.toList());
 
-        Console.log("USFestivalBookingForm: Booking " + mealsToBook.size() + " meal ScheduledItems within EventPart time boundaries");
+        Console.log("USFestivalInPersonBookingForm: Booking " + mealsToBook.size() + " meal ScheduledItems within EventPart time boundaries");
 
         // Book all meals
         if (!mealsToBook.isEmpty()) {
@@ -1537,7 +1521,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private one.modality.base.shared.entities.EventPart findMainEventPart(PolicyAggregate policyAggregate) {
         dev.webfx.stack.orm.entity.EntityList<one.modality.base.shared.entities.EventPart> eventParts = policyAggregate.getEventParts();
         if (eventParts == null || eventParts.isEmpty()) {
-            Console.log("USFestivalBookingForm: No EventParts found");
+            Console.log("USFestivalInPersonBookingForm: No EventParts found");
             return null;
         }
 
@@ -1545,8 +1529,8 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         one.modality.base.shared.entities.EventPart earlyArrivalPart = policyAggregate.getEarlyArrivalPart();
         one.modality.base.shared.entities.EventPart lateDeparturePart = policyAggregate.getLateDeparturePart();
 
-        Console.log("USFestivalBookingForm: PolicyAggregate early arrival part: " + (earlyArrivalPart != null ? earlyArrivalPart.getName() : "none"));
-        Console.log("USFestivalBookingForm: PolicyAggregate late departure part: " + (lateDeparturePart != null ? lateDeparturePart.getName() : "none"));
+        Console.log("USFestivalInPersonBookingForm: PolicyAggregate early arrival part: " + (earlyArrivalPart != null ? earlyArrivalPart.getName() : "none"));
+        Console.log("USFestivalInPersonBookingForm: PolicyAggregate late departure part: " + (lateDeparturePart != null ? lateDeparturePart.getName() : "none"));
 
         // If PolicyAggregate methods work, use them to find the main part
         if (earlyArrivalPart != null || lateDeparturePart != null) {
@@ -1557,7 +1541,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     dev.webfx.stack.orm.entity.Entities.samePrimaryKey(part, lateDeparturePart);
 
                 if (!isEarlyArrival && !isLateDeparture) {
-                    Console.log("USFestivalBookingForm: Found main EventPart: " + part.getName() +
+                    Console.log("USFestivalInPersonBookingForm: Found main EventPart: " + part.getName() +
                         " (" + part.getStartDate() + " " + part.getStartTime() +
                         " to " + part.getEndDate() + " " + part.getEndTime() + ")");
                     return part;
@@ -1567,7 +1551,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // If PolicyAggregate methods return null, identify parts by their dates
         // The main event is typically the longest part (most days)
-        Console.log("USFestivalBookingForm: PolicyAggregate methods returned null, identifying parts by dates");
+        Console.log("USFestivalInPersonBookingForm: PolicyAggregate methods returned null, identifying parts by dates");
         one.modality.base.shared.entities.EventPart longestPart = null;
         long longestDuration = -1;
 
@@ -1576,7 +1560,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             LocalDate partEnd = part.getEndDate();
             if (partStart != null && partEnd != null) {
                 long duration = ChronoUnit.DAYS.between(partStart, partEnd);
-                Console.log("USFestivalBookingForm: EventPart " + part.getName() +
+                Console.log("USFestivalInPersonBookingForm: EventPart " + part.getName() +
                     " (" + partStart + " to " + partEnd + ") duration: " + duration + " days");
                 if (duration > longestDuration) {
                     longestDuration = duration;
@@ -1586,11 +1570,11 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         if (longestPart != null) {
-            Console.log("USFestivalBookingForm: Identified main EventPart by longest duration: " + longestPart.getName() +
+            Console.log("USFestivalInPersonBookingForm: Identified main EventPart by longest duration: " + longestPart.getName() +
                 " (" + longestPart.getStartDate() + " " + longestPart.getStartTime() +
                 " to " + longestPart.getEndDate() + " " + longestPart.getEndTime() + ")");
         } else {
-            Console.log("USFestivalBookingForm: No main EventPart found");
+            Console.log("USFestivalInPersonBookingForm: No main EventPart found");
         }
 
         return longestPart;
@@ -1637,13 +1621,13 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private DefaultMealsSelectionSection.MealBoundary determineMealFromBoundary(
             one.modality.base.shared.entities.ScheduledBoundary boundary, LocalTime fallbackTime) {
         if (boundary == null) {
-            Console.log("USFestivalBookingForm: ScheduledBoundary is null, falling back to time-based detection");
+            Console.log("USFestivalInPersonBookingForm: ScheduledBoundary is null, falling back to time-based detection");
             return determineMealFromTime(fallbackTime);
         }
 
         one.modality.base.shared.entities.ScheduledItem scheduledItem = boundary.getScheduledItem();
         if (scheduledItem == null) {
-            Console.log("USFestivalBookingForm: Boundary ScheduledItem is null, falling back to time-based detection");
+            Console.log("USFestivalInPersonBookingForm: Boundary ScheduledItem is null, falling back to time-based detection");
             return determineMealFromTime(fallbackTime);
         }
 
@@ -1652,7 +1636,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             scheduledItem, one.modality.base.shared.knownitems.KnownItemFamily.MEALS);
 
         if (!isMeal) {
-            Console.log("USFestivalBookingForm: Boundary item '" + scheduledItem.getName() +
+            Console.log("USFestivalInPersonBookingForm: Boundary item '" + scheduledItem.getName() +
                 "' is not a meal, falling back to time-based detection");
             return determineMealFromTime(fallbackTime);
         }
@@ -1669,7 +1653,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         if (itemName != null) {
             String lowerName = itemName.toLowerCase();
-            Console.log("USFestivalBookingForm: Boundary meal item name: '" + itemName + "'");
+            Console.log("USFestivalInPersonBookingForm: Boundary meal item name: '" + itemName + "'");
 
             if (lowerName.contains("breakfast") || lowerName.contains("morning")) {
                 return DefaultMealsSelectionSection.MealBoundary.BREAKFAST;
@@ -1681,7 +1665,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         // If we couldn't determine from name, fall back to time-based detection
-        Console.log("USFestivalBookingForm: Could not determine meal type from item name '" + itemName +
+        Console.log("USFestivalInPersonBookingForm: Could not determine meal type from item name '" + itemName +
             "', falling back to time-based detection");
         return determineMealFromTime(fallbackTime);
     }
@@ -1712,7 +1696,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         LocalTime endTime = one.modality.base.shared.entities.util.ScheduledBoundaries.getTime(endBoundary, true);
 
         // Debug logging to understand what data is available
-        Console.log("USFestivalBookingForm: Creating main event period with boundary times:");
+        Console.log("USFestivalInPersonBookingForm: Creating main event period with boundary times:");
         if (startBoundary != null) {
             one.modality.base.shared.entities.ScheduledItem startItem = startBoundary.getScheduledItem();
             Console.log("  startBoundary: scheduledItem=" + (startItem != null ? startItem.getName() : "null") +
@@ -1760,20 +1744,20 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Get sharing accommodation item from PolicyAggregate
         one.modality.base.shared.entities.ItemPolicy sharingAccommodationItemPolicy = policyAggregate.getSharingAccommodationItemPolicy();
         if (sharingAccommodationItemPolicy == null) {
-            Console.log("USFestivalBookingForm: No sharing accommodation item configured - skipping Share Accommodation option");
+            Console.log("USFestivalInPersonBookingForm: No sharing accommodation item configured - skipping Share Accommodation option");
             return;
         }
         Item sharingAccommodationItem = sharingAccommodationItemPolicy.getItem();
         if (sharingAccommodationItem == null) {
-            Console.log("USFestivalBookingForm: Sharing accommodation ItemPolicy has no item - skipping");
+            Console.log("USFestivalInPersonBookingForm: Sharing accommodation ItemPolicy has no item - skipping");
             return;
         }
 
-        Console.log("USFestivalBookingForm: Found sharing accommodation item: " + sharingAccommodationItem.getName());
+        Console.log("USFestivalInPersonBookingForm: Found sharing accommodation item: " + sharingAccommodationItem.getName());
 
         // Calculate price and breakdown using the sharing accommodation item
         AccommodationPriceResult priceResult = calculateShareAccommodationPriceWithWorkingBooking(policyAggregate, sharingAccommodationItem, arrivalDate, departureDate);
-        Console.log("USFestivalBookingForm: Calculated Share Accommodation price: " + priceResult.totalPrice);
+        Console.log("USFestivalInPersonBookingForm: Calculated Share Accommodation price: " + priceResult.totalPrice);
 
         // Store the breakdown for this option using the item's primary key
         accommodationSection.setBreakdownForOption(sharingAccommodationItem.getPrimaryKey(), priceResult.breakdown);
@@ -1802,7 +1786,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             );
 
         accommodationSection.addAccommodationOption(shareAccommodation);
-        Console.log("USFestivalBookingForm: Share Accommodation option added with item '" + sharingAccommodationItem.getName() + "' and price: " + priceResult.totalPrice);
+        Console.log("USFestivalInPersonBookingForm: Share Accommodation option added with item '" + sharingAccommodationItem.getName() + "' and price: " + priceResult.totalPrice);
     }
 
     /**
@@ -1815,7 +1799,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Calculate price and breakdown (teachings + meals, no accommodation, no breakfast since no overnight stay)
         // Day visitor has no accommodation availability to track (pass null)
         AccommodationPriceResult priceResult = calculateAccommodationPriceWithWorkingBooking(policyAggregate, null, arrivalDate, departureDate, null);
-        Console.log("USFestivalBookingForm: Calculated Day Visitor price: " + priceResult.totalPrice);
+        Console.log("USFestivalInPersonBookingForm: Calculated Day Visitor price: " + priceResult.totalPrice);
 
         // Store the breakdown for this option
         accommodationSection.setBreakdownForOption("DAY_VISITOR", priceResult.breakdown);
@@ -1838,7 +1822,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             );
 
         accommodationSection.addAccommodationOption(dayVisitor);
-        Console.log("USFestivalBookingForm: Day Visitor option added with price: " + priceResult.totalPrice);
+        Console.log("USFestivalInPersonBookingForm: Day Visitor option added with price: " + priceResult.totalPrice);
     }
 
     // ========================================
@@ -1854,33 +1838,33 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void populateFestivalDays() {
         // Skip if already populated
         if (festivalDaysPopulated) {
-            Console.log("USFestivalBookingForm: Festival days already populated, skipping");
+            Console.log("USFestivalInPersonBookingForm: Festival days already populated, skipping");
             return;
         }
 
         if (festivalDaySection == null) {
-            Console.log("USFestivalBookingForm: festivalDaySection is null, skipping population");
+            Console.log("USFestivalInPersonBookingForm: festivalDaySection is null, skipping population");
             return;
         }
 
         if (workingBookingProperties == null) {
-            Console.log("USFestivalBookingForm: WorkingBookingProperties not available yet for festival days");
+            Console.log("USFestivalInPersonBookingForm: WorkingBookingProperties not available yet for festival days");
             return;
         }
 
         // Check if WorkingBooking is initialized before accessing PolicyAggregate
         if (workingBookingProperties.getWorkingBooking() == null) {
-            Console.log("USFestivalBookingForm: WorkingBooking not initialized yet for festival days");
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking not initialized yet for festival days");
             return;
         }
 
         PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         if (policyAggregate == null) {
-            Console.log("USFestivalBookingForm: PolicyAggregate not available yet for festival days");
+            Console.log("USFestivalInPersonBookingForm: PolicyAggregate not available yet for festival days");
             return;
         }
 
-        Console.log("USFestivalBookingForm: Populating festival days from PolicyAggregate");
+        Console.log("USFestivalInPersonBookingForm: Populating festival days from PolicyAggregate");
 
         // Find the main EventPart to get accurate boundary dates
         // The main EventPart excludes early arrival and late departure periods
@@ -1892,7 +1876,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             LocalDate mainStartDate = mainEventPart.getStartDate();
             LocalDate mainEndDate = mainEventPart.getEndDate();
 
-            Console.log("USFestivalBookingForm: Setting festival day section main event boundaries: " +
+            Console.log("USFestivalInPersonBookingForm: Setting festival day section main event boundaries: " +
                 mainStartDate + " to " + mainEndDate);
 
             if (mainStartDate != null) {
@@ -1924,7 +1908,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     LocalDate partStartDate = part.getStartDate();
                     if (partStartDate != null && !partStartDate.isBefore(mainEndDate)) {
                         lateDeparturePart = part;
-                        Console.log("USFestivalBookingForm: Found late departure part by date: " + part.getName() +
+                        Console.log("USFestivalInPersonBookingForm: Found late departure part by date: " + part.getName() +
                             " (starts " + partStartDate + " which is on or after main event end " + mainEndDate + ")");
                         break;
                     }
@@ -1939,11 +1923,11 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             LocalDate lateDepartureEndDate = lateDeparturePart.getEndDate();
             if (lateDepartureEndDate != null) {
                 festivalDaySection.setLateDepartureEndDate(lateDepartureEndDate);
-                Console.log("USFestivalBookingForm: Late departure end date: " + lateDepartureEndDate);
+                Console.log("USFestivalInPersonBookingForm: Late departure end date: " + lateDepartureEndDate);
             }
         }
 
-        Console.log("USFestivalBookingForm: Late departure part: " +
+        Console.log("USFestivalInPersonBookingForm: Late departure part: " +
             (lateDeparturePart != null ? lateDeparturePart.getName() : "none"));
 
         // Populate festival days from PolicyAggregate
@@ -1951,7 +1935,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Mark as populated to avoid re-populating
         festivalDaysPopulated = true;
-        Console.log("USFestivalBookingForm: Festival days populated successfully");
+        Console.log("USFestivalInPersonBookingForm: Festival days populated successfully");
     }
 
     // ========================================
@@ -1967,32 +1951,32 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void populateMealsOptions() {
         // Skip if already populated
         if (mealsOptionsPopulated) {
-            Console.log("USFestivalBookingForm: Meals options already populated, skipping");
+            Console.log("USFestivalInPersonBookingForm: Meals options already populated, skipping");
             return;
         }
 
         if (mealsSection == null) {
-            Console.log("USFestivalBookingForm: mealsSection is null, skipping population");
+            Console.log("USFestivalInPersonBookingForm: mealsSection is null, skipping population");
             return;
         }
 
         if (workingBookingProperties == null) {
-            Console.log("USFestivalBookingForm: WorkingBookingProperties not available yet for meals");
+            Console.log("USFestivalInPersonBookingForm: WorkingBookingProperties not available yet for meals");
             return;
         }
 
         if (workingBookingProperties.getWorkingBooking() == null) {
-            Console.log("USFestivalBookingForm: WorkingBooking not initialized yet for meals");
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking not initialized yet for meals");
             return;
         }
 
         PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         if (policyAggregate == null) {
-            Console.log("USFestivalBookingForm: PolicyAggregate not available yet for meals");
+            Console.log("USFestivalInPersonBookingForm: PolicyAggregate not available yet for meals");
             return;
         }
 
-        Console.log("USFestivalBookingForm: Populating meals options from PolicyAggregate");
+        Console.log("USFestivalInPersonBookingForm: Populating meals options from PolicyAggregate");
 
         // Find the main EventPart to get accurate boundary dates and times
         // The main EventPart excludes early arrival and late departure periods
@@ -2006,60 +1990,60 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             LocalTime mainStartTime = mainEventPart.getStartTime();
             LocalTime mainEndTime = mainEventPart.getEndTime();
 
-            Console.log("USFestivalBookingForm: Main EventPart boundaries - " +
+            Console.log("USFestivalInPersonBookingForm: Main EventPart boundaries - " +
                 "start: " + mainStartDate + " " + mainStartTime +
                 ", end: " + mainEndDate + " " + mainEndTime);
 
             if (mainStartDate != null) {
                 mealsSection.setEventBoundaryStartDate(mainStartDate);
-                Console.log("USFestivalBookingForm: Set meals section event boundary start date: " + mainStartDate);
+                Console.log("USFestivalInPersonBookingForm: Set meals section event boundary start date: " + mainStartDate);
             }
             if (mainEndDate != null) {
                 mealsSection.setEventBoundaryEndDate(mainEndDate);
-                Console.log("USFestivalBookingForm: Set meals section event boundary end date: " + mainEndDate);
+                Console.log("USFestivalInPersonBookingForm: Set meals section event boundary end date: " + mainEndDate);
             }
 
             // Get meal ScheduledItems for isInPeriod checks (needed before creating period)
             java.util.List<one.modality.base.shared.entities.ScheduledItem> mealItems =
                 policyAggregate.filterScheduledItemsOfFamily(one.modality.base.shared.knownitems.KnownItemFamily.MEALS);
             mealsSection.setMealScheduledItems(mealItems);
-            Console.log("USFestivalBookingForm: Set meals section meal ScheduledItems: " + mealItems.size() + " items");
+            Console.log("USFestivalInPersonBookingForm: Set meals section meal ScheduledItems: " + mealItems.size() + " items");
 
             // Determine which meal marks the start of the main event from the ScheduledBoundary
             // The boundary's ScheduledItem tells us exactly what item marks the boundary
             one.modality.base.shared.entities.ScheduledBoundary startBoundary = mainEventPart.getStartBoundary();
             DefaultMealsSelectionSection.MealBoundary startMeal = determineMealFromBoundary(startBoundary, mainStartTime);
             mealsSection.setEventBoundaryStartMeal(startMeal);
-            Console.log("USFestivalBookingForm: Set meals section event boundary start meal: " + startMeal);
+            Console.log("USFestivalInPersonBookingForm: Set meals section event boundary start meal: " + startMeal);
 
             // Determine which meal marks the end of the main event from the ScheduledBoundary
             one.modality.base.shared.entities.ScheduledBoundary endBoundary = mainEventPart.getEndBoundary();
             DefaultMealsSelectionSection.MealBoundary endMeal = determineMealFromBoundary(endBoundary, mainEndTime);
             mealsSection.setEventBoundaryEndMeal(endMeal);
-            Console.log("USFestivalBookingForm: Set meals section event boundary end meal: " + endMeal);
+            Console.log("USFestivalInPersonBookingForm: Set meals section event boundary end meal: " + endMeal);
 
             // Create a Period with actual times from the boundary ScheduledItems
             // The EventPart's times may be null, so we derive times from the boundary meals
             one.modality.base.shared.entities.Period mainEventPeriodWithTimes = createMainEventPeriodWithBoundaryTimes(
                 mainEventPart, startBoundary, endBoundary, mealItems);
             mealsSection.setMainEventPeriod(mainEventPeriodWithTimes);
-            Console.log("USFestivalBookingForm: Set meals section main event period with boundary times");
+            Console.log("USFestivalInPersonBookingForm: Set meals section main event period with boundary times");
         } else {
             // Fallback to event dates if no main EventPart found
-            Console.log("USFestivalBookingForm: No main EventPart found, using event dates as boundaries");
+            Console.log("USFestivalInPersonBookingForm: No main EventPart found, using event dates as boundaries");
             if (eventStartDate != null) {
                 mealsSection.setEventBoundaryStartDate(eventStartDate);
-                Console.log("USFestivalBookingForm: Set meals section event boundary start: " + eventStartDate);
+                Console.log("USFestivalInPersonBookingForm: Set meals section event boundary start: " + eventStartDate);
             }
             if (eventEndDate != null) {
                 mealsSection.setEventBoundaryEndDate(eventEndDate);
-                Console.log("USFestivalBookingForm: Set meals section event boundary end: " + eventEndDate);
+                Console.log("USFestivalInPersonBookingForm: Set meals section event boundary end: " + eventEndDate);
             }
             // Pass meal ScheduledItems for isInPeriod checks (fallback case)
             java.util.List<one.modality.base.shared.entities.ScheduledItem> mealItems =
                 policyAggregate.filterScheduledItemsOfFamily(one.modality.base.shared.knownitems.KnownItemFamily.MEALS);
             mealsSection.setMealScheduledItems(mealItems);
-            Console.log("USFestivalBookingForm: Set meals section meal ScheduledItems: " + mealItems.size() + " items");
+            Console.log("USFestivalInPersonBookingForm: Set meals section meal ScheduledItems: " + mealItems.size() + " items");
         }
 
         // Populate meals options from PolicyAggregate
@@ -2069,12 +2053,12 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
         if (workingBooking != null) {
             mealsSection.setWorkingBooking(workingBooking);
-            Console.log("USFestivalBookingForm: Set WorkingBooking on mealsSection for DocumentBill pricing");
+            Console.log("USFestivalInPersonBookingForm: Set WorkingBooking on mealsSection for DocumentBill pricing");
         }
 
         // Mark as populated to avoid re-populating
         mealsOptionsPopulated = true;
-        Console.log("USFestivalBookingForm: Meals options populated successfully");
+        Console.log("USFestivalInPersonBookingForm: Meals options populated successfully");
     }
 
     // ========================================
@@ -2090,23 +2074,23 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void populateAudioRecordingPhaseOptions() {
         // Skip if already populated
         if (audioRecordingPhasePopulated) {
-            Console.log("USFestivalBookingForm: Audio recording phase options already populated, skipping");
+            Console.log("USFestivalInPersonBookingForm: Audio recording phase options already populated, skipping");
             return;
         }
 
         if (audioRecordingPhaseSection == null) {
-            Console.log("USFestivalBookingForm: audioRecordingPhaseSection is null, skipping population");
+            Console.log("USFestivalInPersonBookingForm: audioRecordingPhaseSection is null, skipping population");
             return;
         }
 
         if (workingBookingProperties == null || workingBookingProperties.getWorkingBooking() == null) {
-            Console.log("USFestivalBookingForm: WorkingBooking not available yet for audio recording phase options");
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking not available yet for audio recording phase options");
             return;
         }
 
         PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         if (policyAggregate == null) {
-            Console.log("USFestivalBookingForm: PolicyAggregate not available yet for audio recording phase options");
+            Console.log("USFestivalInPersonBookingForm: PolicyAggregate not available yet for audio recording phase options");
             return;
         }
 
@@ -2116,14 +2100,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         if (phaseCoverages == null || phaseCoverages.size() <= 1) {
             // No phase coverages or only one - hide section and let additional options handle audio recording
-            Console.log("USFestivalBookingForm: " + (phaseCoverages == null ? 0 : phaseCoverages.size()) +
+            Console.log("USFestivalInPersonBookingForm: " + (phaseCoverages == null ? 0 : phaseCoverages.size()) +
                 " audio recording phase coverages found - hiding phase section");
             audioRecordingPhaseSection.setVisible(false);
             audioRecordingPhasePopulated = true;
             return;
         }
 
-        Console.log("USFestivalBookingForm: Populating audio recording phase options from PolicyAggregate");
+        Console.log("USFestivalInPersonBookingForm: Populating audio recording phase options from PolicyAggregate");
 
         // Set workingBookingProperties on the section (needed for price calculation)
         audioRecordingPhaseSection.setWorkingBookingProperties(workingBookingProperties);
@@ -2136,7 +2120,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Mark as populated to avoid re-populating
         audioRecordingPhasePopulated = true;
-        Console.log("USFestivalBookingForm: Audio recording phase options populated successfully with " +
+        Console.log("USFestivalInPersonBookingForm: Audio recording phase options populated successfully with " +
             phaseCoverages.size() + " options");
     }
 
@@ -2153,57 +2137,57 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     private void populateAdditionalOptions() {
         // Skip if already populated
         if (additionalOptionsPopulated) {
-            Console.log("USFestivalBookingForm: Additional options already populated, skipping");
+            Console.log("USFestivalInPersonBookingForm: Additional options already populated, skipping");
             return;
         }
 
         if (additionalOptionsSection == null) {
-            Console.log("USFestivalBookingForm: additionalOptionsSection is null, skipping population");
+            Console.log("USFestivalInPersonBookingForm: additionalOptionsSection is null, skipping population");
             return;
         }
 
         if (workingBookingProperties == null) {
-            Console.log("USFestivalBookingForm: WorkingBookingProperties not available yet for additional options");
+            Console.log("USFestivalInPersonBookingForm: WorkingBookingProperties not available yet for additional options");
             return;
         }
 
         if (workingBookingProperties.getWorkingBooking() == null) {
-            Console.log("USFestivalBookingForm: WorkingBooking not initialized yet for additional options");
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking not initialized yet for additional options");
             return;
         }
 
         PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         if (policyAggregate == null) {
-            Console.log("USFestivalBookingForm: PolicyAggregate not available yet for additional options");
+            Console.log("USFestivalInPersonBookingForm: PolicyAggregate not available yet for additional options");
             return;
         }
 
-        Console.log("USFestivalBookingForm: Populating additional options from PolicyAggregate");
+        Console.log("USFestivalInPersonBookingForm: Populating additional options from PolicyAggregate");
 
         // Populate transport section first (parking + shuttle items)
         if (transportSection != null) {
             transportSection.populateFromPolicyAggregate(policyAggregate);
             boolean hasTransport = transportSection.hasAnyOptions();
             transportSection.setVisible(hasTransport);
-            Console.log("USFestivalBookingForm: Transport options populated - hasAnyOptions=" + hasTransport +
+            Console.log("USFestivalInPersonBookingForm: Transport options populated - hasAnyOptions=" + hasTransport +
                 " (parking=" + transportSection.hasParkingOptions() + ", shuttle=" + transportSection.hasShuttleOptions() + ")");
 
             // Exclude parking and transport items from additional options (handled by transport section)
             additionalOptionsSection.setExcludeParkingAndTransport(hasTransport);
-            Console.log("USFestivalBookingForm: Parking and transport excluded from additional options: " + hasTransport);
+            Console.log("USFestivalInPersonBookingForm: Parking and transport excluded from additional options: " + hasTransport);
         }
 
         // Exclude audio recording items if they're handled by the dedicated phase section
         boolean audioPhaseVisible = audioRecordingPhaseSection != null && audioRecordingPhaseSection.getView().isVisible();
         additionalOptionsSection.setExcludeAudioRecording(audioPhaseVisible);
-        Console.log("USFestivalBookingForm: Audio recording excluded from additional options: " + audioPhaseVisible);
+        Console.log("USFestivalInPersonBookingForm: Audio recording excluded from additional options: " + audioPhaseVisible);
 
         // Populate additional options from PolicyAggregate
         additionalOptionsSection.populateFromPolicyAggregate(policyAggregate);
 
         // Mark as populated to avoid re-populating
         additionalOptionsPopulated = true;
-        Console.log("USFestivalBookingForm: Additional options populated successfully");
+        Console.log("USFestivalInPersonBookingForm: Additional options populated successfully");
     }
 
     /**
@@ -2267,7 +2251,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             int daysToCharge = isBreakfast ? nights : teachingDays;
             if (daysToCharge > 0) {
                 totalMealsPrice += dailyMealRate * daysToCharge;
-                Console.log("USFestivalBookingForm: Meal item '" + item.getName() + "' rate=" + dailyMealRate + "/day * " + daysToCharge + " = " + (dailyMealRate * daysToCharge));
+                Console.log("USFestivalInPersonBookingForm: Meal item '" + item.getName() + "' rate=" + dailyMealRate + "/day * " + daysToCharge + " = " + (dailyMealRate * daysToCharge));
             }
         }
 
@@ -2301,14 +2285,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         Console.log("USFestivalBookingForm.bookSelectedItemsIntoWorkingBooking() - Booking selected items");
 
         if (workingBookingProperties == null || workingBookingProperties.getWorkingBooking() == null) {
-            Console.log("USFestivalBookingForm: WorkingBooking not available, skipping item booking");
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking not available, skipping item booking");
             return;
         }
 
         WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
         PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
         if (policyAggregate == null) {
-            Console.log("USFestivalBookingForm: PolicyAggregate not available, skipping item booking");
+            Console.log("USFestivalInPersonBookingForm: PolicyAggregate not available, skipping item booking");
             return;
         }
 
@@ -2433,7 +2417,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Add the request if we have any text
         if (requestText.length() > 0) {
             String request = requestText.toString().trim();
-            Console.log("USFestivalBookingForm: Adding booking details to request: " + request);
+            Console.log("USFestivalInPersonBookingForm: Adding booking details to request: " + request);
             workingBooking.addRequest(request);
         }
     }
@@ -2453,14 +2437,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             workingBooking.getFamilyDocumentLines(KnownItemFamily.ACCOMMODATION);
 
         if (accommodationLines == null || accommodationLines.isEmpty()) {
-            Console.log("USFestivalBookingForm: No accommodation lines found for setShareOwnerInfo");
+            Console.log("USFestivalInPersonBookingForm: No accommodation lines found for setShareOwnerInfo");
             return;
         }
 
         // Set share owner info on each accommodation line
         for (one.modality.base.shared.entities.DocumentLine line : accommodationLines) {
             workingBooking.setShareOwnerInfo(line, matesNames);
-            Console.log("USFestivalBookingForm: Set share owner info with " + matesNames.length + " mates on DocumentLine");
+            Console.log("USFestivalInPersonBookingForm: Set share owner info with " + matesNames.length + " mates on DocumentLine");
         }
     }
 
@@ -2479,14 +2463,14 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             workingBooking.getFamilyDocumentLines(KnownItemFamily.ACCOMMODATION);
 
         if (accommodationLines == null || accommodationLines.isEmpty()) {
-            Console.log("USFestivalBookingForm: No accommodation lines found for setShareMateInfo");
+            Console.log("USFestivalInPersonBookingForm: No accommodation lines found for setShareMateInfo");
             return;
         }
 
         // Set share mate info on each accommodation line
         for (one.modality.base.shared.entities.DocumentLine line : accommodationLines) {
             workingBooking.setShareMateInfo(line, ownerName);
-            Console.log("USFestivalBookingForm: Set share mate info with owner '" + ownerName + "' on DocumentLine");
+            Console.log("USFestivalInPersonBookingForm: Set share mate info with owner '" + ownerName + "' on DocumentLine");
         }
     }
 
@@ -2498,7 +2482,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // TODO: If festivalDaySection has specific day selection, filter by those dates
         List<ScheduledItem> teachingItems = policyAggregate.filterTeachingScheduledItems();
         if (!teachingItems.isEmpty()) {
-            Console.log("USFestivalBookingForm: Booking " + teachingItems.size() + " teaching items");
+            Console.log("USFestivalInPersonBookingForm: Booking " + teachingItems.size() + " teaching items");
             workingBooking.bookScheduledItems(teachingItems, false);
         }
     }
@@ -2513,7 +2497,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
      * @param sharingAccommodationItem the sharing accommodation Item (has share_mate=true)
      */
     private void bookShareAccommodationItem(WorkingBooking workingBooking, PolicyAggregate policyAggregate, Item sharingAccommodationItem) {
-        Console.log("USFestivalBookingForm: Booking sharing accommodation item: " + sharingAccommodationItem.getName());
+        Console.log("USFestivalInPersonBookingForm: Booking sharing accommodation item: " + sharingAccommodationItem.getName());
 
         // Get dates from festival day section
         LocalDate arrivalDate = null;
@@ -2535,12 +2519,12 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             if (!teachingDatesSorted.isEmpty()) {
                 arrivalDate = teachingDatesSorted.get(0);
                 departureDate = teachingDatesSorted.get(teachingDatesSorted.size() - 1).plusDays(1);
-                Console.log("USFestivalBookingForm: Using fallback dates from teaching for sharing accommodation: " + arrivalDate + " to " + departureDate);
+                Console.log("USFestivalInPersonBookingForm: Using fallback dates from teaching for sharing accommodation: " + arrivalDate + " to " + departureDate);
             }
         }
 
         if (arrivalDate == null || departureDate == null) {
-            Console.log("USFestivalBookingForm: No dates available for sharing accommodation - skipping");
+            Console.log("USFestivalInPersonBookingForm: No dates available for sharing accommodation - skipping");
             return;
         }
 
@@ -2553,7 +2537,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         if (accommodationDates.isEmpty()) {
-            Console.log("USFestivalBookingForm: No accommodation dates calculated - skipping");
+            Console.log("USFestivalInPersonBookingForm: No accommodation dates calculated - skipping");
             return;
         }
 
@@ -2566,7 +2550,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Book using bookTemporalButNonScheduledItem (since sharing accommodation has no ScheduledItem entries)
         workingBooking.bookTemporalButNonScheduledItem(site, sharingAccommodationItem, accommodationDates, false);
-        Console.log("USFestivalBookingForm: Booked sharing accommodation for " + accommodationDates.size() + " nights");
+        Console.log("USFestivalInPersonBookingForm: Booked sharing accommodation for " + accommodationDates.size() + " nights");
     }
 
     /**
@@ -2579,19 +2563,19 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         HasAccommodationSelectionSection.AccommodationOption selectedOption = accommodationSection.getSelectedOption();
         if (selectedOption == null) {
-            Console.log("USFestivalBookingForm: No accommodation selected - skipping accommodation booking");
+            Console.log("USFestivalInPersonBookingForm: No accommodation selected - skipping accommodation booking");
             return;
         }
 
         // Day visitor - no accommodation booking
         if (selectedOption.isDayVisitor()) {
-            Console.log("USFestivalBookingForm: Day visitor - skipping accommodation booking");
+            Console.log("USFestivalInPersonBookingForm: Day visitor - skipping accommodation booking");
             return;
         }
 
         Item selectedItem = selectedOption.getItemEntity();
         if (selectedItem == null) {
-            Console.log("USFestivalBookingForm: Selected accommodation has no itemEntity - skipping");
+            Console.log("USFestivalInPersonBookingForm: Selected accommodation has no itemEntity - skipping");
             return;
         }
 
@@ -2624,7 +2608,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             if (!teachingDatesSorted.isEmpty()) {
                 arrivalDate = teachingDatesSorted.get(0);
                 departureDate = teachingDatesSorted.get(teachingDatesSorted.size() - 1).plusDays(1);
-                Console.log("USFestivalBookingForm: Using fallback dates from teaching for accommodation: " + arrivalDate + " to " + departureDate);
+                Console.log("USFestivalInPersonBookingForm: Using fallback dates from teaching for accommodation: " + arrivalDate + " to " + departureDate);
             }
         }
 
@@ -2634,7 +2618,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 selectedNights.add(currentDate);
                 currentDate = currentDate.plusDays(1);
             }
-            Console.log("USFestivalBookingForm: Selected accommodation nights: " + selectedNights);
+            Console.log("USFestivalInPersonBookingForm: Selected accommodation nights: " + selectedNights);
         }
 
         // Find all accommodation ScheduledItems for this Item
@@ -2655,7 +2639,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             // Fallback: if no items match the date filter but we have items for this room type,
             // use all items (handles bad test data where dates are wrong)
             if (accommodationItems.isEmpty() && !allAccommodationItems.isEmpty()) {
-                Console.log("USFestivalBookingForm: WARNING - No accommodation items match selected dates, using all items as fallback");
+                Console.log("USFestivalInPersonBookingForm: WARNING - No accommodation items match selected dates, using all items as fallback");
                 accommodationItems = allAccommodationItems;
             }
         } else {
@@ -2663,10 +2647,10 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         if (!accommodationItems.isEmpty()) {
-            Console.log("USFestivalBookingForm: Booking " + accommodationItems.size() + " accommodation items for " + selectedOption.getName());
+            Console.log("USFestivalInPersonBookingForm: Booking " + accommodationItems.size() + " accommodation items for " + selectedOption.getName());
             workingBooking.bookScheduledItems(accommodationItems, false);
         } else {
-            Console.log("USFestivalBookingForm: No accommodation ScheduledItems found for " + selectedOption.getName());
+            Console.log("USFestivalInPersonBookingForm: No accommodation ScheduledItems found for " + selectedOption.getName());
         }
     }
 
@@ -2691,7 +2675,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         List<ScheduledItem> mealsItems = policyAggregate.filterScheduledItemsOfFamily(KnownItemFamily.MEALS);
         if (mealsItems.isEmpty()) {
-            Console.log("USFestivalBookingForm: No meals items in policy - skipping");
+            Console.log("USFestivalInPersonBookingForm: No meals items in policy - skipping");
             return;
         }
 
@@ -2727,7 +2711,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             if (!teachingDatesSorted.isEmpty()) {
                 arrivalDate = teachingDatesSorted.get(0);
                 departureDate = teachingDatesSorted.get(teachingDatesSorted.size() - 1).plusDays(1); // departure = last teaching day + 1
-                Console.log("USFestivalBookingForm: Using fallback dates from teaching: " + arrivalDate + " to " + departureDate);
+                Console.log("USFestivalInPersonBookingForm: Using fallback dates from teaching: " + arrivalDate + " to " + departureDate);
             }
         }
 
@@ -2739,9 +2723,9 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 currentDate = currentDate.plusDays(1);
             }
         }
-        Console.log("USFestivalBookingForm: Accommodation nights for breakfast calculation: " + accommodationNights);
-        Console.log("USFestivalBookingForm: Arrival date: " + arrivalDate + ", Departure date: " + departureDate);
-        Console.log("USFestivalBookingForm: Arrival time: " + arrivalTime + ", Departure time: " + departureTime);
+        Console.log("USFestivalInPersonBookingForm: Accommodation nights for breakfast calculation: " + accommodationNights);
+        Console.log("USFestivalInPersonBookingForm: Arrival date: " + arrivalDate + ", Departure date: " + departureDate);
+        Console.log("USFestivalInPersonBookingForm: Arrival time: " + arrivalTime + ", Departure time: " + departureTime);
 
         // Final dates for closure
         final LocalDate finalArrivalDate = arrivalDate;
@@ -2773,7 +2757,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             boolean isLunch = itemName.contains("lunch") || itemName.contains("midday");
             boolean isDinner = itemName.contains("dinner") || itemName.contains("evening") || itemName.contains("supper");
 
-            Console.log("USFestivalBookingForm: Processing meal item '" + item.getName() + "' → isBreakfast=" + isBreakfast + ", isLunch=" + isLunch + ", isDinner=" + isDinner);
+            Console.log("USFestivalInPersonBookingForm: Processing meal item '" + item.getName() + "' → isBreakfast=" + isBreakfast + ", isLunch=" + isLunch + ", isDinner=" + isDinner);
 
             // Check if this meal type should be booked based on user selection
             boolean shouldBook = false;
@@ -2803,7 +2787,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                             return accommodationNights.contains(nightBefore);
                         })
                         .collect(java.util.stream.Collectors.toList());
-                    Console.log("USFestivalBookingForm: Filtered breakfast items to dates after accommodation nights: " +
+                    Console.log("USFestivalInPersonBookingForm: Filtered breakfast items to dates after accommodation nights: " +
                         itemScheduledItems.stream().map(msi -> msi.getDate().toString()).collect(java.util.stream.Collectors.joining(", ")));
                 }
 
@@ -2812,38 +2796,38 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 // - Skip lunch on arrival day if arriving AFTERNOON or later
                 // - Skip lunch on departure day if departing MORNING
                 if (isLunch && finalArrivalDate != null && finalDepartureDate != null) {
-                    Console.log("USFestivalBookingForm: Filtering lunch items. Arrival: " + finalArrivalDate + " (" + finalArrivalTime + "), Departure: " + finalDepartureDate + " (" + finalDepartureTime + ")");
-                    Console.log("USFestivalBookingForm: Lunch items before filter: " + itemScheduledItems.size());
+                    Console.log("USFestivalInPersonBookingForm: Filtering lunch items. Arrival: " + finalArrivalDate + " (" + finalArrivalTime + "), Departure: " + finalDepartureDate + " (" + finalDepartureTime + ")");
+                    Console.log("USFestivalInPersonBookingForm: Lunch items before filter: " + itemScheduledItems.size());
                     itemScheduledItems = itemScheduledItems.stream()
                         .filter(msi -> {
                             java.time.LocalDate mealDate = msi.getDate();
-                            Console.log("USFestivalBookingForm: Checking lunch on " + mealDate);
+                            Console.log("USFestivalInPersonBookingForm: Checking lunch on " + mealDate);
                             if (mealDate == null) {
-                                Console.log("USFestivalBookingForm: Lunch date is null, skipping");
+                                Console.log("USFestivalInPersonBookingForm: Lunch date is null, skipping");
                                 return false;
                             }
 
                             // Exclude meals outside the stay period (before arrival or after departure)
                             if (mealDate.isBefore(finalArrivalDate) || mealDate.isAfter(finalDepartureDate)) {
-                                Console.log("USFestivalBookingForm: Skipping lunch on " + mealDate + " (outside stay period " + finalArrivalDate + " to " + finalDepartureDate + ")");
+                                Console.log("USFestivalInPersonBookingForm: Skipping lunch on " + mealDate + " (outside stay period " + finalArrivalDate + " to " + finalDepartureDate + ")");
                                 return false;
                             }
 
                             // Arrival day: skip lunch if arriving AFTERNOON or EVENING
                             if (mealDate.equals(finalArrivalDate)) {
-                                Console.log("USFestivalBookingForm: Lunch on arrival day. arrivalTime=" + finalArrivalTime);
+                                Console.log("USFestivalInPersonBookingForm: Lunch on arrival day. arrivalTime=" + finalArrivalTime);
                                 if (finalArrivalTime == HasFestivalDaySelectionSection.ArrivalDepartureTime.AFTERNOON ||
                                     finalArrivalTime == HasFestivalDaySelectionSection.ArrivalDepartureTime.EVENING) {
-                                    Console.log("USFestivalBookingForm: Skipping lunch on arrival day " + mealDate + " (arriving " + finalArrivalTime + ")");
+                                    Console.log("USFestivalInPersonBookingForm: Skipping lunch on arrival day " + mealDate + " (arriving " + finalArrivalTime + ")");
                                     return false;
                                 }
                             }
 
                             // Departure day: skip lunch if departing MORNING
                             if (mealDate.equals(finalDepartureDate)) {
-                                Console.log("USFestivalBookingForm: Lunch on departure day. departureTime=" + finalDepartureTime);
+                                Console.log("USFestivalInPersonBookingForm: Lunch on departure day. departureTime=" + finalDepartureTime);
                                 if (finalDepartureTime == HasFestivalDaySelectionSection.ArrivalDepartureTime.MORNING) {
-                                    Console.log("USFestivalBookingForm: Skipping lunch on departure day " + mealDate + " (departing MORNING)");
+                                    Console.log("USFestivalInPersonBookingForm: Skipping lunch on departure day " + mealDate + " (departing MORNING)");
                                     return false;
                                 }
                             }
@@ -2851,7 +2835,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                             return true;
                         })
                         .collect(java.util.stream.Collectors.toList());
-                    Console.log("USFestivalBookingForm: Lunch items after filter: " + itemScheduledItems.size());
+                    Console.log("USFestivalInPersonBookingForm: Lunch items after filter: " + itemScheduledItems.size());
                 }
 
                 // For dinner: filter based on stay period and arrival/departure time
@@ -2859,28 +2843,28 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 // - Skip dinner on arrival day if arriving EVENING
                 // - Skip dinner on departure day if departing MORNING or AFTERNOON
                 if (isDinner && finalArrivalDate != null && finalDepartureDate != null) {
-                    Console.log("USFestivalBookingForm: Filtering dinner/supper items. Arrival: " + finalArrivalDate + " (" + finalArrivalTime + "), Departure: " + finalDepartureDate + " (" + finalDepartureTime + ")");
-                    Console.log("USFestivalBookingForm: Dinner items before filter: " + itemScheduledItems.size());
+                    Console.log("USFestivalInPersonBookingForm: Filtering dinner/supper items. Arrival: " + finalArrivalDate + " (" + finalArrivalTime + "), Departure: " + finalDepartureDate + " (" + finalDepartureTime + ")");
+                    Console.log("USFestivalInPersonBookingForm: Dinner items before filter: " + itemScheduledItems.size());
                     itemScheduledItems = itemScheduledItems.stream()
                         .filter(msi -> {
                             java.time.LocalDate mealDate = msi.getDate();
-                            Console.log("USFestivalBookingForm: Checking dinner on " + mealDate);
+                            Console.log("USFestivalInPersonBookingForm: Checking dinner on " + mealDate);
                             if (mealDate == null) {
-                                Console.log("USFestivalBookingForm: Dinner date is null, skipping");
+                                Console.log("USFestivalInPersonBookingForm: Dinner date is null, skipping");
                                 return false;
                             }
 
                             // Exclude meals outside the stay period (before arrival or after departure)
                             if (mealDate.isBefore(finalArrivalDate) || mealDate.isAfter(finalDepartureDate)) {
-                                Console.log("USFestivalBookingForm: Skipping dinner on " + mealDate + " (outside stay period " + finalArrivalDate + " to " + finalDepartureDate + ")");
+                                Console.log("USFestivalInPersonBookingForm: Skipping dinner on " + mealDate + " (outside stay period " + finalArrivalDate + " to " + finalDepartureDate + ")");
                                 return false;
                             }
 
                             // Arrival day: skip dinner if arriving EVENING
                             if (mealDate.equals(finalArrivalDate)) {
-                                Console.log("USFestivalBookingForm: Dinner on arrival day. arrivalTime=" + finalArrivalTime);
+                                Console.log("USFestivalInPersonBookingForm: Dinner on arrival day. arrivalTime=" + finalArrivalTime);
                                 if (finalArrivalTime == HasFestivalDaySelectionSection.ArrivalDepartureTime.EVENING) {
-                                    Console.log("USFestivalBookingForm: Skipping dinner on arrival day " + mealDate + " (arriving EVENING)");
+                                    Console.log("USFestivalInPersonBookingForm: Skipping dinner on arrival day " + mealDate + " (arriving EVENING)");
                                     return false;
                                 }
                             }
@@ -2889,25 +2873,25 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                             if (mealDate.equals(finalDepartureDate)) {
                                 boolean isMorning = finalDepartureTime == HasFestivalDaySelectionSection.ArrivalDepartureTime.MORNING;
                                 boolean isAfternoon = finalDepartureTime == HasFestivalDaySelectionSection.ArrivalDepartureTime.AFTERNOON;
-                                Console.log("USFestivalBookingForm: Dinner on departure day " + mealDate + ". departureTime=" + finalDepartureTime + " (isMorning=" + isMorning + ", isAfternoon=" + isAfternoon + ")");
+                                Console.log("USFestivalInPersonBookingForm: Dinner on departure day " + mealDate + ". departureTime=" + finalDepartureTime + " (isMorning=" + isMorning + ", isAfternoon=" + isAfternoon + ")");
                                 if (isMorning || isAfternoon) {
-                                    Console.log("USFestivalBookingForm: Skipping dinner on departure day " + mealDate + " (departing " + finalDepartureTime + ")");
+                                    Console.log("USFestivalInPersonBookingForm: Skipping dinner on departure day " + mealDate + " (departing " + finalDepartureTime + ")");
                                     return false;
                                 } else {
-                                    Console.log("USFestivalBookingForm: KEEPING dinner on departure day " + mealDate + " (departing " + finalDepartureTime + " = EVENING)");
+                                    Console.log("USFestivalInPersonBookingForm: KEEPING dinner on departure day " + mealDate + " (departing " + finalDepartureTime + " = EVENING)");
                                 }
                             } else {
-                                Console.log("USFestivalBookingForm: Dinner on " + mealDate + " (not departure day " + finalDepartureDate + ") - KEEPING");
+                                Console.log("USFestivalInPersonBookingForm: Dinner on " + mealDate + " (not departure day " + finalDepartureDate + ") - KEEPING");
                             }
 
                             return true;
                         })
                         .collect(java.util.stream.Collectors.toList());
-                    Console.log("USFestivalBookingForm: Dinner items after filter: " + itemScheduledItems.size());
+                    Console.log("USFestivalInPersonBookingForm: Dinner items after filter: " + itemScheduledItems.size());
                 }
 
                 if (!itemScheduledItems.isEmpty()) {
-                    Console.log("USFestivalBookingForm: Booking " + itemScheduledItems.size() + " " + item.getName() + " items (addOnly=false to replace)");
+                    Console.log("USFestivalInPersonBookingForm: Booking " + itemScheduledItems.size() + " " + item.getName() + " items (addOnly=false to replace)");
                     // Always use addOnly=false to REPLACE items of this type
                     // This ensures filtered items replace any items from the initial state
                     workingBooking.bookScheduledItems(itemScheduledItems, false);
@@ -2935,7 +2919,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             HasMealsSelectionSection.DietaryPreference preference = mealsSection.getDietaryPreference();
             if (preference != null) {
                 String prefName = preference.name().toLowerCase();
-                Console.log("USFestivalBookingForm: No API dietary item, looking for legacy '" + prefName + "' item");
+                Console.log("USFestivalInPersonBookingForm: No API dietary item, looking for legacy '" + prefName + "' item");
 
                 // Find an Item matching the preference name
                 selectedDietaryItem = policyAggregate.getScheduledItems().stream()
@@ -2949,7 +2933,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     .orElse(null);
 
                 if (selectedDietaryItem != null) {
-                    Console.log("USFestivalBookingForm: Found legacy dietary item: " + selectedDietaryItem.getName());
+                    Console.log("USFestivalInPersonBookingForm: Found legacy dietary item: " + selectedDietaryItem.getName());
                 }
             }
         }
@@ -2963,13 +2947,13 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 if (policy.getScope() != null) {
                     dietSite = policy.getScope().getSite();
                 }
-                Console.log("USFestivalBookingForm: Unbooking previous dietary item '" + dietItem.getName() + "'");
+                Console.log("USFestivalInPersonBookingForm: Unbooking previous dietary item '" + dietItem.getName() + "'");
                 workingBooking.unbookItem(dietSite, dietItem);
             }
         }
 
         if (selectedDietaryItem == null) {
-            Console.log("USFestivalBookingForm: No dietary preference selected (neither API nor legacy)");
+            Console.log("USFestivalInPersonBookingForm: No dietary preference selected (neither API nor legacy)");
             return;
         }
 
@@ -2981,7 +2965,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         }
 
         // Dietary items are non-temporal - book without attendance records (no dates)
-        Console.log("USFestivalBookingForm: Booking dietary preference '" + selectedDietaryItem.getName() + "' (non-temporal, no attendance dates)" +
+        Console.log("USFestivalInPersonBookingForm: Booking dietary preference '" + selectedDietaryItem.getName() + "' (non-temporal, no attendance dates)" +
             (site != null ? " at site " + site.getName() : ""));
         workingBooking.bookAtemporalItem(site, selectedDietaryItem);
     }
@@ -3005,7 +2989,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         if (selectedOption == null || selectedOption.isNoRecordingOption()) {
             // No audio recording selected - unbook all audio items
             if (!allAudioItems.isEmpty()) {
-                Console.log("USFestivalBookingForm: Unbooking " + allAudioItems.size() + " audio recording items (none selected)");
+                Console.log("USFestivalInPersonBookingForm: Unbooking " + allAudioItems.size() + " audio recording items (none selected)");
                 workingBooking.unbookScheduledItems(allAudioItems);
             }
             return;
@@ -3016,7 +3000,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         List<ScheduledItem> itemsToBook = selectedOption.getScheduledItems();
 
         if (itemsToBook == null || itemsToBook.isEmpty()) {
-            Console.log("USFestivalBookingForm: Selected phase has no scheduled items, unbooking all audio items");
+            Console.log("USFestivalInPersonBookingForm: Selected phase has no scheduled items, unbooking all audio items");
             if (!allAudioItems.isEmpty()) {
                 workingBooking.unbookScheduledItems(allAudioItems);
             }
@@ -3030,11 +3014,11 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             .collect(java.util.stream.Collectors.toList());
 
         if (!itemsToUnbook.isEmpty()) {
-            Console.log("USFestivalBookingForm: Unbooking " + itemsToUnbook.size() + " audio recording items not in selected option");
+            Console.log("USFestivalInPersonBookingForm: Unbooking " + itemsToUnbook.size() + " audio recording items not in selected option");
             workingBooking.unbookScheduledItems(itemsToUnbook);
         }
 
-        Console.log("USFestivalBookingForm: Booking " + itemsToBook.size() + " audio recording items for " +
+        Console.log("USFestivalInPersonBookingForm: Booking " + itemsToBook.size() + " audio recording items for " +
             selectedOption.getName());
         // Use addOnly=false to replace existing audio items with the selected option's items
         workingBooking.bookScheduledItems(itemsToBook, false);
@@ -3057,17 +3041,17 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         List<HasAdditionalOptionsSection.AdditionalOption> selectedOptions = additionalOptionsSection.getSelectedOptions();
 
         if (selectedOptions.isEmpty()) {
-            Console.log("USFestivalBookingForm: No additional options selected");
+            Console.log("USFestivalInPersonBookingForm: No additional options selected");
             return;
         }
 
-        Console.log("USFestivalBookingForm: Processing " + selectedOptions.size() + " selected additional options");
+        Console.log("USFestivalInPersonBookingForm: Processing " + selectedOptions.size() + " selected additional options");
 
         // Book each selected option
         for (HasAdditionalOptionsSection.AdditionalOption option : selectedOptions) {
             Item itemEntity = option.getItemEntity();
             if (itemEntity == null) {
-                Console.log("USFestivalBookingForm: Option '" + option.getName() + "' has no item entity, skipping");
+                Console.log("USFestivalInPersonBookingForm: Option '" + option.getName() + "' has no item entity, skipping");
                 continue;
             }
 
@@ -3090,10 +3074,10 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     .collect(java.util.stream.Collectors.toList());
 
                 if (!scheduledItems.isEmpty()) {
-                    Console.log("USFestivalBookingForm: Booking " + scheduledItems.size() + " '" + option.getName() + "' items (temporal, with attendance dates)");
+                    Console.log("USFestivalInPersonBookingForm: Booking " + scheduledItems.size() + " '" + option.getName() + "' items (temporal, with attendance dates)");
                     workingBooking.bookScheduledItems(scheduledItems, true);
                 } else {
-                    Console.log("USFestivalBookingForm: No scheduled items found for temporal '" + option.getName() + "'");
+                    Console.log("USFestivalInPersonBookingForm: No scheduled items found for temporal '" + option.getName() + "'");
                 }
             } else {
                 // Non-temporal item - book without attendance records (no dates)
@@ -3104,7 +3088,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                     site = itemPolicy.getScope().getSite();
                 }
 
-                Console.log("USFestivalBookingForm: Booking '" + option.getName() + "' (non-temporal, no attendance dates)" +
+                Console.log("USFestivalInPersonBookingForm: Booking '" + option.getName() + "' (non-temporal, no attendance dates)" +
                     (site != null ? " at site " + site.getName() : ""));
                 workingBooking.bookAtemporalItem(site, itemEntity);
             }
@@ -3133,7 +3117,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
         // Unbook all transport items first (to handle deselection)
         if (!allTransportItems.isEmpty()) {
-            Console.log("USFestivalBookingForm: Unbooking " + allTransportItems.size() + " transport scheduled items before rebooking selected ones");
+            Console.log("USFestivalInPersonBookingForm: Unbooking " + allTransportItems.size() + " transport scheduled items before rebooking selected ones");
             workingBooking.unbookScheduledItems(allTransportItems);
         }
 
@@ -3142,7 +3126,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         if (!selectedParking.isEmpty()) {
             LocalDate arrivalDate = transportSection.getArrivalDate();
             LocalDate departureDate = transportSection.getDepartureDate();
-            Console.log("USFestivalBookingForm: Booking " + selectedParking.size() + " selected parking options" +
+            Console.log("USFestivalInPersonBookingForm: Booking " + selectedParking.size() + " selected parking options" +
                 " (arrival=" + arrivalDate + ", departure=" + departureDate + ")");
 
             for (HasTransportSection.ParkingOption parking : selectedParking) {
@@ -3159,13 +3143,13 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                         })
                         .collect(java.util.stream.Collectors.toList());
 
-                    Console.log("USFestivalBookingForm: Booking parking '" + parking.getName() +
+                    Console.log("USFestivalInPersonBookingForm: Booking parking '" + parking.getName() +
                         "' - " + filteredItems.size() + " of " + scheduledItems.size() + " scheduled items (filtered by dates)");
                     if (!filteredItems.isEmpty()) {
                         workingBooking.bookScheduledItems(filteredItems, true);
                     }
                 } else {
-                    Console.log("USFestivalBookingForm: Parking '" + parking.getName() + "' has no scheduled items to book");
+                    Console.log("USFestivalInPersonBookingForm: Parking '" + parking.getName() + "' has no scheduled items to book");
                 }
             }
         }
@@ -3173,21 +3157,21 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         // Book selected shuttle options
         List<HasTransportSection.ShuttleOption> selectedShuttles = transportSection.getSelectedShuttleOptions();
         if (!selectedShuttles.isEmpty()) {
-            Console.log("USFestivalBookingForm: Booking " + selectedShuttles.size() + " selected shuttle options");
+            Console.log("USFestivalInPersonBookingForm: Booking " + selectedShuttles.size() + " selected shuttle options");
             for (HasTransportSection.ShuttleOption shuttle : selectedShuttles) {
                 List<ScheduledItem> scheduledItems = shuttle.getScheduledItems();
                 if (scheduledItems != null && !scheduledItems.isEmpty()) {
-                    Console.log("USFestivalBookingForm: Booking shuttle '" + shuttle.getName() +
+                    Console.log("USFestivalInPersonBookingForm: Booking shuttle '" + shuttle.getName() +
                         "' (" + shuttle.getDirection() + ") - " + scheduledItems.size() + " scheduled items");
                     workingBooking.bookScheduledItems(scheduledItems, true);
                 } else {
-                    Console.log("USFestivalBookingForm: Shuttle '" + shuttle.getName() + "' has no scheduled items to book");
+                    Console.log("USFestivalInPersonBookingForm: Shuttle '" + shuttle.getName() + "' has no scheduled items to book");
                 }
             }
         }
 
         if (selectedParking.isEmpty() && selectedShuttles.isEmpty()) {
-            Console.log("USFestivalBookingForm: No transport options selected");
+            Console.log("USFestivalInPersonBookingForm: No transport options selected");
         }
     }
 
@@ -3216,7 +3200,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
                 .collect(java.util.stream.Collectors.toList());
 
             if (!scheduledItems.isEmpty()) {
-                Console.log("USFestivalBookingForm: Booking " + scheduledItems.size() + " '" + transportItem.getName() + "' transport items");
+                Console.log("USFestivalInPersonBookingForm: Booking " + scheduledItems.size() + " '" + transportItem.getName() + "' transport items");
                 workingBooking.bookScheduledItems(scheduledItems, true);
             }
         }
@@ -3299,7 +3283,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             daysCount = festivalDaySection.getSelectedDaysCount();
         }
 
-        Console.log("USFestivalBookingForm: Updating sticky header - room=" + roomName + ", days=" + daysCount);
+        Console.log("USFestivalInPersonBookingForm: Updating sticky header - room=" + roomName + ", days=" + daysCount);
 
         // Only update room name and days - price is bound to WorkingBookingProperties.totalProperty()
         stickyPriceHeader.setRoomName(roomName);
@@ -3324,7 +3308,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             form.setTermsUrl(termsUrl);
             // Custom terms text emphasizing cancellation and refund policy
             form.setTermsText(I18n.getI18nText(KMCNY18nKeys.USFestivalAcceptTermsText));
-            Console.log("USFestivalBookingForm: Set terms URL to: " + termsUrl);
+            Console.log("USFestivalInPersonBookingForm: Set terms URL to: " + termsUrl);
         }
     }
 

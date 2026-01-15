@@ -6,7 +6,6 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires modality.base.client.icons;
     requires modality.base.shared.entities;
     requires modality.base.shared.knownitems;
     requires modality.booking.client.workingbooking;
@@ -18,7 +17,6 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires modality.event.frontoffice.activity.book;
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;
-    requires webfx.extras.panes;
     requires webfx.platform.console;
     requires webfx.stack.orm.entity;
 
