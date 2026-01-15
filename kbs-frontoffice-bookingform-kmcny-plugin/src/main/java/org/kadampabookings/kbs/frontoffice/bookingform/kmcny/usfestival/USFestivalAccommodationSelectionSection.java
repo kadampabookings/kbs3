@@ -31,16 +31,23 @@ public class USFestivalAccommodationSelectionSection extends DefaultAccommodatio
         private final String category;     // "Teachings", "Accommodation", "Meals"
         private final String dateRange;    // "Jul 1-8" or "8 nights"
         private final int price;           // Price in cents
+        private final Integer remainingQuantity; // Remaining availability (null if not applicable)
 
         public PriceBreakdownItem(String category, String dateRange, int price) {
+            this(category, dateRange, price, null);
+        }
+
+        public PriceBreakdownItem(String category, String dateRange, int price, Integer remainingQuantity) {
             this.category = category;
             this.dateRange = dateRange;
             this.price = price;
+            this.remainingQuantity = remainingQuantity;
         }
 
         public String getCategory() { return category; }
         public String getDateRange() { return dateRange; }
         public int getPrice() { return price; }
+        public Integer getRemainingQuantity() { return remainingQuantity; }
     }
 
     // Map from itemId to breakdown items
@@ -113,6 +120,10 @@ public class USFestivalAccommodationSelectionSection extends DefaultAccommodatio
             String labelText = item.getCategory();
             if (item.getDateRange() != null && !item.getDateRange().isEmpty()) {
                 labelText += " (" + item.getDateRange() + ")";
+            }
+            // Add remaining quantity for accommodation items (debug info)
+            if (item.getRemainingQuantity() != null) {
+                labelText += " [" + item.getRemainingQuantity() + " left]";
             }
             Label nameLabel = new Label(labelText);
             nameLabel.getStyleClass().add("bookingpage-text-xs");

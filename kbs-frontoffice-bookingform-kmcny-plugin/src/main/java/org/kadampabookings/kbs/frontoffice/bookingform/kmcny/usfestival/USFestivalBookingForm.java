@@ -919,14 +919,22 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
 
             Console.log("USFestivalBookingForm: Processing accommodation: " + item.getName());
 
-            // Calculate availability
-            int minAvailability = scheduledItems.stream()
-                .mapToInt(si -> si.getGuestsAvailability() != null ? si.getGuestsAvailability() : 0)
-                .min()
-                .orElse(0);
+            // Calculate availability (null means unlimited, so we filter those out)
+            // Only consider items with defined availability for the minimum calculation
+            java.util.OptionalInt minAvailabilityOpt = scheduledItems.stream()
+                .filter(si -> si.getGuestsAvailability() != null)
+                .mapToInt(ScheduledItem::getGuestsAvailability)
+                .min();
+
+            // If no items have defined availability, it's unlimited (null)
+            // Otherwise use the minimum value found
+            Integer minAvailability = minAvailabilityOpt.isPresent() ? minAvailabilityOpt.getAsInt() : null;
 
             HasAccommodationSelectionSection.AvailabilityStatus status;
-            if (minAvailability <= 0) {
+            if (minAvailability == null) {
+                // Unlimited availability
+                status = HasAccommodationSelectionSection.AvailabilityStatus.AVAILABLE;
+            } else if (minAvailability <= 0) {
                 status = HasAccommodationSelectionSection.AvailabilityStatus.SOLD_OUT;
             } else if (minAvailability <= 5) {
                 status = HasAccommodationSelectionSection.AvailabilityStatus.LIMITED;
@@ -959,7 +967,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             boolean perPerson = itemRate == null || !Boolean.FALSE.equals(itemRate.isPerPerson());
 
             // Calculate total price and breakdown using WorkingBooking
-            AccommodationPriceResult priceResult = calculateAccommodationPriceWithWorkingBooking(policyAggregate, item, arrivalDate, departureDate);
+            AccommodationPriceResult priceResult = calculateAccommodationPriceWithWorkingBooking(policyAggregate, item, arrivalDate, departureDate, minAvailability);
             Console.log("USFestivalBookingForm: Calculated price for " + item.getName() + ": " + priceResult.totalPrice);
 
             // Store the breakdown for this option
@@ -1018,10 +1026,11 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
      * @param accommodationItem the accommodation Item to calculate price for (null for day visitor)
      * @param arrivalDate the event arrival date
      * @param departureDate the event departure date
+     * @param accommodationAvailability the remaining availability for the accommodation (null if not applicable)
      * @return the calculated result with total price and breakdown
      */
     private AccommodationPriceResult calculateAccommodationPriceWithWorkingBooking(PolicyAggregate policyAggregate, Item accommodationItem,
-                                                               LocalDate arrivalDate, LocalDate departureDate) {
+                                                               LocalDate arrivalDate, LocalDate departureDate, Integer accommodationAvailability) {
         // Create a temporary WorkingBooking for price calculation
         WorkingBooking tempBooking = new WorkingBooking(policyAggregate, null);
 
@@ -1093,7 +1102,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             int accoPrice = calc.calculateDocumentLinesPrice(accoLines);
             String accoDateRange = accommodationNightsCount + " night" + (accommodationNightsCount != 1 ? "s" : "");
             breakdown.add(new USFestivalAccommodationSelectionSection.PriceBreakdownItem(
-                "Accommodation", accoDateRange, accoPrice));
+                "Accommodation", accoDateRange, accoPrice, accommodationAvailability));
         }
 
         // Meals breakdown - split by meal type (Breakfast, Lunch, Dinner)
@@ -1803,7 +1812,8 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         if (accommodationSection == null) return;
 
         // Calculate price and breakdown (teachings + meals, no accommodation, no breakfast since no overnight stay)
-        AccommodationPriceResult priceResult = calculateAccommodationPriceWithWorkingBooking(policyAggregate, null, arrivalDate, departureDate);
+        // Day visitor has no accommodation availability to track (pass null)
+        AccommodationPriceResult priceResult = calculateAccommodationPriceWithWorkingBooking(policyAggregate, null, arrivalDate, departureDate, null);
         Console.log("USFestivalBookingForm: Calculated Day Visitor price: " + priceResult.totalPrice);
 
         // Store the breakdown for this option
@@ -2373,10 +2383,13 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             if (additionalOptionsSection.needsAssistedListening()) {
                 requestText.append("Assisted listening device requested\n");
             }
-            if (additionalOptionsSection.needsParking()) {
-                HasAdditionalOptionsSection.ParkingType parkingType = additionalOptionsSection.getParkingType();
-                requestText.append("Parking: ").append(parkingType != null ? parkingType.name().toLowerCase() : "standard").append("\n");
-            }
+        }
+
+        // Get parking info from transport section (new unified parking card)
+        if (transportSection != null && transportSection.isParkingEnabled()) {
+            HasTransportSection.ParkingOption selectedParkingType = transportSection.getSelectedParkingType();
+            String parkingTypeName = selectedParkingType != null ? selectedParkingType.getName() : "Standard";
+            requestText.append("Parking: ").append(parkingTypeName.toLowerCase()).append("\n");
         }
 
         // Get roommate info and set on accommodation document lines using WorkingBooking API
@@ -3123,16 +3136,33 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
             workingBooking.unbookScheduledItems(allTransportItems);
         }
 
-        // Book selected parking options
+        // Book selected parking options (filtered by arrival/departure dates)
         List<HasTransportSection.ParkingOption> selectedParking = transportSection.getSelectedParkingOptions();
         if (!selectedParking.isEmpty()) {
-            Console.log("USFestivalBookingForm: Booking " + selectedParking.size() + " selected parking options");
+            LocalDate arrivalDate = transportSection.getArrivalDate();
+            LocalDate departureDate = transportSection.getDepartureDate();
+            Console.log("USFestivalBookingForm: Booking " + selectedParking.size() + " selected parking options" +
+                " (arrival=" + arrivalDate + ", departure=" + departureDate + ")");
+
             for (HasTransportSection.ParkingOption parking : selectedParking) {
                 List<ScheduledItem> scheduledItems = parking.getScheduledItems();
                 if (scheduledItems != null && !scheduledItems.isEmpty()) {
+                    // Filter scheduled items to only include those within the arrival/departure date range
+                    List<ScheduledItem> filteredItems = scheduledItems.stream()
+                        .filter(si -> {
+                            LocalDate siDate = si.getDate();
+                            if (siDate == null) return true; // Include items without a date
+                            boolean afterArrival = arrivalDate == null || !siDate.isBefore(arrivalDate);
+                            boolean beforeDeparture = departureDate == null || !siDate.isAfter(departureDate);
+                            return afterArrival && beforeDeparture;
+                        })
+                        .collect(java.util.stream.Collectors.toList());
+
                     Console.log("USFestivalBookingForm: Booking parking '" + parking.getName() +
-                        "' - " + scheduledItems.size() + " scheduled items");
-                    workingBooking.bookScheduledItems(scheduledItems, true);
+                        "' - " + filteredItems.size() + " of " + scheduledItems.size() + " scheduled items (filtered by dates)");
+                    if (!filteredItems.isEmpty()) {
+                        workingBooking.bookScheduledItems(filteredItems, true);
+                    }
                 } else {
                     Console.log("USFestivalBookingForm: Parking '" + parking.getName() + "' has no scheduled items to book");
                 }
