@@ -2277,6 +2277,41 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
         bookSelectedItemsIntoWorkingBooking();
     }
 
+    @Override
+    public void onAccommodationSoldOutRecovery(HasAccommodationSelectionSection.AccommodationOption newOption, Runnable continueToSummary) {
+        Console.log("USFestivalInPersonBookingForm.onAccommodationSoldOutRecovery() - new option: " + newOption.getName());
+
+        // Step 1: Reset the WorkingBooking to clear the old accommodation and all booked items
+        // This is critical after a SOLDOUT error - the server rejected the booking but local state has the old items
+        if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
+            Console.log("USFestivalInPersonBookingForm: Resetting WorkingBooking due to sold-out recovery");
+            workingBookingProperties.getWorkingBooking().cancelChanges();
+        }
+
+        // Step 2: Update the accommodation section with the new selection
+        // This will update the UI to show the new accommodation as selected
+        if (accommodationSection != null) {
+            // Set the new selected option (this updates the internal state but may not fire callbacks
+            // if called programmatically, so we handle rebooking explicitly below)
+            accommodationSection.setSelectedOption(newOption.getItemId());
+
+            // Update festival day section constraints based on new accommodation
+            HasAccommodationSelectionSection.AccommodationOption selectedOption = accommodationSection.getSelectedOption();
+            if (selectedOption != null && festivalDaySection != null) {
+                festivalDaySection.setMinNightsConstraint(selectedOption.getMinNights());
+                festivalDaySection.setIsDayVisitor(selectedOption.isDayVisitor());
+            }
+        }
+
+        // Step 3: Re-book all items with the new accommodation for the same date ranges
+        // This uses the current date selection from festivalDaySection
+        bookSelectedItemsIntoWorkingBooking();
+        Console.log("USFestivalInPersonBookingForm: Items re-booked with new accommodation");
+
+        // Step 4: Navigate to summary page to review and retry submission
+        continueToSummary.run();
+    }
+
     /**
      * Books all selected items (teaching, accommodation, meals, additional options)
      * into the WorkingBooking so they appear in the price breakdown.
