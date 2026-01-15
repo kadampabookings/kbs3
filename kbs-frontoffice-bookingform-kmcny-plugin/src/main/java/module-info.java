@@ -23,6 +23,7 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires webfx.stack.orm.entity;
 
     // Exported packages
+    exports org.kadampabookings.kbs.frontoffice.bookingform.kmcny;
     exports org.kadampabookings.kbs.frontoffice.bookingform.kmcny.usfestival;
 
     // Provided services

@@ -18,6 +18,6 @@
         <provider interface="one.modality.booking.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingform.kmcny.usfestival.USFestivalBookingFormProvider</provider>
     </providers>
 
-    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.bookingform.kmcny.sttp.STTPI18nKeys"/>
+    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.bookingform.kmcny.KMCNY18nKeys"/>
 
 </project>

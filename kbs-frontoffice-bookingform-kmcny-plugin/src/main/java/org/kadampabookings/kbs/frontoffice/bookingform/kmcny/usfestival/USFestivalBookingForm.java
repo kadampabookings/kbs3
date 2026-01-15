@@ -38,6 +38,7 @@ import java.util.ArrayList;
 
 import one.modality.base.shared.entities.DocumentLine;
 import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
+import org.kadampabookings.kbs.frontoffice.bookingform.kmcny.KMCNY18nKeys;
 
 /**
  * US Festival Booking Form - Implementation for US Festival (event type 38) bookings.
@@ -126,7 +127,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         StandardBookingFormBuilder builder = new StandardBookingFormBuilder(activity, settings)
             .withColorScheme(BookingFormColorScheme.WISDOM_BLUE)  // Blue theme for US Festival
             .withShowUserBadge(false)                             // Hide user badge in header
-            .withCardPaymentOnly(false)                           // Allow multiple payment methods
+            .withCardPaymentOnly(true)                            // Only allow credit/debit card payments
             .withEntryPoint(entryPoint)                           // Handle payment resume/modification
             .withNavigationClickable(false)                       // Navigation only via buttons
             .withStickyHeader(stickyPriceHeader)                  // Sticky price header at top
@@ -3306,7 +3307,7 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
     }
 
     /**
-     * Sets up the terms and conditions URL from the Event's termsUrlEn field.
+     * Sets up the terms and conditions URL and custom text from the Event's termsUrlEn field.
      * This URL is displayed as a clickable link in the terms section.
      */
     private void setupTermsUrl() {
@@ -3321,6 +3322,8 @@ public final class USFestivalBookingForm implements StandardBookingFormCallbacks
         String termsUrl = event.getTermsUrlEn();
         if (termsUrl != null && !termsUrl.isEmpty()) {
             form.setTermsUrl(termsUrl);
+            // Custom terms text emphasizing cancellation and refund policy
+            form.setTermsText(I18n.getI18nText(KMCNY18nKeys.USFestivalAcceptTermsText));
             Console.log("USFestivalBookingForm: Set terms URL to: " + termsUrl);
         }
     }
