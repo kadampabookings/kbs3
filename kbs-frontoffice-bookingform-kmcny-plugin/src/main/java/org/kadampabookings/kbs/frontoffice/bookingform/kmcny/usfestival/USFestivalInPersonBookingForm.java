@@ -3,14 +3,8 @@ package org.kadampabookings.kbs.frontoffice.bookingform.kmcny.usfestival;
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.platform.console.Console;
 import javafx.beans.binding.Bindings;
-import one.modality.base.shared.entities.Event;
-import one.modality.base.shared.entities.EventPart;
-import one.modality.base.shared.entities.Item;
-import one.modality.base.shared.entities.Person;
-import one.modality.base.shared.entities.ScheduledItem;
+import one.modality.base.shared.entities.*;
 import one.modality.base.shared.knownitems.KnownItemFamily;
-
-import java.util.List;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
@@ -28,17 +22,16 @@ import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.crm.shared.services.authn.fx.FXUserPerson;
 import one.modality.ecommerce.policy.service.PolicyAggregate;
+import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
+import org.kadampabookings.kbs.frontoffice.bookingform.kmcny.KMCNY18nKeys;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
-import one.modality.base.shared.entities.DocumentLine;
-import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
-import org.kadampabookings.kbs.frontoffice.bookingform.kmcny.KMCNY18nKeys;
+import java.util.List;
 
 /**
  * US Festival In-Person Booking Form - Implementation for in-person US Festival (event type 38) bookings.
@@ -3002,7 +2995,7 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
         // Dietary items are non-temporal - book without attendance records (no dates)
         Console.log("USFestivalInPersonBookingForm: Booking dietary preference '" + selectedDietaryItem.getName() + "' (non-temporal, no attendance dates)" +
             (site != null ? " at site " + site.getName() : ""));
-        workingBooking.bookAtemporalItem(site, selectedDietaryItem);
+        workingBooking.bookNonTemporalItem(site, selectedDietaryItem);
     }
 
     /**
@@ -3125,7 +3118,7 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
                 Console.log("USFestivalInPersonBookingForm: Booking '" + option.getName() + "' (non-temporal, no attendance dates)" +
                     (site != null ? " at site " + site.getName() : ""));
-                workingBooking.bookAtemporalItem(site, itemEntity);
+                workingBooking.bookNonTemporalItem(site, itemEntity);
             }
         }
     }
