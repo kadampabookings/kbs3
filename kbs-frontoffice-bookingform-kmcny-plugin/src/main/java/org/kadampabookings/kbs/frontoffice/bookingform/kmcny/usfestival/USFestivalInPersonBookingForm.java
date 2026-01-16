@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.frontoffice.bookingform.kmcny.usfestival;
 
 import dev.webfx.extras.i18n.I18n;
 import dev.webfx.platform.console.Console;
+import dev.webfx.platform.uischeduler.UiScheduler;
 import javafx.beans.binding.Bindings;
 import one.modality.base.shared.entities.*;
 import one.modality.base.shared.knownitems.KnownItemFamily;
@@ -610,6 +611,18 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
             Console.log("USFestivalInPersonBookingForm: Updating transport departure date - " + newDate);
             transportSection.setDepartureDate(newDate);
         });
+
+        // Initialize transport section with current dates (listeners only fire on changes)
+        LocalDate currentArrival = festivalDaySection.arrivalDateProperty().get();
+        LocalDate currentDeparture = festivalDaySection.departureDateProperty().get();
+        if (currentArrival != null) {
+            Console.log("USFestivalInPersonBookingForm: Initializing transport arrival date - " + currentArrival);
+            transportSection.setArrivalDate(currentArrival);
+        }
+        if (currentDeparture != null) {
+            Console.log("USFestivalInPersonBookingForm: Initializing transport departure date - " + currentDeparture);
+            transportSection.setDepartureDate(currentDeparture);
+        }
 
         // Listen for any transport selection changes (parking or shuttle)
         transportSection.setOnSelectionChanged(() -> {
@@ -2159,6 +2172,20 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
         // Populate transport section first (parking + shuttle items)
         if (transportSection != null) {
+            // Sync arrival/departure dates to transport section before populating
+            // (ensures shuttle availability is calculated with correct dates)
+            if (festivalDaySection != null) {
+                LocalDate arrivalDate = festivalDaySection.arrivalDateProperty().get();
+                LocalDate departureDate = festivalDaySection.departureDateProperty().get();
+                if (arrivalDate != null) {
+                    Console.log("USFestivalInPersonBookingForm: Syncing transport arrival date before populate - " + arrivalDate);
+                    transportSection.setArrivalDate(arrivalDate);
+                }
+                if (departureDate != null) {
+                    Console.log("USFestivalInPersonBookingForm: Syncing transport departure date before populate - " + departureDate);
+                    transportSection.setDepartureDate(departureDate);
+                }
+            }
             transportSection.populateFromPolicyAggregate(policyAggregate);
             boolean hasTransport = transportSection.hasAnyOptions();
             transportSection.setVisible(hasTransport);
@@ -2271,37 +2298,143 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
     }
 
     @Override
-    public void onAccommodationSoldOutRecovery(HasAccommodationSelectionSection.AccommodationOption newOption, Runnable continueToSummary) {
+    public void onPrepareNewBooking() {
+        Console.log("USFestivalInPersonBookingForm.onPrepareNewBooking() - Reloading availability for new booking");
+
+        // Reset the flag so accommodation options will be repopulated
+        accommodationOptionsPopulated = false;
+
+        // Reload availability from server to get fresh room counts
+        PolicyAggregate policyAggregate = workingBookingProperties != null ? workingBookingProperties.getPolicyAggregate() : null;
+        if (policyAggregate != null) {
+            policyAggregate.reloadAvailabilities()
+                .onSuccess(v -> {
+                    Console.log("USFestivalInPersonBookingForm: Availability reloaded successfully");
+                    // Repopulate accommodation options with fresh availability data on the UI thread
+                    UiScheduler.runInUiThread(() -> {
+                        Console.log("USFestivalInPersonBookingForm: Repopulating accommodation options on UI thread");
+                        populateAccommodationOptions();
+                    });
+                })
+                .onFailure(e -> {
+                    Console.log("USFestivalInPersonBookingForm: Failed to reload availability: " + e.getMessage());
+                    // Still try to repopulate with existing data on the UI thread
+                    UiScheduler.runInUiThread(() -> {
+                        Console.log("USFestivalInPersonBookingForm: Repopulating accommodation options (fallback) on UI thread");
+                        populateAccommodationOptions();
+                    });
+                });
+        } else {
+            Console.log("USFestivalInPersonBookingForm: PolicyAggregate not available, skipping availability reload");
+        }
+    }
+
+    @Override
+    public void onAccommodationSoldOutRecovery(HasAccommodationSelectionSection.AccommodationOption newOption, StandardBookingFormCallbacks.SoldOutRecoveryRoommateInfo roommateInfo, Runnable continueToSummary) {
         Console.log("USFestivalInPersonBookingForm.onAccommodationSoldOutRecovery() - new option: " + newOption.getName());
 
-        // Step 1: Reset the WorkingBooking to clear the old accommodation and all booked items
-        // This is critical after a SOLDOUT error - the server rejected the booking but local state has the old items
-        if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
-            Console.log("USFestivalInPersonBookingForm: Resetting WorkingBooking due to sold-out recovery");
-            workingBookingProperties.getWorkingBooking().cancelChanges();
+        if (workingBookingProperties == null || workingBookingProperties.getWorkingBooking() == null) {
+            Console.log("USFestivalInPersonBookingForm: WorkingBooking not available");
+            continueToSummary.run();
+            return;
         }
 
-        // Step 2: Update the accommodation section with the new selection
-        // This will update the UI to show the new accommodation as selected
-        if (accommodationSection != null) {
-            // Set the new selected option (this updates the internal state but may not fire callbacks
-            // if called programmatically, so we handle rebooking explicitly below)
-            accommodationSection.setSelectedOption(newOption.getItemId());
+        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
+        PolicyAggregate policyAggregate = workingBookingProperties.getPolicyAggregate();
 
-            // Update festival day section constraints based on new accommodation
-            HasAccommodationSelectionSection.AccommodationOption selectedOption = accommodationSection.getSelectedOption();
-            if (selectedOption != null && festivalDaySection != null) {
-                festivalDaySection.setMinNightsConstraint(selectedOption.getMinNights());
-                festivalDaySection.setIsDayVisitor(selectedOption.isDayVisitor());
+        // Step 1: Collect the attendance dates from old accommodation BEFORE removing
+        java.util.Set<LocalDate> oldAccommodationDates = new java.util.HashSet<>();
+        List<DocumentLine> oldAccommodationLines = workingBooking.getFamilyDocumentLines(KnownItemFamily.ACCOMMODATION);
+        for (DocumentLine line : oldAccommodationLines) {
+            List<Attendance> attendances = workingBooking.getLastestDocumentAggregate().getLineAttendances(line);
+            for (Attendance attendance : attendances) {
+                if (attendance.getDate() != null) {
+                    oldAccommodationDates.add(attendance.getDate());
+                }
+            }
+        }
+        Console.log("USFestivalInPersonBookingForm: Old accommodation dates: " + oldAccommodationDates);
+
+        // Compute arrival/departure dates from old accommodation dates
+        // Arrival = min date, Departure = max date + 1 (since accommodation nights are before departure)
+        LocalDate arrivalDate = null;
+        LocalDate departureDate = null;
+        if (!oldAccommodationDates.isEmpty()) {
+            arrivalDate = oldAccommodationDates.stream().min(LocalDate::compareTo).orElse(null);
+            LocalDate maxDate = oldAccommodationDates.stream().max(LocalDate::compareTo).orElse(null);
+            departureDate = maxDate != null ? maxDate.plusDays(1) : null;
+            Console.log("USFestivalInPersonBookingForm: Computed arrival=" + arrivalDate + ", departure=" + departureDate);
+        }
+
+        // Step 2: Remove the old accommodation document lines (keep teaching, meals, etc.)
+        Console.log("USFestivalInPersonBookingForm: Removing " + oldAccommodationLines.size() + " old accommodation lines");
+        for (DocumentLine line : oldAccommodationLines) {
+            workingBooking.removeDocumentLine(line);
+        }
+
+        // Step 3: Update the accommodation section with the new selection
+        // Directly set the selectedOptionProperty to newOption, bypassing setSelectedOption()
+        // which may fail to match itemId if the newOption was created in a different context
+        if (accommodationSection != null) {
+            Console.log("USFestivalInPersonBookingForm: Setting accommodation directly to: " + newOption.getName());
+            accommodationSection.selectedOptionProperty().set(newOption);
+
+            // Update festival day section constraints and dates based on new accommodation
+            if (festivalDaySection != null) {
+                festivalDaySection.setMinNightsConstraint(newOption.getMinNights());
+                festivalDaySection.setIsDayVisitor(newOption.isDayVisitor());
+                // Preserve the original arrival/departure dates so onBeforeSummary() uses them
+                if (arrivalDate != null) {
+                    festivalDaySection.arrivalDateProperty().set(arrivalDate);
+                    Console.log("USFestivalInPersonBookingForm: Set festivalDaySection arrivalDate to " + arrivalDate);
+                }
+                if (departureDate != null) {
+                    festivalDaySection.departureDateProperty().set(departureDate);
+                    Console.log("USFestivalInPersonBookingForm: Set festivalDaySection departureDate to " + departureDate);
+                }
             }
         }
 
-        // Step 3: Re-book all items with the new accommodation for the same date ranges
-        // This uses the current date selection from festivalDaySection
-        bookSelectedItemsIntoWorkingBooking();
-        Console.log("USFestivalInPersonBookingForm: Items re-booked with new accommodation");
+        // Step 4: Book the new accommodation using the same dates as the old one
+        if (policyAggregate != null && !oldAccommodationDates.isEmpty()) {
+            Item newItem = newOption.getItemEntity();
+            if (newItem != null) {
+                // Find ScheduledItems for the new accommodation item that match the old dates
+                List<ScheduledItem> newAccommodationItems = policyAggregate.filterAccommodationScheduledItems().stream()
+                    .filter(si -> dev.webfx.stack.orm.entity.Entities.samePrimaryKey(si.getItem(), newItem))
+                    .filter(si -> si.getDate() != null && oldAccommodationDates.contains(si.getDate()))
+                    .collect(java.util.stream.Collectors.toList());
 
-        // Step 4: Navigate to summary page to review and retry submission
+                Console.log("USFestivalInPersonBookingForm: Booking " + newAccommodationItems.size() + " new accommodation items for dates: " + oldAccommodationDates);
+                if (!newAccommodationItems.isEmpty()) {
+                    workingBooking.bookScheduledItems(newAccommodationItems, false);
+                }
+            }
+        }
+
+        // Step 5: Apply roommate info to the new accommodation lines if provided
+        if (roommateInfo != null && roommateInfo.hasData()) {
+            List<DocumentLine> newAccommodationLines = workingBooking.getFamilyDocumentLines(KnownItemFamily.ACCOMMODATION);
+            if (roommateInfo.isRoomBooker()) {
+                // Room booker mode: set roommate names
+                String[] matesNames = roommateInfo.getRoommateNames().toArray(new String[0]);
+                for (DocumentLine line : newAccommodationLines) {
+                    workingBooking.setShareOwnerInfo(line, matesNames);
+                }
+                Console.log("USFestivalInPersonBookingForm: Set roommate names on new accommodation");
+            } else {
+                // Share accommodation mode: set room owner name
+                String ownerName = roommateInfo.getRoomOwnerName();
+                for (DocumentLine line : newAccommodationLines) {
+                    workingBooking.setShareMateInfo(line, ownerName);
+                }
+                Console.log("USFestivalInPersonBookingForm: Set room owner name on new accommodation");
+            }
+        }
+
+        Console.log("USFestivalInPersonBookingForm: New accommodation booked");
+
+        // Step 6: Navigate to summary page to review and retry submission
         continueToSummary.run();
     }
 
@@ -2506,11 +2639,39 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
      * Books teaching ScheduledItems based on selected festival days.
      */
     private void bookTeachingItems(WorkingBooking workingBooking, PolicyAggregate policyAggregate) {
-        // Get teaching scheduled items - for now, book all teaching items
-        // TODO: If festivalDaySection has specific day selection, filter by those dates
-        List<ScheduledItem> teachingItems = policyAggregate.filterTeachingScheduledItems();
+        // Get all teaching scheduled items
+        List<ScheduledItem> allTeachingItems = policyAggregate.filterTeachingScheduledItems();
+
+        // Get arrival/departure dates from festival day section to filter teaching days
+        LocalDate arrivalDate = null;
+        LocalDate departureDate = null;
+        if (festivalDaySection != null) {
+            arrivalDate = festivalDaySection.getArrivalDate();
+            departureDate = festivalDaySection.getDepartureDate();
+        }
+
+        // Filter teaching items by arrival/departure dates if available
+        List<ScheduledItem> teachingItems;
+        if (arrivalDate != null && departureDate != null) {
+            final LocalDate arrival = arrivalDate;
+            final LocalDate departure = departureDate;
+            teachingItems = allTeachingItems.stream()
+                .filter(si -> {
+                    LocalDate siDate = si.getDate();
+                    if (siDate == null) return false;
+                    // Include teaching days from arrival date up to (but not including) departure date
+                    // Since departure is checkout day, guest attends teaching until the day before
+                    return !siDate.isBefore(arrival) && siDate.isBefore(departure);
+                })
+                .collect(java.util.stream.Collectors.toList());
+            Console.log("USFestivalInPersonBookingForm: Filtered teaching items from " + allTeachingItems.size() + " to " + teachingItems.size() + " based on dates " + arrival + " to " + departure);
+        } else {
+            // No date filter available, book all teaching items
+            teachingItems = allTeachingItems;
+            Console.log("USFestivalInPersonBookingForm: No arrival/departure dates, booking all " + teachingItems.size() + " teaching items");
+        }
+
         if (!teachingItems.isEmpty()) {
-            Console.log("USFestivalInPersonBookingForm: Booking " + teachingItems.size() + " teaching items");
             workingBooking.bookScheduledItems(teachingItems, false);
         }
     }
@@ -3147,6 +3308,30 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
         if (!allTransportItems.isEmpty()) {
             Console.log("USFestivalInPersonBookingForm: Unbooking " + allTransportItems.size() + " transport scheduled items before rebooking selected ones");
             workingBooking.unbookScheduledItems(allTransportItems);
+        }
+
+        // Also unbook ALL parking scheduled items from PolicyAggregate to ensure complete cleanup
+        // (handles edge cases where parking was booked through different paths)
+        List<ScheduledItem> allPolicyParkingItems = policyAggregate.filterScheduledItemsOfFamily(KnownItemFamily.PARKING);
+        if (allPolicyParkingItems != null && !allPolicyParkingItems.isEmpty()) {
+            Console.log("USFestivalInPersonBookingForm: Also unbooking " + allPolicyParkingItems.size() + " parking items from PolicyAggregate");
+            workingBooking.unbookScheduledItems(allPolicyParkingItems);
+
+            // Also unbook parking Items directly (in case they were booked as non-temporal items)
+            // Get unique parking Items and unbook them at each site scope
+            java.util.Set<Item> parkingItems = allPolicyParkingItems.stream()
+                .map(ScheduledItem::getItem)
+                .filter(java.util.Objects::nonNull)
+                .collect(java.util.stream.Collectors.toSet());
+            for (Item parkingItem : parkingItems) {
+                one.modality.base.shared.entities.ItemPolicy itemPolicy = policyAggregate.getItemPolicy(parkingItem);
+                one.modality.base.shared.entities.Site site = null;
+                if (itemPolicy != null && itemPolicy.getScope() != null) {
+                    site = itemPolicy.getScope().getSite();
+                }
+                Console.log("USFestivalInPersonBookingForm: Unbooking parking Item '" + parkingItem.getName() + "' (non-temporal cleanup)");
+                workingBooking.unbookItem(site, parkingItem);
+            }
         }
 
         // Book selected parking options (filtered by arrival/departure dates)

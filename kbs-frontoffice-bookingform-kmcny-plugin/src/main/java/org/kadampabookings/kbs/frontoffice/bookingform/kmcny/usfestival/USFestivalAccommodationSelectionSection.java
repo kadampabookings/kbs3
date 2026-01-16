@@ -75,27 +75,32 @@ public class USFestivalAccommodationSelectionSection extends DefaultAccommodatio
         // Create the base card using parent implementation
         VBox card = super.createOptionCard(option, isSelected);
 
-        // Get breakdown for this option
-        List<PriceBreakdownItem> breakdown = breakdownMap.get(option.getItemId());
-        if (breakdown != null && !breakdown.isEmpty()) {
-            // The card structure is:
-            // VBox card
-            //   └── StackPane wrapper (or just content if sold out)
-            //         └── VBox contentBox (first child)
-            //         └── checkmark/ribbon (second child if present)
-            // We need to add the breakdown section to the contentBox
-
-            Node firstChild = card.getChildren().isEmpty() ? null : card.getChildren().get(0);
-            if (firstChild instanceof StackPane) {
-                StackPane wrapper = (StackPane) firstChild;
-                Node contentNode = wrapper.getChildren().isEmpty() ? null : wrapper.getChildren().get(0);
-                if (contentNode instanceof VBox) {
-                    VBox contentBox = (VBox) contentNode;
-                    VBox breakdownSection = createBreakdownSection(breakdown, option.getAvailability() == AvailabilityStatus.SOLD_OUT);
-                    contentBox.getChildren().add(breakdownSection);
+        // For per-room accommodations with capacity of 1, remove the "One person books the room" note
+        // since it doesn't make sense for single-person rooms
+        if (!option.isDayVisitor() && !option.isPerPerson()) {
+            // Check if the item has capacity of 1
+            one.modality.base.shared.entities.Item itemEntity = option.getItemEntity();
+            Integer capacity = itemEntity != null ? itemEntity.getCapacity() : null;
+            if (capacity != null && capacity == 1) {
+                // Find and remove the sharing note from the card
+                // Card structure: VBox card -> StackPane wrapper -> VBox contentBox -> children
+                Node firstChild = card.getChildren().isEmpty() ? null : card.getChildren().get(0);
+                if (firstChild instanceof StackPane) {
+                    StackPane wrapper = (StackPane) firstChild;
+                    Node contentNode = wrapper.getChildren().isEmpty() ? null : wrapper.getChildren().get(0);
+                    if (contentNode instanceof VBox) {
+                        VBox contentBox = (VBox) contentNode;
+                        // Find and remove the sharing note Label
+                        contentBox.getChildren().removeIf(node ->
+                            node instanceof Label &&
+                            ((Label) node).getText() != null &&
+                            ((Label) node).getText().contains("One person books the room"));
+                    }
                 }
             }
         }
+
+        // Note: Price breakdown section removed per user request
 
         return card;
     }
