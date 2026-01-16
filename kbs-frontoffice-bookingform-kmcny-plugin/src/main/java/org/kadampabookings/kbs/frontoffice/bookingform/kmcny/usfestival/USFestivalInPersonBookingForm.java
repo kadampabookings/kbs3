@@ -2088,7 +2088,7 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
         }
 
         // Check if there are multiple phase coverages for audio recording
-        java.util.List<one.modality.base.shared.entities.PhaseCoverage> phaseCoverages =
+        java.util.List<EventPhaseCoverage> phaseCoverages =
             policyAggregate.getAudioRecordingPhaseCoverages();
 
         if (phaseCoverages == null || phaseCoverages.size() <= 1) {
