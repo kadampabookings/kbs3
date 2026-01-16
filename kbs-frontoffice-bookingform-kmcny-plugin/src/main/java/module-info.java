@@ -18,8 +18,8 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires webfx.extras.i18n;
     requires webfx.extras.i18n.controls;
     requires webfx.platform.console;
-    requires webfx.stack.orm.entity;
     requires webfx.platform.uischeduler;
+    requires webfx.stack.orm.entity;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingform.kmcny;
