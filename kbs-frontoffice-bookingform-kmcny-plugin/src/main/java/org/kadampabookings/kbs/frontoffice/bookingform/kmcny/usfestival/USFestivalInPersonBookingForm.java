@@ -4,12 +4,18 @@ import dev.webfx.extras.i18n.I18n;
 import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.uischeduler.UiScheduler;
+import dev.webfx.platform.windowhistory.WindowHistory;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
 import one.modality.base.shared.entities.*;
 import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
@@ -20,6 +26,7 @@ import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
 import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.CompositeBookingFormPage;
+import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StickyPriceHeader;
 import one.modality.booking.frontoffice.bookingpage.components.ValidationWarningZone;
 import one.modality.booking.frontoffice.bookingpage.sections.*;
@@ -404,19 +411,76 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
      * Creates a page informing the user that booking modification is not currently supported.
      * Displayed for MODIFY_BOOKING entry point.
      *
+     * <p>This page features a nice design with:</p>
+     * <ul>
+     *   <li>An info icon in a themed circle</li>
+     *   <li>A clear title and subtitle</li>
+     *   <li>Instructions to use the "Contact us about this booking" link in Orders tab</li>
+     *   <li>A "Go to Orders" button for easy navigation</li>
+     *   <li>No navigation buttons (Next/Back)</li>
+     * </ul>
+     *
      * @return A page with an informational message about modification not being available
      */
     private CompositeBookingFormPage createModifyNotSupportedPage() {
         DefaultEventHeaderSection headerSection = new DefaultEventHeaderSection();
 
-        // Create the message content
-        Label messageLabel = I18nControls.newLabel(USFestivalI18nKeys.ModifyBookingNotSupported);
-        messageLabel.setWrapText(true);
-        messageLabel.getStyleClass().add("booking-form-info-message");
+        // Create loading spinner (shown initially until page is ready)
+        ProgressIndicator loadingSpinner = new ProgressIndicator();
+        loadingSpinner.setMaxSize(64, 64);
+        VBox loadingBox = new VBox(loadingSpinner);
+        loadingBox.setAlignment(Pos.CENTER);
+        loadingBox.setPadding(new Insets(80));
+        loadingBox.setVisible(true);
+        loadingBox.setManaged(true);
 
-        VBox contentBox = new VBox(20, messageLabel);
+        // Build centered content with icon, title, and instructions
+        VBox contentBox = new VBox(24);
         contentBox.setAlignment(Pos.CENTER);
-        contentBox.setPadding(new Insets(40));
+        contentBox.setPadding(new Insets(40, 40, 40, 40));
+        contentBox.setVisible(false); // Hidden initially until data is ready
+        contentBox.setManaged(false); // Don't participate in layout until visible
+
+        // Info icon in themed circle (like confirmation checkmark)
+        StackPane iconCircle = BookingPageUIBuilder.createThemedIconCircle(80);
+        iconCircle.getStyleClass().add("bookingpage-confirmation-check-circle");
+        // Create info icon using circle + i paths
+        SVGPath infoCircle = BookingPageUIBuilder.createThemedIcon(BookingPageUIBuilder.ICON_INFO_CIRCLE, 1.2);
+        SVGPath infoI = BookingPageUIBuilder.createThemedIcon(BookingPageUIBuilder.ICON_INFO_I, 1.2);
+        StackPane infoIcon = new StackPane(infoCircle, infoI);
+        iconCircle.getChildren().add(infoIcon);
+
+        // Title
+        Label titleLabel = I18nControls.newLabel(USFestivalI18nKeys.ModifyBookingNotSupportedTitle);
+        titleLabel.getStyleClass().addAll("bookingpage-text-3xl", "bookingpage-font-bold", "bookingpage-text-primary");
+        VBox.setMargin(titleLabel, new Insets(12, 0, 0, 0));
+
+        // Subtitle
+        Label subtitleLabel = I18nControls.newLabel(USFestivalI18nKeys.ModifyBookingNotAvailable);
+        subtitleLabel.getStyleClass().addAll("bookingpage-text-md", "bookingpage-text-muted");
+        subtitleLabel.setWrapText(true);
+        subtitleLabel.setAlignment(Pos.CENTER);
+        subtitleLabel.setMaxWidth(500);
+
+        // Instructions info box
+        HBox instructionsBox = BookingPageUIBuilder.createInfoBox(
+            USFestivalI18nKeys.ModifyBookingContactInstructions,
+            BookingPageUIBuilder.InfoBoxType.INFO);
+        instructionsBox.setMaxWidth(500);
+        VBox.setMargin(instructionsBox, new Insets(8, 0, 0, 0));
+
+        // Go to Orders button (navigates to /orders)
+        Button goToOrdersButton = BookingPageUIBuilder.createPrimaryButton(USFestivalI18nKeys.GoToOrders);
+        goToOrdersButton.setOnAction(e -> WindowHistory.getProvider().push("/orders"));
+        VBox.setMargin(goToOrdersButton, new Insets(8, 0, 0, 0));
+
+        contentBox.getChildren().addAll(iconCircle, titleLabel, subtitleLabel, instructionsBox, goToOrdersButton);
+
+        // Container with both loading spinner and content (stacked)
+        StackPane container = new StackPane(loadingBox, contentBox);
+
+        // Track if content has been shown (to avoid multiple triggers)
+        final boolean[] contentShown = {false};
 
         // Create an anonymous BookingFormSection to wrap the content
         BookingFormSection infoSection = new BookingFormSection() {
@@ -427,20 +491,36 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
             @Override
             public Node getView() {
-                return contentBox;
+                return container;
             }
 
             @Override
             public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
-                // No-op - this section doesn't need working booking properties
+                // Only show content once and when we have valid working booking data
+                if (!contentShown[0] && workingBookingProperties != null) {
+                    WorkingBooking wb = workingBookingProperties.getWorkingBooking();
+                    // Check if booking data is actually loaded (has event or document)
+                    if (wb != null && (wb.getEvent() != null || wb.getDocument() != null)) {
+                        contentShown[0] = true;
+                        // Use UiScheduler to ensure smooth transition
+                        UiScheduler.runInUiThread(() -> {
+                            loadingBox.setVisible(false);
+                            loadingBox.setManaged(false);
+                            contentBox.setVisible(true);
+                            contentBox.setManaged(true);
+                        });
+                    }
+                }
             }
         };
 
+        // Create page with NO buttons (empty array) to hide Next/Back navigation
         return new CompositeBookingFormPage(
             USFestivalI18nKeys.ModifyBookingNotSupportedTitle,
             headerSection,
             infoSection
-        ).setStep(true);
+        ).setStep(true)
+         .setButtons(); // Empty buttons array - hides Next button
     }
 
     // ========================================
@@ -3596,11 +3676,12 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
         Event event = policyAggregate.getEvent();
         if (event == null) return;
 
+        // Always use custom terms text for US Festival
+        form.setTermsText(I18n.getI18nText(KMCNY18nKeys.USFestivalAcceptTermsText));
+
         String termsUrl = event.getTermsUrlEn();
         if (termsUrl != null && !termsUrl.isEmpty()) {
             form.setTermsUrl(termsUrl);
-            // Custom terms text emphasizing cancellation and refund policy
-            form.setTermsText(I18n.getI18nText(KMCNY18nKeys.USFestivalAcceptTermsText));
             Console.log("USFestivalInPersonBookingForm: Set terms URL to: " + termsUrl);
         }
     }

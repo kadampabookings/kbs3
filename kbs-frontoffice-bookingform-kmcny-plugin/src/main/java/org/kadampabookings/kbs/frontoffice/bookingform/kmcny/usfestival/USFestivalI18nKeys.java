@@ -73,4 +73,7 @@ public interface USFestivalI18nKeys {
     // Booking Modification (not supported message)
     Object ModifyBookingNotSupportedTitle = "ModifyBookingNotSupportedTitle";
     Object ModifyBookingNotSupported = "ModifyBookingNotSupported";
+    Object ModifyBookingNotAvailable = "ModifyBookingNotAvailable";
+    Object ModifyBookingContactInstructions = "ModifyBookingContactInstructions";
+    Object GoToOrders = "GoToOrders";
 }

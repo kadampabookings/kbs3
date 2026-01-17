@@ -19,6 +19,7 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires webfx.extras.i18n.controls;
     requires webfx.platform.console;
     requires webfx.platform.uischeduler;
+    requires webfx.platform.windowhistory;
     requires webfx.stack.orm.entity;
 
     // Exported packages

@@ -467,7 +467,7 @@ public final class BookingModificationForm {
 
         // Set payment amounts (convert to cents)
         int totalInCents = workingBookingProperties.getBalance();
-        confirmationSection.setPaymentAmounts(totalInCents, totalInCents); // Full payment
+        confirmationSection.setPaymentAmounts(totalInCents, 0, totalInCents); // Full payment
 
         // Add the confirmation view
         contentContainer.getChildren().add(confirmationSection.getView());
