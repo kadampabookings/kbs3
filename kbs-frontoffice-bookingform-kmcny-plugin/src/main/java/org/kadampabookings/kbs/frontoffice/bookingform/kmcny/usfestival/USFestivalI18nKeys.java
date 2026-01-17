@@ -69,4 +69,8 @@ public interface USFestivalI18nKeys {
     Object BookingDetails = "BookingDetails";
     Object Step1YourRoom = "Step1YourRoom";
     Object Step2BookingDetails = "Step2BookingDetails";
+
+    // Booking Modification (not supported message)
+    Object ModifyBookingNotSupportedTitle = "ModifyBookingNotSupportedTitle";
+    Object ModifyBookingNotSupported = "ModifyBookingNotSupported";
 }

@@ -1,9 +1,15 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.kmcny.usfestival;
 
 import dev.webfx.extras.i18n.I18n;
+import dev.webfx.extras.i18n.controls.I18nControls;
 import dev.webfx.platform.console.Console;
 import dev.webfx.platform.uischeduler.UiScheduler;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import one.modality.base.shared.entities.*;
 import one.modality.base.shared.knownitems.KnownItemFamily;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
@@ -11,6 +17,7 @@ import one.modality.booking.client.workingbooking.WorkingBooking;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
+import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.CompositeBookingFormPage;
 import one.modality.booking.frontoffice.bookingpage.components.StickyPriceHeader;
@@ -91,6 +98,7 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
     // State
     private final EventBookingFormSettings settings;
     private final WorkingBookingProperties workingBookingProperties;
+    private final BookingFormEntryPoint entryPoint;
     private boolean accommodationOptionsPopulated = false;
 
     // Event boundary dates from EventSelection and EventPart (loaded from PolicyAggregate)
@@ -110,22 +118,34 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
     public USFestivalInPersonBookingForm(HasWorkingBookingProperties activity, EventBookingFormSettings settings, BookingFormEntryPoint entryPoint) {
         this.settings = settings;
         this.workingBookingProperties = activity.getWorkingBookingProperties();
+        this.entryPoint = entryPoint;
 
         // Create the sticky price header
         this.stickyPriceHeader = new StickyPriceHeader();
         this.stickyPriceHeader.setColorScheme(BookingFormColorScheme.WISDOM_BLUE);
 
-        // Build the form with custom steps
+        // Build the form with custom steps based on entry point
         StandardBookingFormBuilder builder = new StandardBookingFormBuilder(activity, settings)
             .withColorScheme(BookingFormColorScheme.WISDOM_BLUE)  // Blue theme for US Festival
             .withShowUserBadge(false)                             // Hide user badge in header
             .withCardPaymentOnly(true)                            // Only allow credit/debit card payments
             .withEntryPoint(entryPoint)                           // Handle payment resume/modification
             .withNavigationClickable(false)                       // Navigation only via buttons
-            .withStickyHeader(stickyPriceHeader)                  // Sticky price header at top
-            // Custom steps (before Your Information)
-            .addCustomStep(createAccommodationPage())             // Step 1: Your Room
-            .addCustomStep(createBookingDetailsPage())            // Step 2: Festival Days, Meals, Options
+            .withStickyHeader(stickyPriceHeader);                 // Sticky price header at top
+
+        // Handle different entry points
+        if (entryPoint == BookingFormEntryPoint.NEW_BOOKING) {
+            // New booking: show accommodation and booking details steps
+            builder
+                .addCustomStep(createAccommodationPage())         // Step 1: Your Room
+                .addCustomStep(createBookingDetailsPage());       // Step 2: Festival Days, Meals, Options
+        } else if (entryPoint == BookingFormEntryPoint.MODIFY_BOOKING) {
+            // Modify booking: show informational message that modification is not supported
+            builder.addCustomStep(createModifyNotSupportedPage());
+        }
+        // PAY_BOOKING: no custom steps - StandardBookingForm navigates directly to payment
+
+        builder
             // Custom Your Information page with event header
             .withYourInformationPageSupplier(this::createYourInformationPageWithHeader)
             // Custom Member Selection page with event header
@@ -134,11 +154,14 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
         this.form = builder.build();
 
-        // Wire up section callbacks
-        setupAccommodationCallbacks();
-        setupAccommodationButtons();
-        setupBookingDetailsCallbacks();
-        setupBookingDetailsButtons();
+        // Wire up section callbacks only for new bookings
+        // For PAY_BOOKING/MODIFY_BOOKING, the booking data should not be modified
+        if (entryPoint == BookingFormEntryPoint.NEW_BOOKING) {
+            setupAccommodationCallbacks();
+            setupAccommodationButtons();
+            setupBookingDetailsCallbacks();
+            setupBookingDetailsButtons();
+        }
         setupYourInformationCallbacks();
         setupMemberSelectionCallbacks();
 
@@ -156,10 +179,24 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
     /**
      * Sets up a listener to populate accommodation options when the WorkingBooking becomes available.
      * Also checks if the WorkingBooking is already available (e.g., when swapped from entry form).
+     *
+     * <p>Note: For PAY_BOOKING and MODIFY_BOOKING entry points, we skip the population logic
+     * since those entry points work with existing booking data that should not be overwritten.</p>
      */
     private void setupWorkingBookingListener() {
         if (workingBookingProperties == null) {
             Console.log("USFestivalInPersonBookingForm: WorkingBookingProperties not available, cannot set up listener");
+            return;
+        }
+
+        // Skip population logic for non-NEW_BOOKING entry points
+        // Existing bookings should not have their data overwritten
+        if (entryPoint != BookingFormEntryPoint.NEW_BOOKING) {
+            Console.log("USFestivalInPersonBookingForm: Skipping WorkingBooking listener for " + entryPoint);
+            // Still bind the sticky price header for PAY_BOOKING so user sees correct total
+            if (stickyPriceHeader != null) {
+                stickyPriceHeader.totalPriceProperty().bind(workingBookingProperties.totalProperty());
+            }
             return;
         }
 
@@ -361,6 +398,49 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
             memberSelectionSection)
             .setStep(true)
             .setShowingOwnSubmitButton(true);
+    }
+
+    /**
+     * Creates a page informing the user that booking modification is not currently supported.
+     * Displayed for MODIFY_BOOKING entry point.
+     *
+     * @return A page with an informational message about modification not being available
+     */
+    private CompositeBookingFormPage createModifyNotSupportedPage() {
+        DefaultEventHeaderSection headerSection = new DefaultEventHeaderSection();
+
+        // Create the message content
+        Label messageLabel = I18nControls.newLabel(USFestivalI18nKeys.ModifyBookingNotSupported);
+        messageLabel.setWrapText(true);
+        messageLabel.getStyleClass().add("booking-form-info-message");
+
+        VBox contentBox = new VBox(20, messageLabel);
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.setPadding(new Insets(40));
+
+        // Create an anonymous BookingFormSection to wrap the content
+        BookingFormSection infoSection = new BookingFormSection() {
+            @Override
+            public Object getTitleI18nKey() {
+                return USFestivalI18nKeys.ModifyBookingNotSupportedTitle;
+            }
+
+            @Override
+            public Node getView() {
+                return contentBox;
+            }
+
+            @Override
+            public void setWorkingBookingProperties(WorkingBookingProperties workingBookingProperties) {
+                // No-op - this section doesn't need working booking properties
+            }
+        };
+
+        return new CompositeBookingFormPage(
+            USFestivalI18nKeys.ModifyBookingNotSupportedTitle,
+            headerSection,
+            infoSection
+        ).setStep(true);
     }
 
     // ========================================
