@@ -2452,6 +2452,10 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
     @Override
     public void onBeforeSummary() {
+        // Apply booker details to WorkingBooking BEFORE booking items
+        // This ensures age-dependent pricing is calculated correctly in the summary
+        applyBookerDetailsToWorkingBooking();
+
         // Book selected items into WorkingBooking BEFORE summary is displayed
         // This ensures the price breakdown shows all selected options
         bookSelectedItemsIntoWorkingBooking();
@@ -2596,6 +2600,35 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
         // Step 6: Navigate to summary page to review and retry submission
         continueToSummary.run();
+    }
+
+    /**
+     * Applies the selected booker's personal details to the WorkingBooking.
+     * This must be called before bookSelectedItemsIntoWorkingBooking() so that
+     * age-dependent pricing (based on booker's birthdate) is calculated correctly.
+     */
+    private void applyBookerDetailsToWorkingBooking() {
+        if (workingBookingProperties == null || workingBookingProperties.getWorkingBooking() == null) {
+            return;
+        }
+
+        WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
+
+        // Case 1: Household member selected (logged-in user booking for self or family member)
+        HasMemberSelectionSection.MemberInfo selectedMember = form.getState().getSelectedMember();
+        if (selectedMember != null && selectedMember.getPersonEntity() != null) {
+            Person person = selectedMember.getPersonEntity();
+            workingBooking.applyPersonalDetails(person);
+            Console.log("USFestivalInPersonBookingForm: Applied personal details for member: " + person.getFirstName());
+            return;
+        }
+
+        // Case 2: New user (guest checkout)
+        HasYourInformationSection.NewUserData newUserData = form.getState().getPendingNewUserData();
+        if (newUserData != null) {
+            workingBooking.applyGuestPersonalDetails(newUserData.firstName, newUserData.lastName, newUserData.email);
+            Console.log("USFestivalInPersonBookingForm: Applied personal details for new user: " + newUserData.firstName);
+        }
     }
 
     /**
