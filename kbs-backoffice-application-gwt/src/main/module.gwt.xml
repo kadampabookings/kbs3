@@ -445,6 +445,12 @@
     <source path="one/modality/hotel/backoffice/activities/household/gantt/view"/>
     <!--==============< modality-hotel-backoffice-activity-reception-plugin >===============-->
     <source path="one/modality/hotel/backoffice/activities/reception"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/data"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/i18n"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/modal"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/row"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/util"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/view"/>
     <!--==============< modality-hotel-backoffice-activity-roomsetup-plugin >===============-->
     <source path="one/modality/hotel/backoffice/activities/roomsetup"/>
     <source path="one/modality/hotel/backoffice/activities/roomsetup/dialog"/>
@@ -534,7 +540,6 @@
     <source path="dev/webfx/extras/panes/transitions"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
-    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->

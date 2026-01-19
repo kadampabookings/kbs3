@@ -283,7 +283,61 @@ public class GPClassSummarySection extends DefaultSummarySection {
 
     @Override
     public void refreshPriceBreakdown() {
-        // Override to prevent default behavior - we manage our own price content
+        // If priceLines were added externally (e.g., PAY_BOOKING flow), render them
+        if (!priceLines.isEmpty()) {
+            renderExternalPriceLines();
+            return;
+        }
+        // Otherwise, use our GP-specific price content from dateSelectionSection
         updatePriceContent();
+    }
+
+    /**
+     * Renders externally-added price lines (used for PAY_BOOKING flow).
+     * This displays the price lines in the GP-specific UI elements.
+     */
+    private void renderExternalPriceLines() {
+        if (datesLabel == null || subtotalLabel == null || totalValue == null) {
+            return;
+        }
+
+        // Build dates text from price line descriptions
+        StringBuilder datesText = new StringBuilder();
+        int total = 0;
+        int lineCount = 0;
+
+        for (PriceLine line : priceLines) {
+            if (datesText.length() > 0) {
+                datesText.append(", ");
+            }
+            // Use description (dates) if available, otherwise use name
+            String lineText = line.getDescription() != null && !line.getDescription().isEmpty()
+                    ? line.getDescription()
+                    : line.getName();
+            datesText.append(lineText);
+            total += line.getAmount();
+            lineCount++;
+        }
+
+        // Update UI elements
+        datesLabel.setText(datesText.toString());
+        datesLabel.setVisible(true);
+        datesLabel.setManaged(true);
+
+        // Show line count and total
+        subtotalLabel.setText(lineCount + " class" + (lineCount != 1 ? "es" : ""));
+        subtotalValue.setText(formatPrice(total));
+
+        // Hide discount for external price lines
+        discountRow.setVisible(false);
+        discountRow.setManaged(false);
+
+        // Hide already paid row
+        alreadyPaidRow.setVisible(false);
+        alreadyPaidRow.setManaged(false);
+
+        // Update total
+        totalLabel.setText("Total");
+        totalValue.setText(formatPrice(total));
     }
 }
