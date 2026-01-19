@@ -387,8 +387,18 @@
     <source path="one/modality/ecommerce/payment/buscall/serial"/>
     <!--=======================< modality-ecommerce-payment-remote >========================-->
     <source path="one/modality/ecommerce/payment/spi/impl/remote"/>
+    <!--=======================< modality-ecommerce-policy-service >========================-->
+    <source path="one/modality/ecommerce/policy/service"/>
+    <source path="one/modality/ecommerce/policy/service/spi"/>
+    <!--===================< modality-ecommerce-policy-service-buscall >====================-->
+    <source path="one/modality/ecommerce/policy/service/buscall"/>
+    <source path="one/modality/ecommerce/policy/service/buscall/serial"/>
+    <!--====================< modality-ecommerce-policy-service-remote >====================-->
+    <source path="one/modality/ecommerce/policy/service/spi/impl/remote"/>
     <!--===================< modality-ecommerce-shared-pricecalculator >====================-->
     <source path="one/modality/ecommerce/shared/pricecalculator"/>
+    <!--=============< modality-event-backoffice-activity-createevent-plugin >==============-->
+    <source path="one/modality/event/backoffice/activities/createevent"/>
     <!--===========< modality-event-backoffice-activity-eventsetup-home-plugin >============-->
     <source path="one/modality/event/backoffice/activities/eventsetup/home"/>
     <!--================< modality-event-backoffice-activity-medias-plugin >================-->
@@ -399,6 +409,10 @@
     <source path="one/modality/event/backoffice/activities/program"/>
     <!--===========< modality-event-backoffice-activity-recurringevents-plugin >============-->
     <source path="one/modality/event/backoffice/activities/recurringevents"/>
+    <!--==============< modality-event-backoffice-activity-roomsetup-plugin >===============-->
+    <source path="one/modality/event/backoffice/activities/roomsetup"/>
+    <!--=====================< modality-event-backoffice-eventcreator >=====================-->
+    <source path="one/modality/event/backoffice/eventcreator"/>
     <!--==============< modality-event-backoffice-events-ganttcanvas-plugin >===============-->
     <source path="one/modality/event/backoffice/events/ganttcanvas"/>
     <source path="one/modality/event/backoffice/events/ganttcanvas/spi/impl/event"/>
@@ -431,6 +445,12 @@
     <source path="one/modality/hotel/backoffice/activities/household/gantt/view"/>
     <!--==============< modality-hotel-backoffice-activity-reception-plugin >===============-->
     <source path="one/modality/hotel/backoffice/activities/reception"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/data"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/i18n"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/modal"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/row"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/util"/>
+    <source path="one/modality/hotel/backoffice/activities/reception/view"/>
     <!--==============< modality-hotel-backoffice-activity-roomsetup-plugin >===============-->
     <source path="one/modality/hotel/backoffice/activities/roomsetup"/>
     <source path="one/modality/hotel/backoffice/activities/roomsetup/dialog"/>
@@ -520,7 +540,6 @@
     <source path="dev/webfx/extras/panes/transitions"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
-    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->

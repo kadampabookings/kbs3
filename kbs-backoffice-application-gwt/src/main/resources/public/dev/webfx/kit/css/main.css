@@ -433,25 +433,6 @@ iframe {
     border: none;
 }
 
-/*===== webfx-extras-controls-web@main.css from webfx-extras-util-control =====*/
-
-:root {
-    --fx-spinner-color: var(--fx-theme-color);
-}
-
-.webfx-extras-spinner {
-    animation: webfx-extras-spinner-rotate 1s linear infinite;
-    --fx-svg-path-fill: var(--fx-spinner-color);
-}
-
-@keyframes webfx-extras-spinner-rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
 
 :root {
@@ -513,6 +494,25 @@ iframe {
     --webfx-material-label-fill: var(--webfx-material-invalid-fill);
     --webfx-material-line-fill: var(--webfx-material-invalid-fill);
     --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
+}
+/*===== webfx-extras-controls-web@main.css from webfx-extras-util-control =====*/
+
+:root {
+    --fx-spinner-color: var(--fx-theme-color);
+}
+
+.webfx-extras-spinner {
+    animation: webfx-extras-spinner-rotate 1s linear infinite;
+    --fx-svg-path-fill: var(--fx-spinner-color);
+}
+
+@keyframes webfx-extras-spinner-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 /*===== webfx-extras-dropdown-button-web@main.css from webfx-extras-controlfactory =====*/
 
@@ -1824,6 +1824,228 @@ body, textarea /* because textarea has explicit default monospace font */ {
     color: #666;
 }
 
+/* ===== Label Editor Styles ===== */
+
+/* Main view styles */
+.labeleditor-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.labeleditor-subtitle {
+    font-size: 18px;
+    color: #666;
+}
+
+.labeleditor-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.labeleditor-card-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Grid cell styles */
+.labeleditor-id-cell {
+    font-size: 12px;
+}
+
+.labeleditor-lang-flag {
+    font-size: 9px;
+}
+
+.labeleditor-lang-toggle {
+    font-size: 11px;
+    cursor: pointer;
+    --fx-background-color: #f8f9fa;
+    --fx-border-color: #dee2e6;
+    --fx-border-width: 1px;
+    --fx-border-style: solid;
+    --fx-border-radius: 4px;
+    --fx-background-radius: 4px;
+    --fx-text-fill: #495057;
+}
+
+.labeleditor-lang-toggle:hover {
+    --fx-background-color: #e9ecef;
+    --fx-border-color: #ced4da;
+}
+
+.labeleditor-lang-toggle.pseudo-selected {
+    --fx-background-color: #00b8d4;
+    --fx-border-color: #00a5c4;
+    --fx-text-fill: white;
+}
+
+.labeleditor-lang-toggle.pseudo-selected:hover {
+    --fx-background-color: #00a5c4;
+    --fx-border-color: #0096b4;
+}
+
+/* Dialog styles */
+.labeleditor-dialog-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.labeleditor-ref-lang-highlight {
+    --fx-background-color: #fff3cd;
+    --fx-background-radius: 5px;
+}
+
+.labeleditor-error-dialog-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #dc3545;
+}
+
+.labeleditor-error-dialog-header {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.labeleditor-error-dialog-content {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Delete dialog styles */
+.labeleditor-delete-dialog-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.labeleditor-delete-dialog-message {
+    font-size: 14px;
+}
+
+.labeleditor-delete-dialog-confirm {
+    font-size: 14px;
+    color: #666;
+}
+
+.labeleditor-warning-message {
+    font-size: 14px;
+}
+
+/* Usage panel styles (light theme - for dialogs) */
+.labeleditor-usage-panel {
+    --fx-background-color: #fff8e1;
+    --fx-background-radius: 6px;
+    --fx-border-color: #ffe082;
+    --fx-border-radius: 6px;
+    --fx-border-width: 1px;
+    --fx-border-style: solid;
+}
+
+.labeleditor-usage-warning-icon {
+    font-size: 14px;
+    color: #ff8f00;
+}
+
+.labeleditor-usage-title {
+    font-size: 12px;
+    color: #5d4037;
+}
+
+.labeleditor-usage-type-label {
+    font-size: 12px;
+    color: #5d4037;
+}
+
+.labeleditor-usage-more-label {
+    font-size: 10px;
+    font-style: italic;
+    color: #795548;
+}
+
+/* Reference row styles (light theme) */
+.labeleditor-ref-bullet {
+    color: #795548;
+}
+
+.labeleditor-ref-id-badge {
+    --fx-background-color: #e3f2fd;
+    --fx-background-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #1565c0;
+}
+
+.labeleditor-ref-name {
+    font-size: 11px;
+    color: #37474f;
+}
+
+.labeleditor-ref-field {
+    font-size: 9px;
+    color: #78909c;
+}
+
+.labeleditor-ref-date {
+    font-size: 10px;
+    color: #607d8b;
+}
+
+.labeleditor-ref-placeholder {
+    font-size: 10px;
+    font-style: italic;
+    color: #9e9e9e;
+}
+
+/* Popup styles (dark theme) */
+.labeleditor-popup-content {
+    color: #f7fafc;
+}
+
+.labeleditor-popup-header {
+    font-size: 13px;
+    color: #f7fafc;
+}
+
+.labeleditor-popup-type-label {
+    font-size: 12px;
+    color: #a0aec0;
+}
+
+.labeleditor-popup-more-label {
+    font-size: 11px;
+    font-style: italic;
+    color: #718096;
+}
+
+.labeleditor-popup-bullet {
+    color: #63b3ed;
+    font-size: 12px;
+}
+
+.labeleditor-popup-id-badge {
+    --fx-background-color: #4299e1;
+    --fx-background-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+}
+
+.labeleditor-popup-date {
+    font-size: 11px;
+    color: #a0aec0;
+}
+
+.labeleditor-popup-name {
+    font-size: 12px;
+    color: #e2e8f0;
+}
+
+.labeleditor-popup-placeholder {
+    font-size: 11px;
+    font-style: italic;
+    color: #718096;
+}
+
 /*===== modality-backoffice-bookingdetailspanel-web@main.css from modality-crm-backoffice-bookingdetailspanel =====*/
 
 fx-titledpane .title {
@@ -2335,6 +2557,12 @@ tr.branch, .grid-row.branch {
 
 
 
+/*===== modality-crm-backoffice-organizations-web@main.css from modality-crm-backoffice-activity-organizations-plugin =====*/
+
+.section-divider-label {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 /*===== modality-crm-backoffice-organizations-fxweb@main.css from modality-crm-backoffice-activity-organizations-plugin =====*/
 
 /* Organizations View - Name renderer */
@@ -2408,12 +2636,6 @@ tr.branch, .grid-row.branch {
 .organization-id-label { font-size: 12px; --fx-text-fill: #6B7280;
 }
 
-/*===== modality-crm-backoffice-organizations-web@main.css from modality-crm-backoffice-activity-organizations-plugin =====*/
-
-.section-divider-label {
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
 /*===== modality-client-bootstrap-webfx@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */
@@ -4225,6 +4447,316 @@ tr.branch, .grid-row.branch {
     background-color: transparent;
 }
 
+/*===== modality-event-backoffice-activity-roomsetup-fxweb@main.css from modality-event-backoffice-activity-roomsetup-plugin =====*/
+
+/* Room Setup Activity Styles - Unified (JavaFX + Web) */
+
+/* Color Variables (referenced in comments for documentation) */
+/* Primary: #0096D6 (Modality blue) */
+/* Success: #10b981 (Green) */
+/* Warning: #f59e0b (Amber) */
+/* Danger: #ef4444 (Red) */
+/* External: #8b5cf6 (Purple) */
+/* Background: #fafaf9 */
+/* Card: #ffffff */
+/* Border: #e7e5e4 */
+/* Text: #1c1917 */
+/* TextMuted: #78716c */
+
+/* Pool Cards */
+.roomsetup-pool-card { --fx-background-color: white; --fx-background-radius: 12px; --fx-border-color: #e7e5e4; --fx-border-radius: 12px; --fx-border-width: 1px;  box-shadow: 0px 1px 3px rgba(0,0,0,0.06);
+}
+
+.roomsetup-pool-header { --fx-background-color: #fafaf9; --fx-background-radius: 11px 11px 0px 0px; --fx-border-color: #e7e5e4; --fx-border-width: 0px 0px 1px 0px;
+}
+
+.roomsetup-pool-title { font-size: 15px; font-weight: 600; --fx-text-fill: #1c1917;
+}
+
+.roomsetup-pool-count { font-size: 13px; --fx-text-fill: #78716c;
+}
+
+/* Room Chips */
+.roomsetup-room-chip { --fx-background-color: white; --fx-border-color: #e7e5e4; --fx-border-radius: 10px; --fx-background-radius: 10px; --fx-border-width: 1px; cursor: pointer;
+}
+
+.roomsetup-room-chip:hover { --fx-border-color: #0096D6;  box-shadow: 0px 2px 8px rgba(0,0,0,0.08);
+}
+
+.roomsetup-room-chip-selected { --fx-border-color: #0096D6; --fx-background-color: #e0f4fc;
+}
+
+.roomsetup-room-chip-external { --fx-background-color: #f5f3ff; --fx-border-color: #8b5cf6;
+}
+
+.roomsetup-room-chip-external:hover { --fx-border-color: #8b5cf6;  box-shadow: 0px 2px 8px rgba(139,92,246,0.15);
+}
+
+.roomsetup-room-chip-override { --fx-background-color: #fef3c7; --fx-border-color: #0096D6;
+}
+
+.roomsetup-room-chip-inactive { --fx-background-color: #f8fafc; --fx-border-color: #e2e8f0; opacity: 0.7;
+}
+
+.roomsetup-room-id { font-size: 14px; font-weight: 600; --fx-text-fill: #1c1917;
+}
+
+.roomsetup-room-id-external { --fx-text-fill: #8b5cf6;
+}
+
+.roomsetup-room-name { font-size: 13px; --fx-text-fill: #78716c;
+}
+
+/* Beds Badge */
+.roomsetup-beds-badge { --fx-background-color: #f5f5f4; --fx-background-radius: 4px; font-size: 12px; font-weight: 600; --fx-text-fill: #78716c;
+}
+
+.roomsetup-beds-badge-override { --fx-background-color: #0096D6; --fx-text-fill: white;
+}
+
+.roomsetup-beds-badge-external { --fx-background-color: #ede9fe; --fx-text-fill: #8b5cf6;
+}
+
+/* Room Type Groups */
+.roomsetup-type-group-header { --fx-background-color: #fafaf9; --fx-border-color: #e7e5e4; --fx-border-radius: 10px; --fx-background-radius: 10px; --fx-border-width: 1px; cursor: pointer;
+}
+
+.roomsetup-type-group-header-expanded { --fx-background-color: rgba(0,150,214,0.03); --fx-border-color: #0096D6; --fx-border-radius: 10px 10px 0px 0px; --fx-background-radius: 10px 10px 0px 0px;
+}
+
+.roomsetup-type-icon { --fx-background-color: #e5e5e5; --fx-background-radius: 6px; --fx-text-fill: #78716c;
+}
+
+.roomsetup-type-icon-expanded { --fx-background-color: #0096D6; --fx-text-fill: white;
+}
+
+.roomsetup-type-label { font-size: 14px; font-weight: 600; --fx-text-fill: #1c1917;
+}
+
+.roomsetup-type-label-expanded { --fx-text-fill: #0096D6;
+}
+
+.roomsetup-type-count { --fx-background-color: #f0f0f0; --fx-background-radius: 12px; font-size: 12px; font-weight: 600; --fx-text-fill: #78716c;
+}
+
+.roomsetup-type-count-active { --fx-background-color: rgba(0,150,214,0.1); --fx-text-fill: #0096D6;
+}
+
+.roomsetup-type-group-content { --fx-background-color: #fafaf9; --fx-border-color: #0096D6; --fx-border-width: 0px 1px 1px 1px; --fx-border-radius: 0px 0px 10px 10px; --fx-background-radius: 0px 0px 10px 10px;
+}
+
+/* Progress Section */
+.roomsetup-progress-section { --fx-background-color: white; --fx-background-radius: 12px; --fx-border-color: #e7e5e4; --fx-border-radius: 12px; --fx-border-width: 1px;  box-shadow: 0px 1px 3px rgba(0,0,0,0.06);
+}
+
+.roomsetup-progress-title { font-size: 14px; font-weight: 600; --fx-text-fill: #1c1917;
+}
+
+.roomsetup-progress-value { font-size: 24px; font-weight: 700; --fx-text-fill: #0096D6;
+}
+
+.roomsetup-progress-value-complete { --fx-text-fill: #10b981;
+}
+
+.roomsetup-progress-value-over { --fx-text-fill: #f59e0b;
+}
+
+.roomsetup-progress-bar { --fx-background-color: #fafaf9; --fx-background-radius: 4px;
+}
+
+.roomsetup-progress-bar-fill { --fx-background-color: linear-gradient(to right, #0096D6, #0077a8); --fx-background-radius: 4px;
+}
+
+.roomsetup-progress-bar-fill-complete { --fx-background-color: #10b981;
+}
+
+.roomsetup-progress-bar-fill-over { --fx-background-color: linear-gradient(to right, #10b981, #f59e0b);
+}
+
+/* Stat Cards */
+.roomsetup-stat-card { --fx-background-color: white; --fx-background-radius: 12px; --fx-border-color: #e7e5e4; --fx-border-radius: 12px; --fx-border-width: 1px; --fx-textalignment: center;
+}
+
+.roomsetup-stat-value { font-size: 40px; font-weight: 700; --fx-text-fill: #0096D6;
+}
+
+.roomsetup-stat-value-success { --fx-text-fill: #10b981;
+}
+
+.roomsetup-stat-value-warning { --fx-text-fill: #f59e0b;
+}
+
+.roomsetup-stat-value-external { --fx-text-fill: #8b5cf6;
+}
+
+.roomsetup-stat-label { font-size: 14px; --fx-text-fill: #78716c;
+}
+
+/* Category Pills */
+.roomsetup-category-pill { --fx-background-radius: 10px; --fx-border-radius: 10px; --fx-border-width: 1px; --fx-border-color: rgba(0,0,0,0.1);
+}
+
+.roomsetup-category-pill-label { font-size: 14px; font-weight: 600;
+}
+
+.roomsetup-category-pill-value { --fx-background-radius: 6px; font-size: 14px; font-weight: 700; --fx-text-fill: white;
+}
+
+/* Buttons */
+.roomsetup-btn-primary { --fx-background-color: #0096D6; --fx-text-fill: white; --fx-background-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+
+.roomsetup-btn-primary:hover { --fx-background-color: #0077a8;  box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
+}
+
+.roomsetup-btn-secondary { --fx-background-color: white; --fx-text-fill: #78716c; --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 8px; --fx-border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer;
+}
+
+.roomsetup-btn-secondary:hover { --fx-border-color: #0096D6; --fx-text-fill: #0096D6;
+}
+
+.roomsetup-btn-danger { --fx-background-color: white; --fx-text-fill: #dc2626; --fx-border-color: #fecaca; --fx-border-width: 1px; --fx-background-radius: 8px; --fx-border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer;
+}
+
+.roomsetup-btn-danger:hover { --fx-background-color: #fef2f2;
+}
+
+/* Assign All Button */
+.roomsetup-assign-all-btn { --fx-background-color: #0096D6; --fx-text-fill: white; --fx-background-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;  box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+}
+
+.roomsetup-assign-all-btn:hover { --fx-scale-x: 1.05; --fx-scale-y: 1.05;  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Help Tips */
+.roomsetup-help-tip { --fx-background-color: white; --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 12px; --fx-border-radius: 12px;
+}
+
+.roomsetup-help-tip-warning { --fx-background-color: #fefce8; --fx-border-color: #fde047;
+}
+
+.roomsetup-help-tip-info { --fx-background-color: #e0f4fc; --fx-border-color: rgba(0,150,214,0.4);
+}
+
+.roomsetup-help-tip-text { font-size: 14px; --fx-text-fill: #1c1917;
+}
+
+/* External Site Card */
+.roomsetup-external-site-card { --fx-background-color: #f5f3ff; --fx-background-radius: 12px; --fx-border-color: #8b5cf6; --fx-border-width: 2px; --fx-border-style: dashed; --fx-border-radius: 12px;
+}
+
+.roomsetup-external-site-title { font-size: 16px; font-weight: 600; --fx-text-fill: #8b5cf6;
+}
+
+/* Modal Dialog */
+.roomsetup-modal-overlay { --fx-background-color: rgba(0,0,0,0.4);
+}
+
+.roomsetup-modal-content { --fx-background-color: white; --fx-background-radius: 16px;  box-shadow: 0px 20px 40px rgba(0,0,0,0.2);
+}
+
+.roomsetup-modal-header { --fx-border-color: #e7e5e4; --fx-border-width: 0px 0px 1px 0px;
+}
+
+.roomsetup-modal-footer { --fx-border-color: #e7e5e4; --fx-border-width: 1px 0px 0px 0px; --fx-background-color: #fafaf9; --fx-background-radius: 0px 0px 16px 16px;
+}
+
+.roomsetup-modal-title { font-size: 18px; font-weight: 600; --fx-text-fill: #1c1917;
+}
+
+/* Form Fields */
+.roomsetup-form-label { font-size: 12px; font-weight: 600; --fx-text-fill: #78716c;
+}
+
+.roomsetup-form-input { --fx-background-color: white; --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 8px; --fx-border-radius: 8px; font-size: 14px; --fx-text-fill: #1c1917;
+}
+
+.roomsetup-form-input:focused { --fx-border-color: #0096D6;  box-shadow: 0px 0px 3px rgba(0,150,214,0.1);
+}
+
+/* Gender Toggle Buttons */
+.roomsetup-gender-btn { --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 8px; --fx-border-radius: 8px; font-size: 13px; font-weight: 500; --fx-text-fill: #78716c; --fx-background-color: white; cursor: pointer;
+}
+
+.roomsetup-gender-btn-selected { --fx-border-color: #0096D6; --fx-border-width: 2px; --fx-background-color: #e0f4fc; --fx-text-fill: #0096D6;
+}
+
+/* Group By Buttons */
+.roomsetup-groupby-btn { --fx-background-color: white; --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 8px; --fx-border-radius: 8px; font-size: 13px; --fx-text-fill: #78716c; cursor: pointer;
+}
+
+.roomsetup-groupby-btn-active { --fx-background-color: #0096D6; --fx-border-color: #0096D6; --fx-text-fill: white;
+}
+
+/* Search Field */
+.roomsetup-search-input { --fx-background-color: white; --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 8px; --fx-border-radius: 8px; font-size: 14px;
+}
+
+.roomsetup-search-input:focused { --fx-border-color: #0096D6;  box-shadow: 0px 0px 3px rgba(0,150,214,0.1);
+}
+
+/* Notes Section */
+.roomsetup-notes-section { --fx-background-color: white; --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 12px; --fx-border-radius: 12px;
+}
+
+.roomsetup-note-item { --fx-background-radius: 10px;
+}
+
+.roomsetup-note-success { --fx-background-color: #f0fdf4; --fx-border-color: #a7f3d0; --fx-border-width: 1px; --fx-border-radius: 10px; --fx-background-radius: 10px;
+}
+
+.roomsetup-note-warning { --fx-background-color: #fefce8; --fx-border-color: #fde047; --fx-border-width: 1px; --fx-border-radius: 10px; --fx-background-radius: 10px;
+}
+
+.roomsetup-note-info { --fx-background-color: #eff6ff; --fx-border-color: #bfdbfe; --fx-border-width: 1px; --fx-border-radius: 10px; --fx-background-radius: 10px;
+}
+
+.roomsetup-note-text-success { --fx-text-fill: #166534; font-size: 14px;
+}
+
+.roomsetup-note-text-warning { --fx-text-fill: #854d0e; font-size: 14px;
+}
+
+.roomsetup-note-text-info { --fx-text-fill: #1e40af; font-size: 14px;
+}
+
+/* Additional Components */
+.roomsetup-stat-value-medium { font-size: 24px; font-weight: 700;
+}
+
+.roomsetup-icon-container { --fx-background-radius: 10px;
+}
+
+.roomsetup-empty-state { --fx-background-color: white; --fx-background-radius: 16px; --fx-border-color: #e7e5e4; --fx-border-radius: 16px; --fx-border-width: 1px;
+}
+
+.roomsetup-empty-icon { font-size: 48px;
+}
+
+.roomsetup-empty-title { font-size: 18px; font-weight: 600;
+}
+
+.roomsetup-badge-info { --fx-background-color: #e0f4fc; --fx-background-radius: 6px; --fx-text-fill: #0096D6; font-size: 12px; font-weight: 600;
+}
+
+.roomsetup-dialog-title { font-size: 16px; font-weight: 600;
+}
+
+.roomsetup-modified-indicator { font-size: 11px; --fx-text-fill: #0096D6;
+}
+
+.roomsetup-section-label { font-size: 11px; font-weight: 600; --fx-text-fill: #78716c;
+}
+
+.roomsetup-stepper-button { --fx-background-color: white; --fx-border-color: #e7e5e4; --fx-border-width: 1px; --fx-background-radius: 10px; --fx-border-radius: 10px; font-size: 20px; cursor: pointer;
+}
+
+.roomsetup-stepper-button:hover { --fx-border-color: #0096D6;
+}
+
+.roomsetup-stepper-value { font-size: 28px; font-weight: 700;
+}
+
 /*===== modality-hotel-backoffice-activities-household-fxweb@main.css from modality-hotel-backoffice-activity-household-plugin =====*/
 
 /* Household Dashboard CSS */
@@ -4709,6 +5241,427 @@ tr.branch, .grid-row.branch {
 
 .filter-toggle-inactive { --fx-background-color: white; --fx-text-fill: #667085; --fx-border-color: #D0D5DD;
 }
+/*===== modality-hotel-backoffice-activity-reception-web@main.css from modality-hotel-backoffice-activity-reception-plugin =====*/
+
+/*
+ * Reception Dashboard - Web CSS
+ * Bootstrap-inspired theme for Buddhist center environment
+ *
+ * Note: Sizing (padding, widths, heights) is set in Java code per KBS3 guidelines.
+ * This CSS only handles colors, fonts, and visual decorations.
+ */
+
+/* ==========================================
+   Root Variables (Web/CSS3 syntax)
+   ========================================== */
+
+:root {
+    /* Primary */
+    --reception-primary: #0d6efd;
+    --reception-primary-hover: #0b5ed7;
+    --reception-primary-light: #e7f1ff;
+    --reception-primary-border: #b6d4fe;
+    --reception-primary-text: #084298;
+
+    /* Success */
+    --reception-success: #198754;
+    --reception-success-hover: #157347;
+    --reception-success-light: #e8f5e9;
+    --reception-success-border: #c3e6cb;
+    --reception-success-text: #0f5132;
+
+    /* Warning */
+    --reception-warning: #fd7e14;
+    --reception-warning-hover: #e96b02;
+    --reception-warning-light: #fff3cd;
+    --reception-warning-border: #ffecb5;
+    --reception-warning-text: #5c4503;
+
+    /* Danger */
+    --reception-danger: #dc3545;
+    --reception-danger-hover: #bb2d3b;
+    --reception-danger-light: #f8d7da;
+    --reception-danger-border: #f5c2c7;
+    --reception-danger-text: #842029;
+
+    /* Purple */
+    --reception-purple: #6f42c1;
+    --reception-purple-hover: #5a32a3;
+    --reception-purple-light: #f3e8ff;
+    --reception-purple-border: #e2d9f3;
+    --reception-purple-text: #59359a;
+
+    /* Teal */
+    --reception-teal: #20c997;
+    --reception-teal-hover: #1aa179;
+    --reception-teal-light: #d2f4ea;
+
+    /* Text colors */
+    --reception-text: #212529;
+    --reception-text-secondary: #495057;
+    --reception-text-muted: #5c636a;
+    --reception-text-light: #8c959d;
+
+    /* Backgrounds */
+    --reception-bg: #f8f9fa;
+    --reception-bg-card: #ffffff;
+    --reception-border: #dee2e6;
+    --reception-border-light: #e9ecef;
+}
+
+/* ==========================================
+   Dashboard Layout
+   ========================================== */
+
+.reception-dashboard {
+    background-color: var(--reception-bg);
+}
+
+.reception-header {
+    background-color: var(--reception-bg-card);
+    border-bottom: 1px solid var(--reception-border);
+}
+
+.reception-content {
+    background-color: transparent;
+}
+
+.reception-sidebar {
+    background-color: transparent;
+}
+
+/* ==========================================
+   Cards
+   ========================================== */
+
+.reception-card {
+    background-color: var(--reception-bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--reception-border);
+}
+
+.reception-card-header {
+    border-bottom: 1px solid var(--reception-border-light);
+}
+
+.reception-card-title {
+    color: var(--reception-text);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* ==========================================
+   Stat Cards
+   ========================================== */
+
+.stat-card {
+    background-color: var(--reception-bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--reception-border);
+    transition: all 0.15s ease;
+}
+
+.stat-card-clickable {
+    cursor: pointer;
+}
+
+.stat-card-clickable:hover {
+    background-color: var(--reception-bg);
+    border-color: var(--reception-text-muted);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.stat-card-selected {
+    background-color: var(--reception-primary-light);
+    border-color: var(--reception-primary);
+    border-width: 2px;
+}
+
+.stat-card-value {
+    color: var(--reception-text);
+    font-weight: 700;
+    font-size: 28px;
+}
+
+.stat-card-label {
+    color: var(--reception-text-muted);
+    font-size: 11px;
+}
+
+/* ==========================================
+   Guest List & Rows
+   ========================================== */
+
+.guest-list {
+    background-color: var(--reception-bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--reception-border);
+}
+
+.guest-row {
+    background-color: transparent;
+    border-bottom: 1px solid var(--reception-border-light);
+    transition: background-color 0.1s ease;
+}
+
+.guest-row:hover {
+    background-color: var(--reception-bg);
+}
+
+.guest-row-selected {
+    background-color: var(--reception-primary-light);
+}
+
+/* ==========================================
+   Status Badges
+   ========================================== */
+
+.status-badge {
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.status-expected {
+    background-color: var(--reception-primary-light);
+    color: var(--reception-primary);
+}
+
+.status-checked-in {
+    background-color: var(--reception-success-light);
+    color: var(--reception-success);
+}
+
+.status-checked-out {
+    background-color: var(--reception-purple-light);
+    color: var(--reception-purple);
+}
+
+.status-no-show {
+    background-color: var(--reception-danger-light);
+    color: var(--reception-danger);
+}
+
+.status-pre-booked {
+    background-color: var(--reception-warning-light);
+    color: var(--reception-warning-text);
+}
+
+.status-cancelled {
+    background-color: #e9ecef;
+    color: var(--reception-text-muted);
+}
+
+/* ==========================================
+   Tab Bar
+   ========================================== */
+
+.reception-tab-bar {
+    background-color: var(--reception-bg-card);
+    border-bottom: 1px solid var(--reception-border-light);
+}
+
+.reception-tab-item {
+    background-color: transparent;
+    color: var(--reception-text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.15s ease;
+    border: none;
+}
+
+.reception-tab-item:hover {
+    color: var(--reception-text);
+}
+
+.reception-tab-item-active {
+    color: var(--reception-primary);
+    font-weight: 600;
+    border-bottom: 2px solid var(--reception-primary);
+}
+
+.reception-tab-count {
+    background-color: var(--reception-bg);
+    border-radius: 10px;
+    color: var(--reception-text-muted);
+    font-size: 11px;
+}
+
+/* ==========================================
+   Search Box
+   ========================================== */
+
+.reception-search-box {
+    background-color: var(--reception-bg);
+    border-radius: 8px;
+    border: 1px solid var(--reception-border);
+    transition: all 0.15s ease;
+}
+
+.reception-search-box:focus {
+    border-color: var(--reception-primary);
+    background-color: var(--reception-bg-card);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--reception-primary-light);
+}
+
+/* ==========================================
+   Event Filter Dropdown
+   ========================================== */
+
+.reception-event-filter {
+    background-color: var(--reception-bg-card);
+    border-radius: 8px;
+    border: 1px solid var(--reception-border);
+    color: var(--reception-text);
+    transition: all 0.15s ease;
+}
+
+.reception-event-filter:hover {
+    border-color: var(--reception-primary);
+}
+
+.reception-event-filter:focus {
+    border-color: var(--reception-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--reception-primary-light);
+}
+
+/* ==========================================
+   Icon Buttons
+   ========================================== */
+
+.btn-icon {
+    background-color: transparent;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-icon:hover {
+    background-color: var(--reception-bg);
+}
+
+/* ==========================================
+   Quick Action Buttons
+   ========================================== */
+
+.btn-quick-action {
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+/* ==========================================
+   Empty State
+   ========================================== */
+
+.empty-state {
+    background-color: transparent;
+}
+
+.empty-state-icon {
+    color: var(--reception-text-light);
+    font-size: 48px;
+}
+
+.empty-state-text {
+    color: var(--reception-text-muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+/* ==========================================
+   Teal Buttons (Messages)
+   ========================================== */
+
+.btn-teal {
+    background-color: var(--reception-teal);
+    color: white;
+    border-radius: 8px;
+    border: none;
+    transition: background-color 0.15s ease;
+}
+
+.btn-teal:hover {
+    background-color: var(--reception-teal-hover);
+}
+
+/* ==========================================
+   Purple Buttons (Shift Notes)
+   ========================================== */
+
+.btn-purple {
+    background-color: var(--reception-purple);
+    color: white;
+    border-radius: 8px;
+    border: none;
+    transition: background-color 0.15s ease;
+}
+
+.btn-purple:hover {
+    background-color: var(--reception-purple-hover);
+}
+
+/* ==========================================
+   Button Icon Styling
+   ========================================== */
+
+.button-icon {
+    fill: currentColor;
+}
+
+/* ==========================================
+   Register Status Badge
+   ========================================== */
+
+.register-open {
+    background-color: var(--reception-success-light);
+    color: var(--reception-success);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.register-closed {
+    background-color: var(--reception-danger-light);
+    color: var(--reception-danger);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+/* ==========================================
+   Animations (Web-only)
+   ========================================== */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-backdrop {
+    animation: fadeIn 0.15s ease-out;
+}
+
+.modal-content {
+    animation: slideUp 0.2s ease-out;
+}
+
 /*===== modality-hotel-backoffice-activity-roomsetup-web@main.css from modality-hotel-backoffice-activity-roomsetup-plugin =====*/
 
 /* RoomSetup Module - Web CSS

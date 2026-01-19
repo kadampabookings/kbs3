@@ -13,6 +13,8 @@ module kbs.backoffice.application.gluon {
     requires modality.ecommerce.document.service.remote;
     requires modality.ecommerce.payment.buscall;
     requires modality.ecommerce.payment.remote;
+    requires modality.ecommerce.policy.service.buscall;
+    requires modality.ecommerce.policy.service.remote;
     requires webfx.extras.canvas.blob.openjfx;
     requires webfx.extras.filepicker.openjfx;
     requires webfx.extras.fxraiser.json;
