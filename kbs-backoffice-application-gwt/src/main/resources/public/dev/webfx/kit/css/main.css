@@ -157,7 +157,7 @@ body { /* Although we don't want that padding, we apply it initially because thi
 :where([fx-border-overlay]) :where([fx-border-overlay]),
 /* Stop propagation of background/border variables to non-host children (replacement for fx-children)
    Do NOT reset variables on child elements that are themselves Region hosts (they carry fx-border-overlay). */
-[fx-border-overlay] > :not([fx-border-overlay]) {
+[fx-border-overlay] > :not([fx-border-overlay]):not([fx-no-border-overlay]) { /* fx-no-border-overlay is for regions where :before border doesn't work (e.g. textarea) */
     --fx-background-color: transparent;
     --fx-background-radius: var(--fx-border-radius);
     --fx-background-image: none;
@@ -318,23 +318,23 @@ fx-button, fx-togglebutton {
     --fx-border-radius: 5px;
 }
 
-textarea.text-field {
+textarea {
     padding: 8px;
     box-sizing: border-box;
     outline: none;
 
-    /* :before border doesn't work on textarea for some reason, so we apply to it directly */
+    /* textarea has fx-no-border-overlay instead of fx-border-overlay (because :before for borders doesn't work on textarea), so we apply the border styles directly to it */
     border-style: var(--fx-border-style);
     border-color: var(--fx-border-color);
     border-width: var(--fx-border-width);
     border-radius: var(--fx-border-radius, inherit);
 }
 
-textarea.text-field:focus {
+textarea:focus {
     --fx-border-color: var(--fx-focus-color);
 }
 
-fx-titledpane textarea.text-field {
+fx-titledpane textarea {
     --fx-border-radius: 0 0 5px 5px;
 }
 
@@ -433,6 +433,25 @@ iframe {
     border: none;
 }
 
+/*===== webfx-extras-controls-web@main.css from webfx-extras-util-control =====*/
+
+:root {
+    --fx-spinner-color: var(--fx-theme-color);
+}
+
+.webfx-extras-spinner {
+    animation: webfx-extras-spinner-rotate 1s linear infinite;
+    --fx-svg-path-fill: var(--fx-spinner-color);
+}
+
+@keyframes webfx-extras-spinner-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 /*===== webfx-extras-material-web@main.css from webfx-extras-styles-materialdesign =====*/
 
 :root {
@@ -494,25 +513,6 @@ iframe {
     --webfx-material-label-fill: var(--webfx-material-invalid-fill);
     --webfx-material-line-fill: var(--webfx-material-invalid-fill);
     --webfx-material-focused-line-fill: var(--webfx-material-invalid-fill);
-}
-/*===== webfx-extras-controls-web@main.css from webfx-extras-util-control =====*/
-
-:root {
-    --fx-spinner-color: var(--fx-theme-color);
-}
-
-.webfx-extras-spinner {
-    animation: webfx-extras-spinner-rotate 1s linear infinite;
-    --fx-svg-path-fill: var(--fx-spinner-color);
-}
-
-@keyframes webfx-extras-spinner-rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
 }
 /*===== webfx-extras-dropdown-button-web@main.css from webfx-extras-controlfactory =====*/
 
@@ -2557,12 +2557,6 @@ tr.branch, .grid-row.branch {
 
 
 
-/*===== modality-crm-backoffice-organizations-web@main.css from modality-crm-backoffice-activity-organizations-plugin =====*/
-
-.section-divider-label {
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
 /*===== modality-crm-backoffice-organizations-fxweb@main.css from modality-crm-backoffice-activity-organizations-plugin =====*/
 
 /* Organizations View - Name renderer */
@@ -2636,6 +2630,12 @@ tr.branch, .grid-row.branch {
 .organization-id-label { font-size: 12px; --fx-text-fill: #6B7280;
 }
 
+/*===== modality-crm-backoffice-organizations-web@main.css from modality-crm-backoffice-activity-organizations-plugin =====*/
+
+.section-divider-label {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 /*===== modality-client-bootstrap-webfx@main.css from modality-base-client-bootstrap =====*/
 
 /* Bootstrap style */

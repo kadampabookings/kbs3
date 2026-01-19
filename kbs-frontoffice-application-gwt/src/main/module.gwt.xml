@@ -112,6 +112,7 @@
     <resource path="org/kadampabookings/kbs/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/kbs/frontoffice/booking/"/>
     <!--====================< kbs-frontoffice-bookingform-kmcny-plugin >====================-->
+    <source path="org/kadampabookings/kbs/frontoffice/bookingform/kmcny"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/kmcny/usfestival"/>
     <!--====================< kbs-frontoffice-bookingform-mkmc-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc"/>
@@ -286,6 +287,7 @@
     <source path="one/modality/booking/frontoffice/bookingpage"/>
     <source path="one/modality/booking/frontoffice/bookingpage/cart"/>
     <source path="one/modality/booking/frontoffice/bookingpage/components"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/components/price"/>
     <source path="one/modality/booking/frontoffice/bookingpage/navigation"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/audiorecording"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/closed"/>
@@ -298,6 +300,7 @@
     <source path="one/modality/booking/frontoffice/bookingpage/sections"/>
     <source path="one/modality/booking/frontoffice/bookingpage/standard"/>
     <source path="one/modality/booking/frontoffice/bookingpage/theme"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/util"/>
     <!--====================< modality-crm-backoffice-organization-fx >=====================-->
     <source path="one/modality/crm/backoffice/organization/fx"/>
     <source path="one/modality/crm/backoffice/organization/fx/impl"/>
