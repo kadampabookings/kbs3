@@ -4830,6 +4830,10 @@ body, textarea /* because textarea has explicit default monospace font */ {
     --fx-svg-path-fill: var(--fx-fill);
 }
 
+/* Increasing the line height for the event description */
+.bookingpage-text-base {
+    line-height: 1.8;
+}
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-frontoffice-bookingform-recurringevent-plugin =====*/
 
 :root {
