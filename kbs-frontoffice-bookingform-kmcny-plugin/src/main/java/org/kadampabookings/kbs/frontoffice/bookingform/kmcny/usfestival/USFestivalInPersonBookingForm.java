@@ -362,8 +362,9 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
         yourInformationSection = new DefaultYourInformationSection();
         yourInformationSection.setColorScheme(BookingFormColorScheme.WISDOM_BLUE);
-        yourInformationSection.setForceAccountCreation(false);  // Festival allows guest checkout
         yourInformationSection.setBackButtonVisible(true);  // Can go back to booking details
+        // Note: forceAccountCreation and showGenderField are now auto-configured from
+        // event.noAccountBooking and ItemPolicy.genderInfoRequired respectively
 
         return new CompositeBookingFormPage(BookingPageI18nKeys.YourInformation,
             yourInfoEventHeaderSection,
