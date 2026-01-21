@@ -9,7 +9,6 @@ module kbs.backoffice.application.openjfx {
     requires javafx.media;
     requires javafx.web;
     requires kbs.backoffice.application;
-    requires modality.ecommerce.document.service.buscall;
     requires modality.ecommerce.document.service.remote;
     requires modality.ecommerce.payment.buscall;
     requires modality.ecommerce.payment.remote;

@@ -4000,6 +4000,29 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .bookingpage-price-includes-secondary { font-size: 12px; --fx-text-fill: #6c757d;
 }
 
+/* Amber Price Includes Info Box (per FestivalRegistrationV2.jsx mockup) */
+.bookingpage-price-includes-box-amber { --fx-background-color: #FEF3C7; --fx-border-color: #F59E0B #FCD34D #FCD34D #F59E0B; --fx-border-width: 1px 1px 1px 4px; --fx-border-radius: 8px; --fx-background-radius: 8px;
+}
+
+.bookingpage-price-includes-amber-bold { font-size: 13px; font-weight: 700; --fx-text-fill: #92400E;
+}
+
+.bookingpage-price-includes-amber-primary { font-size: 13px; --fx-text-fill: #92400E;
+}
+
+.bookingpage-price-includes-amber-secondary { font-size: 12px; --fx-text-fill: #B45309;
+}
+
+/* No Accommodation Separator */
+.bookingpage-no-accommodation-line { --fx-background-color: #D1D5DB;
+}
+
+.bookingpage-no-accommodation-pill { --fx-background-color: #F3F4F6; --fx-border-color: #D1D5DB; --fx-border-width: 1px; --fx-border-radius: 24px; --fx-background-radius: 24px;  box-shadow: 0px 1px 3px rgba(0,0,0,0.08);
+}
+
+.bookingpage-no-accommodation-text { font-size: 13px; font-weight: 700; --fx-text-fill: #374151;
+}
+
 /* Info Box - Outline Primary (transparent bg, primary color border all around) */
 .bookingpage-info-box-outline-primary { --fx-background-color: transparent; --fx-border-color: var(--booking-form-primary); --fx-border-width: 1px; --fx-border-radius: 8px;
 }
@@ -4506,8 +4529,39 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .bookingpage-soldout-ribbon { --fx-background-color: #78716c;
 }
 
-.bookingpage-soldout-ribbon-text { font-size: 11px; font-weight: 600; --fx-text-fill: #fafaf9;
-    /* Padding set in Java: new Insets(4, 40, 4, 40) */
+.bookingpage-soldout-ribbon-text { font-size: 9px; font-weight: 600; --fx-text-fill: #fafaf9;
+    /* Padding set in Java for angled ribbon */
+}
+
+/* ==========================================
+   Accommodation Sold Out Section Components
+   ========================================== */
+
+/* Orange icon circle (80x80) for sold out header */
+.bookingpage-soldout-icon-circle { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 40px;
+    /* Size set in Java: min/max 80x80 */
+}
+
+/* Icon inside the sold out icon circle */
+.bookingpage-soldout-icon-circle-icon { --fx-stroke: var(--booking-form-primary); --fx-fill: transparent;
+}
+
+/* Explanation box with orange theme */
+.bookingpage-soldout-explanation-box { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 12px; --fx-border-color: #FFE0B2; --fx-border-radius: 12px; --fx-border-width: 1px;
+    /* Padding set in Java: new Insets(20) */
+}
+
+/* Text inside explanation box (dark orange) */
+.bookingpage-text-warning-dark { --fx-text-fill: var(--booking-form-primary-dark);
+}
+
+/* Sold out indicator with semi-transparent white background */
+.bookingpage-soldout-indicator { --fx-background-color: rgba(255, 255, 255, 0.7); --fx-background-radius: 6px;
+    /* Padding set in Java: new Insets(10, 12, 10, 12) */
+}
+
+/* Icon inside sold out indicator */
+.bookingpage-soldout-indicator-icon { --fx-stroke: var(--booking-form-primary-dark); --fx-fill: transparent;
 }
 
 /* ==========================================
@@ -4800,6 +4854,407 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .bookingpage-checkbox-card.soldout { --fx-border-color: #d1d5db; --fx-border-width: 2px; --fx-background-color: #fafafa; cursor: default; opacity: 0.85;
 }
 
+/* ==========================================
+   Gender Selection Buttons
+   ========================================== */
+
+.bookingpage-gender-button { --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; --fx-background-color: white; --fx-text-fill: #495057; cursor: pointer; --fx-background-radius: 8px;
+}
+
+.bookingpage-gender-button:hover { --fx-border-color: var(--booking-form-hover-border);
+}
+
+.bookingpage-gender-button.selected { --fx-border-color: var(--booking-form-primary); --fx-background-color: var(--booking-form-selected-bg); --fx-text-fill: #212529; font-weight: 600;
+}
+
+/* ==========================================
+   Toggle Switch
+   ========================================== */
+
+.bookingpage-toggle-background { --fx-background-color: #dee2e6; --fx-background-radius: 12px;
+}
+
+.bookingpage-toggle-background.active { --fx-background-color: var(--booking-form-primary);
+}
+
+.bookingpage-toggle-knob { --fx-background-color: white; --fx-background-radius: 10px;  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.bookingpage-toggle-label { font-size: 14px; font-weight: 500; --fx-text-fill: #212529;
+}
+
+.bookingpage-toggle-item { font-size: 13px; --fx-text-fill: #6c757d;
+}
+
+.bookingpage-terms-link { --fx-text-fill: var(--booking-form-primary); font-weight: 500;
+}
+
+/* ==========================================
+   Email Verification Success Icon
+   ========================================== */
+
+.bookingpage-verification-success-icon { --fx-background-color: #10B981; --fx-background-radius: 16px;
+}
+
+.bookingpage-success-title { font-size: 14px; font-weight: 600; --fx-text-fill: #10B981;
+}
+
+.bookingpage-success-subtitle { font-size: 13px; --fx-text-fill: #6c757d;
+}
+
+/* ==========================================
+   Info Banner (Email Sent Confirmation)
+   ========================================== */
+
+.bookingpage-info-banner { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: var(--booking-form-primary); --fx-border-width: 0px 0px 0px 4px; --fx-background-radius: 8px;
+}
+
+/* ==========================================
+   Registration Waiting Section (Timer Page)
+   ========================================== */
+
+/* Header badge container */
+.registration-waiting-badge { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 20px; --fx-border-color: var(--booking-form-primary); --fx-border-radius: 20px; --fx-border-width: 1px;
+}
+
+/* Badge icon */
+.registration-waiting-badge-icon { --fx-stroke: var(--booking-form-primary); --fx-fill: transparent; --fx-stroke-width: 1.5px;
+}
+
+/* Badge text */
+.registration-waiting-badge-text { font-size: 12px; font-weight: 600; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Summary header with bottom border */
+.registration-waiting-summary-header { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: #E6E7E7; --fx-border-width: 0px 0px 1px 0px;
+}
+
+/* Summary icon */
+.registration-waiting-summary-icon { --fx-stroke: var(--booking-form-primary); --fx-fill: transparent; --fx-stroke-width: 2px;
+}
+
+/* Countdown timer container */
+.registration-waiting-countdown { --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-border-radius: 16px; --fx-background-color: white; --fx-background-radius: 16px;
+}
+
+/* Countdown title text */
+.registration-waiting-countdown-title { font-size: 14px; font-weight: 500; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+/* Timer digit box */
+.registration-waiting-digit { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 12px; font-size: 48px; font-weight: 700; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Timer digit label (HOURS, MINUTES, SECONDS) */
+.registration-waiting-digit-label { font-size: 11px; font-weight: 600; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+/* Timer digit pane background */
+.registration-waiting-digit-pane { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 12px;
+}
+
+/* Timer colon separator */
+.registration-waiting-colon { font-size: 48px; font-weight: 700; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* What to expect box */
+.registration-waiting-expect-box { --fx-background-color: #f8f9fa; --fx-border-color: #E6E7E7; --fx-border-width: 1px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+/* What to expect header */
+.registration-waiting-expect-header { font-size: 14px; font-weight: 600; --fx-text-fill: var(--booking-form-text-primary);
+}
+
+/* What to expect emoji */
+.registration-waiting-expect-emoji { font-size: 16px;
+}
+
+/* What to expect item text */
+.registration-waiting-expect-item { font-size: 13px; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+/* Checkmark icon */
+.registration-waiting-checkmark { --fx-fill: #16A34A;
+}
+
+/* Danger warning text */
+.registration-waiting-warning { font-size: 14px; font-weight: 700; --fx-text-fill: #dc3545;
+}
+
+/* Cancel booking button */
+.registration-waiting-cancel-btn { --fx-background-color: white; --fx-border-color: #dc3545; --fx-border-width: 1px; --fx-border-radius: 8px; --fx-background-radius: 8px; font-size: 14px; font-weight: 500; --fx-text-fill: #dc3545; cursor: pointer;
+}
+
+.registration-waiting-cancel-btn:hover { --fx-background-color: #dc3545; --fx-text-fill: white;
+}
+
+/* Header title */
+.registration-waiting-title { font-size: 24px; font-weight: 600; --fx-text-fill: #212529;
+}
+
+/* Summary card container */
+.registration-waiting-summary-card { --fx-background-color: white; --fx-background-radius: 12px; --fx-border-color: #E5E7EB; --fx-border-radius: 12px; --fx-border-width: 1px;
+}
+
+/* Summary card header */
+.registration-waiting-summary-header { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 12px 12px 0px 0px;
+}
+
+/* Summary header title */
+.registration-waiting-summary-header-title { font-size: 16px; font-weight: 600; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Summary clipboard icon */
+.registration-waiting-summary-icon { --fx-fill: var(--booking-form-primary);
+}
+
+/* Opening date display */
+.registration-waiting-opening-date { font-size: 14px; font-weight: 600; --fx-text-fill: #212529;
+}
+
+/* Placeholder text */
+.registration-waiting-placeholder { font-size: 14px; --fx-text-fill: #6c757d;
+}
+
+
+/* Submitting title text */
+.registration-waiting-submitting-title { font-size: 18px; font-weight: 600; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Submitting subtitle text */
+.registration-waiting-submitting-subtitle { font-size: 14px; --fx-text-fill: #6c757d;
+}
+
+/* Pulsing icon for submitting state (reuse queue-processing style) */
+.registration-waiting-pulse-icon { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 40px;
+}
+
+/* ==========================================
+   Queue Processing Section (Queue Page)
+   ========================================== */
+
+/* Pulsing icon circle */
+.queue-processing-pulse-icon { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 40px;
+}
+
+/* Progress card container */
+.queue-processing-card { --fx-background-color: white; --fx-background-radius: 12px; --fx-border-color: var(--booking-form-primary); --fx-border-radius: 12px; --fx-border-width: 2px;
+}
+
+/* Progress bar track */
+.queue-processing-bar-track { --fx-background-color: #E5E7EB; --fx-background-radius: 6px;
+}
+
+/* Progress bar fill */
+.queue-processing-bar-fill { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 6px;
+}
+
+/* Position display container */
+.queue-processing-position { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 8px;
+}
+
+/* Position number */
+.queue-processing-position-number { font-size: 28px; font-weight: 700; --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Position total */
+.queue-processing-position-total { font-size: 16px; font-weight: 500; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+/* Why the wait info box */
+.queue-processing-why-box { --fx-background-color: #FFF8E7; --fx-border-color: #FFE4B3; --fx-border-width: 1px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+/* Why the wait header text */
+.queue-processing-why-header { font-size: 14px; font-weight: 600; --fx-text-fill: #92400E;
+}
+
+/* Why the wait explanation text */
+.queue-processing-why-text { font-size: 13px; --fx-text-fill: #92400E;
+}
+
+/* Danger warning text (same as waiting section) */
+.queue-processing-warning { font-size: 14px; font-weight: 700; --fx-text-fill: #dc3545;
+}
+
+/* Duration note text */
+.queue-processing-note { font-size: 13px; --fx-text-fill: var(--booking-form-text-secondary);
+}
+
+/* Compact summary container */
+.queue-processing-summary { --fx-background-color: #f8f9fa; --fx-background-radius: 8px;
+}
+
+/* =====================================================
+ * UNIFIED REGISTRATION QUEUE SECTION
+ * Consolidates registration waiting and queue processing
+ * ===================================================== */
+
+/* === DANGER BANNER === */
+.registration-queue-danger-banner { --fx-background-color: #FEF2F2; --fx-border-color: #DC2626; --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+.registration-queue-danger-icon { --fx-background-color: #DC2626; --fx-background-radius: 20px;
+}
+
+.registration-queue-danger-icon-svg { --fx-fill: transparent; --fx-stroke: white; --fx-stroke-width: 2.5px;
+}
+
+.registration-queue-danger-title { font-size: 16px; font-weight: 700; --fx-text-fill: #991B1B;
+}
+
+.registration-queue-danger-message { font-size: 14px; --fx-text-fill: #B91C1C;
+}
+
+/* === STATUS HEADER === */
+.registration-queue-status-header { --fx-background-color: white; --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+.registration-queue-icon-badge { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 28px;
+}
+
+.registration-queue-icon-badge-pulse {
+    /* Pulse animation handled via Timeline in Java */
+}
+
+.registration-queue-icon-badge-svg { --fx-fill: transparent; --fx-stroke: var(--booking-form-primary); --fx-stroke-width: 2px;
+}
+
+.registration-queue-status-title { font-size: 24px; font-weight: 700; --fx-text-fill: #212529;
+}
+
+.registration-queue-status-subtitle { font-size: 14px; --fx-text-fill: #6c757d;
+}
+
+/* === QUEUE EXPLANATION CARD === */
+.registration-queue-explanation { --fx-background-color: #F8FAFC; --fx-border-color: #E2E8F0; --fx-border-width: 1px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+.registration-queue-explanation-icon { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 14px;
+}
+
+.registration-queue-explanation-icon-svg { --fx-fill: transparent; --fx-stroke: white; --fx-stroke-width: 2px;
+}
+
+.registration-queue-explanation-header { font-size: 15px; font-weight: 600; --fx-text-fill: #334155;
+}
+
+.registration-queue-explanation-step {
+}
+
+.registration-queue-explanation-number { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 12px;
+}
+
+.registration-queue-explanation-number-text { font-size: 12px; font-weight: 700; --fx-text-fill: var(--booking-form-primary);
+}
+
+.registration-queue-explanation-step-title { font-size: 13px; font-weight: 600; --fx-text-fill: #334155;
+}
+
+.registration-queue-explanation-step-desc { font-size: 12px; --fx-text-fill: #64748B;
+}
+
+/* === TEMPORARY NOTICE (AMBER) === */
+.registration-queue-notice { --fx-background-color: #FFFBEB; --fx-border-color: #FCD34D; --fx-border-width: 1px; --fx-border-radius: 10px; --fx-background-radius: 10px;
+}
+
+.registration-queue-notice-icon { --fx-background-color: #FEF3C7; --fx-background-radius: 12px;
+}
+
+.registration-queue-notice-icon-svg { --fx-fill: transparent; --fx-stroke: #D97706; --fx-stroke-width: 2px;
+}
+
+.registration-queue-notice-title { font-size: 13px; font-weight: 600; --fx-text-fill: #92400E;
+}
+
+.registration-queue-notice-desc { font-size: 12px; --fx-text-fill: #A16207;
+}
+
+/* === COUNTDOWN SECTION === */
+.registration-queue-countdown { --fx-background-color: white; --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+.registration-queue-countdown-label { font-size: 13px; font-weight: 500; --fx-text-fill: #6c757d;
+}
+
+.registration-queue-countdown-digit { font-size: 48px; font-weight: 700; --fx-text-fill: var(--booking-form-primary); font-family: monospace;
+}
+
+.registration-queue-countdown-digit-box { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 10px;
+}
+
+.registration-queue-countdown-colon { font-size: 36px; font-weight: 700; --fx-text-fill: var(--booking-form-primary);
+}
+
+.registration-queue-countdown-unit { font-size: 11px; font-weight: 500; --fx-text-fill: #6c757d; text-align: center;
+}
+
+.registration-queue-countdown-date { font-size: 12px; --fx-text-fill: #495057; --fx-background-color: #f8f9fa; --fx-background-radius: 6px;
+}
+
+/* === PROGRESS SECTION === */
+.registration-queue-progress { --fx-background-color: white; --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+.registration-queue-progress-header { font-size: 13px; font-weight: 600; --fx-text-fill: var(--booking-form-primary);
+}
+
+.registration-queue-progress-label { font-size: 13px; --fx-text-fill: #6c757d;
+}
+
+.registration-queue-progress-percent { font-size: 13px; font-weight: 600; --fx-text-fill: var(--booking-form-primary);
+}
+
+.registration-queue-progress-track { --fx-background-color: #E5E7EB; --fx-background-radius: 7px;
+}
+
+.registration-queue-progress-fill { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 7px;
+}
+
+.registration-queue-position { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 8px;
+}
+
+.registration-queue-position-text { font-size: 13px; --fx-text-fill: #0D47A1;
+}
+
+.registration-queue-position-number { font-size: 18px; font-weight: 700; --fx-text-fill: var(--booking-form-primary);
+}
+
+.registration-queue-status-message { font-size: 13px; --fx-text-fill: #495057; font-style: italic;
+}
+
+/* === REGISTRATION SUMMARY === */
+.registration-queue-summary { --fx-background-color: white; --fx-border-color: #E6E7E7; --fx-border-width: 1px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+.registration-queue-summary-header { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: #E6E7E7; --fx-border-width: 0px 0px 1px 0px;
+}
+
+.registration-queue-summary-icon { --fx-fill: transparent; --fx-stroke: var(--booking-form-primary); --fx-stroke-width: 2px;
+}
+
+.registration-queue-summary-title { font-size: 15px; font-weight: 600; --fx-text-fill: #0D47A1;
+}
+
+.registration-queue-placeholder { font-size: 14px; --fx-text-fill: #6c757d;
+}
+
+.registration-queue-summary-label { font-size: 14px; font-weight: 500; --fx-text-fill: #6c757d;
+}
+
+.registration-queue-summary-value { font-size: 14px; font-weight: 600; --fx-text-fill: #292A33;
+}
+
+/* === ACTION BUTTON === */
+.registration-queue-action-button { --fx-background-color: white; --fx-border-color: #dee2e6; --fx-border-width: 2px; --fx-border-radius: 8px; --fx-background-radius: 8px; cursor: pointer;
+}
+
+.registration-queue-action-button:hover { --fx-background-color: #f8f9fa; --fx-border-color: #adb5bd;
+}
+
+.registration-queue-action-button .label { font-size: 14px; font-weight: 600; --fx-text-fill: #495057;
+}
+
 /*===== modality-booking-frontoffice-bookingpage-web@main.css from modality-booking-frontoffice-bookingpage =====*/
 
 /* Translation + shadow effect on booking page cards */
@@ -4828,6 +5283,37 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .bookingpage-btn-select-type-icon {
     --fx-svg-path-stroke: var(--fx-stroke);
     --fx-svg-path-fill: var(--fx-fill);
+}
+
+/* Sold out section icons - use orange/warning colors */
+.bookingpage-soldout-icon-circle-icon {
+    --fx-svg-path-stroke: #F57C00;
+    --fx-svg-path-fill: transparent;
+    stroke: #F57C00;
+}
+
+.bookingpage-soldout-indicator-icon {
+    --fx-svg-path-stroke: #E65100;
+    --fx-svg-path-fill: transparent;
+    stroke: #E65100;
+}
+
+/* Sold out section backgrounds and text colors for web */
+.bookingpage-soldout-icon-circle {
+    background-color: #FFF3E0;
+}
+
+.bookingpage-soldout-explanation-box {
+    background-color: #FFF3E0;
+    border-color: #FFE0B2;
+}
+
+.bookingpage-soldout-indicator {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.bookingpage-text-warning-dark {
+    color: #E65100;
 }
 
 /* Increasing the line height for the event description */

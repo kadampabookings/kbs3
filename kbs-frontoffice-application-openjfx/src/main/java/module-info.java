@@ -10,7 +10,6 @@ module kbs.frontoffice.application.openjfx {
     requires javafx.web;
     requires kbs.frontoffice.application;
     requires kbs.frontoffice.footer.nktikbu;
-    requires modality.ecommerce.document.service.buscall;
     requires modality.ecommerce.document.service.remote;
     requires modality.ecommerce.payment.buscall;
     requires modality.ecommerce.payment.remote;
