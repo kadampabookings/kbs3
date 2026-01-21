@@ -555,10 +555,11 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
                     roommateInfoSection.setVisible(true);
                 } else if (!isDayVisitor && option.getItemEntity() != null) {
                     // Room booking: check capacity for multi-person rooms
+                    // Only show roommate fields if booking is per-room (not per-person)
                     Item item = option.getItemEntity();
                     Integer capacity = item.getCapacity();
-                    if (capacity != null && capacity > 1) {
-                        // Multi-person room: show roommate fields
+                    if (capacity != null && capacity > 1 && !option.isPerPerson()) {
+                        // Multi-person room with per-room pricing: show roommate fields
                         roommateInfoSection.setRoomCapacity(capacity);
 
                         // Get minOccupancy from ItemPolicy (defaults to capacity if not defined,
