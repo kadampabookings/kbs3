@@ -362,8 +362,9 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
         yourInformationSection = new DefaultYourInformationSection();
         yourInformationSection.setColorScheme(BookingFormColorScheme.WISDOM_BLUE);
-        yourInformationSection.setForceAccountCreation(false);  // Festival allows guest checkout
         yourInformationSection.setBackButtonVisible(true);  // Can go back to booking details
+        // Note: forceAccountCreation and showGenderField are now auto-configured from
+        // event.noAccountBooking and ItemPolicy.genderInfoRequired respectively
 
         return new CompositeBookingFormPage(BookingPageI18nKeys.YourInformation,
             yourInfoEventHeaderSection,
@@ -554,10 +555,11 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
                     roommateInfoSection.setVisible(true);
                 } else if (!isDayVisitor && option.getItemEntity() != null) {
                     // Room booking: check capacity for multi-person rooms
+                    // Only show roommate fields if booking is per-room (not per-person)
                     Item item = option.getItemEntity();
                     Integer capacity = item.getCapacity();
-                    if (capacity != null && capacity > 1) {
-                        // Multi-person room: show roommate fields
+                    if (capacity != null && capacity > 1 && !option.isPerPerson()) {
+                        // Multi-person room with per-room pricing: show roommate fields
                         roommateInfoSection.setRoomCapacity(capacity);
 
                         // Get minOccupancy from ItemPolicy (defaults to capacity if not defined,
@@ -1000,22 +1002,15 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
             Item item = entry.getKey();
             List<ScheduledItem> scheduledItems = entry.getValue();
 
-            // Calculate availability (null means unlimited, so we filter those out)
-            // Only consider items with defined availability for the minimum calculation
-            java.util.OptionalInt minAvailabilityOpt = scheduledItems.stream()
-                .filter(si -> si.getGuestsAvailability() != null)
-                .mapToInt(ScheduledItem::getGuestsAvailability)
-                .min();
-
-            // If no items have defined availability, it's unlimited (null)
-            // Otherwise use the minimum value found
-            Integer minAvailability = minAvailabilityOpt.isPresent() ? minAvailabilityOpt.getAsInt() : null;
+            // Calculate minimum availability across all days
+            // Items without pool allocation (guestsAvailability = null) are treated as 0 (unavailable)
+            int minAvailability = scheduledItems.stream()
+                .mapToInt(si -> si.getGuestsAvailability() != null ? si.getGuestsAvailability() : 0)
+                .min()
+                .orElse(0);
 
             HasAccommodationSelectionSection.AvailabilityStatus status;
-            if (minAvailability == null) {
-                // Unlimited availability
-                status = HasAccommodationSelectionSection.AvailabilityStatus.AVAILABLE;
-            } else if (minAvailability <= 0) {
+            if (minAvailability <= 0) {
                 status = HasAccommodationSelectionSection.AvailabilityStatus.SOLD_OUT;
             } else if (minAvailability <= 5) {
                 status = HasAccommodationSelectionSection.AvailabilityStatus.LIMITED;
@@ -2965,14 +2960,16 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
 
         if (additionalOptionsSection == null) return;
 
+        // Unbook all ceremony items first (to handle deselection)
+        List<ScheduledItem> allCeremonyItems = policyAggregate.filterCeremonyScheduledItems();
+        if (allCeremonyItems != null && !allCeremonyItems.isEmpty()) {
+            workingBooking.unbookScheduledItems(allCeremonyItems);
+        }
+
         // Get all selected additional options
         List<HasAdditionalOptionsSection.AdditionalOption> selectedOptions = additionalOptionsSection.getSelectedOptions();
 
-        if (selectedOptions.isEmpty()) {
-            return;
-        }
-
-        // Book each selected option
+        // Book each selected option (skip if none selected)
         for (HasAdditionalOptionsSection.AdditionalOption option : selectedOptions) {
             Item itemEntity = option.getItemEntity();
             if (itemEntity == null) {
@@ -3010,6 +3007,19 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
                 }
 
                 workingBooking.bookNonTemporalItem(site, itemEntity);
+            }
+        }
+
+        // Book selected ceremony options (ceremonies are always ScheduledItems)
+        List<HasAdditionalOptionsSection.CeremonyOption> selectedCeremonies = additionalOptionsSection.getSelectedCeremonyOptions();
+        if (!selectedCeremonies.isEmpty()) {
+            List<ScheduledItem> ceremonyScheduledItems = selectedCeremonies.stream()
+                .map(HasAdditionalOptionsSection.CeremonyOption::getScheduledItem)
+                .filter(java.util.Objects::nonNull)
+                .collect(java.util.stream.Collectors.toList());
+
+            if (!ceremonyScheduledItems.isEmpty()) {
+                workingBooking.bookScheduledItems(ceremonyScheduledItems, true);
             }
         }
     }
