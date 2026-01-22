@@ -1729,6 +1729,16 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
             .orElse(null);
         int pricePerNight = itemRate != null && itemRate.getPrice() != null ? itemRate.getPrice() : 0;
 
+        // Extract minimum nights constraint from ItemPolicy (same as regular accommodation options)
+        HasAccommodationSelectionSection.ConstraintType constraintType = HasAccommodationSelectionSection.ConstraintType.NONE;
+        String constraintLabel = null;
+        int minNights = 0;
+        if (sharingAccommodationItemPolicy.getMinDay() != null && sharingAccommodationItemPolicy.getMinDay() > 0) {
+            constraintType = HasAccommodationSelectionSection.ConstraintType.MIN_NIGHTS;
+            minNights = sharingAccommodationItemPolicy.getMinDay();
+            constraintLabel = I18n.getI18nText(BookingPageI18nKeys.MinNights, minNights);
+        }
+
         HasAccommodationSelectionSection.AccommodationOption shareAccommodation =
             new HasAccommodationSelectionSection.AccommodationOption(
                 sharingAccommodationItem.getPrimaryKey(),  // Use actual Item's primary key
@@ -1737,9 +1747,9 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
                 I18n.getI18nText(USFestivalI18nKeys.ShareAccommodationDescription),
                 pricePerNight,  // pricePerNight from rate
                 HasAccommodationSelectionSection.AvailabilityStatus.AVAILABLE,
-                HasAccommodationSelectionSection.ConstraintType.NONE,
-                null,
-                0,
+                constraintType,
+                constraintLabel,
+                minNights,
                 false,  // isDayVisitor = false (we book actual sharing accommodation item)
                 null,   // imageUrl
                 true,   // perPerson
