@@ -2270,6 +2270,29 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
     }
 
     @Override
+    public void onEnteringSoldOutRecovery() {
+        // Step 1: Reset roommate info section (clears old roommate values and hides section)
+        if (roommateInfoSection != null) {
+            roommateInfoSection.reset();
+            roommateInfoSection.setVisible(false);
+        }
+
+        // Step 2: Remove old accommodation document lines from WorkingBooking
+        if (workingBookingProperties != null && workingBookingProperties.getWorkingBooking() != null) {
+            WorkingBooking workingBooking = workingBookingProperties.getWorkingBooking();
+            List<DocumentLine> oldAccommodationLines = workingBooking.getFamilyDocumentLines(KnownItemFamily.ACCOMMODATION);
+            for (DocumentLine line : oldAccommodationLines) {
+                workingBooking.removeDocumentLine(line);
+            }
+        }
+
+        // Step 3: Clear accommodation selection in the form UI
+        if (accommodationSection != null) {
+            accommodationSection.selectedOptionProperty().set(null);
+        }
+    }
+
+    @Override
     public void onAccommodationSoldOutRecovery(HasAccommodationSelectionSection.AccommodationOption newOption, StandardBookingFormCallbacks.SoldOutRecoveryRoommateInfo roommateInfo, Runnable continueToSummary) {
         if (workingBookingProperties == null || workingBookingProperties.getWorkingBooking() == null) {
             continueToSummary.run();
@@ -2326,6 +2349,43 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
             }
         }
 
+        // Step 3b: Reset and configure roommate section for new accommodation type
+        // This mirrors the logic in setupAccommodationCallbacks() to ensure consistency
+        if (roommateInfoSection != null) {
+            // Always reset roommate section when accommodation changes (clears old values)
+            roommateInfoSection.reset();
+
+            Item newItem = newOption.getItemEntity();
+            boolean isShareAccommodation = newItem != null && Boolean.TRUE.equals(newItem.isShare_mate());
+            boolean isDayVisitor = newOption.isDayVisitor();
+
+            if (isShareAccommodation) {
+                // Share Accommodation: single field for room owner name
+                roommateInfoSection.setIsRoomBooker(false);
+                roommateInfoSection.setVisible(true);
+            } else if (!isDayVisitor && newItem != null) {
+                Integer capacity = newItem.getCapacity();
+                if (capacity != null && capacity > 1 && !newOption.isPerPerson()) {
+                    // Multi-person room with per-room pricing: show roommate fields
+                    roommateInfoSection.setRoomCapacity(capacity);
+                    one.modality.base.shared.entities.ItemPolicy itemPolicy = policyAggregate != null
+                        ? policyAggregate.getItemPolicy(newItem)
+                        : null;
+                    int minOccupancy = (itemPolicy != null && itemPolicy.getMinOccupancy() != null)
+                        ? itemPolicy.getMinOccupancy() : capacity;
+                    roommateInfoSection.setMinOccupancy(minOccupancy);
+                    roommateInfoSection.setIsRoomBooker(true);
+                    roommateInfoSection.setVisible(true);
+                } else {
+                    // Single-person room or per-person pricing: hide roommate section
+                    roommateInfoSection.setVisible(false);
+                }
+            } else {
+                // Day Visitor or no item entity: hide roommate section
+                roommateInfoSection.setVisible(false);
+            }
+        }
+
         // Step 4: Book the new accommodation using the same dates as the old one
         if (policyAggregate != null && !oldAccommodationDates.isEmpty()) {
             Item newItem = newOption.getItemEntity();
@@ -2342,22 +2402,33 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
             }
         }
 
-        // Step 5: Apply roommate info to the new accommodation lines if provided
-        if (roommateInfo != null && roommateInfo.hasData()) {
+        // Step 5: Apply FRESH roommate info from sold-out dialog to new accommodation lines
+        // The sold-out dialog collects new roommate info after the old data was cleared in onEnteringSoldOutRecovery().
+        // Only apply if the new accommodation requires roommate info (roommateInfoSection is visible).
+        if (roommateInfo != null && roommateInfo.hasData() && roommateInfoSection != null && roommateInfoSection.isVisible()) {
             List<DocumentLine> newAccommodationLines = workingBooking.getFamilyDocumentLines(KnownItemFamily.ACCOMMODATION);
-            if (roommateInfo.isRoomBooker()) {
-                // Room booker mode: set roommate names
-                String[] matesNames = roommateInfo.getRoommateNames().toArray(new String[0]);
-                for (DocumentLine line : newAccommodationLines) {
-                    workingBooking.setShareOwnerInfo(line, matesNames);
+
+            if (roommateInfo.isRoomBooker() && roommateInfoSection.isRoomBooker()) {
+                // Both sold-out dialog and new accommodation are in room booker mode
+                java.util.List<String> matesNames = roommateInfo.getRoommateNames();
+                // Truncate if new room has smaller capacity than what was entered
+                int maxMates = roommateInfoSection.getRoomCapacity() - 1;
+                if (matesNames.size() > maxMates) {
+                    matesNames = matesNames.subList(0, maxMates);
                 }
-            } else {
-                // Share accommodation mode: set room owner name
+                String[] matesNamesArray = matesNames.toArray(new String[0]);
+                for (DocumentLine line : newAccommodationLines) {
+                    workingBooking.setShareOwnerInfo(line, matesNamesArray);
+                }
+            } else if (!roommateInfo.isRoomBooker() && !roommateInfoSection.isRoomBooker()) {
+                // Both sold-out dialog and new accommodation are in share accommodation mode
                 String ownerName = roommateInfo.getRoomOwnerName();
                 for (DocumentLine line : newAccommodationLines) {
                     workingBooking.setShareMateInfo(line, ownerName);
                 }
             }
+            // If modes don't match (e.g., dialog was share but new accommodation is room booker),
+            // the fields stay clean and user can enter info via booking form if needed.
         }
 
         // Step 6: Navigate to summary page to review and retry submission
