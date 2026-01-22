@@ -2203,6 +2203,9 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
         // Reset the flag so accommodation options will be repopulated
         accommodationOptionsPopulated = false;
 
+        // Reset UI sections to their default state for the new booking
+        resetUISectionsForNewBooking();
+
         // Reload availability from server to get fresh room counts
         PolicyAggregate policyAggregate = workingBookingProperties != null ? workingBookingProperties.getPolicyAggregate() : null;
         if (policyAggregate != null) {
@@ -2219,6 +2222,50 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
                         populateAccommodationOptions();
                     });
                 });
+        }
+    }
+
+    /**
+     * Resets all UI sections to their default state when starting a new booking.
+     * This ensures previous booking selections don't carry over to the new booking.
+     */
+    private void resetUISectionsForNewBooking() {
+        // Reset meals section to defaults (all meals selected, no dietary preference)
+        if (mealsSection != null) {
+            mealsSection.setWantsBreakfast(true);
+            mealsSection.setWantsLunch(true);
+            mealsSection.setWantsDinner(true);
+            mealsSection.setSelectedDietaryItem(null);
+        }
+
+        // Reset festival day section
+        if (festivalDaySection != null) {
+            festivalDaySection.reset();
+        }
+
+        // Reset roommate info section
+        if (roommateInfoSection != null) {
+            roommateInfoSection.reset();
+        }
+
+        // Reset additional options section
+        if (additionalOptionsSection != null) {
+            additionalOptionsSection.setNeedsAssistedListening(false);
+            additionalOptionsSection.setNeedsParking(false);
+            additionalOptionsSection.setNeedsShuttleOutbound(false);
+            additionalOptionsSection.setNeedsShuttleReturn(false);
+            additionalOptionsSection.clearOptions();
+            additionalOptionsSection.clearCeremonyOptions();
+        }
+
+        // Reset transport section (parking and shuttle)
+        if (transportSection != null) {
+            transportSection.reset();
+        }
+
+        // Reset audio recording section
+        if (audioRecordingPhaseSection != null) {
+            audioRecordingPhaseSection.reset();
         }
     }
 
@@ -2764,12 +2811,12 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
                 shouldBook = mealsSection.wantsDinner();
             }
 
-            if (shouldBook) {
-                // Find all ScheduledItems for this specific meal Item
-                List<ScheduledItem> itemScheduledItems = mealsItems.stream()
-                    .filter(msi -> dev.webfx.stack.orm.entity.Entities.samePrimaryKey(msi.getItem(), item))
-                    .collect(java.util.stream.Collectors.toList());
+            // Find all ScheduledItems for this specific meal Item
+            List<ScheduledItem> itemScheduledItems = mealsItems.stream()
+                .filter(msi -> dev.webfx.stack.orm.entity.Entities.samePrimaryKey(msi.getItem(), item))
+                .collect(java.util.stream.Collectors.toList());
 
+            if (shouldBook) {
                 // For breakfast: filter to dates that are accommodation night + 1
                 // (breakfast on day d+1 is served after staying overnight on day d)
                 if (isBreakfast && !accommodationNights.isEmpty()) {
@@ -2841,6 +2888,11 @@ public final class USFestivalInPersonBookingForm implements StandardBookingFormC
                     // Always use addOnly=false to REPLACE items of this type
                     // This ensures filtered items replace any items from the initial state
                     workingBooking.bookScheduledItems(itemScheduledItems, false);
+                }
+            } else {
+                // Meal type is deselected - unbook all scheduled items for this meal type
+                if (!itemScheduledItems.isEmpty()) {
+                    workingBooking.unbookScheduledItems(itemScheduledItems);
                 }
             }
         }
