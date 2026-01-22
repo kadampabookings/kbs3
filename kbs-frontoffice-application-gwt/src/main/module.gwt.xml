@@ -293,6 +293,8 @@
     <source path="one/modality/booking/frontoffice/bookingpage/navigation"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/audiorecording"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/closed"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/pages/countdown"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/pages/offline"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/payment"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/personal"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/prerequisite"/>
@@ -800,6 +802,12 @@
     <source path="dev/webfx/platform/util/http"/>
     <!--============================< webfx-platform-util-time >============================-->
     <source path="dev/webfx/platform/util/time"/>
+    <!--===========================< webfx-platform-visibility >============================-->
+    <source path="dev/webfx/platform/visibility"/>
+    <source path="dev/webfx/platform/visibility/spi"/>
+    <source path="dev/webfx/platform/visibility/spi/impl"/>
+    <!--======================< webfx-platform-visibility-elemental2 >======================-->
+    <source path="dev/webfx/platform/visibility/spi/impl/elemental2"/>
     <!--==========================< webfx-platform-windowhistory >==========================-->
     <source path="dev/webfx/platform/windowhistory"/>
     <source path="dev/webfx/platform/windowhistory/spi"/>

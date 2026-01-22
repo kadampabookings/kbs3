@@ -5255,6 +5255,109 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .registration-queue-action-button .label { font-size: 14px; font-weight: 600; --fx-text-fill: #495057;
 }
 
+/* ==========================================
+   Payment Outcome Pages (Refused/Canceled)
+   Amber warning styling based on JSX mockup
+   ========================================== */
+
+/* Amber icon circle - 80px with 4px amber border */
+.bookingpage-warning-icon-circle { --fx-background-color: #FEF3C7; --fx-border-color: #F59E0B; --fx-border-width: 4px; --fx-border-radius: 40px; --fx-background-radius: 40px;
+}
+
+/* Title - 24px, warm brown color */
+.bookingpage-warning-title { font-size: 24px; font-weight: bold; --fx-text-fill: #92400E;
+}
+
+/* Subtitle - 15px, gray (for Label/Hyperlink) */
+.bookingpage-warning-subtitle { font-size: 15px; --fx-text-fill: #6c757d;
+}
+
+/* Subtitle - 15px, gray (for Text nodes in TextFlow) */
+.bookingpage-warning-subtitle-text { font-size: 15px; --fx-fill: #6c757d;
+}
+
+/* Orders link in subtitle - uses theme primary color */
+.bookingpage-orders-link { --fx-text-fill: var(--booking-form-primary);
+}
+
+/* Pay Later box title - 15px, semi-bold, dark */
+.bookingpage-paylater-title { font-size: 15px; font-weight: 600; --fx-text-fill: #212529;
+}
+
+/* Pay Later box description - 14px, gray (for Label/Hyperlink) */
+.bookingpage-paylater-desc { font-size: 14px; --fx-text-fill: #6c757d;
+}
+
+/* Pay Later box description - 14px, gray (for Text nodes in TextFlow) */
+.bookingpage-paylater-desc-text { font-size: 14px; --fx-fill: #6c757d;
+}
+
+/* Decline reason amber card */
+.bookingpage-decline-reason-card { --fx-background-color: #FFFBEB; --fx-border-color: #F59E0B #FDE68A #FDE68A #F59E0B; --fx-border-width: 1px 1px 1px 4px; --fx-border-radius: 8px; --fx-background-radius: 8px;
+}
+
+/* "DECLINE REASON" header - uppercase, small, amber */
+.bookingpage-decline-reason-header { font-size: 11px; font-weight: bold; --fx-text-fill: #92400E;
+}
+
+/* Failure reason message - 14px, dark amber */
+.bookingpage-decline-reason-message { font-size: 14px; --fx-text-fill: #78350F;
+}
+
+/* ==========================================
+   Registration Status Pages (Countdown + Offline)
+   ========================================== */
+
+/* Registration Countdown Page */
+.registration-countdown-page { --fx-background-color: white;
+}
+
+.registration-countdown-timer-value { font-size: 36px; font-weight: 700; --fx-text-fill: var(--booking-form-primary);
+}
+
+.registration-countdown-timer-label { font-size: 13px; --fx-text-fill: #6c757d; font-weight: 500;
+}
+
+.registration-countdown-timer-box { --fx-background-color: var(--booking-form-selected-bg); --fx-border-color: var(--booking-form-primary); --fx-border-width: 2px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
+.registration-countdown-info-card { --fx-background-color: #F8F9FA; --fx-background-radius: 16px; --fx-border-color: #E6E7E7; --fx-border-radius: 16px;
+}
+
+.registration-countdown-reassurance-box { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 8px;
+}
+
+.registration-countdown-step-number { --fx-background-color: var(--booking-form-primary); --fx-background-radius: 14px;
+}
+
+.registration-countdown-step-number-text { --fx-text-fill: white; font-size: 13px; font-weight: 600;
+}
+
+.registration-countdown-reassurance-text { --fx-text-fill: #1f2937;
+}
+
+/* Registration Offline Page */
+.registration-offline-page { --fx-background-color: white;
+}
+
+.registration-offline-info-card { --fx-background-color: #F8F9FA; --fx-background-radius: 16px; --fx-border-color: #E6E7E7; --fx-border-radius: 16px;
+}
+
+.registration-offline-lightbulb-icon { --fx-background-color: var(--booking-form-selected-bg); --fx-background-radius: 16px;
+}
+
+.registration-offline-suggestion-icon { --fx-background-color: #E5E7EB; --fx-background-radius: 12px;
+}
+
+.registration-offline-text-gray { --fx-text-fill: #4B5563;
+}
+
+.registration-offline-text-light-gray { --fx-text-fill: #9CA3AF;
+}
+
+.registration-offline-email-link { --fx-text-fill: var(--booking-form-primary); font-weight: 500;
+}
+
 /*===== modality-booking-frontoffice-bookingpage-web@main.css from modality-booking-frontoffice-bookingpage =====*/
 
 /* Translation + shadow effect on booking page cards */
