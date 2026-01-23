@@ -15,7 +15,7 @@ import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.PriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultSummarySection;
+import one.modality.booking.frontoffice.bookingpage.sections.summary.DefaultSummarySection;
 import one.modality.ecommerce.document.service.DocumentAggregate;
 import one.modality.ecommerce.shared.pricecalculator.PriceCalculator;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;

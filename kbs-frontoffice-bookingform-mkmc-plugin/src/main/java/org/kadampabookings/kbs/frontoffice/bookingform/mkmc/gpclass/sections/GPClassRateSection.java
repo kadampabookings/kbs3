@@ -22,7 +22,7 @@ import one.modality.booking.frontoffice.bookingpage.BookingFormSection;
 import one.modality.booking.frontoffice.bookingpage.PriceFormatter;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
-import one.modality.booking.frontoffice.bookingpage.sections.HasRateTypeSection;
+import one.modality.booking.frontoffice.bookingpage.sections.options.HasRateTypeSection;
 import one.modality.ecommerce.policy.service.PolicyAggregate;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 

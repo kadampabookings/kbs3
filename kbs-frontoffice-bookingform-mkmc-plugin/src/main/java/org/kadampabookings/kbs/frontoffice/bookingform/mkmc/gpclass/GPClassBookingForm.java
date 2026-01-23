@@ -12,7 +12,7 @@ import one.modality.booking.frontoffice.bookingpage.BookingFormButton;
 import one.modality.booking.frontoffice.bookingpage.BookingFormPage;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.CompositeBookingFormPage;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultEventHeaderSection;
+import one.modality.booking.frontoffice.bookingpage.sections.summary.DefaultEventHeaderSection;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormBuilder;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormCallbacks;

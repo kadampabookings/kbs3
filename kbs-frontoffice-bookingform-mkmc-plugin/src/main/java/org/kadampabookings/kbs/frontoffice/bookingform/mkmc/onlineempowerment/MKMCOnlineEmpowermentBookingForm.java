@@ -13,8 +13,8 @@ import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultAudioRecordingSection;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultEventHeaderSection;
+import one.modality.booking.frontoffice.bookingpage.sections.audio.DefaultAudioRecordingSection;
+import one.modality.booking.frontoffice.bookingpage.sections.summary.DefaultEventHeaderSection;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.sections.PrerequisiteSection;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment.sections.RateTypeSection;
 

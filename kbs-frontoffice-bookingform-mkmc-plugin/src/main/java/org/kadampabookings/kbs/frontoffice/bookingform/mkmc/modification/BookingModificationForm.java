@@ -21,8 +21,13 @@ import one.modality.base.shared.entities.markers.HasPersonalDetails;
 import one.modality.booking.client.workingbooking.WorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
-import one.modality.booking.frontoffice.bookingpage.sections.*;
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
+// Section imports - moved to sub-packages for better organization
+import one.modality.booking.frontoffice.bookingpage.sections.audio.DefaultAudioRecordingSection;
+import one.modality.booking.frontoffice.bookingpage.sections.confirmation.HasConfirmationSection;
+import one.modality.booking.frontoffice.bookingpage.sections.payment.DefaultPaymentSection;
+import one.modality.booking.frontoffice.bookingpage.sections.payment.HasPaymentSection;
+import one.modality.booking.frontoffice.bookingpage.sections.summary.DefaultExistingBookingSummarySection;
 import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.MKMCI18nKeys;
 
 import java.util.Set;
