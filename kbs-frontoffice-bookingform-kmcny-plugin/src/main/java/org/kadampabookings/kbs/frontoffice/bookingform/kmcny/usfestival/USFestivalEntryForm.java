@@ -3,7 +3,7 @@ package org.kadampabookings.kbs.frontoffice.bookingform.kmcny.usfestival;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingpage.AbstractEntryForm;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultRegistrationTypeSection;
+import one.modality.booking.frontoffice.bookingpage.sections.options.DefaultRegistrationTypeSection;
 import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 

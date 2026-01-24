@@ -9,7 +9,7 @@ import javafx.scene.shape.SVGPath;
 import one.modality.booking.frontoffice.bookingpage.BookingPageI18nKeys;
 import one.modality.booking.frontoffice.bookingpage.components.BookingPageUIBuilder;
 import one.modality.booking.frontoffice.bookingpage.components.StyledSectionHeader;
-import one.modality.booking.frontoffice.bookingpage.sections.DefaultConfirmationSection;
+import one.modality.booking.frontoffice.bookingpage.sections.confirmation.DefaultConfirmationSection;
 
 /**
  * Customized confirmation section for audio recording purchases.
