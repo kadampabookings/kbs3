@@ -5304,6 +5304,14 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .bookingpage-decline-reason-message { font-size: 14px; --fx-text-fill: #78350F;
 }
 
+/* Small warning icon circle (32px) */
+.bookingpage-warning-icon-circle-sm { --fx-background-color: #FEF3C7; --fx-background-radius: 16px;
+}
+
+/* Info box with rounded corners (neutral) */
+.bookingpage-info-box-neutral-rounded { --fx-background-color: #F8F9FA; --fx-border-color: #E6E7E7; --fx-border-width: 1px; --fx-border-radius: 12px; --fx-background-radius: 12px;
+}
+
 /* ==========================================
    Registration Status Pages (Countdown + Offline)
    ========================================== */

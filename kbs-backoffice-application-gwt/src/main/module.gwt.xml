@@ -1087,6 +1087,7 @@
     <source path="dev/webfx/stack/routing/uirouter/operations"/>
     <!--==============================< webfx-stack-session >===============================-->
     <source path="dev/webfx/stack/session"/>
+    <source path="dev/webfx/stack/session/isolation"/>
     <source path="dev/webfx/stack/session/spi"/>
     <!--===========================< webfx-stack-session-client >===========================-->
     <source path="dev/webfx/stack/session/spi/impl/client"/>

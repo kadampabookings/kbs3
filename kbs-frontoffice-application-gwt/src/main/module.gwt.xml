@@ -117,7 +117,6 @@
     <!--====================< kbs-frontoffice-bookingform-mkmc-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/gpclass"/>
-    <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/gpclass/sections"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/modification"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/onlineempowerment"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/onlineempowerment/sections"/>
@@ -301,7 +300,22 @@
     <source path="one/modality/booking/frontoffice/bookingpage/pages/summary"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/teaching"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/terms"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/sections"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/accommodation"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/audio"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/confirmation"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/dates"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/existing"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/generalprogram"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/meals"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/member"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/options"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/payment"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/prerequisite"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/queue"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/roommate"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/summary"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/transport"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/user"/>
     <source path="one/modality/booking/frontoffice/bookingpage/standard"/>
     <source path="one/modality/booking/frontoffice/bookingpage/theme"/>
     <source path="one/modality/booking/frontoffice/bookingpage/util"/>
@@ -1055,6 +1069,7 @@
     <source path="dev/webfx/stack/routing/uirouter/operations"/>
     <!--==============================< webfx-stack-session >===============================-->
     <source path="dev/webfx/stack/session"/>
+    <source path="dev/webfx/stack/session/isolation"/>
     <source path="dev/webfx/stack/session/spi"/>
     <!--===========================< webfx-stack-session-client >===========================-->
     <source path="dev/webfx/stack/session/spi/impl/client"/>
