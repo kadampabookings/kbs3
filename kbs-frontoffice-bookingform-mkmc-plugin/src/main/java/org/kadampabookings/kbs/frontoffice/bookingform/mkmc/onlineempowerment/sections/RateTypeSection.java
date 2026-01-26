@@ -210,7 +210,7 @@ public class RateTypeSection extends DefaultRateTypeSection {
 
         // Book items into WorkingBooking (addOnly=false to replace any existing selections)
         if (!periodTeachingItems.isEmpty()) {
-            workingBookingProperties.getWorkingBooking().bookScheduledItems(periodTeachingItems, false);
+            workingBookingProperties.getWorkingBooking().bookScheduledItems(periodTeachingItems, true);
         }
     }
 
