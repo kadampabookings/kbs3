@@ -1008,6 +1008,14 @@ iframe {
 }
 
 
+/*===== webfx-extras-transitionpane-web@main.css from webfx-extras-panes =====*/
+
+.transition-pane-dual-container {
+    --fx-translate-x: 0;
+
+    transform: translateX(var(--fx-translate-x));
+
+}
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
 
 :root {
