@@ -3,6 +3,7 @@
 module kbs.frontoffice.bookingform.nkt.plugin.obsolete {
 
     // Direct dependencies modules
+    requires javafx.graphics;
     requires kbs.client.festivaltypes;
     requires modality.base.shared.entities;
     requires modality.booking.client.workingbooking;
