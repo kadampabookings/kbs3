@@ -64,6 +64,7 @@
         <module>kbs-frontoffice-bookingform-kmcny-plugin</module>
         <module>kbs-frontoffice-bookingform-mkmc-plugin</module>
         <module>kbs-frontoffice-bookingform-nkt-plugin</module>
+        <module>kbs-frontoffice-bookingform-nkt-plugin-obsolete</module>
         <module>kbs-frontoffice-footer-nktikbu</module>
         <module>kbs-server-application</module>
         <module>kbs-server-application-vertx</module>

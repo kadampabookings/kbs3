@@ -121,7 +121,6 @@
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/onlineempowerment"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/onlineempowerment/sections"/>
     <!--=====================< kbs-frontoffice-bookingform-nkt-plugin >=====================-->
-    <source path="org/kadampabookings/kbs/frontoffice/bookingform/nkt/onlinefestival"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/nkt/sttp"/>
     <!--=========================< kbs-frontoffice-footer-nktikbu >=========================-->
     <source path="org/kadampabookings/kbs/frontoffice/footer/nktikbu"/>
@@ -290,16 +289,8 @@
     <source path="one/modality/booking/frontoffice/bookingpage/components"/>
     <source path="one/modality/booking/frontoffice/bookingpage/components/price"/>
     <source path="one/modality/booking/frontoffice/bookingpage/navigation"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/audiorecording"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/closed"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/countdown"/>
     <source path="one/modality/booking/frontoffice/bookingpage/pages/offline"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/payment"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/personal"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/prerequisite"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/summary"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/teaching"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/terms"/>
     <source path="one/modality/booking/frontoffice/bookingpage/sections/accommodation"/>
     <source path="one/modality/booking/frontoffice/bookingpage/sections/audio"/>
     <source path="one/modality/booking/frontoffice/bookingpage/sections/confirmation"/>
