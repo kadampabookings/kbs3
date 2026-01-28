@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <exported-packages>
+        <source-packages/>
+        <resource-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+    </dependencies>
+
+    <providers>
+        <!-- NKT Online Festivals -->
+        <provider interface="one.modality.booking.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingform.nkt.onlinefestival.NKTOnlineFestivalBookingFormProvider</provider>
+    </providers>
+
+</project>
