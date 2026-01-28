@@ -39,12 +39,7 @@ public final class MKMCOnlineEmpowermentBookingForm extends AbstractOnlineEventB
             HasWorkingBookingProperties activity,
             EventBookingFormSettings settings,
             BookingFormEntryPoint entryPoint) {
-        super(activity, settings, entryPoint);
-    }
-
-    @Override
-    protected BookingFormColorScheme getColorScheme() {
-        return BookingFormColorScheme.JOY_AMBER;
+        super(activity, settings, entryPoint, BookingFormColorScheme.JOY_AMBER);
     }
 
     @Override

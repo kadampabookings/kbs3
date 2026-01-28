@@ -6,6 +6,8 @@ import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
+import one.modality.booking.frontoffice.bookingpage.standard.DefaultInPersonBookingForm;
+import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
 
@@ -15,7 +17,7 @@ import one.modality.event.frontoffice.activities.book.event.EventBookingFormSett
  * <p>This provider creates the appropriate booking form based on entry point:</p>
  * <ul>
  *   <li>NEW_BOOKING: {@link USFestivalEntryForm} - Entry form with registration type selection</li>
- *   <li>MODIFY_BOOKING/PAY_BOOKING: {@link USFestivalInPersonBookingForm} - Direct in-person form</li>
+ *   <li>MODIFY_BOOKING/PAY_BOOKING: {@link DefaultInPersonBookingForm} - Direct in-person form</li>
  * </ul>
  *
  * <p>The entry form allows users to choose between In-Person and Online registration,
@@ -23,8 +25,6 @@ import one.modality.event.frontoffice.activities.book.event.EventBookingFormSett
  *
  * @author Bruno Salmon
  * @see USFestivalEntryForm
- * @see USFestivalInPersonBookingForm
- * @see USFestivalOnlineBookingForm
  */
 public final class USFestivalBookingFormProvider implements BookingFormProvider {
 
@@ -55,9 +55,10 @@ public final class USFestivalBookingFormProvider implements BookingFormProvider 
             return new USFestivalEntryForm(activity, settings, entryPoint);
         }
 
-        // For modifications/payments, go directly to in-person form
-        // (online modifications would need different handling in the future)
-        USFestivalInPersonBookingForm bookingForm = new USFestivalInPersonBookingForm(activity, settings, entryPoint);
-        return bookingForm.getForm();
+        // For modifications/payments, go directly to in-person form with WISDOM_BLUE theme
+        // TODO: Future enhancement - detect if existing booking is online or in-person from document
+        return new DefaultInPersonBookingForm(
+            activity, settings, entryPoint, BookingFormColorScheme.WISDOM_BLUE
+        ).getForm();
     }
 }
