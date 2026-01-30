@@ -187,7 +187,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
                 bp.setCenter(super.getOrCreateDialogContent());
                 return bp;
             }
-        }.always(virtuousTopicProperty, virtuous -> DqlStatement.where("virtuous=?", virtuous));
+        }.always(virtuousTopicProperty, virtuous -> DqlStatement.where("virtuous=$1", virtuous));
         // Creating a virtual teacher named "All" that will be used to select all teachers
         store = topicButtonSelector.getStore();
         Topic allTopic = store.createEntity(Topic.class);
@@ -386,14 +386,14 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
                 "{class: 'Podcast', fields: 'channel, channelPodcastId, date, title, excerpt, imageUrl, audioUrl, wistiaVideoId, durationMillis', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
             //.always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(DqlStatement.limit("?", INITIAL_LIMIT))
-            .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
+            .always(DqlStatement.limit("$1", INITIAL_LIMIT))
+            .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = $1", teacher))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
-                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+                return DqlStatement.where("lower(title) like $1 or lower(excerpt) like $1", searchLike);
             })
             .always(DqlStatement.where("audioUrl != null"))
-            .ifNotNull(lastLoadedPodcastProperty, podcast -> DqlStatement.where("date < ?", podcast.getDate()))
+            .ifNotNull(lastLoadedPodcastProperty, podcast -> DqlStatement.where("date < $1", podcast.getDate()))
             .storeEntitiesInto(podcastsFeed)
             //.setResultCacheEntry("kbs/podcasts/podcasts")
             .start();
@@ -404,15 +404,15 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
             .always( // language=JSON5
                 "{class: 'Video', fields: 'date, title, imageUrl, wistiaVideoId, youtubeVideoId, durationMillis, width, height, ord', orderBy: 'ord nulls last, date desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
-            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(DqlStatement.limit("?", INITIAL_LIMIT))
+            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = $1", lang))
+            .always(DqlStatement.limit("$1", INITIAL_LIMIT))
             .always(DqlStatement.where("playlist=1 or teacher != null"))
-            .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = ?", teacher))
+            .ifNotNull(teacherProperty, teacher -> teacher == FAVORITE_TAB_VIRTUAL_TEACHER ? DqlStatement.whereFieldIn("id", FXFavoritePodcasts.getFavoritePodcastIds().toArray()) : DqlStatement.where("teacher = $1", teacher))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
-                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+                return DqlStatement.where("lower(title) like $1 or lower(excerpt) like $1", searchLike);
             })
-            .ifNotNull(lastLoadedVideoProperty, video -> DqlStatement.where("ord!=null and ord > ? or ord=null and date < ?", video.getOrd(), video.getOrd() == null ? video.getDate() : LocalDate.now()))
+            .ifNotNull(lastLoadedVideoProperty, video -> DqlStatement.where("ord!=null and ord > $1 or ord=null and date < $2", video.getOrd(), video.getOrd() == null ? video.getDate() : LocalDate.now()))
             .storeEntitiesInto(videosFeed)
             //.setResultCacheEntry("kbs/podcasts/videos"))
             .start();

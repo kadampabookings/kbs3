@@ -77,7 +77,7 @@ public class NewsImportJob implements ApplicationJob {
         // When this job starts, fetchAfterParameter is not set yet, so we initialize it with the latest news date
         // imported so far in the database.
         if (latestNewsDateTime == null) {
-            EntityStore.create().<News>executeQuery("select date from News where lang=? order by date desc limit ?", lang, Math.max(RECHECK_LATEST_DB_NEWS_UPDATES_COUNT, 1))
+            EntityStore.create().<News>executeQuery("select date from News where lang=$1 order by date desc limit $2", lang, Math.max(RECHECK_LATEST_DB_NEWS_UPDATES_COUNT, 1))
                 .onFailure(error -> Console.log("[NEWS_IMPORT] ⛔️️ Error while reading latest news", error))
                 .onSuccess(news -> {
                     News lastestNews = Collections.last(news);
