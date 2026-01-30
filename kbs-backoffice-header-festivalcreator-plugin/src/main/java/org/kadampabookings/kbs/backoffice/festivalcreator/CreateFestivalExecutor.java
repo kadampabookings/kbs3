@@ -104,10 +104,9 @@ final class CreateFestivalExecutor {
             if (validationSupport.isValid()) {
                 FestivalType festivalType = getSelectedFestivalType();
                 int year = startDateField.getDate().getYear();
-                // For now (2025) we do only Online Festivals with KBS3 (in 2026 the same event will be for both in-person & online)
-                String eventName = I18n.getI18nText("[{0}] Festival {1} Online", festivalType.getShortI18nKey(), year);
+                String eventName = I18n.getI18nText("[{0}] Festival {1}", festivalType.getShortI18nKey(), year);
                 UpdateStore updateStore = UpdateStore.create();
-                Site venue = EventCreator.insertNewVenue("Online", true, updateStore);
+                Site venue = updateStore.createEntity(Site.class, 1671); // MKMC main site (temporary hardcoded for Spring & Summer) //EventCreator.insertNewVenue("Online", true, updateStore);
                 AsyncSpinner.displayButtonSpinnerDuringAsyncExecution(
                     EventCreator.createEvent(eventName, festivalType.getTypeId(), venue, startDateField.getDate(), endDateField.getDate(), updateStore)
                         .onSuccess(v -> {
