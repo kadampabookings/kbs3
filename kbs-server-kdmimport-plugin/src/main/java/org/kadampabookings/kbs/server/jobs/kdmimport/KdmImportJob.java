@@ -46,10 +46,10 @@ public class KdmImportJob implements ApplicationJob {
 
         JsonFetch.fetchJsonArray(KDM_FETCH_URL)
 
-            .onFailure(error -> Console.log("Error while fetching " + KDM_FETCH_URL, error))
+            .onFailure(error -> Console.error("Error while fetching " + KDM_FETCH_URL, error))
             .onSuccess(webKdmJsonArray -> EntityStore.create().<KdmCenter>executeQuery("select id,kdmId,name,type,lat,lng from KdmCenter")
 
-                .onFailure(Console::log)
+                .onFailure(Console::error)
                 .onSuccess(kdmCenters -> {
 
                     Set<Integer> kdmIds = kdmCenters.stream().map(KdmCenter::getKdmId).collect(Collectors.toSet());
@@ -113,7 +113,7 @@ public class KdmImportJob implements ApplicationJob {
 
                     updateStore.submitChanges()
 
-                        .onFailure(Console::log)
+                        .onFailure(Console::error)
                         .onSuccess(result -> processClosedCentres(webKdmJsonArray, kdmCenters));
                 }));
     }
@@ -126,7 +126,7 @@ public class KdmImportJob implements ApplicationJob {
             String closedCentreIdsString = closedCentreIds.stream().map(String::valueOf).collect(Collectors.joining(","));
             EntityStore.create().<Organization>executeQuery("select id,kdmCenter.id from Organization where kdmCenter in (" + closedCentreIdsString + ")")
 
-                .onFailure(Console::log)
+                .onFailure(Console::error)
                 .onSuccess(organizations -> {
 
                     UpdateStore updateStore = UpdateStore.create();
@@ -134,7 +134,7 @@ public class KdmImportJob implements ApplicationJob {
                         organization = updateStore.updateEntity(organization);
                         organization.setClosed(true);
                     }
-                    updateStore.submitChanges().onFailure(Console::log);
+                    updateStore.submitChanges().onFailure(Console::error);
                 });
         }
     }

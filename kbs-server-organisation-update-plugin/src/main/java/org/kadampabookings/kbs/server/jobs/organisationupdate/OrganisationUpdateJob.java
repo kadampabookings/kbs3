@@ -38,17 +38,17 @@ public class OrganisationUpdateJob implements ApplicationJob {
         UpdateStore updateStore = UpdateStore.create();
         EntityStore.create().<Country>executeQuery("select id,iso_alpha2,latitude,longitude,north,south,east,west from Country")
 
-            .onFailure(Console::log)
+            .onFailure(Console::error)
             .onSuccess(countries -> {
 
                 EntityStore.create().<Organization>executeQuery("select id,name,importIssue,kdmCenter.id from Organization")
 
-                    .onFailure(Console::log)
+                    .onFailure(Console::error)
                     .onSuccess(organizations -> {
 
                         EntityStore.create().<KdmCenter>executeQuery("select id,kdmId,name,type,lat,lng from KdmCenter")
 
-                            .onFailure(Console::log)
+                            .onFailure(Console::error)
                             .onSuccess(kdmCenters -> {
 
                                 for (KdmCenter kdmCenter : kdmCenters) {
@@ -136,7 +136,7 @@ public class OrganisationUpdateJob implements ApplicationJob {
                                 }
 
                                 if (updateStore.hasChanges()) {
-                                    updateStore.submitChanges().onFailure(Console::log);
+                                    updateStore.submitChanges().onFailure(Console::error);
                                 }
                             });
                     });

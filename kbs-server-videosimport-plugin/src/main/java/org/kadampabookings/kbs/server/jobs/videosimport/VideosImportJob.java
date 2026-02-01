@@ -60,7 +60,7 @@ public class VideosImportJob implements ApplicationJob {
             importNewsVideosFromLatestNews();
         } else {
             EntityStore.create().<Video>executeQuery("select id,news from Video order by news.id desc limit 1")
-                .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest video from database", error))
+                .onFailure(error -> Console.error("[VIDEOS_IMPORT] Error while reading latest video from database", error))
                 .onSuccess(dbVideos -> {
                     if (!dbVideos.isEmpty()) {
                         latestImportedNews = dbVideos.get(0).getNews();
@@ -74,13 +74,13 @@ public class VideosImportJob implements ApplicationJob {
         // Reading the next 10 news from the database that needs to be checked for videos import
         EntityStore entityStore = EntityStore.create();
         entityStore.<News>executeQuery("select channelNewsId,title,excerpt,lang from News where id>=$1 order by id limit 10", latestImportedNews == null ? 0 : latestImportedNews.getPrimaryKey())
-            .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
+            .onFailure(error -> Console.error("[VIDEOS_IMPORT] ⛔️️ Error while reading latest news from database", error))
             .onSuccess(dbNews -> {
                 News latestNews = dbNews.get(dbNews.size() - 1);
                 // Fetching the news JSON info from WordPress
                 new Batch<>(dbNews.toArray(new News[0])).executeParallel(ReadOnlyAstObject[]::new,
                             news -> JsonFetch.fetchJsonObject(NEWS_FETCH_URL + "/" + news.getChannelNewsId()))
-                    .onFailure(Console::log)
+                    .onFailure(Console::error)
                     .onSuccess(newsJsonBatch -> { // Note: same indexes as dbNews
                         // Extracting the mediaIds and links of this news
                         List<String> mediaIds = new ArrayList<>(); // same indexes as dbNews
@@ -110,7 +110,7 @@ public class VideosImportJob implements ApplicationJob {
                                             });
                                         }
                                     }))
-                            .onFailure(e -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while fetching media links", e))
+                            .onFailure(e -> Console.error("[VIDEOS_IMPORT] ⛔️️ Error while fetching media links", e))
                             .onSuccess(ignored -> {
                                 if (wistiaIdsQueue.isEmpty()) {
                                     continueImport(latestNews);
@@ -119,13 +119,13 @@ public class VideosImportJob implements ApplicationJob {
                                 UpdateStore updateStore = UpdateStore.createAbove(entityStore);
                                 entityStore.<Video>executeQuery(
                                         "select wistiaVideoId from Video where wistiaVideoId in (" + Collections.toStringCommaSeparatedWithSingleQuotedStrings(wistiaIdsQueue.keySet()) + ")")
-                                    .onFailure(e -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while reading videos from database", e))
+                                    .onFailure(e -> Console.error("[VIDEOS_IMPORT] ⛔️️ Error while reading videos from database", e))
                                     .compose(existingVideos -> {
                                         List<String> existingWistiaIds = Collections.map(existingVideos, Video::getWistiaVideoId);
                                         List<String> newWistiaIds = Collections.filter(wistiaIdsQueue.keySet(), wistiaId -> !existingWistiaIds.contains(wistiaId));
                                         return new Batch<>(newWistiaIds.toArray(new String[0])).executeParallel(ReadOnlyAstObject[]::new,
                                                 wistiaId -> JsonFetch.fetchJsonObject(WISTIA_FETCH_URL + "/" + wistiaId + ".json")
-                                            .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while fetching wistia media", error))
+                                            .onFailure(error -> Console.error("[VIDEOS_IMPORT] ⛔️️ Error while fetching wistia media", error))
                                             .onSuccess(wistiaJson -> {
                                                 // Reading wistia info
                                                 ReadOnlyAstObject media = wistiaJson.getObject("media");
@@ -161,7 +161,7 @@ public class VideosImportJob implements ApplicationJob {
                                             continueImport(latestNews);
                                         } else {
                                             updateStore.submitChanges()
-                                                .onFailure(error -> Console.log("[VIDEOS_IMPORT] ⛔️️ Error while inserting video in database", error))
+                                                .onFailure(error -> Console.error("[VIDEOS_IMPORT] ⛔️️ Error while inserting video in database", error))
                                                 .onSuccess(result -> {
                                                     int newVideosCount = result.getRowCount();
                                                     Console.log("[VIDEOS_IMPORT] " + newVideosCount + " new videos imported in database");
