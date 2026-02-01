@@ -36,6 +36,8 @@ import one.modality.event.backoffice.eventcreator.EventCreator;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
+import static org.kadampabookings.kbs.backoffice.festivalcreator.FestivalCreatorCssSelectors.*;
+
 /**
  * @author Bruno Salmon
  */
@@ -72,7 +74,7 @@ final class CreateFestivalExecutor {
             new ScalePane(buttonBar)
         );
         container.spacingProperty().bind(container.heightProperty().multiply(0.1)); // multiply not yet supported by webfx
-        container.getStyleClass().add("event-creator-dialog");
+        container.getStyleClass().add(event_creator_dialog);
         container.setMaxWidth(700);
 
         // Pre-computing the most probable Festival start date from the festival type selected by the user

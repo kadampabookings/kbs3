@@ -51,6 +51,8 @@ import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDateTime;
 
+import static org.kadampabookings.kbs.frontoffice.activities.news.NewsCssSelectors.*;
+
 final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private static final int INITIAL_LIMIT = 5;
@@ -126,7 +128,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
 
         topicProperty.bind(topicButtonSelector.selectedItemProperty());
 
-        searchBar.getStyleClass().setAll("searchbar");
+        searchBar.getStyleClass().setAll(searchbar);
         searchBar.setAlignment(Pos.CENTER);
         searchBar.setMinWidth(200);
         searchBar.setMaxWidth(500);
@@ -178,7 +180,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
         pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = news request (as news are on the left)
 
-        pageContainer.getStyleClass().add("news-activity"); // for CSS styling
+        pageContainer.getStyleClass().add(news_activity); // for CSS styling
 
         newsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedNews = Collections.last(newsFeed);

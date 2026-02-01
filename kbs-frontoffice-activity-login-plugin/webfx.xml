@@ -16,6 +16,9 @@
         <provider interface="dev.webfx.platform.boot.spi.ApplicationJob">org.kadampabookings.kbs.frontoffice.activities.login.KbsFrontOfficeLoginOverriderJob</provider>
     </providers>
 
-    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.activities.login.KbsFrontOfficeLoginI18nKeys"/>
+    <java-ui-api package="org.kadampabookings.kbs.frontoffice.activities.login" prefix="KbsFrontOfficeLogin">
+        <i18n/>
+        <css/>
+    </java-ui-api>
 
 </project>

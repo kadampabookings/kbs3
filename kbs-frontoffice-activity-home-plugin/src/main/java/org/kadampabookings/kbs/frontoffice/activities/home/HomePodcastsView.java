@@ -12,6 +12,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
+
+import static org.kadampabookings.kbs.frontoffice.activities.home.FrontOfficeHomeCssSelectors.*;
 //import org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting;
 
 /**
@@ -22,7 +24,7 @@ final class HomePodcastsView {
     static Region createView(BrowsingHistory browsingHistory) {
 
         Text podcastsHeaderLabel = I18n.newText(FrontOfficeHomeI18nKeys.PodcastsHeader);
-        podcastsHeaderLabel.getStyleClass().setAll("podcasts-header");
+        podcastsHeaderLabel.getStyleClass().setAll(podcasts_header);
 
         Button seeAllButton = I18nControls.newButton("See all");
         seeAllButton.setPrefSize(240, 48);
@@ -47,7 +49,7 @@ final class HomePodcastsView {
         );
         container.setAlignment(Pos.TOP_CENTER);
         container.setPadding(new Insets(88, 0, 88, 0));
-        container.getStyleClass().setAll("home-podcasts");
+        container.getStyleClass().setAll(home_podcasts);
 
         return container;
     }

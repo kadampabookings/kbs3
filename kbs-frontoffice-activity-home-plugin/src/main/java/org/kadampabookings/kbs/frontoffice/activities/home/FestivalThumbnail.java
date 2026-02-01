@@ -32,6 +32,8 @@ import one.modality.event.frontoffice.activities.book.BookStarter;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
+import static org.kadampabookings.kbs.frontoffice.activities.home.FrontOfficeHomeCssSelectors.*;
+
 /**
  * @author Bruno Salmon
  */
@@ -60,7 +62,7 @@ final class FestivalThumbnail {
         Label festivalName = I18nControls.newLabel(I18nKeys.embedInString("[0] {0}", festivalType.getLongI18nKey()), year);
         festivalName.setWrapText(true);
         festivalName.setTextAlignment(TextAlignment.CENTER);
-        festivalName.getStyleClass().setAll("festival-name");
+        festivalName.getStyleClass().setAll(festival_name);
 
         boolean canBookNow = EventLifeCycle.canBookNow(festival);
         Button button = Bootstrap.button(I18nControls.newButton(
@@ -88,7 +90,7 @@ final class FestivalThumbnail {
         container.setMaxSize(2 * 360, 2 * 400);
         container.setPadding(new Insets(48, 8, 48, 8));
         container.setAlignment(Pos.TOP_CENTER);
-        container.getStyleClass().setAll("festival-thumbnail", festivalType.getStyleClass());
+        container.getStyleClass().setAll(festival_thumbnail, festivalType.getStyleClass());
         return container;
     }
 
@@ -110,7 +112,7 @@ final class FestivalThumbnail {
         bookNowOptionsBox.setAlignment(Pos.CENTER);
 
         Pane bookNowDialog = new GoldenRatioPane(bookNowOptionsBox);
-        bookNowDialog.getStyleClass().setAll("book-now-dialog");
+        bookNowDialog.getStyleClass().setAll(book_now_dialog);
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         bookNowDialog.setPrefSize(Math.min(700, screenBounds.getWidth() * 0.8), Math.min(500, screenBounds.getHeight() * 0.3));
         Pane dialogArea = FXMainFrameDialogArea.getDialogArea();

@@ -56,6 +56,8 @@ import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDate;
 
+import static org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsCssSelectors.*;
+
 /**
  * @author Bruno Salmon
  */
@@ -255,7 +257,7 @@ final class PodcastsActivity extends ViewDomainActivityBase implements ModalityB
         pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = podcasts request (as podcasts are on the left)
 
-        pageContainer.getStyleClass().add("podcasts-activity"); // for CSS styling
+        pageContainer.getStyleClass().add(podcasts_activity); // for CSS styling
 
         podcastsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedPodcast = Collections.last(podcastsFeed);

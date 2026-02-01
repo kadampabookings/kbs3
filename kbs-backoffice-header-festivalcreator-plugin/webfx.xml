@@ -15,6 +15,9 @@
         <provider interface="one.modality.base.backoffice.mainframe.headernode.MainFrameHeaderNodeProvider">org.kadampabookings.kbs.backoffice.festivalcreator.MainFrameHeaderFestivalCreatorProvider</provider>
     </providers>
 
-    <i18n javaKeysClass="org.kadampabookings.kbs.backoffice.festivalcreator.FestivalCreatorI18nKeys"/>
+    <java-ui-api package="org.kadampabookings.kbs.backoffice.festivalcreator" prefix="FestivalCreator">
+        <i18n/>
+        <css/>
+    </java-ui-api>
 
 </project>
