@@ -169,6 +169,8 @@
     <source path="one/modality/base/client/entities"/>
     <source path="one/modality/base/client/entities/filters"/>
     <source path="one/modality/base/client/entities/functions"/>
+    <!--==================< modality-base-client-entity-message-receiver >==================-->
+    <source path="one/modality/base/client/message/receiver"/>
     <!--=========================< modality-base-client-gantt-fx >==========================-->
     <source path="one/modality/base/client/gantt/fx/highlight"/>
     <source path="one/modality/base/client/gantt/fx/interstice"/>
@@ -228,8 +230,6 @@
     <public path="" includes="images/svg/mono/"/>
     <!--=======================< modality-base-client-mainframe-fx >========================-->
     <source path="one/modality/base/client/mainframe/fx"/>
-    <!--=========================< modality-base-client-messaging >=========================-->
-    <source path="one/modality/base/client/messaging"/>
     <!--==============< modality-base-client-operationactionsloading-plugin >===============-->
     <source path="one/modality/base/client/operationactionsloading"/>
     <!--=====================< modality-base-client-presentationmodel >=====================-->
@@ -268,6 +268,10 @@
     <source path="one/modality/base/shared/entities/markers"/>
     <source path="one/modality/base/shared/entities/triggers"/>
     <source path="one/modality/base/shared/entities/util"/>
+    <!--====================< modality-base-shared-entity-message-bus >=====================-->
+    <source path="one/modality/base/shared/entity/message/bus"/>
+    <!--===================< modality-base-shared-entity-message-sender >===================-->
+    <source path="one/modality/base/shared/entity/message/sender"/>
     <!--========================< modality-base-shared-knownitems >=========================-->
     <source path="one/modality/base/shared/knownitems"/>
     <!--==============< modality-booking-backoffice-activity-bookings-plugin >==============-->
@@ -540,6 +544,7 @@
     <source path="dev/webfx/extras/panes/transitions"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
+    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->
@@ -1008,9 +1013,12 @@
     <!--========================< webfx-stack-orm-entity-controls >=========================-->
     <source path="dev/webfx/stack/orm/entity/controls/entity/selector"/>
     <source path="dev/webfx/stack/orm/entity/controls/entity/sheet"/>
-    <!--========================< webfx-stack-orm-entity-messaging >========================-->
-    <source path="dev/webfx/stack/orm/entity/messaging"/>
-    <source path="dev/webfx/stack/orm/entity/messaging/serial"/>
+    <!--====================< webfx-stack-orm-entity-message-receiver >=====================-->
+    <source path="dev/webfx/stack/orm/entity/message/receiver"/>
+    <!--=====================< webfx-stack-orm-entity-message-sender >======================-->
+    <source path="dev/webfx/stack/orm/entity/message/sender"/>
+    <!--=====================< webfx-stack-orm-entity-message-serial >======================-->
+    <source path="dev/webfx/stack/orm/entity/message/serial"/>
     <!--===========================< webfx-stack-orm-expression >===========================-->
     <source path="dev/webfx/stack/orm/expression"/>
     <source path="dev/webfx/stack/orm/expression/builder"/>
@@ -1079,6 +1087,7 @@
     <source path="dev/webfx/stack/routing/uirouter/operations"/>
     <!--==============================< webfx-stack-session >===============================-->
     <source path="dev/webfx/stack/session"/>
+    <source path="dev/webfx/stack/session/isolation"/>
     <source path="dev/webfx/stack/session/spi"/>
     <!--===========================< webfx-stack-session-client >===========================-->
     <source path="dev/webfx/stack/session/spi/impl/client"/>

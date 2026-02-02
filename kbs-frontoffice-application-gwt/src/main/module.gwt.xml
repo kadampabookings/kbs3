@@ -111,15 +111,16 @@
     <public path="" includes="images/organizations/"/>
     <resource path="org/kadampabookings/kbs/frontoffice/booking"/>
     <public path="" includes="org/kadampabookings/kbs/frontoffice/booking/"/>
+    <!--====================< kbs-frontoffice-bookingform-kmcny-plugin >====================-->
+    <source path="org/kadampabookings/kbs/frontoffice/bookingform/kmcny"/>
+    <source path="org/kadampabookings/kbs/frontoffice/bookingform/kmcny/usfestival"/>
     <!--====================< kbs-frontoffice-bookingform-mkmc-plugin >=====================-->
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/gpclass"/>
-    <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/gpclass/sections"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/modification"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/onlineempowerment"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/mkmc/onlineempowerment/sections"/>
     <!--=====================< kbs-frontoffice-bookingform-nkt-plugin >=====================-->
-    <source path="org/kadampabookings/kbs/frontoffice/bookingform/nkt/onlinefestival"/>
     <source path="org/kadampabookings/kbs/frontoffice/bookingform/nkt/sttp"/>
     <!--=========================< kbs-frontoffice-footer-nktikbu >=========================-->
     <source path="org/kadampabookings/kbs/frontoffice/footer/nktikbu"/>
@@ -159,6 +160,8 @@
     <source path="one/modality/base/client/entities"/>
     <source path="one/modality/base/client/entities/filters"/>
     <source path="one/modality/base/client/entities/functions"/>
+    <!--==================< modality-base-client-entity-message-receiver >==================-->
+    <source path="one/modality/base/client/message/receiver"/>
     <!--===========================< modality-base-client-error >===========================-->
     <source path="one/modality/base/client/error"/>
     <!--===========================< modality-base-client-i18n >============================-->
@@ -213,8 +216,6 @@
     <public path="" includes="images/svg/mono/"/>
     <!--=======================< modality-base-client-mainframe-fx >========================-->
     <source path="one/modality/base/client/mainframe/fx"/>
-    <!--=========================< modality-base-client-messaging >=========================-->
-    <source path="one/modality/base/client/messaging"/>
     <!--==============< modality-base-client-operationactionsloading-plugin >===============-->
     <source path="one/modality/base/client/operationactionsloading"/>
     <!--=====================< modality-base-client-presentationmodel >=====================-->
@@ -266,6 +267,8 @@
     <source path="one/modality/base/shared/entities/markers"/>
     <source path="one/modality/base/shared/entities/triggers"/>
     <source path="one/modality/base/shared/entities/util"/>
+    <!--====================< modality-base-shared-entity-message-bus >=====================-->
+    <source path="one/modality/base/shared/entity/message/bus"/>
     <!--========================< modality-base-shared-knownitems >=========================-->
     <source path="one/modality/base/shared/knownitems"/>
     <!--===========================< modality-base-shared-util >============================-->
@@ -284,18 +287,29 @@
     <source path="one/modality/booking/frontoffice/bookingpage"/>
     <source path="one/modality/booking/frontoffice/bookingpage/cart"/>
     <source path="one/modality/booking/frontoffice/bookingpage/components"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/components/price"/>
     <source path="one/modality/booking/frontoffice/bookingpage/navigation"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/audiorecording"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/closed"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/payment"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/personal"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/prerequisite"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/summary"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/teaching"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/pages/terms"/>
-    <source path="one/modality/booking/frontoffice/bookingpage/sections"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/pages/countdown"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/pages/offline"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/accommodation"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/audio"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/confirmation"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/dates"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/existing"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/generalprogram"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/meals"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/member"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/options"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/payment"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/prerequisite"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/queue"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/roommate"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/summary"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/transport"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/sections/user"/>
     <source path="one/modality/booking/frontoffice/bookingpage/standard"/>
     <source path="one/modality/booking/frontoffice/bookingpage/theme"/>
+    <source path="one/modality/booking/frontoffice/bookingpage/util"/>
     <!--====================< modality-crm-backoffice-organization-fx >=====================-->
     <source path="one/modality/crm/backoffice/organization/fx"/>
     <source path="one/modality/crm/backoffice/organization/fx/impl"/>
@@ -367,6 +381,14 @@
     <source path="one/modality/ecommerce/payment/client"/>
     <!--=======================< modality-ecommerce-payment-remote >========================-->
     <source path="one/modality/ecommerce/payment/spi/impl/remote"/>
+    <!--=======================< modality-ecommerce-policy-service >========================-->
+    <source path="one/modality/ecommerce/policy/service"/>
+    <source path="one/modality/ecommerce/policy/service/spi"/>
+    <!--===================< modality-ecommerce-policy-service-buscall >====================-->
+    <source path="one/modality/ecommerce/policy/service/buscall"/>
+    <source path="one/modality/ecommerce/policy/service/buscall/serial"/>
+    <!--====================< modality-ecommerce-policy-service-remote >====================-->
+    <source path="one/modality/ecommerce/policy/service/spi/impl/remote"/>
     <!--===================< modality-ecommerce-shared-pricecalculator >====================-->
     <source path="one/modality/ecommerce/shared/pricecalculator"/>
     <!--=========================< modality-event-client-event-fx >=========================-->
@@ -785,6 +807,12 @@
     <source path="dev/webfx/platform/util/http"/>
     <!--============================< webfx-platform-util-time >============================-->
     <source path="dev/webfx/platform/util/time"/>
+    <!--===========================< webfx-platform-visibility >============================-->
+    <source path="dev/webfx/platform/visibility"/>
+    <source path="dev/webfx/platform/visibility/spi"/>
+    <source path="dev/webfx/platform/visibility/spi/impl"/>
+    <!--======================< webfx-platform-visibility-elemental2 >======================-->
+    <source path="dev/webfx/platform/visibility/spi/impl/elemental2"/>
     <!--==========================< webfx-platform-windowhistory >==========================-->
     <source path="dev/webfx/platform/windowhistory"/>
     <source path="dev/webfx/platform/windowhistory/spi"/>
@@ -960,9 +988,10 @@
     <!--========================< webfx-stack-orm-entity-controls >=========================-->
     <source path="dev/webfx/stack/orm/entity/controls/entity/selector"/>
     <source path="dev/webfx/stack/orm/entity/controls/entity/sheet"/>
-    <!--========================< webfx-stack-orm-entity-messaging >========================-->
-    <source path="dev/webfx/stack/orm/entity/messaging"/>
-    <source path="dev/webfx/stack/orm/entity/messaging/serial"/>
+    <!--====================< webfx-stack-orm-entity-message-receiver >=====================-->
+    <source path="dev/webfx/stack/orm/entity/message/receiver"/>
+    <!--=====================< webfx-stack-orm-entity-message-serial >======================-->
+    <source path="dev/webfx/stack/orm/entity/message/serial"/>
     <!--===========================< webfx-stack-orm-expression >===========================-->
     <source path="dev/webfx/stack/orm/expression"/>
     <source path="dev/webfx/stack/orm/expression/builder"/>
@@ -1031,6 +1060,7 @@
     <source path="dev/webfx/stack/routing/uirouter/operations"/>
     <!--==============================< webfx-stack-session >===============================-->
     <source path="dev/webfx/stack/session"/>
+    <source path="dev/webfx/stack/session/isolation"/>
     <source path="dev/webfx/stack/session/spi"/>
     <!--===========================< webfx-stack-session-client >===========================-->
     <source path="dev/webfx/stack/session/spi/impl/client"/>

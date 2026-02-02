@@ -100,8 +100,8 @@ public final class FXFestivals {
         String select = """
             select name, type.name, startDate, endDate, kbs3, state, live, openingDate, bookingFormUrl
                 from Event
-                where type in (?)
-                    and startDate < ?
+                where type in ($1)
+                    and startDate < $2
                 order by startDate desc
                     , name like '%Online%' ? 1 : 0
                 limit 2""";

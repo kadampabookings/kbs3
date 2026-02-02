@@ -15,6 +15,9 @@
         <provider interface="dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter">org.kadampabookings.kbs.frontoffice.activities.home.FrontOfficeHomeRouting$RouteToHomeRequestEmitter</provider>
     </providers>
 
-    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.activities.home.FrontOfficeHomeI18nKeys"/>
+    <java-ui-api package="org.kadampabookings.kbs.frontoffice.activities.home" prefix="FrontOfficeHome">
+        <i18n/>
+        <css/>
+    </java-ui-api>
 
 </project>

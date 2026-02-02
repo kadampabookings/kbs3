@@ -15,6 +15,8 @@
         <provider interface="dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter">org.kadampabookings.kbs.frontoffice.activities.books.BooksRouting$RouteToBooksRequestEmitter</provider>
     </providers>
 
-    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.activities.books.BooksI18nKeys"/>
+    <java-ui-api package="org.kadampabookings.kbs.frontoffice.activities.books" prefix="Books">
+        <i18n/>
+    </java-ui-api>
 
 </project>

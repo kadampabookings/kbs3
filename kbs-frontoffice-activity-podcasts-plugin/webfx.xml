@@ -16,6 +16,9 @@
         <provider interface="dev.webfx.stack.routing.uirouter.operations.RouteRequestEmitter">org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsRouting$RouteToPodcastsRequestEmitter</provider>
     </providers>
 
-    <i18n javaKeysClass="org.kadampabookings.kbs.frontoffice.activities.podcasts.PodcastsI18nKeys"/>
+    <java-ui-api package="org.kadampabookings.kbs.frontoffice.activities.podcasts" prefix="Podcasts">
+        <i18n/>
+        <css/>
+    </java-ui-api>
 
 </project>

@@ -4,76 +4,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover"/>
         <meta name="mavenBuildTimestamp" content="${maven.build.timestamp}"/>
-        <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
-        <link rel='manifest' href='./pwa-manifest.json'>
-        <style>
-            :root {
-                --progress-circle-radius: 52px;
-                --progress-icon-size: 32px;
-            }
-        
-            #pwa-progress-bar-container {
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: calc(var(--progress-circle-radius) * 2 + 16px);
-                height: calc(var(--progress-circle-radius) * 2 + 16px);
-            }
-        
-            .circular-progress {
-                position: relative;
-                width: calc(var(--progress-circle-radius) * 2 + 16px);
-                height: calc(var(--progress-circle-radius) * 2 + 16px);
-            }
-        
-            .circular-progress > svg {
-                transform: rotate(-90deg);
-                width: calc(var(--progress-circle-radius) * 2 + 16px);
-                height: calc(var(--progress-circle-radius) * 2 + 16px);
-            }
-        
-            .circular-progress-bg {
-                fill: none;
-                stroke: #e6e6e6;
-                stroke-width: 8;
-            }
-        
-            .circular-progress-bar {
-                fill: none;
-                stroke: #007bff;
-                stroke-width: 8;
-                stroke-linecap: round;
-                transition: stroke-dashoffset 0.3s ease;
-            }
-        
-            .progress-icon {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        
-            .pause-icon {
-                width: var(--progress-icon-size);
-                height: var(--progress-icon-size);
-                background-color: #007bff;
-                border-radius: calc(var(--progress-icon-size) * 0.125);
-            }
-        
-            .play-icon {
-                width: calc(var(--progress-icon-size) * 1.4);
-                height: calc(var(--progress-icon-size) * 1.4);
-                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 2v20c0 .83.84 1.37 1.55.98l15-10c.68-.49.68-1.47 0-1.96l-15-10C5.84 .63 5 1.17 5 2z" stroke-linejoin="round" fill="%23007bff"/></svg>');
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position: center;
-            }
-        </style>
         <title>KBS3 Back-Office</title>
         <link rel="icon" href="favicon.svg" type="image/svg+xml"></link>
         <meta name="description" content="KBS3 Back-Office application"></meta>
@@ -89,107 +19,126 @@
         <link href="https://fonts.googleapis.com/css2?family=Vollkorn+SC:wght@400;600;700;900&amp;display=swap" rel="stylesheet"></link>
         <link rel="stylesheet" type="text/css" href="./dev/webfx/kit/perfectscrollbar/perfect-scrollbar.css"></link>
         <link rel="stylesheet" href="./dev/webfx/kit/css/main.css?v=${maven.build.timestamp}"></link>
+        <style>
+            /*********************************************
+            *** Page loading spinner (Material Design) ***
+            *********************************************/
 
+            #loadingSpinner {
+                position: fixed;
+                width: 100%;
+                height: 90%;
+                z-index: 100;
+                pointer-events: none;
+            }
+
+            #loadingSpinner, #loadingSpinner tr, #loadingSpinner td {
+                border: none;
+                background: transparent;
+            }
+
+            .loader {
+                position: relative;
+                margin: 0 auto;
+                width: 100px;
+            }
+
+            .loader:before {
+                content: '';
+                display: block;
+                padding-top: 100%;
+            }
+
+            .circular {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                animation: rotate 2s linear infinite;
+                transform-origin: center center;
+            }
+
+            .path {
+                stroke-dasharray: 1, 200;
+                stroke-dashoffset: 0;
+                animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+                stroke-linecap: round;
+            }
+
+            @keyframes rotate {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes dash {
+                0% {
+                    stroke-dasharray: 1, 200;
+                    stroke-dashoffset: 0;
+                }
+                50% {
+                    stroke-dasharray: 89, 200;
+                    stroke-dashoffset: -35px;
+                }
+                100% {
+                    stroke-dasharray: 89, 200;
+                    stroke-dashoffset: -124px;
+                }
+            }
+
+            @keyframes color {
+                100%,
+                0% {
+                    stroke: #d62d20;
+                }
+                40% {
+                    stroke: #0057e7;
+                }
+                66% {
+                    stroke: #008744;
+                }
+                80%,
+                90% {
+                    stroke: #ffa700;
+                }
+            }
+        </style>
     </head>
     <body>
-         <div id="pwa-progress-bar-container">
-             <div class="circular-progress">
-                 <svg id="progress-svg">
-                     <circle class="circular-progress-bg" id="progress-bg"></circle>
-                     <circle id="pwa-progress-bar" class="circular-progress-bar"></circle>
-                 </svg>
-                 <div class="progress-icon">
-                     <div id="progress-icon-inner" class="pause-icon"></div>
-                 </div>
-             </div>
-         </div>
-        
-         <script>
-             function loadGwtApp() {
-                 console.log('Injecting application script...');
-                 var script = document.createElement('script');
-                 script.src = "./kbs_backoffice_application_gwt.nocache.js";
-                 document.body.appendChild(script);
-             }
-             if ('serviceWorker' in navigator) {
-                 navigator.serviceWorker.register('pwa-service-worker.js');
-                 var isCriticalDone = false; // Don't use `let` declaration otherwise it might be unaccessible in closures on older Safari/WebKit versions on iOS
-        
-                 // Initialize circular progress bar using CSS variable
-                 const radiusValue = getComputedStyle(document.documentElement).getPropertyValue('--progress-circle-radius').trim();
-                 const radius = parseFloat(radiusValue);
-                 const circumference = 2 * Math.PI * radius;
-                 const center = radius + 8; // radius + half stroke width
-        
-                 const bgCircle = document.getElementById('progress-bg');
-                 const bar = document.getElementById('pwa-progress-bar');
-        
-                 if (bgCircle) {
-                     bgCircle.setAttribute('cx', center);
-                     bgCircle.setAttribute('cy', center);
-                     bgCircle.setAttribute('r', radius);
-                 }
-        
-                 if (bar) {
-                     bar.setAttribute('cx', center);
-                     bar.setAttribute('cy', center);
-                     bar.setAttribute('r', radius);
-                     bar.style.strokeDasharray = circumference;
-                     bar.style.strokeDashoffset = circumference;
-                 }
-        
-                 function checkLaunch() {
-                     if (isCriticalDone && navigator.serviceWorker.controller) {
-                         loadGwtApp();
-                     }
-                 }
-                 navigator.serviceWorker.addEventListener('message', event => {
-                     if (event.data) {
-                         if (event.data.type === 'loading_progress') {
-                             const percent = Math.round((event.data.current / event.data.total) * 100);
-                             const container = document.getElementById('pwa-progress-bar-container');
-                             const bar = document.getElementById('pwa-progress-bar');
-                             const icon = document.getElementById('progress-icon-inner');
-                             if (container && bar) {
-                                 if (!event.data.completed && percent < 100) {
-                                     container.style.display = 'block';
-                                     bar.style.strokeDashoffset = circumference - (percent / 100) * circumference;
-                                     if (icon) {
-                                         icon.className = 'pause-icon';
-                                     }
-                                 }
-                                 if (event.data.completed || percent >= 100) {
-                                     bar.style.strokeDashoffset = 0;
-                                     if (icon) {
-                                         icon.className = 'play-icon';
-                                     }
-                                     setTimeout(() => container.style.display = 'none', 800);
-                                 }
-                             }
-                             if (event.data.criticalCompleted && !isCriticalDone) {
-                                 isCriticalDone = true;
-                                 checkLaunch();
-                             }
-                         } else if (event.data.type === 'status') {
-                             if (event.data.criticalCompleted && !isCriticalDone) {
-                                 isCriticalDone = true;
-                                 checkLaunch();
-                             }
-                         }
-                     }
-                 });
-                 if (navigator.serviceWorker.controller) {
-                     navigator.serviceWorker.controller.postMessage({ type: 'check_status' });
-                 } else {
-                     navigator.serviceWorker.addEventListener('controllerchange', () => {
-                         navigator.serviceWorker.controller.postMessage({ type: 'check_status' });
-                     });
-                 }
-             } else {
-                 loadGwtApp();
-             }
-         </script>
+    <table id="loadingSpinner">
+        <tr>
+            <td style="text-align: center; vertical-align: middle;">
+                <div class="loader">
+                    <svg class="circular">
+                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+                    </svg>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script>
+            async function unregisterPwaServiceWorker() {
+                if (navigator.serviceWorker) {
+                    navigator.serviceWorker.getRegistrations()
+                        .then(registrations => {
+                            registrations.forEach((registration, i) => registration.unregister());
+                            return null;
+                        });
+                    const cache = await caches.open("webfx-pwa-cache")
+                    const keys = await cache.keys();
+                    await Promise.all(keys.map(async (req) => {
+                        await cache.delete(req);
+                    }));
+                }
+            }
+            unregisterPwaServiceWorker();
+        </script>
         <script type="text/javascript" charset="utf-8" src="./emul/java/util/regex/xregexp.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./kbs_backoffice_application_gwt.nocache.js"></script>
         <script type="text/javascript" charset="utf-8" src="./dev/webfx/kit/perfectscrollbar/perfect-scrollbar.min.js"></script>
 
     </body>

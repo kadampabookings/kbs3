@@ -51,6 +51,8 @@ import one.modality.event.client.mediaview.VideoView;
 
 import java.time.LocalDateTime;
 
+import static org.kadampabookings.kbs.frontoffice.activities.news.NewsCssSelectors.*;
+
 final class NewsActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin, ModalityButtonFactoryMixin {
 
     private static final int INITIAL_LIMIT = 5;
@@ -126,7 +128,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
 
         topicProperty.bind(topicButtonSelector.selectedItemProperty());
 
-        searchBar.getStyleClass().setAll("searchbar");
+        searchBar.getStyleClass().setAll(searchbar);
         searchBar.setAlignment(Pos.CENTER);
         searchBar.setMinWidth(200);
         searchBar.setMaxWidth(500);
@@ -178,7 +180,7 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
         pageContainer.setOnSwipeLeft(e -> videosSwitch.setSelected(true));  // finger right to left = videos request (as videos are on the right)
         pageContainer.setOnSwipeRight(e -> videosSwitch.setSelected(false)); // finger left to right = news request (as news are on the left)
 
-        pageContainer.getStyleClass().add("news-activity"); // for CSS styling
+        pageContainer.getStyleClass().add(news_activity); // for CSS styling
 
         newsFeed.addListener((InvalidationListener) observable -> {
             lastLoadedNews = Collections.last(newsFeed);
@@ -245,14 +247,14 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             .always( // language=JSON5
                 "{class: 'News', fields: 'channel, channelNewsId, date, title, excerpt, imageUrl, linkUrl', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().not().and(activeProperty()))
-            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(DqlStatement.limit("?", INITIAL_LIMIT))
+            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = $1", lang))
+            .always(DqlStatement.limit("$1", INITIAL_LIMIT))
             .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> {
                 String searchLike = "%" + searchText.toLowerCase() + "%";
-                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+                return DqlStatement.where("lower(title) like $1 or lower(excerpt) like $1", searchLike);
             })
-            .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=?", topic))
-            .ifNotNull(loadNewsBeforeDateProperty, date -> DqlStatement.where("date < ?", date))
+            .ifNotNull(topicProperty, topic -> DqlStatement.where("topic=$1", topic))
+            .ifNotNull(loadNewsBeforeDateProperty, date -> DqlStatement.where("date < $1", date))
             .storeEntitiesInto(newsFeed)
             //.setResultCacheEntry("kbs/news/news")
             .start();
@@ -262,18 +264,18 @@ final class NewsActivity extends ViewDomainActivityBase implements OperationActi
             .always( // language=JSON5
                 "{class: 'Video', fields: 'date, title, excerpt, imageUrl, wistiaVideoId, durationMillis, width, height', orderBy: 'date desc, id desc'}")
             .bindActivePropertyTo(videosSwitch.selectedProperty().and(activeProperty()))
-            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
-            .always(DqlStatement.limit("?", INITIAL_LIMIT))
+            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = $1", lang))
+            .always(DqlStatement.limit("$1", INITIAL_LIMIT))
             .ifTrimNotEmpty(searchTextField.textProperty(), searchText -> {
                 String searchLike = "%" + searchText.toLowerCase() + "%";
-                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+                return DqlStatement.where("lower(title) like $1 or lower(excerpt) like $1", searchLike);
             })
             .always(DqlStatement.where("playlist == null && teacher == null"))
             .ifNotNull(topicProperty, topic -> {
                 String searchLike = "%" + topic.getName().toLowerCase() + "%";
-                return DqlStatement.where("lower(title) like ? or lower(excerpt) like ?", searchLike, searchLike);
+                return DqlStatement.where("lower(title) like $1 or lower(excerpt) like $1", searchLike);
             })
-            .ifNotNull(latestLoadedVideoProperty, video -> DqlStatement.where("date < ?", video.getDate()))
+            .ifNotNull(latestLoadedVideoProperty, video -> DqlStatement.where("date < $1", video.getDate()))
             .storeEntitiesInto(videosFeed)
             //.setResultCacheEntry("kbs/news/videos")
             .start();

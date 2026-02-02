@@ -80,9 +80,9 @@ public class PodcastsImportJob implements ApplicationJob {
         String fetchUrl = PODCAST_FETCH_URL + "?order=asc&after=" + Times.formatIso(latestPodcastDateTime);
         JsonFetch.fetchJsonArray(fetchUrl)
                 .onFailure(error -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while fetching " + fetchUrl, error))
-                // Fetching the latest podcasts from the database in order to determine those that are not yet imported
+                // Fetching the latest podcasts from the database to determine those that are not yet imported
                 .onSuccess(webPodcastsJsonArray -> EntityStore.create().<Podcast>executeQuery(
-                                "select channelPodcastId from Podcast where date >= ? order by date limit ?", latestPodcastDateTime, webPodcastsJsonArray.size()
+                                "select channelPodcastId from Podcast where date >= $1 order by date limit $2", latestPodcastDateTime, webPodcastsJsonArray.size()
                         )
                         .onFailure(e -> Console.log("[PODCASTS_IMPORT] ⛔️️ Error while reading podcasts from database", e))
                         .onSuccess(dbPodcasts -> {

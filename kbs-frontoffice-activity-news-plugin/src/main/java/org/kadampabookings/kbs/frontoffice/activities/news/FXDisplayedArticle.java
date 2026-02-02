@@ -28,7 +28,7 @@ public final class FXDisplayedArticle {
             else {
                 // Otherwise, we request the server to load that organization from that id
                 EntityStore.create()
-                    .<News>executeQuery("select linkUrl from News where id=?", articleId)
+                    .<News>executeQuery("select linkUrl from News where id=$1", articleId)
                     .onFailure(Console::log)
                     .onSuccess(list -> // on successfully receiving the list (should be a singleton list)
                         setDisplayedArticle(list.isEmpty() ? null : list.get(0))); // we finally set FXOrganization

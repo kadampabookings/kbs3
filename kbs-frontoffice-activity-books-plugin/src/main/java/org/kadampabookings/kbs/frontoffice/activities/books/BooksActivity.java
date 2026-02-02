@@ -98,7 +98,7 @@ final class BooksActivity extends ViewDomainActivityBase implements OperationAct
             .always( // language=JSON5
                 "{class: 'Book', fields: 'title, description, imageUrl, freeUrl, orderUrl', orderBy: 'id'}")
             .bindActivePropertyTo(showVideosProperty.not().and(activeProperty()))
-            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = ?", lang))
+            .always(I18n.languageProperty(), lang -> DqlStatement.where("lang = $1", lang))
             .setIndividualEntityToObjectMapperFactory(IndividualEntityToObjectMapper.factory(() -> new BookView(this::showVideos), BookView::setBook, BookView::getView))
             .storeMappedObjectsInto(booksContainer.getChildren())
             .setResultCacheEntry("kbs/books/books")

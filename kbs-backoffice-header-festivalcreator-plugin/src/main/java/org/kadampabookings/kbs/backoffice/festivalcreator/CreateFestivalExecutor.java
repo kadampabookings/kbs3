@@ -36,6 +36,8 @@ import one.modality.event.backoffice.eventcreator.EventCreator;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 import org.kadampabookings.kbs.client.festivaltypes.FestivalType;
 
+import static org.kadampabookings.kbs.backoffice.festivalcreator.FestivalCreatorCssSelectors.*;
+
 /**
  * @author Bruno Salmon
  */
@@ -72,7 +74,7 @@ final class CreateFestivalExecutor {
             new ScalePane(buttonBar)
         );
         container.spacingProperty().bind(container.heightProperty().multiply(0.1)); // multiply not yet supported by webfx
-        container.getStyleClass().add("event-creator-dialog");
+        container.getStyleClass().add(event_creator_dialog);
         container.setMaxWidth(700);
 
         // Pre-computing the most probable Festival start date from the festival type selected by the user
@@ -104,10 +106,9 @@ final class CreateFestivalExecutor {
             if (validationSupport.isValid()) {
                 FestivalType festivalType = getSelectedFestivalType();
                 int year = startDateField.getDate().getYear();
-                // For now (2025) we do only Online Festivals with KBS3 (in 2026 the same event will be for both in-person & online)
-                String eventName = I18n.getI18nText("[{0}] Festival {1} Online", festivalType.getShortI18nKey(), year);
+                String eventName = I18n.getI18nText("[{0}] Festival {1}", festivalType.getShortI18nKey(), year);
                 UpdateStore updateStore = UpdateStore.create();
-                Site venue = EventCreator.insertNewVenue("Online", true, updateStore);
+                Site venue = updateStore.createEntity(Site.class, 1671); // MKMC main site (temporary hardcoded for Spring & Summer) //EventCreator.insertNewVenue("Online", true, updateStore);
                 AsyncSpinner.displayButtonSpinnerDuringAsyncExecution(
                     EventCreator.createEvent(eventName, festivalType.getTypeId(), venue, startDateField.getDate(), endDateField.getDate(), updateStore)
                         .onSuccess(v -> {

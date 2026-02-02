@@ -29,6 +29,8 @@ import javafx.scene.paint.Color;
 import one.modality.base.client.icons.SvgIcons;
 import one.modality.crm.client.activities.login.LoginActivity;
 
+import static org.kadampabookings.kbs.frontoffice.activities.login.KbsFrontOfficeLoginCssSelectors.*;
+
 /**
  * @author Bruno Salmon
  */
@@ -81,7 +83,7 @@ final class KbsFrontOfficeLoginActivity extends ViewDomainActivityBase {
                 showVideo(false);
         });
 
-        stackPane.getStyleClass().setAll("kbs-main-login");
+        stackPane.getStyleClass().setAll(kbs_main_login);
 
         return stackPane;
     }

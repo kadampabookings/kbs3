@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
 import one.modality.base.frontoffice.utility.page.FOPageUtil;
 import org.kadampabookings.kbs.client.festivaltypes.FXFestivals;
 
+import static org.kadampabookings.kbs.frontoffice.activities.home.FrontOfficeHomeCssSelectors.*;
+
 final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements OperationActionFactoryMixin {
 
     @Override
@@ -23,7 +25,7 @@ final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements Op
     @Override
     public Node buildUi() {
         Text festivalsHeaderLabel = I18n.newText(FrontOfficeHomeI18nKeys.FestivalsHeader);
-        festivalsHeaderLabel.getStyleClass().setAll("festivals-header");
+        festivalsHeaderLabel.getStyleClass().setAll(festivals_header);
 
         ColumnsPane festivalColumnsPane = new ColumnsPane(40, 40);
         festivalColumnsPane.setMinColumnWidth(250);
@@ -32,7 +34,7 @@ final class FrontOfficeHomeActivity extends ViewDomainActivityBase implements Op
             new ScalePane(new FestivalThumbnail(festival).getView()));
 
         /*Hyperlink moreEventsLabel = I18nControls.newHyperlink(FrontOfficeHomeI18nKeys.MoreEvents);
-        moreEventsLabel.getStyleClass().setAll("more-events");*/
+        moreEventsLabel.getStyleClass().setAll(FrontOfficeHomeCssSelectors.more_events);*/
 
         VBox festivalsBox = FOPageUtil.restrictToMaxPageWidthAndApplyPageLeftRightPadding(new VBox(64,
             new ScalePane(festivalsHeaderLabel)
