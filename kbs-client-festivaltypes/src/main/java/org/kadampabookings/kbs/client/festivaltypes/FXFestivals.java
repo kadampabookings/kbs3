@@ -109,7 +109,7 @@ public final class FXFestivals {
                 new EntityStoreQuery(select, FestivalType.SPRING_FESTIVAL.getTypeId(), nextYear),
                 new EntityStoreQuery(select, FestivalType.SUMMER_FESTIVAL.getTypeId(), nextYear),
                 new EntityStoreQuery(select, FestivalType.FALL_FESTIVAL.getTypeId(), nextYear))
-            .onFailure(Console::log)
+            .onFailure(Console::error)
             .inUiThread()
             .onCacheAndOrSuccess(festivalsLists -> {
                 LAST_SPRING_FESTIVAL_PROPERTY.set((Event) Collections.get(festivalsLists[0], 0)); // Spring Festival

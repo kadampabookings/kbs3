@@ -65,7 +65,7 @@ public class NewsImportJob implements ApplicationJob {
             importLangNews(LANGUAGES[0]);
         } else {
             EntityStore.create().<Topic>executeQuery("select id,channelTopicId from Topic where channelTopicId!=null")
-                .onFailure(error -> Console.log("[NEWS_IMPORT] Error while reading news topics", error))
+                .onFailure(error -> Console.error("[NEWS_IMPORT] Error while reading news topics", error))
                 .onSuccess(dbNewsTopics -> {
                     newsTopics = dbNewsTopics;
                     importNews();
@@ -78,7 +78,7 @@ public class NewsImportJob implements ApplicationJob {
         // imported so far in the database.
         if (latestNewsDateTime == null) {
             EntityStore.create().<News>executeQuery("select date from News where lang=$1 order by date desc limit $2", lang, Math.max(RECHECK_LATEST_DB_NEWS_UPDATES_COUNT, 1))
-                .onFailure(error -> Console.log("[NEWS_IMPORT] ⛔️️ Error while reading latest news", error))
+                .onFailure(error -> Console.error("[NEWS_IMPORT] ⛔️️ Error while reading latest news", error))
                 .onSuccess(news -> {
                     News lastestNews = Collections.last(news);
                     if (lastestNews == null) { // Means that there is no news in the database
@@ -97,10 +97,10 @@ public class NewsImportJob implements ApplicationJob {
         String fetchUrl = NEWS_FETCH_URL + "?lang=" + lang + "&order=asc&after=" + Times.formatIso(latestNewsDateTime);
         //Console.log("[NEWS_IMPORT] Fetching " + fetchUrl);
         JsonFetch.fetchJsonArray(fetchUrl)
-            .onFailure(error -> Console.log("[NEWS_IMPORT] ⛔️️ Error while fetching " + fetchUrl, error))
+            .onFailure(error -> Console.error("[NEWS_IMPORT] ⛔️️ Error while fetching " + fetchUrl, error))
             .onSuccess(webNewsJsonArray -> EntityStore.create().<News>executeQuery(
                     "select channelNewsId from News where channelNewsId in (" + getIds(webNewsJsonArray) + ")")
-                .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while reading news from database", e))
+                .onFailure(e -> Console.error("[NEWS_IMPORT] ⛔️️ Error while reading news from database", e))
                 .onSuccess(dbNews -> {
 
                     // Checking if there are new news to import from the website, and collecting their media ids (will need to be fetched)
@@ -131,7 +131,7 @@ public class NewsImportJob implements ApplicationJob {
                     // Executing all individual media fetches in parallel
                     mediaIdsInputBatch.executeParallel(ReadOnlyAstObject[]::new, mediaId ->
                             mediaId == null ? Future.succeededFuture(null) : JsonFetch.fetchJsonObject(MEDIA_FETCH_URL + "/" + mediaId))
-                        .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while fetching news medias", e))
+                        .onFailure(e -> Console.error("[NEWS_IMPORT] ⛔️️ Error while fetching news medias", e))
                         .onSuccess(webMediasJsonBatch -> {
 
                             // Preparing the update store for the database submit
@@ -182,7 +182,7 @@ public class NewsImportJob implements ApplicationJob {
                             LocalDateTime finalMaxNewsDateTime = maxNewsDateTime;
 
                             updateStore.submitChanges()
-                                .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while inserting news in database", e))
+                                .onFailure(e -> Console.error("[NEWS_IMPORT] ⛔️️ Error while inserting news in database", e))
                                 .onSuccess(result -> {
                                     int newNewsCount = result.getRowCount();
                                     latestNewsDateTime = finalMaxNewsDateTime;
@@ -199,11 +199,11 @@ public class NewsImportJob implements ApplicationJob {
                                                         News news = updateStore2.updateEntity(EntityId.create(News.class, newsPrimaryKey));
                                                         news.setFieldValue("withVideos", true);
                                                         updateStore2.submitChanges()
-                                                            .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while updating news withVideo", e))
+                                                            .onFailure(e -> Console.error("[NEWS_IMPORT] ⛔️️ Error while updating news withVideo", e))
                                                             .onSuccess(ignored -> Console.log("[NEWS_IMPORT] News " + newsPrimaryKey + " withVideos updated"));
                                                     }
                                                 }))
-                                        .onFailure(e -> Console.log("[NEWS_IMPORT] ⛔️️ Error while updating news withVideo", e))
+                                        .onFailure(e -> Console.error("[NEWS_IMPORT] ⛔️️ Error while updating news withVideo", e))
                                         .onSuccess(v -> importLangNews(lang));
                                 });
                         });
