@@ -1,6 +1,7 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment;
 
 import dev.webfx.stack.orm.entity.Entities;
+import one.modality.base.shared.entities.AttendanceMode;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
@@ -28,6 +29,11 @@ public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFo
     @Override
     public int getPriority() {
         return APP_PRIORITY;
+    }
+
+    @Override
+    public AttendanceMode getAttendanceMode(Event event) {
+        return AttendanceMode.ONLINE;  // Online empowerment is always online
     }
 
     @Override
