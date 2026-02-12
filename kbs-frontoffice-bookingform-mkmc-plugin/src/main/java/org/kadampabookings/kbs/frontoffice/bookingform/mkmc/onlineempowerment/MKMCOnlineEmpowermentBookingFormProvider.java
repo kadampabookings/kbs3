@@ -1,14 +1,15 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment;
 
 import dev.webfx.stack.orm.entity.Entities;
+import one.modality.base.shared.entities.AttendanceMode;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
 import one.modality.booking.frontoffice.bookingform.BookingFormEntryPoint;
 import one.modality.booking.frontoffice.bookingform.BookingFormProvider;
+import one.modality.booking.frontoffice.bookingpage.standard.DefaultInPersonBookingForm;
+import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettingsBuilder;
-import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.modification.BookingModificationForm;
-import org.kadampabookings.kbs.frontoffice.bookingform.mkmc.modification.BookingModificationFormAdapter;
 
 /**
  * Provider for MKMC Online Empowerment booking forms.
@@ -31,11 +32,25 @@ public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFo
     }
 
     @Override
+    public AttendanceMode getAttendanceMode(Event event) {
+        return AttendanceMode.ONLINE;  // Online empowerment is always online
+    }
+
+    @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity, BookingFormEntryPoint entryPoint) {
         if (entryPoint == BookingFormEntryPoint.MODIFY_BOOKING) {
-            // Create modification form for adding options to existing booking
-            BookingModificationForm modificationForm = BookingModificationForm.create(activity.getWorkingBookingProperties());
-            return new BookingModificationFormAdapter(modificationForm);
+            // TODO: Re-enable BookingModificationForm once audio recording modification is working correctly.
+            //  Was: BookingModificationForm.create(activity.getWorkingBookingProperties()) wrapped in BookingModificationFormAdapter.
+            return new DefaultInPersonBookingForm(
+                activity,
+                new EventBookingFormSettingsBuilder(event)
+                    .setHeaderMaxTopBottomPadding(62)
+                    .setShowNavigationBar(true)
+                    .setShowPriceBar(false)
+                    .build(),
+                entryPoint,
+                BookingFormColorScheme.JOY_AMBER
+            ).getForm();
         }
 
         // Default: create new booking form (or handle payment return)

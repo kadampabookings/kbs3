@@ -15,7 +15,6 @@ import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm
 import one.modality.crm.shared.services.authn.fx.FXUserPerson;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormBuilder;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormCallbacks;
-import one.modality.booking.frontoffice.bookingpage.theme.BookingFormColorScheme;
 import one.modality.event.frontoffice.activities.book.event.EventBookingFormSettings;
 
 /**
@@ -72,7 +71,6 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
         // Build the form - all generic logic is handled by StandardBookingForm
         // STTP is simpler than GP: no date selection, no rate selection, no existing booking section
         StandardBookingFormBuilder builder = new StandardBookingFormBuilder(activity, settings)
-            .withColorScheme(BookingFormColorScheme.PEACE_PURPLE)  // Applied as CSS theme class
             .withShowUserBadge(true)                     // Show user badge in header
             .withCardPaymentOnly(true)                   // STTP only accepts card payment
             .withEntryPoint(entryPoint)                  // Handle payment resume/modification entry points
@@ -200,7 +198,6 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
 
         // Your Information - login/registration form
         yourInformationSection = new DefaultYourInformationSection();
-        yourInformationSection.setColorScheme(BookingFormColorScheme.PEACE_PURPLE);
         // Force account creation - STTP is an online program requiring login for course materials
         yourInformationSection.setForceAccountCreation(true);
         // Hide back button - when not logged in, Your Information is the first step
@@ -236,7 +233,6 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
 
         // Member Selection - displays household members for selection
         memberSelectionSection = new DefaultMemberSelectionSection();
-        memberSelectionSection.setColorScheme(BookingFormColorScheme.PEACE_PURPLE);
         // Hide back button - when logged in, Member Selection is the first step
         memberSelectionSection.setBackButtonVisible(false);
 

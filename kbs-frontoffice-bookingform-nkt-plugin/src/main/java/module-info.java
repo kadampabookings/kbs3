@@ -14,9 +14,10 @@ module kbs.frontoffice.bookingform.nkt.plugin {
     requires webfx.stack.orm.entity;
 
     // Exported packages
+    exports org.kadampabookings.kbs.frontoffice.bookingform.nkt.festivals;
     exports org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp;
 
     // Provided services
-    provides one.modality.booking.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPBookingFormProvider;
+    provides one.modality.booking.frontoffice.bookingform.BookingFormProvider with org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPBookingFormProvider, org.kadampabookings.kbs.frontoffice.bookingform.nkt.festivals.SpringFestivalBookingFormProvider;
 
 }

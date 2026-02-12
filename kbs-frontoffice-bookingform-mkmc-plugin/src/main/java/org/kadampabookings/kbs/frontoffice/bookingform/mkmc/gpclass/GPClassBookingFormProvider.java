@@ -31,6 +31,11 @@ public final class GPClassBookingFormProvider implements BookingFormProvider {
     }
 
     @Override
+    public boolean autoLoadExistingBooking(Event event) {
+        return true;
+    }
+
+    @Override
     public BookingForm createBookingForm(Event event, HasWorkingBookingProperties activity, BookingFormEntryPoint entryPoint) {
         return new GPClassBookingForm(activity,
             new EventBookingFormSettingsBuilder(event)

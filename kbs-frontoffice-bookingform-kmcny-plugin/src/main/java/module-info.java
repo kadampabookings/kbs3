@@ -3,7 +3,6 @@
 module kbs.frontoffice.bookingform.kmcny.plugin {
 
     // Direct dependencies modules
-    requires javafx.controls;
     requires javafx.graphics;
     requires modality.base.shared.entities;
     requires modality.booking.client.workingbooking;
@@ -11,7 +10,6 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires modality.booking.frontoffice.bookingpage;
     requires modality.ecommerce.shared.pricecalculator;
     requires modality.event.frontoffice.activity.book;
-    requires webfx.extras.i18n.controls;
     requires webfx.stack.orm.entity;
 
     // Exported packages

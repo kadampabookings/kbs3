@@ -8,7 +8,7 @@ import one.modality.booking.frontoffice.bookingpage.sections.existing.DefaultExi
 import one.modality.booking.frontoffice.bookingpage.sections.existing.HasExistingBookingSection;
 import one.modality.booking.frontoffice.bookingpage.sections.generalprogram.DefaultClassDateSelectionSection;
 import one.modality.booking.frontoffice.bookingpage.sections.generalprogram.DefaultGeneralProgramSummarySection;
-import one.modality.booking.frontoffice.bookingpage.sections.options.DefaultRateSection;
+import one.modality.booking.frontoffice.bookingpage.sections.options.GPClassRateTypeSection;
 import one.modality.booking.frontoffice.bookingpage.sections.options.HasRateTypeSection;
 import one.modality.booking.frontoffice.bookingpage.sections.summary.HasSummarySection;
 import one.modality.booking.frontoffice.bookingpage.standard.AbstractGeneralProgramClassBookingForm;
@@ -54,7 +54,7 @@ public final class GPClassBookingForm extends AbstractGeneralProgramClassBooking
 
     @Override
     protected HasRateTypeSection createRateSection() {
-        return new DefaultRateSection();
+        return new GPClassRateTypeSection();
     }
 
     @Override

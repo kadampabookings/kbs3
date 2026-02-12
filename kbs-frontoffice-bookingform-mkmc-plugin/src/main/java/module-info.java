@@ -3,16 +3,12 @@
 module kbs.frontoffice.bookingform.mkmc.plugin {
 
     // Direct dependencies modules
-    requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires modality.base.client.i18n;
     requires modality.base.shared.entities;
-    requires modality.base.shared.knownitems;
     requires modality.booking.client.workingbooking;
     requires modality.booking.frontoffice.bookingform;
     requires modality.booking.frontoffice.bookingpage;
-    requires modality.ecommerce.policy.service;
     requires modality.event.frontoffice.activity.book;
     requires webfx.extras.i18n.controls;
     requires webfx.extras.webtext;

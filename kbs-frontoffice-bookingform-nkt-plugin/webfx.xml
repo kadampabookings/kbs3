@@ -15,6 +15,8 @@
     <providers>
         <!-- STTP -->
         <provider interface="one.modality.booking.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp.STTPBookingFormProvider</provider>
+        <provider interface="one.modality.booking.frontoffice.bookingform.BookingFormProvider">org.kadampabookings.kbs.frontoffice.bookingform.nkt.festivals.SpringFestivalBookingFormProvider</provider>
+
     </providers>
 
     <java-ui-api package="org.kadampabookings.kbs.frontoffice.bookingform.nkt.sttp" prefix="STTP">
