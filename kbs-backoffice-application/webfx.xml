@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project applicationId="org.kadampabookings.kbs.backoffice" applicationLabel="KBS" pwa="true">
+<project applicationId="org.kadampabookings.kbs.backoffice" applicationLabel="KBS" pwa="false">
 
     <description>The KBS Back-Office application (cross-platform non-executable module).</description>
 
