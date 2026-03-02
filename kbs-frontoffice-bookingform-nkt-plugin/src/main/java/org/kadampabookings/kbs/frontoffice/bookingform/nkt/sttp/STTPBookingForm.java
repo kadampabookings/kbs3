@@ -10,7 +10,7 @@ import one.modality.booking.frontoffice.bookingpage.CompositeBookingFormPage;
 import one.modality.booking.frontoffice.bookingpage.sections.summary.DefaultEventHeaderSection;
 import one.modality.booking.frontoffice.bookingpage.sections.member.DefaultMemberSelectionSection;
 import one.modality.booking.frontoffice.bookingpage.sections.user.DefaultYourInformationSection;
-import one.modality.booking.frontoffice.bookingpage.standard.HouseholdMemberLoader;
+import one.modality.booking.frontoffice.bookingpage.standard.AccountMemberLoader;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingForm;
 import one.modality.crm.shared.services.authn.fx.FXUserPerson;
 import one.modality.booking.frontoffice.bookingpage.standard.StandardBookingFormBuilder;
@@ -37,7 +37,7 @@ import one.modality.event.frontoffice.activities.book.event.EventBookingFormSett
  *   <li>Confirmation</li>
  * </ol>
  *
- * <p>Household member booking is handled in the Member Selection section.
+ * <p>Account member booking is handled in the Member Selection section.
  * Members already booked for the event are shown as "Already Booked" and cannot be selected again.</p>
  *
  * @author Claude
@@ -119,7 +119,7 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
     }
 
     /**
-     * Loads household members if the user is already logged in.
+     * Loads account members if the user is already logged in.
      * Called at construction time because onAfterLogin() won't be triggered
      * if the user was already authenticated before opening the form.
      */
@@ -127,8 +127,8 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
         Person person = FXUserPerson.getUserPerson();
         Console.log("STTPBookingForm.loadMembersIfLoggedIn() - person: " + (person != null ? person.getFullName() : "null"));
         if (person != null && memberSelectionSection != null) {
-            Console.log("  Loading household members at construction time...");
-            HouseholdMemberLoader.loadMembersAsync(person, memberSelectionSection, settings.event());
+            Console.log("  Loading account members at construction time...");
+            AccountMemberLoader.loadMembersAsync(person, memberSelectionSection, settings.event());
         }
     }
 
@@ -143,7 +143,7 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
         yourInformationSection.setOnLoginSuccess(person -> {
             // Update form state
             form.getState().setLoggedInPerson(person);
-            // Load household members (this also triggers onAfterLogin callback)
+            // Load account members (this also triggers onAfterLogin callback)
             onAfterLogin();
             // Navigate to member selection
             form.navigateToMemberSelection();
@@ -231,7 +231,7 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
         // Event Header - shows event name, dates, location, description, cover image
         memberSelectionEventHeaderSection = new DefaultEventHeaderSection();
 
-        // Member Selection - displays household members for selection
+        // Member Selection - displays account members for selection
         memberSelectionSection = new DefaultMemberSelectionSection();
         // Hide back button - when logged in, Member Selection is the first step
         memberSelectionSection.setBackButtonVisible(false);
@@ -259,7 +259,7 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
     // === StandardBookingFormCallbacks Implementation ===
 
     /**
-     * Called after user logs in. Loads household members into our custom member selection section.
+     * Called after user logs in. Loads account members into our custom member selection section.
      * This is needed because StandardBookingForm only loads members into its defaultMemberSelectionSection,
      * which is null when we provide a custom page via withMemberSelectionPageSupplier.
      */
@@ -267,7 +267,7 @@ public final class STTPBookingForm implements StandardBookingFormCallbacks {
     public void onAfterLogin() {
         Person person = FXUserPerson.getUserPerson();
          if (person != null && memberSelectionSection != null) {
-            HouseholdMemberLoader.loadMembersAsync(person, memberSelectionSection, settings.event());
+            AccountMemberLoader.loadMembersAsync(person, memberSelectionSection, settings.event());
         } else {
             Console.log("  SKIPPED loading - person or section is null");
         }
