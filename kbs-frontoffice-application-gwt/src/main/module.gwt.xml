@@ -970,6 +970,8 @@
     <!--======================< webfx-stack-orm-domainmodel-service >=======================-->
     <source path="dev/webfx/stack/orm/domainmodel/service"/>
     <source path="dev/webfx/stack/orm/domainmodel/service/spi"/>
+    <!--===================< webfx-stack-orm-domainmodel-service-loader >===================-->
+    <source path="dev/webfx/stack/orm/domainmodel/service/loader"/>
     <!--==============================< webfx-stack-orm-dql >===============================-->
     <source path="dev/webfx/stack/orm/dql"/>
     <source path="dev/webfx/stack/orm/dql/sqlcompiler"/>
@@ -981,6 +983,7 @@
     <source path="dev/webfx/stack/orm/dql/sqlcompiler/terms"/>
     <!--=====================< webfx-stack-orm-dql-query-interceptor >======================-->
     <source path="dev/webfx/stack/orm/dql/query/interceptor"/>
+    <source path="dev/webfx/stack/orm/dql/query/interceptor/serial"/>
     <!--===================< webfx-stack-orm-dql-querypush-interceptor >====================-->
     <source path="dev/webfx/stack/orm/dql/querypush/interceptor"/>
     <!--=====================< webfx-stack-orm-dql-submit-interceptor >=====================-->
