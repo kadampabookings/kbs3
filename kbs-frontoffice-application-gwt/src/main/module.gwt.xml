@@ -922,11 +922,12 @@
     <source path="dev/webfx/stack/db/query/spi/impl"/>
     <!--==========================< webfx-stack-db-query-buscall >==========================-->
     <source path="dev/webfx/stack/db/query/buscall"/>
-    <source path="dev/webfx/stack/db/query/buscall/serial"/>
-    <source path="dev/webfx/stack/db/query/buscall/serial/compression"/>
-    <source path="dev/webfx/stack/db/query/buscall/serial/compression/repeat"/>
     <!--==========================< webfx-stack-db-query-remote >===========================-->
     <source path="dev/webfx/stack/db/query/spi/impl/remote"/>
+    <!--==========================< webfx-stack-db-query-serial >===========================-->
+    <source path="dev/webfx/stack/db/query/serial"/>
+    <source path="dev/webfx/stack/db/query/serial/compression"/>
+    <source path="dev/webfx/stack/db/query/serial/compression/repeat"/>
     <!--============================< webfx-stack-db-querypush >============================-->
     <source path="dev/webfx/stack/db/querypush"/>
     <source path="dev/webfx/stack/db/querypush/diff"/>
