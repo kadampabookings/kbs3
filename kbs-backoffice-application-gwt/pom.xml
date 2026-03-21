@@ -438,6 +438,13 @@
 
         <dependency>
             <groupId>one.modality</groupId>
+            <artifactId>modality-booking-backoffice-bookingeditor-volunteer-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>one.modality</groupId>
             <artifactId>modality-booking-backoffice-operations-document</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>sources</classifier>

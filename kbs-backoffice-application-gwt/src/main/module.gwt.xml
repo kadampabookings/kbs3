@@ -291,6 +291,8 @@
     <source path="one/modality/booking/backoffice/bookingeditor/audiorecording"/>
     <!--===========< modality-booking-backoffice-bookingeditor-teaching-plugin >============-->
     <source path="one/modality/booking/backoffice/bookingeditor/teaching"/>
+    <!--===========< modality-booking-backoffice-bookingeditor-volunteer-plugin >===========-->
+    <source path="one/modality/booking/backoffice/bookingeditor/volunteer"/>
     <!--================< modality-booking-backoffice-operations-document >=================-->
     <source path="one/modality/booking/backoffice/operations/entities/document"/>
     <source path="one/modality/booking/backoffice/operations/entities/document/registration"/>
