@@ -164,12 +164,6 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-stack-orm-entity-message-serial</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.webfx</groupId>
             <artifactId>webfx-stack-push-server-simple</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
