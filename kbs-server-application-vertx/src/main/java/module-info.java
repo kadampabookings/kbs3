@@ -29,7 +29,6 @@ module kbs.server.application.vertx {
     requires webfx.stack.orm.dql.query.interceptor;
     requires webfx.stack.orm.dql.querypush.interceptor;
     requires webfx.stack.orm.dql.submit.interceptor;
-    requires webfx.stack.orm.entity.message.serial;
     requires webfx.stack.push.server.simple;
     requires webfx.stack.routing.router.vertx;
     requires webfx.stack.session.vertx;

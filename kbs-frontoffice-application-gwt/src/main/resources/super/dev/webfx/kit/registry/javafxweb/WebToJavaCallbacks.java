@@ -9,7 +9,18 @@ public class WebToJavaCallbacks {
 
     public static void bindCallbackMethods(Object javaInstance) {
         JsPropertyMap<Object> pm = Js.asPropertyMap(javaInstance);
-        if (javaInstance instanceof one.modality.ecommerce.payment.client.WebPaymentForm) {
+        if (javaInstance instanceof dev.webfx.extras.player.video.web.WebVideoPlayerBase) {
+            dev.webfx.extras.player.video.web.WebVideoPlayerBase castedInstance = (dev.webfx.extras.player.video.web.WebVideoPlayerBase) javaInstance;
+            registerClearFn(pm, "onReady", (JsVoidFn0Arg) castedInstance::onReady);
+            registerClearFn(pm, "onPlay", (JsVoidFn0Arg) castedInstance::onPlay);
+            registerClearFn(pm, "onPause", (JsVoidFn0Arg) castedInstance::onPause);
+            registerClearFn(pm, "onEnd", (JsVoidFn0Arg) castedInstance::onEnd);
+        } else if (javaInstance instanceof dev.webfx.extras.webview.pane.WebViewPane) {
+            dev.webfx.extras.webview.pane.WebViewPane castedInstance = (dev.webfx.extras.webview.pane.WebViewPane) javaInstance;
+            registerClearFn(pm, "consoleLog", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleLog);
+            registerClearFn(pm, "consoleWarn", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleWarn);
+            registerClearFn(pm, "consoleError", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleError);
+        } else if (javaInstance instanceof one.modality.ecommerce.payment.client.WebPaymentForm) {
             one.modality.ecommerce.payment.client.WebPaymentForm castedInstance = (one.modality.ecommerce.payment.client.WebPaymentForm) javaInstance;
             registerClearFn(pm, "onGatewayDebugStep", (JsVoidFn1Arg<java.lang.Object>) castedInstance::onGatewayDebugStep);
             registerClearFn(pm, "onGatewayInitSuccess", (JsVoidFn0Arg) castedInstance::onGatewayInitSuccess);
@@ -18,17 +29,6 @@ public class WebToJavaCallbacks {
             registerClearFn(pm, "onGatewayBuyerVerificationFailure", (JsVoidFn1Arg<java.lang.String>) castedInstance::onGatewayBuyerVerificationFailure);
             registerClearFn(pm, "onGatewayPaymentVerificationSuccess", (JsVoidFn1Arg<java.lang.String>) castedInstance::onGatewayPaymentVerificationSuccess);
             registerClearFn(pm, "pay", (JsVoidFn0Arg) castedInstance::pay);
-        } else if (javaInstance instanceof dev.webfx.extras.webview.pane.WebViewPane) {
-            dev.webfx.extras.webview.pane.WebViewPane castedInstance = (dev.webfx.extras.webview.pane.WebViewPane) javaInstance;
-            registerClearFn(pm, "consoleLog", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleLog);
-            registerClearFn(pm, "consoleWarn", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleWarn);
-            registerClearFn(pm, "consoleError", (JsVoidFn1Arg<java.lang.String>) castedInstance::consoleError);
-        } else if (javaInstance instanceof dev.webfx.extras.player.video.web.WebVideoPlayerBase) {
-            dev.webfx.extras.player.video.web.WebVideoPlayerBase castedInstance = (dev.webfx.extras.player.video.web.WebVideoPlayerBase) javaInstance;
-            registerClearFn(pm, "onReady", (JsVoidFn0Arg) castedInstance::onReady);
-            registerClearFn(pm, "onPlay", (JsVoidFn0Arg) castedInstance::onPlay);
-            registerClearFn(pm, "onPause", (JsVoidFn0Arg) castedInstance::onPause);
-            registerClearFn(pm, "onEnd", (JsVoidFn0Arg) castedInstance::onEnd);
         }
     }
 

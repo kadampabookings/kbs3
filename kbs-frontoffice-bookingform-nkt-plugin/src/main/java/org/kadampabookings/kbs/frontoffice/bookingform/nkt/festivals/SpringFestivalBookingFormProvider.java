@@ -1,6 +1,5 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.nkt.festivals;
 
-import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
 import one.modality.booking.frontoffice.bookingform.BookingForm;
@@ -31,33 +30,9 @@ import one.modality.event.frontoffice.activities.book.event.EventBookingFormSett
  */
 public class SpringFestivalBookingFormProvider implements BookingFormProvider {
 
-    // Event type ID for Spring Festival events
-    // This should match the event_type table in the database
-    private static final int SPRING_FESTIVAL_EVENT_TYPE_ID = 35;
-
     @Override
-    public boolean acceptEvent(Event event) {
-        if (event == null) {
-            return false;
-        }
-
-        // Check by event type ID
-        if (Entities.samePrimaryKey(event.getType(), SPRING_FESTIVAL_EVENT_TYPE_ID)) {
-            return true;
-        }
-
-        // Fallback: check by event name
-        String eventName = event.getName();
-        if (eventName != null && eventName.toLowerCase().contains("spring festival")) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public int getPriority() {
-        return APP_PRIORITY;
+    public String getBookingFormCode() {
+        return "spring-festival";
     }
 
     @Override

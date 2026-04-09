@@ -45,10 +45,12 @@ module kbs.backoffice.application.gluon {
     requires webfx.stack.com.bus.json.client.websocket.jre;
     requires webfx.stack.com.websocket.jre;
     requires webfx.stack.db.query.buscall;
+    requires webfx.stack.db.query.remote;
+    requires webfx.stack.db.query.serial;
     requires webfx.stack.db.querypush.buscall;
     requires webfx.stack.db.querypush.client.simple;
-    requires webfx.stack.db.querysubmit.jre.jdbc;
     requires webfx.stack.db.submit.buscall;
+    requires webfx.stack.db.submit.remote;
     requires webfx.stack.orm.dql.query.interceptor;
     requires webfx.stack.orm.dql.querypush.interceptor;
     requires webfx.stack.orm.dql.submit.interceptor;

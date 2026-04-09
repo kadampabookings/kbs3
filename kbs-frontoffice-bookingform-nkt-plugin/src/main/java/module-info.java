@@ -11,7 +11,6 @@ module kbs.frontoffice.bookingform.nkt.plugin {
     requires modality.crm.client.authn.fx;
     requires modality.event.frontoffice.activity.book;
     requires webfx.platform.console;
-    requires webfx.stack.orm.entity;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingform.nkt.festivals;

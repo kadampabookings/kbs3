@@ -10,7 +10,6 @@ module kbs.frontoffice.bookingform.kmcny.plugin {
     requires modality.booking.frontoffice.bookingpage;
     requires modality.ecommerce.shared.pricecalculator;
     requires modality.event.frontoffice.activity.book;
-    requires webfx.stack.orm.entity;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingform.kmcny;
