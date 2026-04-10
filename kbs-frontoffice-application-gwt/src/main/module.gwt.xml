@@ -524,6 +524,7 @@
     <source path="dev/webfx/extras/player/video/web/youtube"/>
     <!--============================< webfx-extras-responsive >=============================-->
     <source path="dev/webfx/extras/responsive"/>
+    <source path="dev/webfx/extras/responsive/impl"/>
     <!--=========================< webfx-extras-styles-bootstrap >==========================-->
     <source path="dev/webfx/extras/styles/bootstrap"/>
     <!--=======================< webfx-extras-styles-materialdesign >=======================-->
