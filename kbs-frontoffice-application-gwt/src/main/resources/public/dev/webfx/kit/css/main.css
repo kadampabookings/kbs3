@@ -433,6 +433,14 @@ iframe {
     border: none;
 }
 
+/*===== webfx-extras-transitionpane-web@main.css from webfx-extras-panes =====*/
+
+.transition-pane-dual-container {
+    --fx-translate-x: 0;
+
+    transform: translateX(var(--fx-translate-x));
+
+}
 /*===== webfx-extras-controls-web@main.css from webfx-extras-util-control =====*/
 
 :root {
@@ -1008,14 +1016,6 @@ iframe {
 }
 
 
-/*===== webfx-extras-transitionpane-web@main.css from webfx-extras-panes =====*/
-
-.transition-pane-dual-container {
-    --fx-translate-x: 0;
-
-    transform: translateX(var(--fx-translate-x));
-
-}
 /*===== webfx-extras-visual-grid-web@main.css from webfx-extras-visual-grid =====*/
 
 :root {
@@ -3068,6 +3068,103 @@ body, textarea /* because textarea has explicit default monospace font */ {
 }
 
 
+/*===== modality-booking-frontoffice-bookingpage-web@main.css from modality-booking-frontoffice-bookingpage =====*/
+
+/* Level 1: Selectable — web-specific transitions */
+.bookingpage-selectable {
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bookingpage-selectable:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.bookingpage-selectable.disabled {
+    cursor: default;
+}
+
+.bookingpage-selectable.disabled:hover {
+    box-shadow: none;
+}
+
+/* Translation + shadow effect on booking page buttons */
+.booking-form fx-button:hover {
+    translate: 0 -1px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    transition: translate 250ms ease-in;
+}
+
+.booking-form-event-header {
+    overflow: hidden;
+}
+
+/* Sticky price header - positioning managed by Java via FXMainFrameOverlayArea */
+.sticky-price-header {
+    background: linear-gradient(to bottom, #FFFFFF, #FAFBFC);
+    border-bottom: 1px solid #E5E7EB;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Fix for SVG icons - override :root --fx-svg-path-stroke which defaults to transparent.
+   The unified CSS sets --fx-stroke and --fx-fill, but SVG paths use --fx-svg-path-stroke/fill
+   as primary with --fx-stroke/fill only as fallback. Since :root sets --fx-svg-path-stroke: transparent,
+   we need to explicitly bridge the variables for proper color inheritance. */
+.bookingpage-icon-primary,
+.bookingpage-btn-select-type-icon {
+    --fx-svg-path-stroke: var(--fx-stroke);
+    --fx-svg-path-fill: var(--fx-fill);
+}
+
+/* Sold out section icons - use orange/warning colors */
+.bookingpage-soldout-icon-circle-icon {
+    --fx-svg-path-stroke: #F57C00;
+    --fx-svg-path-fill: transparent;
+    stroke: #F57C00;
+}
+
+.bookingpage-soldout-indicator-icon {
+    --fx-svg-path-stroke: #E65100;
+    --fx-svg-path-fill: transparent;
+    stroke: #E65100;
+}
+
+/* Sold out section backgrounds and text colors for web */
+.bookingpage-soldout-icon-circle {
+    background-color: #FFF3E0;
+}
+
+.bookingpage-soldout-explanation-box {
+    background-color: #FFF3E0;
+    border-color: #FFE0B2;
+}
+
+.bookingpage-soldout-indicator {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.bookingpage-text-warning-dark {
+    color: #E65100;
+}
+
+/* Increasing the line height for the event description */
+.bookingpage-text-base {
+    line-height: 1.8;
+}
+
+/* Selectable card - web-specific soldout overrides */
+.bookingpage-selectable-card.soldout {
+    border-color: #D1D5DB;
+    border-style: dashed;
+    background-color: #F9FAFB;
+    cursor: default;
+}
+
+.bookingpage-selectable-card.soldout:hover {
+    border-color: #D1D5DB;
+    background-color: #F9FAFB;
+    box-shadow: none;
+}
 /*===== modality-booking-frontoffice-bookingpage-fxweb@main.css from modality-booking-frontoffice-bookingpage =====*/
 
 /* ==========================================
@@ -5031,103 +5128,6 @@ body, textarea /* because textarea has explicit default monospace font */ {
 .registration-queue-dynamic-area { }
 
 
-/*===== modality-booking-frontoffice-bookingpage-web@main.css from modality-booking-frontoffice-bookingpage =====*/
-
-/* Level 1: Selectable — web-specific transitions */
-.bookingpage-selectable {
-    cursor: pointer;
-    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.bookingpage-selectable:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.bookingpage-selectable.disabled {
-    cursor: default;
-}
-
-.bookingpage-selectable.disabled:hover {
-    box-shadow: none;
-}
-
-/* Translation + shadow effect on booking page buttons */
-.booking-form fx-button:hover {
-    translate: 0 -1px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
-    transition: translate 250ms ease-in;
-}
-
-.booking-form-event-header {
-    overflow: hidden;
-}
-
-/* Sticky price header - positioning managed by Java via FXMainFrameOverlayArea */
-.sticky-price-header {
-    background: linear-gradient(to bottom, #FFFFFF, #FAFBFC);
-    border-bottom: 1px solid #E5E7EB;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-/* Fix for SVG icons - override :root --fx-svg-path-stroke which defaults to transparent.
-   The unified CSS sets --fx-stroke and --fx-fill, but SVG paths use --fx-svg-path-stroke/fill
-   as primary with --fx-stroke/fill only as fallback. Since :root sets --fx-svg-path-stroke: transparent,
-   we need to explicitly bridge the variables for proper color inheritance. */
-.bookingpage-icon-primary,
-.bookingpage-btn-select-type-icon {
-    --fx-svg-path-stroke: var(--fx-stroke);
-    --fx-svg-path-fill: var(--fx-fill);
-}
-
-/* Sold out section icons - use orange/warning colors */
-.bookingpage-soldout-icon-circle-icon {
-    --fx-svg-path-stroke: #F57C00;
-    --fx-svg-path-fill: transparent;
-    stroke: #F57C00;
-}
-
-.bookingpage-soldout-indicator-icon {
-    --fx-svg-path-stroke: #E65100;
-    --fx-svg-path-fill: transparent;
-    stroke: #E65100;
-}
-
-/* Sold out section backgrounds and text colors for web */
-.bookingpage-soldout-icon-circle {
-    background-color: #FFF3E0;
-}
-
-.bookingpage-soldout-explanation-box {
-    background-color: #FFF3E0;
-    border-color: #FFE0B2;
-}
-
-.bookingpage-soldout-indicator {
-    background-color: rgba(255, 255, 255, 0.7);
-}
-
-.bookingpage-text-warning-dark {
-    color: #E65100;
-}
-
-/* Increasing the line height for the event description */
-.bookingpage-text-base {
-    line-height: 1.8;
-}
-
-/* Selectable card - web-specific soldout overrides */
-.bookingpage-selectable-card.soldout {
-    border-color: #D1D5DB;
-    border-style: dashed;
-    background-color: #F9FAFB;
-    cursor: default;
-}
-
-.bookingpage-selectable-card.soldout:hover {
-    border-color: #D1D5DB;
-    background-color: #F9FAFB;
-    box-shadow: none;
-}
 /*===== modality-event-client-recurringevents-web@main.css from modality-event-frontoffice-bookingform-recurringevent-plugin =====*/
 
 :root {

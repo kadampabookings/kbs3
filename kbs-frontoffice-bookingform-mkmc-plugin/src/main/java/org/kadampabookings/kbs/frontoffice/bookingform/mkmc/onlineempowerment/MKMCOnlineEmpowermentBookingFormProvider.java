@@ -1,6 +1,5 @@
 package org.kadampabookings.kbs.frontoffice.bookingform.mkmc.onlineempowerment;
 
-import dev.webfx.stack.orm.entity.Entities;
 import one.modality.base.shared.entities.AttendanceMode;
 import one.modality.base.shared.entities.Event;
 import one.modality.booking.client.workingbooking.HasWorkingBookingProperties;
@@ -19,16 +18,9 @@ import one.modality.event.frontoffice.activities.book.event.EventBookingFormSett
  */
 public final class MKMCOnlineEmpowermentBookingFormProvider implements BookingFormProvider {
 
-    private static final int EVENT_TYPE_ONLINE_EMPOWERMENT = 24;
-
     @Override
-    public boolean acceptEvent(Event event) {
-        return Entities.samePrimaryKey(event.getType(), EVENT_TYPE_ONLINE_EMPOWERMENT);
-    }
-
-    @Override
-    public int getPriority() {
-        return APP_PRIORITY;
+    public String getBookingFormCode() {
+        return "online-empowerment";
     }
 
     @Override

@@ -12,7 +12,6 @@ module kbs.frontoffice.bookingform.mkmc.plugin {
     requires modality.event.frontoffice.activity.book;
     requires webfx.extras.i18n.controls;
     requires webfx.extras.webtext;
-    requires webfx.stack.orm.entity;
 
     // Exported packages
     exports org.kadampabookings.kbs.frontoffice.bookingform.mkmc;
