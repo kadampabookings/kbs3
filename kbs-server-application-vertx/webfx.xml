@@ -31,20 +31,21 @@
 
     </required-libraries>
 
-    <!-- This is to remove the following warning:
-SLF4J(W): Class path contains multiple SLF4J providers.
-SLF4J(W): Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@3c756e4d]
-SLF4J(W): Found provider [org.slf4j.jul.JULServiceProvider@7c0e2abd]
-     -->
     <maven-pom-manual>
         <dependencyManagement>
             <dependencies>
+                <!-- This is to remove the following warning:
+            SLF4J(W): Class path contains multiple SLF4J providers.
+            SLF4J(W): Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@3c756e4d]
+            SLF4J(W): Found provider [org.slf4j.jul.JULServiceProvider@7c0e2abd]
+                 -->
                 <dependency>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-jdk14</artifactId>
                     <scope>provided</scope>
                 </dependency>
             </dependencies>
+
         </dependencyManagement>
     </maven-pom-manual>
 
