@@ -12,7 +12,6 @@ module kbs.server.application.vertx {
     requires modality.ecommerce.policy.service.server;
     requires webfx.platform.ast.factory.vertx;
     requires webfx.platform.boot.vertx;
-    requires webfx.platform.console.java;
     requires webfx.platform.fetch.vertx;
     requires webfx.platform.resource.jre;
     requires webfx.platform.scheduler.vertx;
