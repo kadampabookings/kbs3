@@ -24,6 +24,20 @@
         </dependency>
 
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.6</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>8.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>one.modality</groupId>
             <artifactId>modality-base-server-rest-map-vertx-plugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -62,7 +76,7 @@
 
         <dependency>
             <groupId>dev.webfx</groupId>
-            <artifactId>webfx-platform-console-java</artifactId>
+            <artifactId>webfx-platform-console-sl4j-plugin</artifactId>
             <version>0.1.0-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
@@ -235,4 +249,19 @@
 
     </profiles>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- This is to remove the following warning:
+            SLF4J(W): Class path contains multiple SLF4J providers.
+            SLF4J(W): Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@3c756e4d]
+            SLF4J(W): Found provider [org.slf4j.jul.JULServiceProvider@7c0e2abd]
+                 -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
 </project>
