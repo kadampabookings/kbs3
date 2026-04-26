@@ -73,7 +73,6 @@
 
     <modules>
         <module>kbs-backoffice-application</module>
-        <module>kbs-backoffice-application-gluon</module>
         <module>kbs-backoffice-application-gwt</module>
         <module>kbs-backoffice-application-openjfx</module>
         <module>kbs-backoffice-header-festivalcreator-plugin</module>
@@ -86,8 +85,6 @@
         <module>kbs-frontoffice-activity-news-plugin</module>
         <module>kbs-frontoffice-activity-podcasts-plugin</module>
         <module>kbs-frontoffice-application</module>
-        <module>kbs-frontoffice-application-gluon</module>
-        <module>kbs-frontoffice-application-gwt</module>
         <module>kbs-frontoffice-application-openjfx</module>
         <module>kbs-frontoffice-bookingform-kmcny-plugin</module>
         <module>kbs-frontoffice-bookingform-mkmc-plugin</module>
