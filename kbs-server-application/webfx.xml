@@ -11,6 +11,7 @@
         <used-by-source-modules/>
 
         <plugin-module>modality-base-server-max-plugin</plugin-module> <!-- includes some standard configuration -->
+        <plugin-module>modality-base-server-dbmigration-plugin</plugin-module> <!-- applies bundled DB migrations at boot -->
         <plugin-module>modality-crm-server-max-plugin</plugin-module>
         <plugin-module>modality-ecommerce-server-max-plugin</plugin-module>
         <plugin-module>modality-event-server-max-plugin</plugin-module>
