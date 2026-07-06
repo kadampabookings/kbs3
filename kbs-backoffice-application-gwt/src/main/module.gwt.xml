@@ -419,8 +419,6 @@
     <source path="one/modality/event/backoffice/activities/program"/>
     <!--===========< modality-event-backoffice-activity-recurringevents-plugin >============-->
     <source path="one/modality/event/backoffice/activities/recurringevents"/>
-    <!--==============< modality-event-backoffice-activity-roomsetup-plugin >===============-->
-    <source path="one/modality/event/backoffice/activities/roomsetup"/>
     <!--=====================< modality-event-backoffice-eventcreator >=====================-->
     <source path="one/modality/event/backoffice/eventcreator"/>
     <!--==============< modality-event-backoffice-events-ganttcanvas-plugin >===============-->
@@ -461,16 +459,6 @@
     <source path="one/modality/hotel/backoffice/activities/reception/row"/>
     <source path="one/modality/hotel/backoffice/activities/reception/util"/>
     <source path="one/modality/hotel/backoffice/activities/reception/view"/>
-    <!--==============< modality-hotel-backoffice-activity-roomsetup-plugin >===============-->
-    <source path="one/modality/hotel/backoffice/activities/roomsetup"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/dialog"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/sitecomparison/data"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/sitecomparison/model"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/sitecomparison/presenter"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/sitecomparison/service"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/sitecomparison/view"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/util"/>
-    <source path="one/modality/hotel/backoffice/activities/roomsetup/view"/>
     <!--========================< modality-hotel-backoffice-icons >=========================-->
     <source path="one/modality/hotel/backoffice/icons"/>
     <!--==============================< webfx-extras-action >===============================-->
