@@ -13,6 +13,7 @@
         <plugin-module>modality-base-server-max-plugin</plugin-module> <!-- includes some standard configuration -->
         <plugin-module>modality-base-server-dbmigration-plugin</plugin-module> <!-- applies bundled DB migrations at boot -->
         <plugin-module>modality-base-server-mailer-plugin</plugin-module> <!-- drains the mail table & transmits (KBS2 handover); inert until MAILER_ENABLED -->
+        <plugin-module>modality-base-server-webpushmailer-plugin</plugin-module> <!-- drains channel='push' mails as Web Push notifications; inert until WEBPUSH_MAILER_ENABLED -->
         <plugin-module>modality-crm-server-max-plugin</plugin-module>
         <plugin-module>modality-ecommerce-server-max-plugin</plugin-module>
         <plugin-module>modality-event-server-max-plugin</plugin-module>
