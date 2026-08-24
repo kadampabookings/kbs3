@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <description>The server job that applies the volunteering GDPR retention policy: periodic sweep of expired application data (V0074 database function) and deletion of due applicant photographs from the image store. Inert until VOLUNTEERING_RETENTION_ENABLED, dry-run until VOLUNTEERING_RETENTION_DRY_RUN=false.</description>
+
+    <exported-packages>
+        <source-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+    </dependencies>
+
+    <providers>
+        <provider interface="dev.webfx.platform.boot.spi.ApplicationJob">org.kadampabookings.kbs.server.jobs.volunteeringretention.VolunteeringRetentionJob</provider>
+    </providers>
+
+</project>
