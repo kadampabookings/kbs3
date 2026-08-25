@@ -873,11 +873,12 @@
     <source path="dev/webfx/stack/authz/client/binder"/>
     <source path="dev/webfx/stack/authz/client/context"/>
     <source path="dev/webfx/stack/authz/client/factory"/>
-    <source path="dev/webfx/stack/authz/client/operation"/>
     <source path="dev/webfx/stack/authz/client/spi"/>
     <source path="dev/webfx/stack/authz/client/spi/impl"/>
-    <source path="dev/webfx/stack/authz/client/spi/impl/inmemory"/>
-    <source path="dev/webfx/stack/authz/client/spi/impl/inmemory/parser"/>
+    <!--=============================< webfx-stack-authz-core >=============================-->
+    <source path="dev/webfx/stack/authz/core"/>
+    <source path="dev/webfx/stack/authz/core/operation"/>
+    <source path="dev/webfx/stack/authz/core/parser"/>
     <!--=========================< webfx-stack-cloud-deepl-client >=========================-->
     <source path="dev/webfx/stack/cloud/deepl/client"/>
     <!--============================< webfx-stack-cloud-image >=============================-->
