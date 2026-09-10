@@ -30,6 +30,9 @@
 
         <!-- Adding config resolutions from environment variables (used in AWS) -->
         <plugin-module>webfx-platform-substitution-var-env-plugin</plugin-module>
+        <!-- Lets a developer type a secret at startup instead of storing it (ex: password = ${{ KBS_DATABASE_PASSWORD | prompt:KBS_DATABASE_PASSWORD }}).
+             Inert unless a conf value uses the prompt: prefix, and never blocks without a desktop or terminal. -->
+        <plugin-module>webfx-platform-substitution-var-prompt-jre-plugin</plugin-module>
 
         <!-- We use Bunny for the images hosting -->
         <plugin-module>webfx-stack-cloud-image-bunny-plugin</plugin-module>
