@@ -1,0 +1,6 @@
+# gitleaks fingerprints deliberately ignored (one per line: path:rule-id:line).
+# GOOGLE_STATICMAP_KEY is generated into src-root.json by `webfx update` from
+# modality-base-server-rest-map-vertx-plugin/src/main/webfx/conf/root-variables.properties
+# and has been in history since 2f9dead4; moving it into a deploy variable is a tracked
+# follow-up. Until then, commits touching the generated config must not be blocked by it.
+kbs-server-application-vertx/src/main/resources/dev/webfx/platform/conf/src-root.json:gcp-api-key:1
