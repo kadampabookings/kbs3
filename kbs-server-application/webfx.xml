@@ -17,6 +17,9 @@
         <plugin-module>modality-crm-server-max-plugin</plugin-module>
         <plugin-module>modality-ecommerce-server-max-plugin</plugin-module>
         <plugin-module>modality-event-server-max-plugin</plugin-module>
+        <plugin-module>modality-event-server-media-plugin</plugin-module> <!-- deleting a teaching session and its media, as an endpoint rather than as SQL a client sends -->
+        <plugin-module>modality-hotel-server-resource-plugin</plugin-module> <!-- deleting a room and its configurations, same reason -->
+        <plugin-module>modality-crm-server-person-plugin</plugin-module> <!-- merging a duplicate person, the last of step 1's six statements -->
 
         <plugin-module>kbs-server-podcastsimport-plugin</plugin-module>
         <plugin-module>kbs-server-newsimport-plugin</plugin-module>
