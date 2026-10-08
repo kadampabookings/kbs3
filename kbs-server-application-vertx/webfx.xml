@@ -20,7 +20,7 @@
         <library>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.38</version>
         </library>
 
         <library>
