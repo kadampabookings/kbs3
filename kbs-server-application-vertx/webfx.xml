@@ -26,7 +26,7 @@
         <library>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>8.0</version> <!-- Must be compatible version with Vert.x regarding Jackson library -->
+            <version>9.0</version> <!-- 9.x is on Jackson 3, aligned with Vert.x by the tools.jackson bom in kbs3/webfx.xml -->
         </library>
 
     </required-libraries>

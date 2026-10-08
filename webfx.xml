@@ -24,12 +24,13 @@
     <maven-pom-manual>
         <properties>
             <jackson2.version>2.21.7</jackson2.version>
+            <jackson3.version>3.1.7</jackson3.version>
         </properties>
 
         <dependencyManagement>
             <dependencies>
                 <!-- Aligns every Jackson 2 artifact on one version. Without it Maven's nearest-wins
-                     mixes minors (databind 2.17.2 from logstash-logback-encoder, jsr310 2.18.2 from
+                     mixes minors (databind 2.17.2 from logstash-logback-encoder 8.0, jsr310 2.18.6 from
                      the Square SDK), which Jackson does not support, and drags jackson-annotations
                      below the 2.21 that Vert.x's Jackson 3 databind needs (Jackson 3 still uses the
                      com.fasterxml annotations). 2.21.x is the jackson2.version Vert.x 5.2.1 declares;
@@ -39,6 +40,18 @@
                     <groupId>com.fasterxml.jackson</groupId>
                     <artifactId>jackson-bom</artifactId>
                     <version>${jackson2.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+                <!-- Same for Jackson 3 (tools.jackson), which Vert.x 5 uses for its JSON. Without it
+                     logstash-logback-encoder 9.0, declared nearer than Vert.x, wins nearest-wins with
+                     jackson-databind/core 3.0.1 and Vert.x runs on an older Jackson 3 than it was
+                     built for. 3.1.x is the jackson3.version Vert.x 5.2.1 declares; move it with
+                     Vert.x, together with jackson2.version. -->
+                <dependency>
+                    <groupId>tools.jackson</groupId>
+                    <artifactId>jackson-bom</artifactId>
+                    <version>${jackson3.version}</version>
                     <type>pom</type>
                     <scope>import</scope>
                 </dependency>
