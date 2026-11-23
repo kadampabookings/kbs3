@@ -20,13 +20,28 @@ A plugin or configuration declared in a module (a `<plugin-module>` line in `web
 `declare@<name>.properties` file, often in `modality-fork`) does nothing until WebFX
 regenerates the executable's files from it: `kbs-server-application/pom.xml`,
 `kbs-server-application-vertx/pom.xml` and `module-info.java`, and the merged configuration
-`kbs-server-application-vertx/src/main/resources/dev/webfx/platform/conf/src-root.json`. They
-are committed and "File managed by WebFX"; CI does not regenerate them (the deploy workflows'
+`kbs-server-application-vertx/src/main/resources/dev/webfx/platform/conf/exe/src-root.json`.
+They are committed and "File managed by WebFX"; CI does not regenerate them (the deploy
+workflows'
 `mvn webfx:update` step is commented out).
 
 - `webfx update` regenerates only the repository it is run in. Run in `modality-fork`, it
-  wires the module there and leaves this repository's files untouched — run it here too. The
-  WebFX CLI is not on the agent's PATH: ask David to run it.
+  wires the module there and leaves this repository's files untouched — run it here too.
+- **Check which CLI build you are about to run.** `webfx` is an alias running
+  `IdeaProjects/webfx-cli/target/webfx-cli-*-fat.jar` — the *jar*, not the sources, so after
+  pulling that repository it runs the old code until `mvn package` is run there. A second,
+  auto-updating build sits under `~/.jdeploy/`, and the two need not agree about where
+  generated resources go. A build predating the `.exe` resource move writes the `src-root`
+  config and the i18n bundles back into the package their reader lives in, and drops each
+  executable's `opens` — which reverts `cf721916` and restores the split package that stops
+  every JPMS executable from launching.
+- **Build the CLI with `-P webfx-cli-timestamp-dev-version`**, which filters the version
+  template back into the committed `dev/webfx/cli/version/dev/version.ini`. Without it the jar
+  bundles whatever stamp was last committed and reports a time it was not built at, so
+  `webfx --version` identifies only a jar built with the profile. To place a jar of unknown
+  provenance, read its behaviour instead: `javap -p -constants
+  dev/webfx/cli/specific/SpecificFolders` on the extracted class — `RES_I18N_FOLDER` ending in
+  `/exe` is a build that has the resource move.
 - Precedents: the passkey gateway booted inert on every environment (`11faaa55`), member
   emails reported disabled on staging (`abe5fc5d`), and three server endpoints were missing
   from the fat jar (`5d208d5b`).
