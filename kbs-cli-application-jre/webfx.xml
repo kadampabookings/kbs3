@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project executable="true">
+
+    <description>The JRE executable module of the KBS command-line client.</description>
+
+    <!-- THE TAGS IN THE NAME ARE LOAD-BEARING, and neither can be declared here instead.
+
+         WebFX derives a module's target platforms from its NAME: Target(ProjectModule) calls
+         TargetTag.parseTags(module.getName(), true), which splits on hyphens and skips the first token.
+         The only thing webfx.xml can contribute is target-tags/ignore-tag, which REMOVES a tag. There is
+         no element that adds one. (The executable-target attribute on a plugin-module is a condition on
+         that dependency, not a tag on this module.)
+
+         'jre' without it this executable is treated as supporting every platform, and the update generates
+               a GWT entry point, an index.html, a module.gwt.xml and seven i18n bundles for a program that
+               only ever runs in a terminal.
+
+         'cli' carries the CLIENT branch. Without a tag under CLIENT, WebFX resolves the push, submit and
+               session SPIs to their SERVER implementations: an earlier name ending in -jre alone pulled
+               webfx-stack-db-querypush-server, webfx-stack-push-server-simple,
+               webfx-stack-authn-server-portal and modality-base-backoffice-application into a read-only
+               command-line tool. 'cli' is a TargetTag under CLIENT in webfx-cli, added for this (a
+               command-line program talking to the server IS a client), alongside 'backoffice' and
+               'frontoffice' which were already there. Before that this module had to be called
+               kbs-cli-application-client-jre.
+
+         Found by reading the generated pom, which is the habit: after any update, read what it wrote. -->
+
+    <providers>
+        <!-- The whole entry point. ApplicationBooter is the Main-Class, as in every WebFX executable:
+             KbsCliJob is what it reaches, and KbsCliVariablesResolver supplies the bus's server while the
+             configuration is substituted at CONF_BOOT_LEVEL, which is early enough because the bus connects
+             during the boot (COMMUNICATION_REGISTER_BOOT_LEVEL) rather than lazily. -->
+        <provider interface="dev.webfx.platform.boot.spi.ApplicationJob">org.kadampabookings.kbs.cli.KbsCliJob</provider>
+        <provider interface="dev.webfx.platform.substitution.var.spi.VariablesResolver">org.kadampabookings.kbs.cli.KbsCliVariablesResolver</provider>
+    </providers>
+
+    <exported-packages>
+        <source-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+        <!-- Silences the three SLF4J "no providers were found" lines that otherwise precede every command.
+             They are not WebFX's: slf4j-api arrives with Java-WebSocket (webfx-stack-com-websocket-jre) and
+             warns, on stderr, that nothing is bound to it. A no-op binding is the right one here because
+             nothing in this tool logs THROUGH slf4j - WebFX logs through Console, and the plugin that would
+             route Console to slf4j is deliberately not included. -->
+        <plugin-module executable-target="jre">slf4j-nop</plugin-module>
+    </dependencies>
+
+    <required-libraries>
+        <library name="slf4j-nop">
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>2.0.13</version>
+        </library>
+    </required-libraries>
+
+</project>

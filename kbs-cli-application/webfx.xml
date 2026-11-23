@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <description>The KBS command-line client application (cross-platform non-executable module): the probe catalogue, the invariants and the rehearsal matrix.</description>
+
+    <!-- Deliberately platform-independent, and not merely "the half without main()". Everything here is a
+         question and a rule about an answer: which statement a probe sends, which relation its count must
+         satisfy, and which events a caller's grants reach. None of it touches a file, a console or a clock.
+
+         That is worth keeping true rather than true by accident. This design began as a page in the back
+         office before it became a CLI, and if those probes are ever wanted by somebody without a terminal,
+         this module is what a page would render. Persistence and process control live next door, in the
+         executable, because a page would have different ones. -->
+
+    <exported-packages>
+        <source-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+    </dependencies>
+
+</project>
