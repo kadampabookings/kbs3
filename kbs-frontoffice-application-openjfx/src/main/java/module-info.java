@@ -57,4 +57,9 @@ module kbs.frontoffice.application.openjfx {
     requires webfx.stack.push.client.simple;
     requires webfx.stack.session.client;
 
+    // Resources packages
+    opens dev.webfx.extras.i18n.exe;
+    opens dev.webfx.platform.conf.exe;
+    opens dev.webfx.platform.meta.exe;
+
 }

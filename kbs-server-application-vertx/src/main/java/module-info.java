@@ -29,4 +29,9 @@ module kbs.server.application.vertx {
     requires webfx.stack.orm.dql.submit.interceptor;
     requires webfx.stack.push.server.simple;
 
+    // Resources packages
+    opens dev.webfx.extras.i18n.exe;
+    opens dev.webfx.platform.conf.exe;
+    opens dev.webfx.platform.meta.exe;
+
 }
