@@ -6,8 +6,6 @@
 module kbs.cli.application.jre {
 
     // Direct dependencies modules
-    requires javafx.base;
-    requires javafx.graphics;
     requires kbs.cli.application;
     requires modality.base.shared.domainmodel;
     requires modality.crm.shared.authn;
