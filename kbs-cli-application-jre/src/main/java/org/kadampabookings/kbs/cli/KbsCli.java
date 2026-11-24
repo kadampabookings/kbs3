@@ -128,7 +128,8 @@ public final class KbsCli {
     // ---------------------------------------------------------------- commands
 
     private static int signIn(String[] args) throws Exception {
-        CliArgs parsed = commonSpec().option("username").parse(args);
+        CliArgs parsed = commonSpec().option("username").flag("with-code").parse(args);
+        boolean withCode = parsed.flag("with-code");
         Path confDirectory = confDirectory(parsed);
         ServerEndpoint endpoint = endpointOf(parsed.required("server",
             "there is no default server, on purpose — a probe must say which one it asked"));
@@ -141,9 +142,28 @@ public final class KbsCli {
             throw new IllegalArgumentException("No username was given.");
 
         SessionCache cache = new SessionCache(confDirectory);
-        char[] password = ConsolePrompt.readPassword("Password for " + username + ": ");
+        // A verification code is read exactly as a password is - from a terminal, into a char[] this method
+        // clears, never from the command line. It mints a session, so it IS a credential; that it is six
+        // digits and dies in minutes makes it short-lived, not harmless.
+        char[] secret = null;
         try (ClientRuntime runtime = ClientRuntime.connect(endpoint, DATA_SOURCE_ID, timeout(parsed))) {
-            CallerSession session = CallerSession.signIn(username, password, audience, timeout(parsed));
+            // REQUESTING AND REDEEMING HAPPEN IN ONE RUN, and the server requires it. A code is looked up by
+            // value AND by the loginRunId that asked for it - "the entry tab MUST be the request tab", which
+            // is what stops two people sharing six digits in the same minute and is what makes the attempt cap
+            // mean anything. Asking in one command and redeeming in another gave two runIds and an honest
+            // "[LoginLinkUnrecognisedError] Magic link not found". So this command asks, then waits with the
+            // connection open while somebody fetches the code.
+            if (withCode) {
+                CallerSession.sendVerificationCode(username, endpoint, audience, timeout(parsed));
+                System.out.println("A verification code was sent to " + username + ".");
+                System.out.println("This run must redeem it: the server ties a code to the run that asked for"
+                                   + " it, so the code is useless to any other command. Waiting.");
+            }
+            secret = ConsolePrompt.readPassword(
+                (withCode ? "Verification code for " : "Password for ") + username + ": ");
+            CallerSession session = withCode
+                ? CallerSession.signInWithVerificationCode(username, secret, audience, timeout(parsed))
+                : CallerSession.signIn(username, secret, audience, timeout(parsed));
             String audienceProblem = session.confirmAudience();
             if (audienceProblem != null) {
                 // The session exists server-side but is the wrong arm. NOT cached: a cache of it would be
@@ -159,7 +179,8 @@ public final class KbsCli {
                                + cache.file() + " — a live session token; mode 600.");
             return EXIT_OK;
         } finally {
-            Arrays.fill(password, '\0');
+            if (secret != null)
+                Arrays.fill(secret, '\0');
         }
     }
 
@@ -533,9 +554,11 @@ public final class KbsCli {
               probes                   the probe catalogue, with each statement
               rehearsal                the rehearsal matrix and the order of runs
 
-              signin   --server <url> --audience <front-office|back-office> [--username <u>]
-                                       prompts for a password, confirms the audience the server actually
-                                       granted, and caches the session for 30 minutes (mode 600, in conf/)
+              signin   --server <url> --audience <front-office|back-office> [--username <u>] [--with-code]
+                                       prompts for a password - or, with --with-code, asks the server to mail
+                                       a verification code and waits for it to be typed here. Confirms the
+                                       audience the server actually granted, and caches the session for 30
+                                       minutes (mode 600, in conf/)
               status                   what is cached - never the token itself
               signout                  ends the session and deletes the cache
 
@@ -551,6 +574,12 @@ public final class KbsCli {
                                   token a read compiles under, so the two arms are different questions. The
                                   tool reads the audience back off the server's own token signature and
                                   refuses to probe if it is not the one asked for.
+              --with-code         sign in with a mailed verification code instead of a password. This one
+                                  command does both halves, because the server ties a code to the run that
+                                  asked for it - a code requested by one command cannot be redeemed by
+                                  another. The mailbox is NOT a second factor: an account that must present
+                                  one gets a recovery-only session, whose audience this tool then refuses to
+                                  probe the back office with.
               --caller <label>    which rehearsal identity this is, so the tool knows whether the event should
                                   be reachable. One of: %s
               --as-baseline       record this count as the UNSCOPED answer. Only true when run as a platform
