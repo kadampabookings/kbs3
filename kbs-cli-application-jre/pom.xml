@@ -198,16 +198,15 @@
 
     </dependencies>
 
-    <properties>
-        <plugin.javapackager.name>KbsCli</plugin.javapackager.name>
-        <plugin.javapackager.displayName>Kbs Cli</plugin.javapackager.displayName>
-        <plugin.javapackager.url/>
-    </properties>
-
     <profiles>
-        <!-- profile to make a fat standalone executable jar with all dependencies included inside -->
+
+        <!-- profile to make a fat standalone executable jar with all dependencies included inside.
+             Everything it needs is already in the parent's `fat` execution - the Main-Class from
+             ${webfx.mainClass}, which for a WebFX executable is the platform booter, and the
+             ServicesResourceTransformer that an SPI-driven program cannot do without - and pluginManagement
+             CONFIGURES without RUNNING, so declaring the plugin is the whole job. -->
         <profile>
-            <id>openjfx-fatjar</id>
+            <id>jre-fatjar</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -219,28 +218,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-shade-plugin</artifactId>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>openjfx-desktop</id>
-
-            <build>
-                <plugins>
-
-                    <!-- Generating the fat jar using the Shade plugin (will be passed to JavaPackager) -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-shade-plugin</artifactId>
-                    </plugin>
-
-                    <!-- Generating the desktop executables using the JavaPackager plugin -->
-                    <plugin>
-                        <groupId>io.github.fvarrui</groupId>
-                        <artifactId>javapackager</artifactId>
                     </plugin>
 
                 </plugins>
