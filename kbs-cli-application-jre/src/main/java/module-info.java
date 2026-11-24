@@ -10,6 +10,7 @@ module kbs.cli.application.jre {
     requires javafx.graphics;
     requires kbs.cli.application;
     requires modality.base.shared.domainmodel;
+    requires modality.crm.shared.authn;
     requires webfx.platform.boot;
     requires webfx.platform.substitution.var;
     requires webfx.platform.visibility.jre.headless;

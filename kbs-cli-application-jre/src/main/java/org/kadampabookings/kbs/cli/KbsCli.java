@@ -11,6 +11,7 @@ import dev.webfx.stack.db.query.cli.ResultPrinter;
 import dev.webfx.stack.db.query.cli.RunLog;
 import dev.webfx.stack.db.query.cli.ServerEndpoint;
 import dev.webfx.stack.db.query.cli.SessionCache;
+import one.modality.crm.shared.services.authn.ModalityUserPrincipal;
 import org.kadampabookings.kbs.cli.readscope.Invariant;
 import org.kadampabookings.kbs.cli.readscope.Probe;
 import org.kadampabookings.kbs.cli.readscope.Probes;
@@ -289,6 +290,9 @@ public final class KbsCli {
             String confirmation = session.confirmAudience();
             if (confirmation != null)
                 throw new IllegalStateException(confirmation);
+            String callerProblem = callerRefusal(caller, session.userId());
+            if (callerProblem != null)
+                throw new IllegalStateException(callerProblem);
 
             DqlRunner runner = new DqlRunner(DATA_SOURCE_ID, timeout(parsed));
             long count;
@@ -513,6 +517,56 @@ public final class KbsCli {
             throw new IllegalArgumentException("--audience must be front-office or back-office, not '"
                                                + value + "'.");
         return audience;
+    }
+
+    /**
+     * Why this session is not the caller the command claimed, or null when it is.
+     *
+     * <h3>Why the claim has to be checked rather than printed</h3>
+     *
+     * <p>{@code --caller} tells the tool which relation applies to a cell: {@code = unscoped} where that
+     * identity holds a grant reaching the event, {@code = 0} where it does not. Pass the wrong label and the
+     * matrix answers about somebody else's grants, and the run reports a pass. Printing both the label and the
+     * username on every run was the mitigation; this is the fix.
+     *
+     * <h3>What made it necessary rather than tidy</h3>
+     *
+     * <p>A login address is not an identity. Three of the rehearsal's five staging accounts are shared by
+     * other persons - one of them by nine - so the address says nothing about which person the server
+     * authenticated as. On the {@code event-1840} row, where every cell must be zero, a sweep of the wrong
+     * person produces output identical to a correct one. Through the 2026-11-24 rehearsal this was caught by
+     * running {@code select id from Person where id=CALLER_PERSON} by hand before each sweep: a manual guard
+     * in front of the one mistake this tool exists to prevent, which is a guard that will eventually be
+     * skipped.
+     *
+     * <p>It became cheap only once the client could read its own principal - before
+     * {@code modality-crm-shared-authn} was declared, {@code session.userId()} would not decode at all.
+     *
+     * <h3>Refusing when it cannot tell</h3>
+     *
+     * <p>An unreadable principal is a refusal, not a shrug, for the reason the audience assertion refuses: a
+     * check that passes when it cannot see its subject is worse than no check, because it reads as
+     * confirmation.
+     *
+     * <p>Takes the userId rather than the session, so that the comparison - which is all this is - can be
+     * checked without one. {@code CallerBindingCheck} does exactly that.
+     */
+    static String callerRefusal(RehearsalMatrix.Caller caller, Object userId) {
+        if (caller == null)
+            return null; // no claim was made, so there is nothing to contradict
+        Object personId = ModalityUserPrincipal.getUserPersonId(userId);
+        if (personId == null)
+            return "This run claims --caller " + caller.label() + ", but the session does not say which person"
+                   + " it belongs to, so the claim cannot be checked. Refusing rather than reporting a result"
+                   + " that may be about another caller's grants. Sign in again; if it persists, the principal"
+                   + " is not being decoded (modality-crm-shared-authn supplies that codec).";
+        if (!(personId instanceof Number number) || number.intValue() != caller.personId())
+            return "This run claims --caller " + caller.label() + ", which is person " + caller.personId()
+                   + ", but this session belongs to person " + personId + ". The matrix would have answered"
+                   + " about the wrong grants - and on a row whose cells are all zero, that answer is"
+                   + " indistinguishable from a correct one. Sign in as person " + caller.personId()
+                   + ", or drop --caller to get a count with no invariant attached.";
+        return null;
     }
 
     private static RehearsalMatrix.Caller callerOf(CliArgs parsed) {
