@@ -47,6 +47,16 @@
              nothing in this tool logs THROUGH slf4j - WebFX logs through Console, and the plugin that would
              route Console to slf4j is deliberately not included. -->
         <plugin-module executable-target="jre">slf4j-nop</plugin-module>
+        <!-- The serial codecs for what the SERVER sends this client about itself. Without them the bus logs
+             "No SerialCodec found for id: 'ModalityUserPrincipal'" on every message carrying session state
+             and the client never learns which person it is signed in as - it holds a session it cannot read.
+             A mock codec was considered and rejected: this tool's premise is that it IS the client rather
+             than a second one, and a codec that decoded a different object than the browser's would be
+             exactly the protocol drift that choosing Java was meant to rule out.
+             It is declared HERE and not in webfx-stack-db-query-cli because the harness is generic WebFX and
+             this is Modality's own type. Free, as dependencies go: the module requires only
+             webfx-platform-ast, webfx-platform-util and webfx-stack-com-serial, all already present. -->
+        <plugin-module executable-target="jre">modality-crm-shared-authn</plugin-module>
     </dependencies>
 
     <required-libraries>

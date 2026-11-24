@@ -8,15 +8,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * Which server this run is talking to — answered before the platform boots, because the bus connects during it.
+ * Which server this run is talking to — answerable from the moment the process starts, because nothing later
+ * is guaranteed to still be there when the question is asked.
  *
  * <h3>Why this exists at all</h3>
  *
- * <p>{@code BusCallModuleBooter} runs at {@code COMMUNICATION_REGISTER_BOOT_LEVEL} (5) and touches
- * {@code BusService.bus()}, so the websocket bus connects <em>during</em> the boot — four levels before any
- * application job starts. The server therefore has to be known by {@code CONF_BOOT_LEVEL} (3), when the
- * configuration is substituted, and the only things available that early are the main arguments
- * ({@code ApplicationBooter.getMainArgs()}, set before {@code boot()}) and the filesystem.
+ * <p>The bus's server comes from the configuration, and the configuration substitutes its variables
+ * <em>on read</em> ({@code ConfigImpl} calls {@code Substitutor.substitute} per value) rather than once at a
+ * boot level. The read happens when the bus is created: at {@code COMMUNICATION_REGISTER_BOOT_LEVEL} (5) in an
+ * ordinary WebFX client, where {@code BusCallModuleBooter} touches {@code BusService.bus()} during the boot;
+ * and in a command-line program, where that registration is deferred, inside the command itself.
+ *
+ * <p>So this must be answerable early and must not change afterwards, and the only things available before a
+ * command exists are the main arguments ({@code ApplicationBooter.getMainArgs()}, set before {@code boot()})
+ * and the filesystem. Both are read here — see {@link #endpoint()} for why the answer is then memoised.
  *
  * <h3>The two sources, and why they are one concept</h3>
  *
@@ -38,10 +43,34 @@ public final class RunServer {
 
     private RunServer() {}
 
-    /** The endpoint this run is about, or null when neither the arguments nor the cache names one. */
+    /**
+     * The endpoint this run is about, or null when neither the arguments nor the cache names one.
+     *
+     * <p><b>Memoised, and that is not an optimisation.</b> The configuration substitutes its variables on
+     * every READ ({@code ConfigImpl} calls {@code Substitutor.substitute} per value), not once at a boot
+     * level — so this is asked whenever something first reads the bus's server, which is inside
+     * {@code ClientRuntime.connect()}. {@code signout} deletes the session cache before it connects, on
+     * purpose, and without this memo the answer changed between the start of the command and that read: the
+     * configuration fell back to {@code localhost:80} and the command refused itself on the mismatch, so the
+     * server-side session was never ended. A one-shot process is about exactly one server; answering
+     * differently depending on WHEN it is asked is the defect.
+     */
     public static ServerEndpoint endpoint() {
-        ServerEndpoint fromArguments = fromArguments();
-        return fromArguments != null ? fromArguments : fromCachedSession();
+        if (memoisedEndpoint == null) {
+            ServerEndpoint fromArguments = fromArguments();
+            memoisedEndpoint = fromArguments != null ? fromArguments : fromCachedSession();
+        }
+        return memoisedEndpoint;
+    }
+
+    private static ServerEndpoint memoisedEndpoint;
+
+    /**
+     * Forgets the memo, so that a check can set different arguments and ask again. Nothing in a run calls it:
+     * a one-shot process resolves its server once and keeps it, which is the whole point of the memo.
+     */
+    static void forgetMemoisedEndpoint() {
+        memoisedEndpoint = null;
     }
 
     /**

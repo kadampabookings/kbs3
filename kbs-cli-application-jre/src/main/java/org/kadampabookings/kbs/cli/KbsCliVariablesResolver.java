@@ -10,10 +10,14 @@ import java.util.Optional;
  *
  * <h3>Why a resolver rather than system properties set before the boot</h3>
  *
- * <p>Because it lets the tool keep the platform's own entry point. The configuration is substituted at
- * {@code CONF_BOOT_LEVEL} (3) and the bus connects at level 5, so the server has to be supplied in between —
- * which a resolver does, using the main arguments the platform has already recorded. Setting system properties
- * instead would have to happen before {@code ApplicationBooter.start}, which means owning {@code main}.
+ * <p>Because it lets the tool keep the platform's own entry point. The server has to be supplied by the time
+ * something first reads it from the configuration — which a resolver does, using the main arguments the
+ * platform has already recorded. Setting system properties instead would have to happen before
+ * {@code ApplicationBooter.start}, which means owning {@code main}.
+ *
+ * <p>"By the time something first reads it" rather than "at a boot level": the configuration substitutes each
+ * value in its getter, so this is called whenever the bus's server is first asked for, and in a one-shot
+ * command that can be well after the boot. {@link RunServer#endpoint()} memoises for exactly that reason.
  *
  * <p>Registered alongside the environment and system-property resolvers, and deliberately narrow: it answers
  * three names and nothing else, so it cannot shadow any other variable this build resolves.

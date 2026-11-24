@@ -16,11 +16,15 @@ import java.util.Optional;
  *
  * <h3>Why this is checked offline rather than by signing in</h3>
  *
- * <p>The answer is needed at {@code CONF_BOOT_LEVEL}, before a command exists, so it is read by scanning the
- * main arguments and — when they name no server — the cached session. The second path is the one no
- * end-to-end run can demonstrate without a credential: a probe reuses the server it signed in against, and
- * nothing in this session can sign in. So it is pinned here instead, with a cache written to a temporary
- * directory.
+ * <p>The answer is needed before a command exists, so it is read by scanning the main arguments and — when
+ * they name no server — the cached session. The second path is the one no end-to-end run can demonstrate
+ * without a credential: a probe reuses the server it signed in against. So it is pinned here instead, with a
+ * cache written to a temporary directory.
+ *
+ * <p>Two of these cases are regressions rather than decoration. The answer must survive the deletion of the
+ * cache it came from, because the configuration substitutes its variables on read and {@code signout} deletes
+ * the cache before connecting. And every case names its own conf directory, because without one it reads the
+ * real {@code conf/} and so passed only on a machine nobody had signed in on.
  *
  * <h3>And the property that matters more than the answer</h3>
  *
@@ -58,12 +62,24 @@ public class RunServerCheck {
             public void boot() {
             }
         }, arguments);
+        // Each case sets new arguments and asks again, which a run never does: RunServer.endpoint() memoises,
+        // so that signout's answer survives its own deletion of the cache. Forgetting it here is what keeps
+        // these cases independent of each other.
+        RunServer.forgetMemoisedEndpoint();
     }
 
     public static void main(String[] args) throws IOException {
         Path directory = Files.createTempDirectory("run-server-check");
         directory.toFile().deleteOnExit();
         String conf = directory.toString();
+        // A SECOND, deliberately empty one. Every "answers nothing" case below has to name it, because
+        // RunServer falls back to the cached session's server by design: without a conf directory of its own
+        // such a case reads the real conf/, and so passed only on a machine nobody had signed in on. The first
+        // real sign-in broke five assertions here at once, which is the test depending on the machine rather
+        // than on the code.
+        Path emptyDirectory = Files.createTempDirectory("run-server-check-empty");
+        emptyDirectory.toFile().deleteOnExit();
+        String emptyConf = emptyDirectory.toString();
 
         System.out.println("The command line names the server");
         args("signin", "--server", "wss://backoffice.example.org", "--audience", "back-office");
@@ -72,14 +88,14 @@ public class RunServerCheck {
         args("signin", "--server=ws://localhost:8080");
         check("an =-joined --server is read too",
               new ServerEndpoint("localhost", 8080, false).equals(RunServer.endpoint()));
-        args("signin", "--server");
+        args("signin", "--server", "--conf-dir", emptyConf);
         check("a dangling --server answers nothing rather than throwing", RunServer.endpoint() == null);
-        args("signin", "--server", "not-a-url");
+        args("signin", "--server", "not-a-url", "--conf-dir", emptyConf);
         check("a malformed --server answers nothing rather than throwing", RunServer.endpoint() == null);
-        args("help");
+        args("help", "--conf-dir", emptyConf);
         check("a command that names no server answers nothing", RunServer.endpoint() == null);
-        args();
-        check("no arguments at all answers nothing", RunServer.endpoint() == null);
+        args("--conf-dir", emptyConf);
+        check("nor does an argument list with nothing in it but that directory", RunServer.endpoint() == null);
 
         System.out.println();
         System.out.println("Otherwise the cached session's server — the path no sign-in-less run can show");
@@ -110,6 +126,17 @@ public class RunServerCheck {
         check("a conf directory that does not exist answers nothing", RunServer.endpoint() == null);
 
         System.out.println();
+        System.out.println("And the answer survives the cache it came from — signout's whole problem");
+        cache.store(new SessionCache.Entry("a-token-shaped-string", "operator", Audience.BACK_OFFICE,
+                                           "wss://cached.example.org:443", System.currentTimeMillis()));
+        args("signout", "--conf-dir", conf);
+        check("the server is read from the cache",
+              new ServerEndpoint("cached.example.org", 443, true).equals(RunServer.endpoint()));
+        Files.deleteIfExists(cache.file());
+        check("and is still answered after the cache is deleted, which is when the configuration reads it",
+              new ServerEndpoint("cached.example.org", 443, true).equals(RunServer.endpoint()));
+
+        System.out.println();
         System.out.println("The resolver answers three names and nothing else");
         args("signin", "--server", "wss://backoffice.example.org");
         KbsCliVariablesResolver resolver = new KbsCliVariablesResolver();
@@ -120,7 +147,7 @@ public class RunServerCheck {
               resolver.resolveVariable("MODALITY_DATABASE_PASSWORD").isEmpty()
               && resolver.resolveVariable("BUS_PREFIX").isEmpty()
               && resolver.resolveVariable("SESSION_TOKEN_SIGNING_KEY").isEmpty());
-        args("help");
+        args("help", "--conf-dir", emptyConf);
         check("with no server to report it answers nothing, letting the configuration fall back and the "
               + "run be refused on the mismatch",
               resolver.resolveVariable(ServerEndpoint.HOST_VARIABLE).isEmpty());

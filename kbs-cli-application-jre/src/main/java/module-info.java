@@ -22,6 +22,7 @@ module kbs.cli.application.jre {
     exports org.kadampabookings.kbs.cli;
 
     // Resources packages
+    opens dev.webfx.extras.i18n.exe;
     opens dev.webfx.platform.conf.exe;
     opens dev.webfx.platform.meta.exe;
 

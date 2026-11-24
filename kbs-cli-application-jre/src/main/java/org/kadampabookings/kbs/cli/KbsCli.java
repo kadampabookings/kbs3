@@ -172,6 +172,12 @@ public final class KbsCli {
             System.out.println("No cached session.");
             return EXIT_OK;
         }
+        // Read the server into RunServer's memo while the cache still exists. The bus configuration
+        // substitutes its variables on READ, not once at boot, so the resolver is asked inside
+        // ClientRuntime.connect() below — after the clear() on the next line. Before this call, signout
+        // deleted the only record of its own server and then refused itself with "The bus configuration
+        // resolved to ws://localhost:80 but wss://… was asked for", leaving the session open server-side.
+        RunServer.endpoint();
         // Clear the local copy FIRST. If the server round trip fails, the token is already off this disk,
         // which is the half that can be guaranteed; a token still in a file after a failed logout is worse
         // than a session still open on a server that will expire it within the access window.
