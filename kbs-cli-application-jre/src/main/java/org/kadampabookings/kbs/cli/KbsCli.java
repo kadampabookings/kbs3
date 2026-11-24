@@ -641,7 +641,7 @@ public final class KbsCli {
               --rows              show rows as well as the count. Paged by the SERVER (DQL limit/offset), so
                                   a row count is never a count - run the count form for that.
               --limit <n>         rows per page, default %d.
-              --conf-dir <dir>    where the session cache lives, default conf/. scripts/read-scope-probe refuses
+              --conf-dir <dir>    where the session cache lives, default conf/. scripts/kbs refuses
                                   it, so that every run shares one cache.
               --log-dir <dir>     where the run log and the baselines live, default logs/.
               --timeout <ms>      per bus call, default %d.
