@@ -25,8 +25,10 @@ import java.util.Set;
  *       {@code ChatMessage} and {@code ChatMessageReaction}; a flip of three roots rehearsed with two probes
  *       leaves one root untested, which is a smaller version of exactly the "testing with one account"
  *       finding that made this rehearsal necessary.</li>
- *   <li><b>{@code persons-visible} asserts nothing and is marked personal.</b> It is a measurement, and an
- *       invariant on it would pass while telling nobody anything.</li>
+ *   <li><b>{@code persons-visible} asserts nothing and is marked personal.</b> Not for want of something to
+ *       satisfy — since {@code PersonReadScope} the member arm has a rule — but for want of anything to
+ *       compare against: every front-office caller gets the MEMBER token, so no run in this probe's own
+ *       audience can record the unscoped baseline {@code OWN_ROWS_ONLY} needs. See {@code Probes}.</li>
  * </ul>
  *
  * <p><b>Probed by deletion:</b> removing the comparison in {@code Probe.audienceRefusal}, and separately
@@ -115,7 +117,7 @@ public class ProbeCatalogueCheck {
 
         System.out.println();
         System.out.println("The measurement probe asserts nothing and says so");
-        check("persons-visible has no invariant — it is a measurement",
+        check("persons-visible has no invariant — no front-office run can record the baseline one needs",
               Probes.PERSONS_VISIBLE.invariants().isEmpty());
         check("and is marked as personal, so its rows need a second flag",
               Probes.PERSONS_VISIBLE.showsPersonalData());

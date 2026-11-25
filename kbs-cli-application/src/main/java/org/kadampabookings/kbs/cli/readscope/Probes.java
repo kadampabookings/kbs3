@@ -107,26 +107,33 @@ public final class Probes {
         false);
 
     /**
-     * The one the design note says will fail, and that is the point.
+     * The one the design note said would fail. It did, and that is why {@code Person} is enforced.
      *
-     * <p>{@code ClientReadScope} has a single registered provider ({@code ChatReadScope}), so no row scoping
-     * applies to {@code person}; the only registered read policy refuses callers with NO principal; and the
-     * deny list is a secrets list, on which {@code first_name}, {@code last_name} and {@code email} do not
-     * appear. A signed-in front-office member should therefore be able to count every person in the database.
-     * The front office stopped ASKING — its batch address-to-name query was replaced by the
-     * {@code matchingAccounts} endpoint — but the server never started refusing, and that gap is what nothing
-     * else can currently measure.
+     * <p><b>What it measured: 59,858 — the whole table.</b> {@code ClientReadScope} held a single provider
+     * covering only the three chat roots, so no row scoping applied to {@code person}; the only registered
+     * read policy refuses callers with NO principal; and the deny list is a secrets list, on which
+     * {@code first_name}, {@code last_name} and {@code email} do not appear. The front office had stopped
+     * ASKING — its batch address-to-name query was replaced by the {@code matchingAccounts} endpoint — but
+     * the server never started refusing, and nothing else could measure that gap.
      *
-     * <p>Its first run is a measurement, not a green tick. It gives the read-scope catalogue a number instead
-     * of an argument.
+     * <p><b>The member arm closes it</b> ({@code PersonReadScope}, on staging since 2026-11-25): a
+     * front-office caller reads the people on their own account, and the rows elsewhere linked to one of
+     * them. The expected answer here is therefore no longer the table but a handful — a median of 1 on
+     * staging, 51 for the largest account.
      *
-     * <p>No invariant, because there is nothing yet that it must satisfy: asserting {@code scoped <= unscoped}
-     * against a baseline of "the whole table" would pass while telling nobody anything.
+     * <p><b>Still no invariant, but the reason has changed.</b> It is no longer that there is nothing to
+     * satisfy; it is that there is nothing to compare against. {@code OWN_ROWS_ONLY} needs an unscoped
+     * baseline, and {@code ChatReadScope.tokenForCaller} hands MEMBER to every front-office caller — a
+     * platform super administrator included, because the arm is the verified audience signed into the session
+     * token, not the caller's tier. No front-office run can record that baseline. Taking it from the back
+     * office, where {@code Person} stays unscoped until the back-office arm is built, would let one probe
+     * span both audiences, which is the one thing {@code Probe.audienceRefusal} exists to prevent. That is a
+     * design decision rather than a line of code, so it is written down here instead of taken.
      */
     public static final Probe PERSONS_VISIBLE = new Probe(
         "persons-visible",
-        "How many people a signed-in front-office member can count. Expected to be every person in the"
-        + " database; the number is the finding.",
+        "How many people a signed-in front-office member can count. The whole table before the member arm"
+        + " (59,858 on staging); their own account's people after it.",
         Audience.FRONT_OFFICE,
         "select count(1) as n from Person",
         List.of(),
