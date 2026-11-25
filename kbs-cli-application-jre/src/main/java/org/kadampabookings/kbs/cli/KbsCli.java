@@ -19,6 +19,7 @@ import org.kadampabookings.kbs.cli.readscope.Probes;
 import org.kadampabookings.kbs.cli.readscope.RehearsalMatrix;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
@@ -210,12 +211,24 @@ public final class KbsCli {
      *
      * <p>It is the control, not a convenience. The operator reads it here and types it there, and an
      * attacker who has started their own request cannot make somebody approve it by asking, because their
-     * request carries a different code. For the same reason the URL is composed from the endpoint THIS run
-     * connected to rather than taken from the reply: a server's idea of where its back office lives is not
-     * something this client can check, and a printed link is exactly what a person follows without looking.
+     * request carries a different code.
+     *
+     * <h3>Where the approval page is, and why this run will not guess</h3>
+     *
+     * <p>The page is a BACK-OFFICE route, and the back office is rarely the origin a run connects to: the
+     * bus is reached at the front-office host on staging and at :8080 in development, while the page is
+     * served from {@code backoffice.*} and :5173. This used to print {@code <connected origin>/device-login}
+     * regardless, which was wrong in every configuration except the one where somebody happened to point
+     * {@code --server} at the back office - and a printed link is exactly what a person follows without
+     * looking, so being plausible and wrong is worse here than saying less.
+     *
+     * <p>So the page is NAMED by default, and printed as a link only when the operator says where their
+     * back office is, with {@code --approval-origin}. It is still never taken from the reply: a server's
+     * idea of where its back office lives is not something this client can check, and the control here is
+     * precisely that the operator goes somewhere they already trust and types a code they read themselves.
      */
     private static int deviceLogin(String[] args) throws Exception {
-        CliArgs parsed = commonSpec().option("as").parse(args);
+        CliArgs parsed = commonSpec().option("as").option("approval-origin").parse(args);
         Path confDirectory = confDirectory(parsed);
         ServerEndpoint endpoint = endpointOf(parsed.required("server",
             "there is no default server, on purpose — a probe must say which one it asked"));
@@ -237,10 +250,18 @@ public final class KbsCli {
                     "The server did not answer with a device-login code. Is this build's device-login"
                     + " gateway deployed there?");
 
+            String approvalOrigin = approvalOrigin(parsed.value("approval-origin", null));
             System.out.println();
-            System.out.println("  Open   " + endpoint.httpOrigin() + APPROVAL_PATH);
+            if (approvalOrigin != null)
+                System.out.println("  Open   " + approvalOrigin + APPROVAL_PATH);
+            else
+                System.out.println("  Open   " + APPROVAL_PATH + " in the KBS back office");
             System.out.println("  Type   " + ticket.code());
             System.out.println();
+            if (approvalOrigin == null)
+                System.out.println("No link is printed because the back office is usually not the host this"
+                                   + " run connected to (" + endpoint.httpOrigin() + "). Pass"
+                                   + " --approval-origin <url> to have one.");
             System.out.println("Approve it as the person whose session you want. The code is this request's"
                                + " own — a code from anywhere else will not approve this one.");
             System.out.println("Waiting up to " + ticket.expiresInSeconds() / 60 + " minutes. Ctrl-C to stop.");
@@ -277,6 +298,49 @@ public final class KbsCli {
 
     /** Where the back office serves the approval page. Composed here, never taken from the server's reply. */
     private static final String APPROVAL_PATH = "/device-login";
+
+    /**
+     * The operator's back-office origin, checked before it is printed as something to follow.
+     *
+     * <p>Null in, null out: no link is the honest default, because this client cannot know where the back
+     * office is. What it CAN do is refuse to print nonsense as a link. The value is the operator's own, so
+     * this guards against a typo dressed up as a destination rather than against an attacker - the same
+     * reason the URL is never taken from the server's reply.
+     *
+     * <p>A path, query or fragment is refused rather than trimmed. {@code --approval-origin
+     * https://bo.example.org/device-login} would otherwise print {@code .../device-login/device-login}, and
+     * silently repairing it would teach the flag a shape it does not have.
+     *
+     * @param raw what the operator typed, or null if they did not use the flag
+     * @return the origin with no trailing slash, or null to name the page instead of linking it
+     * @throws IllegalArgumentException if it is not an http(s) origin
+     */
+    static String approvalOrigin(String raw) {
+        if (raw == null || raw.isBlank())
+            return null;
+        String text = raw.trim();
+        URI uri;
+        try {
+            uri = new URI(text);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("--approval-origin is not a URL: " + text);
+        }
+        String scheme = uri.getScheme();
+        if (scheme == null || !(scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https")))
+            throw new IllegalArgumentException(
+                "--approval-origin must start with http:// or https://, and this does not: " + text);
+        if (uri.getHost() == null || uri.getHost().isBlank())
+            throw new IllegalArgumentException("--approval-origin names no host: " + text);
+        if (uri.getQuery() != null || uri.getFragment() != null || uri.getUserInfo() != null)
+            throw new IllegalArgumentException(
+                "--approval-origin is an origin, not a link - drop the query, fragment or credentials: "
+                + text);
+        String path = uri.getPath();
+        if (path != null && !path.isEmpty() && !path.equals("/"))
+            throw new IllegalArgumentException(
+                "--approval-origin is an origin, not a page - " + APPROVAL_PATH + " is added to it: " + text);
+        return text.endsWith("/") ? text.substring(0, text.length() - 1) : text;
+    }
 
     private static int signOut(String[] args) throws Exception {
         CliArgs parsed = commonSpec().parse(args);
@@ -778,10 +842,13 @@ public final class KbsCli {
 
               probe <name> [--<param> <value>] [--caller <label>] [--as-baseline]
                            [--rows [--confirm-personal-data]] [--limit <n>] [--offset <n>]
-              device-login [--as <label>]
+              device-login [--as <label>] [--approval-origin <url>]
                            asks a person to approve this terminal in a browser, and waits for the
                            session they grant. For accounts a password cannot reach: the operator
                            authenticates where their factor lives. Read-only, thirty minutes.
+                           The approval page is a BACK-OFFICE route, which is usually NOT the host
+                           --server points at, so the page is named rather than linked unless
+                           --approval-origin says where the back office is.
               query  -c "<dql>" | -f <file> [--param <value>]... [--count]
                            [--limit <n>] [--offset <n>]
                            -f refuses any path inside the conf directory, and prints the path rather
