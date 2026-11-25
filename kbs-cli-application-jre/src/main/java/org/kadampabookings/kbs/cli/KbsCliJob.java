@@ -2,6 +2,7 @@ package org.kadampabookings.kbs.cli;
 
 import dev.webfx.platform.boot.ApplicationBooter;
 import dev.webfx.platform.boot.spi.ApplicationJob;
+import dev.webfx.stack.db.query.cli.CallerSession;
 
 /**
  * Runs the command, and is the whole of this executable's entry point.
@@ -30,8 +31,14 @@ import dev.webfx.platform.boot.spi.ApplicationJob;
  */
 public final class KbsCliJob implements ApplicationJob {
 
+    /** What this program calls itself on the server's monitoring pages. See {@link CallerSession#setClientName}. */
+    private static final String CLIENT_NAME = "KBS CLI";
+
     @Override
     public void onStart() {
+        // Named before any command runs, because the name rides in the state of the first message sent. The
+        // generic module defaults to "CLI", which already tells a session apart from a browser; this says WHICH.
+        CallerSession.setClientName(CLIENT_NAME);
         System.exit(KbsCli.run(ApplicationBooter.getMainArgs()));
     }
 }
