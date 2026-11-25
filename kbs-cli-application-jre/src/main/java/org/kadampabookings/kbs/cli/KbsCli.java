@@ -17,6 +17,7 @@ import org.kadampabookings.kbs.cli.readscope.Probe;
 import org.kadampabookings.kbs.cli.readscope.Probes;
 import org.kadampabookings.kbs.cli.readscope.RehearsalMatrix;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
@@ -388,8 +389,6 @@ public final class KbsCli {
             throw new IllegalArgumentException("Give a statement with -c \"...\" or a file with -f <path>.");
         if (statement != null && file != null)
             throw new IllegalArgumentException("Give -c or -f, not both.");
-        if (file != null)
-            statement = Files.readString(Path.of(file)).strip();
 
         List<Object> parameterValues = new ArrayList<>();
         for (String value : parsed.values("param"))
@@ -397,7 +396,10 @@ public final class KbsCli {
         Object[] parameters = parameterValues.toArray();
 
         Path logDirectory = logDirectory(parsed);
-        SessionCache cache = new SessionCache(confDirectory(parsed));
+        Path confDirectory = confDirectory(parsed);
+        if (file != null)
+            statement = readStatementFile(confDirectory, file);
+        SessionCache cache = new SessionCache(confDirectory);
         SessionCache.Entry entry = requireSession(cache);
         Audience audience = requireAudience(entry, parsed);
         RunLog runLog = new RunLog(logDirectory);
@@ -410,16 +412,22 @@ public final class KbsCli {
                 throw new IllegalStateException(confirmation);
             DqlRunner runner = new DqlRunner(DATA_SOURCE_ID, timeout(parsed));
             System.out.println("caller   " + entry.username() + " (" + audience.optionValue() + ", confirmed)");
-            System.out.println("dql      " + statement);
+            // A statement from -c was typed by the operator, so echoing it says what ran. A statement from
+            // -f is FILE CONTENT, and printing file content is what turned this command into a way to read
+            // a file aloud — see readStatementFile. The same reasoning governs what reaches the run log,
+            // which is the LESS protected of the two: it is neither mode 600 nor named in the credential
+            // guard, so content that must not be printed must certainly not be appended there.
+            String shown = file == null ? statement : "(from " + file + ")";
+            System.out.println("dql      " + shown);
             if (parsed.flag("count")) {
                 long count = runner.run(statement, parameters).count();
-                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", statement, count);
+                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", shown, count);
                 ResultPrinter.printCount(System.out, "count", count);
             } else {
                 int limit = parsed.intValue("limit", DEFAULT_LIMIT);
                 int offset = parsed.intValue("offset", 0);
                 DqlResult result = runner.runPaged(statement, parameters, limit, offset);
-                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", statement, result.rowCount());
+                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", shown, result.rowCount());
                 ResultPrinter.printRows(System.out, result, offset);
             }
             // No invariant: an arbitrary statement is a probe record with none, exactly as the design note
@@ -583,6 +591,66 @@ public final class KbsCli {
         return Path.of(parsed.value("conf-dir", "conf"));
     }
 
+    /**
+     * The DQL held in {@code file}, refusing any path inside the configuration directory.
+     *
+     * <p><b>Why this refusal exists.</b> Without it, {@code query -f} is a way to read a file aloud: it
+     * printed what it read, and the configuration directory is where the session cache lives — a file this
+     * tool may open and an agent may not. So {@code -f conf/read-scope-cli-session.properties} laundered a
+     * live session token out through the one process permitted to read it, and then appended it to the run
+     * log, which is neither mode 600 nor named in the credential guard. The deny rules were never crossed.
+     * The token came out through the tool, which is the shape of hole a deny list cannot see.
+     *
+     * <p>Compared on REAL paths, so {@code ../conf/x}, a trailing {@code /.} and a symbolic link into the
+     * directory all resolve to the same place before the comparison. A path that cannot be resolved — the
+     * directory does not exist, or the file does not — falls back to absolute-and-normalised, which still
+     * catches the spelling anyone would actually type.
+     *
+     * <p><b>What it does not do.</b> It does not make {@code -f} safe for arbitrary files. The content
+     * still becomes a statement and still travels to the server, where a statement that does not parse is
+     * logged — and {@code ClientQueryGuard}'s masking has the same limit this tool's does, covering quoted
+     * strings and numbers but not a bare {@code key=value}. So {@code -f} on somebody else's secret can
+     * still put it in the SERVER's log, which this refusal does not reach. It closes the one file this tool
+     * itself guarantees is a credential; the rest remains the operator's own error.
+     *
+     * <p>Note also that the directory check can be stepped around with {@code --conf-dir}, which names a
+     * different directory and so makes this comparison miss. That is why the echo was fixed as well rather
+     * than instead: with {@code -f} printing the PATH, the content does not reach the terminal or the run
+     * log however the directory is named. The two halves are independent on purpose.
+     */
+    static String readStatementFile(Path confDirectory, String file) throws IOException {
+        Path statementPath = realOrAbsolute(Path.of(file));
+        if (statementPath.startsWith(realOrAbsolute(confDirectory)))
+            throw new IllegalArgumentException(
+                "Refusing to read " + file + ": it is inside the configuration directory (" + confDirectory
+                + "), which holds this tool's session cache. Give the statement with -c instead.");
+        return Files.readString(statementPath).strip();
+    }
+
+    /**
+     * A path in one canonical form, whether or not it exists: links resolved as far up as the filesystem
+     * can resolve them, the rest normalised.
+     *
+     * <p><b>Falling back to plain {@code toAbsolutePath().normalize()} is not good enough, and the check
+     * caught it.</b> The two paths being compared would then be in DIFFERENT forms whenever one exists and
+     * the other does not — and on macOS that is routine, because {@code /tmp} and {@code /var} are links,
+     * so a resolved path gains a {@code /private} prefix an unresolved one lacks. {@code startsWith} is
+     * then false between a directory and a file inside it, which fails open: the refusal below would not
+     * fire. Resolving the deepest ancestor that DOES exist and re-appending the rest puts both in the same
+     * form in every case.
+     */
+    private static Path realOrAbsolute(Path path) {
+        try {
+            return path.toRealPath();
+        } catch (IOException e) {
+            Path absolute = path.toAbsolutePath().normalize();
+            Path parent = absolute.getParent();
+            Path name = absolute.getFileName();
+            // At the filesystem root there is no ancestor left to resolve, and nothing more to normalise.
+            return parent == null || name == null ? absolute : realOrAbsolute(parent).resolve(name);
+        }
+    }
+
     private static Path logDirectory(CliArgs parsed) {
         return Path.of(parsed.value("log-dir", "logs"));
     }
@@ -620,6 +688,8 @@ public final class KbsCli {
                            [--rows [--confirm-personal-data]] [--limit <n>] [--offset <n>]
               query  -c "<dql>" | -f <file> [--param <value>]... [--count]
                            [--limit <n>] [--offset <n>]
+                           -f refuses any path inside the conf directory, and prints the path rather
+                           than the file's contents: it must not become a way to read a file aloud.
 
             OPTIONS
               --server <url>      wss://host[:port] or http://localhost:8080. No default: a probe must say
