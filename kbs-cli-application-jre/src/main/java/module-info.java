@@ -9,6 +9,8 @@ module kbs.cli.application.jre {
     requires kbs.cli.application;
     requires modality.base.shared.domainmodel;
     requires modality.crm.shared.authn;
+    requires webfx.platform.ast;
+    requires webfx.platform.ast.json.plugin;
     requires webfx.platform.boot;
     requires webfx.platform.substitution.var;
     requires webfx.platform.visibility.jre.headless;

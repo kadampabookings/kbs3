@@ -12,6 +12,7 @@ import dev.webfx.stack.db.query.cli.RunLog;
 import dev.webfx.stack.db.query.cli.ServerEndpoint;
 import dev.webfx.stack.db.query.cli.SessionCache;
 import one.modality.crm.shared.services.authn.ModalityUserPrincipal;
+import one.modality.crm.shared.services.authn.RequestDeviceLoginCredentials;
 import org.kadampabookings.kbs.cli.readscope.Invariant;
 import org.kadampabookings.kbs.cli.readscope.Probe;
 import org.kadampabookings.kbs.cli.readscope.Probes;
@@ -117,13 +118,14 @@ public final class KbsCli {
                 yield EXIT_OK;
             }
             case "signin" -> signIn(rest);
+            case "device-login" -> deviceLogin(rest);
             case "signout" -> signOut(rest);
             case "status" -> status(rest);
             case "probe" -> probe(rest);
             case "query" -> query(rest);
             default -> throw new IllegalArgumentException(
-                "Unknown command '" + command + "'. Try: help, probes, rehearsal, signin, status, probe,"
-                + " query, signout.");
+                "Unknown command '" + command + "'. Try: help, probes, rehearsal, signin, device-login,"
+                + " status, probe, query, signout.");
         };
     }
 
@@ -185,6 +187,96 @@ public final class KbsCli {
                 Arrays.fill(secret, '\0');
         }
     }
+
+    /**
+     * Asks a person to approve this terminal in a browser, and waits for the session they grant.
+     *
+     * <h3>Why this exists when `signin` already works</h3>
+     *
+     * <p>The accounts most worth probing are the ones a password cannot reach. No Java client can produce a
+     * WebAuthn assertion, and a mailbox is deliberately not a second factor — the server answers a factored
+     * account's emailed login with a recovery-only session, which the audience assertion then refuses to
+     * probe the back office with. So for those accounts this is the only route, and it works by having the
+     * operator authenticate where their factor lives.
+     *
+     * <h3>Nothing is copied, and nothing is polled</h3>
+     *
+     * <p>The browser's own session never leaves the browser. The server mints a SEPARATE one — read-only,
+     * thirty minutes, its own method code — and pushes it to this run's address. So there is no second
+     * command to collect it with and no interval to wait between: this process holds its connection open
+     * and watches its own session state. See {@code CallerSession.awaitPushedSession}.
+     *
+     * <h3>The code is printed and never sent anywhere else</h3>
+     *
+     * <p>It is the control, not a convenience. The operator reads it here and types it there, and an
+     * attacker who has started their own request cannot make somebody approve it by asking, because their
+     * request carries a different code. For the same reason the URL is composed from the endpoint THIS run
+     * connected to rather than taken from the reply: a server's idea of where its back office lives is not
+     * something this client can check, and a printed link is exactly what a person follows without looking.
+     */
+    private static int deviceLogin(String[] args) throws Exception {
+        CliArgs parsed = commonSpec().option("as").parse(args);
+        Path confDirectory = confDirectory(parsed);
+        ServerEndpoint endpoint = endpointOf(parsed.required("server",
+            "there is no default server, on purpose — a probe must say which one it asked"));
+        Audience audience = audienceOf(parsed.required("audience",
+            "a run must say which arm it is testing; see the help text"));
+        // What this run records about itself. The SERVER decides whose session it is, from whoever approves,
+        // so this is a label and never a request: --as alice does not ask to become alice.
+        String label = parsed.value("as", "(approved in a browser)");
+
+        SessionCache cache = new SessionCache(confDirectory);
+
+        try (ClientRuntime runtime = ClientRuntime.connect(endpoint, DATA_SOURCE_ID, timeout(parsed))) {
+            Object reply = CallerSession.callWithAudience(
+                new RequestDeviceLoginCredentials(audience.backofficeFlag()), audience, timeout(parsed),
+                "Requesting a device login");
+            DeviceLoginTicket ticket = DeviceLoginTicket.parse(reply);
+            if (ticket == null)
+                throw new IllegalStateException(
+                    "The server did not answer with a device-login code. Is this build's device-login"
+                    + " gateway deployed there?");
+
+            System.out.println();
+            System.out.println("  Open   " + endpoint.httpOrigin() + APPROVAL_PATH);
+            System.out.println("  Type   " + ticket.code());
+            System.out.println();
+            System.out.println("Approve it as the person whose session you want. The code is this request's"
+                               + " own — a code from anywhere else will not approve this one.");
+            System.out.println("Waiting up to " + ticket.expiresInSeconds() / 60 + " minutes. Ctrl-C to stop.");
+
+            // A little beyond the server's own expiry, so a request that lapses is reported as "nobody
+            // approved it" rather than as this client giving up first — two different things to the person
+            // reading, and only one of them is worth retrying immediately.
+            long waitMillis = (ticket.expiresInSeconds() + 10) * 1000L;
+            CallerSession session = CallerSession.awaitPushedSession(label, audience, waitMillis);
+            if (session == null) {
+                System.out.println();
+                System.out.println("Nothing was approved. The request has expired; run this again for a new code.");
+                return EXIT_NOTHING_EVALUATED;
+            }
+
+            String audienceProblem = session.confirmAudience();
+            if (audienceProblem != null) {
+                // The arm comes from the APPROVING session, so this is the honest outcome when a factored
+                // account approves from the recovery-only session its mailbox buys: a front-office session,
+                // when the back office was asked for. Not cached — see signIn for why.
+                session.signOut(timeout(parsed));
+                throw new IllegalStateException(audienceProblem);
+            }
+            cache.store(new SessionCache.Entry(session.token(), label, audience, endpoint.describe(),
+                                               System.currentTimeMillis()));
+            System.out.println();
+            System.out.println("Approved, confirmed " + audience.optionValue()
+                               + " (read back from the server's own token signature).");
+            System.out.println("READ-ONLY and capped at thirty minutes by the server, whatever this cache says.");
+            System.out.println("Cached in " + cache.file() + " — a live session token; mode 600.");
+            return EXIT_OK;
+        }
+    }
+
+    /** Where the back office serves the approval page. Composed here, never taken from the server's reply. */
+    private static final String APPROVAL_PATH = "/device-login";
 
     private static int signOut(String[] args) throws Exception {
         CliArgs parsed = commonSpec().parse(args);
@@ -686,6 +778,10 @@ public final class KbsCli {
 
               probe <name> [--<param> <value>] [--caller <label>] [--as-baseline]
                            [--rows [--confirm-personal-data]] [--limit <n>] [--offset <n>]
+              device-login [--as <label>]
+                           asks a person to approve this terminal in a browser, and waits for the
+                           session they grant. For accounts a password cannot reach: the operator
+                           authenticates where their factor lives. Read-only, thirty minutes.
               query  -c "<dql>" | -f <file> [--param <value>]... [--count]
                            [--limit <n>] [--offset <n>]
                            -f refuses any path inside the conf directory, and prints the path rather
