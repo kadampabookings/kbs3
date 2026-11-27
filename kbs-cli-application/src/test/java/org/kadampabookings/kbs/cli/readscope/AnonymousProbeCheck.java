@@ -68,7 +68,7 @@ public final class AnonymousProbeCheck {
         check("the arm refusal still works independently of anonymity",
               signedIn != null && signedIn.audienceRefusal(Audience.BACK_OFFICE) != null);
 
-        section("Only the booker probe asserts anything, and the other's silence is deliberate");
+        section("Only the booker probe asserts the exposure, and its neighbour's silence is deliberate");
         // documents-without-session must NOT assert zero: anonymous Document reads are intended (the cart
         // and payment-return pages need them), and use-cart-view's existence probe relies in writing on
         // generic reads not being row-filtered. Asserting zero there would demand a fix that breaks a page.
@@ -116,6 +116,46 @@ public final class AnonymousProbeCheck {
               details != null && details.showsPersonalData());
         check("the neighbouring probe's rows carry no person_ column, so it is not marked personal",
               documents != null && !documents.rowsDql().contains("person_") && !documents.showsPersonalData());
+
+        Probe cart = Probes.byName("cart-lookup-without-session");
+
+        section("A REFUSAL is the stronger pass for the exposure, and a failure for the cart read");
+        // The correction that made this section necessary: the committed remedy keys on `bounded`, so an
+        // unbounded anonymous Document read is REFUSED rather than answered 0. Asserting a zero count
+        // would have read that as the probe erroring — a pass that looks like a crash. Accepting both is
+        // also what makes these relations survive a remedy whose shape nobody has settled.
+        Invariant.Measurement refusal = Invariant.Measurement.refused("booker-details-without-session", "anonymous");
+        check("refused HOLDS the no-session relation",
+              Invariant.NOTHING_WITHOUT_A_SESSION.evaluate(refusal).outcome() == Invariant.Verdict.Outcome.HOLDS);
+        check("and says so in words an operator can act on",
+              Invariant.NOTHING_WITHOUT_A_SESSION.evaluate(refusal).detail().contains("refused"));
+        check("a count of 0 still holds it too, for a remedy that denies the columns instead",
+              Invariant.NOTHING_WITHOUT_A_SESSION.evaluate(measured(0, null)).outcome()
+                  == Invariant.Verdict.Outcome.HOLDS);
+        check("the SAME refusal VIOLATES the bounded relation — opposite directions, one fact",
+              Invariant.BOUNDED_READ_STILL_ANSWERS.evaluate(refusal).violated());
+        check("and the violation names what it costs, which is payment and not privacy",
+              Invariant.BOUNDED_READ_STILL_ANSWERS.evaluate(refusal).detail().contains("pay"));
+        check("a bounded read that answers holds",
+              Invariant.BOUNDED_READ_STILL_ANSWERS.evaluate(measured(1, null)).outcome()
+                  == Invariant.Verdict.Outcome.HOLDS);
+        check("a bounded read that answers 0 is violated",
+              Invariant.BOUNDED_READ_STILL_ANSWERS.evaluate(measured(0, null)).violated());
+
+        section("The cart probe: the counterweight, and it carries no credential");
+        check("cart-lookup-without-session exists", cart != null);
+        check("it is anonymous", cart != null && cart.anonymous());
+        check("it asserts the bounded relation",
+              cart != null && cart.invariants().contains(Invariant.BOUNDED_READ_STILL_ANSWERS));
+        check("it BINDS its uuid as $1, which is the whole reason it survives the remedy",
+              cart != null && cart.dql().contains("cart.uuid = $1") && cart.parameterCount() == 1);
+        // A cart uuid IS the authorisation to read one booking without signing in. One committed here
+        // would be a credential in git, and a probe carrying its own key stops measuring the control.
+        check("and carries no literal uuid — the parameter is supplied per run",
+              cart != null && !cart.dql().matches("(?s).*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}.*")
+              && !cart.rowsDql().matches("(?s).*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}.*"));
+        check("its rows take the booking id and nothing from the booker, so it is not personal",
+              cart != null && !cart.rowsDql().contains("person_") && !cart.showsPersonalData());
 
         System.out.println();
         System.out.println("AnonymousProbeCheck: " + pass + " passed, " + fail + " failed");

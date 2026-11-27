@@ -485,13 +485,28 @@ public final class KbsCli {
 
             DqlRunner runner = new DqlRunner(DATA_SOURCE_ID, timeout(parsed));
             long count;
+            boolean refused = false;
             try {
                 count = runner.run(probe.dql(), parameters).count();
             } catch (RuntimeException e) {
-                runLog.append(callerName, audience, probe.name(), probe.dql(), -1);
-                throw e;
+                // A REFUSAL IS AN ANSWER, not a breakdown — but only this one is. The server turning a read
+                // away is the outcome several of these probes exist to see, and rethrowing it exits 2,
+                // which is also what a dead bus, a bad argument and a typo exit with. A probe whose success
+                // cannot be told apart from the server being down tells nobody anything, so the one
+                // sentence the read policy answers with is recognised and carried into the relations.
+                //
+                // Matched NARROWLY and on purpose. Anything wider would swallow real breakage and report it
+                // as a clean pass, which is the failure this whole arrangement exists to prevent, so a
+                // statement that is merely wrong must still be an error. READ_POLICY_REFUSAL is the policy's
+                // own sentence, and AnonymousProbeCheck reads its source to pin that it still is.
+                if (!isReadPolicyRefusal(e)) {
+                    runLog.append(callerName, audience, probe.name(), probe.dql(), -1);
+                    throw e;
+                }
+                refused = true;
+                count = -1;
             }
-            runLog.append(callerName, audience, probe.name(), probe.dql(), count);
+            runLog.append(callerName, audience, probe.name(), probe.dql(), refused ? REFUSED_IN_LOG : count);
 
             System.out.println("probe    " + probe.name());
             System.out.println("caller   " + callerName
@@ -503,7 +518,11 @@ public final class KbsCli {
             System.out.println("dql      " + probe.dql());
             if (parameters.length > 0)
                 System.out.println("with     " + Arrays.toString(parameters));
-            ResultPrinter.printCount(System.out, "count", count);
+            if (refused)
+                System.out.println("refused  " + READ_POLICY_REFUSAL
+                                   + "  — turned away, so there is no count");
+            else
+                ResultPrinter.printCount(System.out, "count", count);
 
             if (parsed.flag("as-baseline")) {
                 baselines.store(baselineKey, count, System.currentTimeMillis());
@@ -517,7 +536,11 @@ public final class KbsCli {
                 return EXIT_OK;
             }
 
-            if (showRows) {
+            if (showRows && refused) {
+                System.out.println();
+                System.out.println("(no rows: this probe's count form was refused, so its row form would be"
+                                   + " refused too)");
+            } else if (showRows) {
                 System.out.println();
                 if (probe.showsPersonalData())
                     System.out.println("⚠️  These rows are personal data. They are not logged; the screen is"
@@ -551,9 +574,11 @@ public final class KbsCli {
                 System.out.println("The matrix does not declare whether " + caller.label() + " reaches this"
                                    + " event, so the per-cell invariants are not evaluated.");
 
-            Invariant.Measurement measurement = new Invariant.Measurement(
-                probe.name(), caller == null ? callerName : caller.label(), count,
-                baseline == null ? null : baseline.count(), reachable);
+            Invariant.Measurement measurement = refused
+                ? Invariant.Measurement.refused(probe.name(), caller == null ? callerName : caller.label())
+                : new Invariant.Measurement(
+                    probe.name(), caller == null ? callerName : caller.label(), count,
+                    baseline == null ? null : baseline.count(), reachable);
 
             System.out.println();
             if (probe.invariants().isEmpty()) {
@@ -673,6 +698,28 @@ public final class KbsCli {
     private static CliArgs.Spec commonSpec() {
         return new CliArgs.Spec()
             .option("server").option("audience").option("conf-dir").option("log-dir").option("timeout");
+    }
+
+    /**
+     * The one sentence {@code NoPrincipalReadPolicy} answers a refused read with.
+     *
+     * <p>Duplicated rather than imported: this module is a client and the policy is a server plugin it must
+     * not depend on. {@code AnonymousProbeCheck} reads the policy's source and asserts this still matches
+     * its {@code REFUSED} constant, so the duplication is pinned rather than hoped for — the arrangement
+     * {@code DeviceLoginGatewayCheck} already uses to hold a gateway's outcome codes against the migration
+     * that defines them.
+     */
+    static final String READ_POLICY_REFUSAL = "This query needs a signed-in caller";
+
+    /** What a refused read records: distinct from a failure's -1 and from a genuine count of 0. */
+    static final long REFUSED_IN_LOG = -2;
+
+    /** Whether this failure is the read policy turning the caller away, rather than anything going wrong. */
+    static boolean isReadPolicyRefusal(Throwable failure) {
+        for (Throwable t = failure; t != null; t = t.getCause())
+            if (t.getMessage() != null && t.getMessage().contains(READ_POLICY_REFUSAL))
+                return true;
+        return false;
     }
 
     private static Object[] parametersFor(Probe probe, CliArgs parsed) {

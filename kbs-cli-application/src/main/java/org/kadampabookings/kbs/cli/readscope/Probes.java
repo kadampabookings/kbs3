@@ -214,12 +214,71 @@ public final class Probes {
         List.of(Invariant.NOTHING_WITHOUT_A_SESSION),
         true);
 
+    /**
+     * A read a signed-out caller is SUPPOSED to be able to make, bound to one cart. <b>The counterweight
+     * to its two neighbours, and the only one here whose failure costs money rather than privacy.</b>
+     *
+     * <p>Anonymous {@code Document} reads are not a mistake to be undone: resume-payment and the cart
+     * probe are reached without signing in, and {@code NoPrincipalReadPolicy}'s second arm turns away the
+     * UNBOUNDED ones precisely so these bounded ones can go on working. Nothing measured that. Both
+     * exposure probes get greener the harder the door is shut, so a remedy one notch too broad would have
+     * read as a complete success while people could not pay.
+     *
+     * <p><b>The uuid is a parameter and never a literal.</b> A cart uuid is the capability that lets a
+     * signed-out caller read one booking — it IS the authorisation — so baking one into this catalogue
+     * would be committing a credential to git, and a probe that carried its own key would stop measuring
+     * the control it is named for. Supply one with {@code --cartUuid}.
+     *
+     * <p>Not marked as personal data: the count is a number, and the row form takes the booking's id and
+     * nothing from the booker. The whole question here is whether the read answers at all.
+     */
+    public static final Probe CART_LOOKUP_WITHOUT_SESSION = new Probe(
+        "cart-lookup-without-session",
+        "That a signed-out caller can still read the one booking a cart uuid names — the read"
+        + " resume-payment and the cart probe depend on. Must stay above zero: this is the probe that"
+        + " catches a fix to the anonymous Document exposure that went one notch too wide.",
+        null, // no arm: a signed-out caller carries no token, so there is none to be about
+        true,
+        "select count(1) as n from Document where cart.uuid = $1",
+        List.of("cartUuid"),
+        "select id from Document where cart.uuid = $1 order by id",
+        List.of(Invariant.BOUNDED_READ_STILL_ANSWERS),
+        false);
+
+    /**
+     * That {@code Person} itself is still closed to a caller with no session. <b>The control, and the only
+     * one of this group that passes today.</b>
+     *
+     * <p>It is the contrast that made the Document finding legible: {@code NoPrincipalReadPolicy} closes
+     * {@code Person} and {@code FrontendAccount}, and the exposure was the copy of Person living on
+     * {@code Document} escaping a rule keyed on the ROOT. Nothing stood guard over the closed half, so a
+     * regression there would have been found the same way the open half was — by somebody looking.
+     *
+     * <p>It also earns its place as the worked example of the other two. A refused read is what both
+     * exposure probes should answer once the bounded-only arm enforces, and this one answers that way
+     * NOW — so the machinery that tells a refusal from a breakdown is exercised against a live server
+     * before anything depends on it, rather than first being trusted on the day it matters.
+     */
+    public static final Probe PERSONS_WITHOUT_SESSION = new Probe(
+        "persons-without-session",
+        "That Person stays closed to a caller with no session — the control the Document finding is"
+        + " measured against, and the one probe here that holds today. Expect it to be REFUSED, which is"
+        + " a stronger pass than a count of zero.",
+        null, // no arm: a signed-out caller carries no token, so there is none to be about
+        true,
+        "select count(1) as n from Person",
+        List.of(),
+        "select id from Person order by id",
+        List.of(Invariant.NOTHING_WITHOUT_A_SESSION),
+        false);
+
     private static final Map<String, Probe> BY_NAME = new LinkedHashMap<>();
 
     static {
         for (Probe probe : List.of(CONVERSATIONS_FOR_EVENT, MESSAGES_FOR_EVENT, REACTIONS_FOR_EVENT,
                                    MY_CONVERSATIONS, UNENFORCED_ROOT, PERSONS_VISIBLE,
-                                   DOCUMENTS_WITHOUT_SESSION, BOOKER_DETAILS_WITHOUT_SESSION))
+                                   DOCUMENTS_WITHOUT_SESSION, BOOKER_DETAILS_WITHOUT_SESSION,
+                                   CART_LOOKUP_WITHOUT_SESSION, PERSONS_WITHOUT_SESSION))
             BY_NAME.put(probe.name(), probe);
     }
 
