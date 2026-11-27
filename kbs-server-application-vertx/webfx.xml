@@ -47,6 +47,38 @@
             </dependencies>
 
         </dependencyManagement>
+
+        <!-- The list of the server's Java libraries, for the security watch (kbs-server-securitywatch-plugin): the fat jar
+             carries none of its own, because shading drops every library's META-INF/maven/** (webfx-parent's shade
+             filter). Written at prepare-package into the module's classes, so the jar - and the fat jar built from it -
+             holds it as the resource kbs/security-watch/java-libraries.txt: one "groupId:artifactId:type[:classifier]:version"
+             line per runtime library (dependency:list's format, without the scope), after a header line. A run from the
+             IDE does not execute it: there the check reads the class path's jars instead, a partial list. -->
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.9.0</version>
+                    <executions>
+                        <execution>
+                            <id>security-watch-java-libraries</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>list</goal>
+                            </goals>
+                            <configuration>
+                                <includeScope>runtime</includeScope>
+                                <sort>true</sort>
+                                <outputScope>false</outputScope>
+                                <appendOutput>false</appendOutput>
+                                <outputFile>${project.build.outputDirectory}/kbs/security-watch/java-libraries.txt</outputFile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
     </maven-pom-manual>
 
 </project>

@@ -104,6 +104,7 @@
         <module>kbs-server-newsimport-plugin</module>
         <module>kbs-server-organisation-update-plugin</module>
         <module>kbs-server-podcastsimport-plugin</module>
+        <module>kbs-server-securitywatch-plugin</module>
         <module>kbs-server-videosimport-plugin</module>
     </modules>
 

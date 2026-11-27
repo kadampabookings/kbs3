@@ -25,6 +25,7 @@
         <plugin-module>kbs-server-podcastsimport-plugin</plugin-module>
         <plugin-module>kbs-server-newsimport-plugin</plugin-module>
         <plugin-module>kbs-server-videosimport-plugin</plugin-module>
+        <plugin-module>kbs-server-securitywatch-plugin</plugin-module> <!-- daily check of what the server runs against public sources, for platform super admins; inert until SECURITY_WATCH_ENABLED -->
 
 <!-- These jobs are run occasionally on dev machines, so commented by default.
         <plugin-module>modality-base-server-geoimport-plugin</plugin-module>
