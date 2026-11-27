@@ -533,11 +533,14 @@ public final class KbsCli {
         }
     }
 
+    /** What the run log and the screen call a run made with no session at all. */
+    static final String ANONYMOUS_CALLER = "anonymous";
+
     private static int query(String[] args) throws Exception {
         CliArgs parsed = commonSpec()
             .option("c").option("f").option("limit").option("offset")
             .repeatable("param")
-            .flag("count")
+            .flag("count").flag("anonymous")
             .parse(args);
         String statement = parsed.value("c", null);
         String file = parsed.value("f", null);
@@ -555,19 +558,30 @@ public final class KbsCli {
         Path confDirectory = confDirectory(parsed);
         if (file != null)
             statement = readStatementFile(confDirectory, file);
-        SessionCache cache = new SessionCache(confDirectory);
-        SessionCache.Entry entry = requireSession(cache);
-        Audience audience = requireAudience(entry, parsed);
         RunLog runLog = new RunLog(logDirectory);
 
-        try (ClientRuntime runtime = ClientRuntime.connect(ServerEndpoint.parse(entry.server()), DATA_SOURCE_ID,
-                                                           timeout(parsed))) {
-            CallerSession session = CallerSession.restore(entry, timeout(parsed));
-            String confirmation = session.confirmAudience();
-            if (confirmation != null)
-                throw new IllegalStateException(confirmation);
+        // Anonymous: no session is read, restored or sent - the run asks what a signed-out visitor may read. The
+        // cache is not even opened, so a session cached there can never ride along by accident.
+        boolean anonymous = parsed.flag("anonymous");
+        String anonymousProblem = anonymousRefusal(anonymous, parsed.value("server", null), parsed.value("audience", null));
+        if (anonymousProblem != null)
+            throw new IllegalArgumentException(anonymousProblem);
+        SessionCache.Entry entry = anonymous ? null : requireSession(new SessionCache(confDirectory));
+        Audience audience = anonymous ? null : requireAudience(entry, parsed);
+        ServerEndpoint server = anonymous ? endpointOf(parsed.value("server", null)) : ServerEndpoint.parse(entry.server());
+        String callerName = anonymous ? ANONYMOUS_CALLER : entry.username();
+
+        try (ClientRuntime runtime = ClientRuntime.connect(server, DATA_SOURCE_ID, timeout(parsed))) {
+            if (anonymous) {
+                System.out.println("caller   " + ANONYMOUS_CALLER + " (no session: what a signed-out visitor may read)");
+            } else {
+                CallerSession session = CallerSession.restore(entry, timeout(parsed));
+                String confirmation = session.confirmAudience();
+                if (confirmation != null)
+                    throw new IllegalStateException(confirmation);
+                System.out.println("caller   " + entry.username() + " (" + audience.optionValue() + ", confirmed)");
+            }
             DqlRunner runner = new DqlRunner(DATA_SOURCE_ID, timeout(parsed));
-            System.out.println("caller   " + entry.username() + " (" + audience.optionValue() + ", confirmed)");
             // A statement from -c was typed by the operator, so echoing it says what ran. A statement from
             // -f is FILE CONTENT, and printing file content is what turned this command into a way to read
             // a file aloud — see readStatementFile. The same reasoning governs what reaches the run log,
@@ -577,19 +591,39 @@ public final class KbsCli {
             System.out.println("dql      " + shown);
             if (parsed.flag("count")) {
                 long count = runner.run(statement, parameters).count();
-                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", shown, count);
+                runLog.append(callerName, audience, file == null ? "-c" : "-f", shown, count);
                 ResultPrinter.printCount(System.out, "count", count);
             } else {
                 int limit = parsed.intValue("limit", DEFAULT_LIMIT);
                 int offset = parsed.intValue("offset", 0);
                 DqlResult result = runner.runPaged(statement, parameters, limit, offset);
-                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", shown, result.rowCount());
+                runLog.append(callerName, audience, file == null ? "-c" : "-f", shown, result.rowCount());
                 ResultPrinter.printRows(System.out, result, offset);
             }
             // No invariant: an arbitrary statement is a probe record with none, exactly as the design note
             // intended. Nothing was asserted, and the exit code says so rather than implying a pass.
             return EXIT_NOTHING_EVALUATED;
         }
+    }
+
+    /**
+     * Why an {@code --anonymous} run cannot be made as asked, or null when it can (or is not anonymous).
+     *
+     * <p>It needs {@code --server}, because there is no cached session to say which server - and no default, for
+     * the reason signin gives. It refuses {@code --audience}: an anonymous caller has no token for the server to
+     * sign an audience into, and this executable claims neither arm (its name says neither, so
+     * {@code Meta.getBackoffice()} is null), so the server treats it as any signed-out visitor. Accepting the
+     * option would let a run say it tested the back office when it tested nobody's arm. Pure.
+     */
+    static String anonymousRefusal(boolean anonymous, String server, String audience) {
+        if (!anonymous)
+            return null;
+        if (server == null)
+            return "--anonymous needs --server: with no session there is nothing to say which server to ask.";
+        if (audience != null)
+            return "--anonymous takes no --audience: a signed-out caller has no token to carry an arm, so the server"
+                   + " answers it as any signed-out visitor whatever this run would claim.";
+        return null;
     }
 
     // ---------------------------------------------------------------- shared option handling
@@ -850,9 +884,12 @@ public final class KbsCli {
                            --server points at, so the page is named rather than linked unless
                            --approval-origin says where the back office is.
               query  -c "<dql>" | -f <file> [--param <value>]... [--count]
-                           [--limit <n>] [--offset <n>]
+                           [--limit <n>] [--offset <n>] [--anonymous --server <url>]
                            -f refuses any path inside the conf directory, and prints the path rather
                            than the file's contents: it must not become a way to read a file aloud.
+                           --anonymous runs with NO session (the cache is not read): it answers what a
+                           signed-out visitor may read - public data, and the proof that personal data
+                           is refused. It needs --server and takes no --audience.
 
             OPTIONS
               --server <url>      wss://host[:port] or http://localhost:8080. No default: a probe must say
