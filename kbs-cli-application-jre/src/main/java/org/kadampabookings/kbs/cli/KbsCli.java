@@ -607,7 +607,7 @@ public final class KbsCli {
         CliArgs parsed = commonSpec()
             .option("c").option("f").option("limit").option("offset")
             .repeatable("param")
-            .flag("count").flag("anonymous")
+            .flag("count").flag("anonymous").flag("confirm-personal-data")
             .parse(args);
         String statement = parsed.value("c", null);
         String file = parsed.value("f", null);
@@ -633,6 +633,10 @@ public final class KbsCli {
         String anonymousProblem = anonymousRefusal(anonymous, parsed.value("server", null), parsed.value("audience", null));
         if (anonymousProblem != null)
             throw new IllegalArgumentException(anonymousProblem);
+        String rowsProblem = anonymousRowsRefusal(anonymous, parsed.flag("count"),
+                                                  parsed.flag("confirm-personal-data"));
+        if (rowsProblem != null)
+            throw new IllegalArgumentException(rowsProblem);
         SessionCache.Entry entry = anonymous ? null : requireSession(new SessionCache(confDirectory));
         Audience audience = anonymous ? null : requireAudience(entry, parsed);
         ServerEndpoint server = anonymous ? endpointOf(parsed.value("server", null)) : ServerEndpoint.parse(entry.server());
@@ -665,6 +669,13 @@ public final class KbsCli {
                 int offset = parsed.intValue("offset", 0);
                 DqlResult result = runner.runPaged(statement, parameters, limit, offset);
                 runLog.append(callerName, audience, file == null ? "-c" : "-f", shown, result.rowCount());
+                if (anonymous) {
+                    System.out.println();
+                    System.out.println("\u26a0\ufe0f  These rows were read with NO SESSION. Whatever is in them is"
+                                       + " readable by anyone who can reach this bus — which is the finding, if"
+                                       + " they hold anything personal. They are not logged; the screen is yours"
+                                       + " to clear.");
+                }
                 ResultPrinter.printRows(System.out, result, offset);
             }
             // No invariant: an arbitrary statement is a probe record with none, exactly as the design note
@@ -682,6 +693,37 @@ public final class KbsCli {
      * {@code Meta.getBackoffice()} is null), so the server treats it as any signed-out visitor. Accepting the
      * option would let a run say it tested the back office when it tested nobody's arm. Pure.
      */
+    /**
+     * Why an anonymous run may not print rows without saying so twice, or null when it may.
+     *
+     * <p><b>Why only the anonymous case.</b> {@code probe} gates rows on a CATALOGUED probe declaring
+     * {@code showsPersonalData}; free-form DQL has nothing to declare, so {@code query} has never had such
+     * a gate and a signed-in run still does not. What {@code --anonymous} changed is not how much is read
+     * but what reading it means: a signed-in run is a named person who authenticated in order to look,
+     * while this one has no caller at all and the run log can only record "anonymous".
+     *
+     * <p>And the arithmetic runs the other way from the usual gate. What a signed-out caller can read is,
+     * by definition, data that is exposed — so the rows this flag prints are disproportionately the ones
+     * that should not have been readable. That is how the Document exposure surfaced: an ad-hoc
+     * {@code query --anonymous} projecting three {@code person_} columns printed a booker's details with
+     * nothing in the way. The count made the finding; the row only put a name on a screen.
+     *
+     * <p>A speed bump and not a prohibition, as the probe gate is: {@code --count} answers the question
+     * without rows, and {@code --confirm-personal-data} says the rows are wanted anyway. Deliberately NOT
+     * a check on the columns selected — {@code person_}, {@code email}, {@code passport} and whatever the
+     * next denormalised copy is called would be a list that is wrong the first time somebody adds to the
+     * schema, and a gate with holes in it is worse than an honest speed bump.
+     */
+    static String anonymousRowsRefusal(boolean anonymous, boolean count, boolean confirmed) {
+        if (!anonymous || count || confirmed)
+            return null;
+        return "Printing rows from an anonymous run needs --confirm-personal-data. With no session there is"
+               + " no caller to attribute this read to, and what a signed-out caller can reach is by"
+               + " definition exposed — so these rows are the likeliest of any to hold somebody's details."
+               + " Use --count to answer the question without them, or pass --confirm-personal-data to"
+               + " print them anyway. (Not a prohibition — a speed bump.)";
+    }
+
     static String anonymousRefusal(boolean anonymous, String server, String audience) {
         if (!anonymous)
             return null;
@@ -978,6 +1020,12 @@ public final class KbsCli {
                            --approval-origin says where the back office is.
               query  -c "<dql>" | -f <file> [--param <value>]... [--count]
                            [--limit <n>] [--offset <n>] [--anonymous --server <url>]
+                           [--confirm-personal-data]
+                           --anonymous runs with NO session, to see what a signed-out visitor
+                           may read. Printing its ROWS needs --confirm-personal-data as well:
+                           what a signed-out caller can reach is by definition exposed, so
+                           those rows are the likeliest to hold somebody's details. --count
+                           needs no such flag. [--anonymous --server <url>]
                            -f refuses any path inside the conf directory, and prints the path rather
                            than the file's contents: it must not become a way to read a file aloud.
                            --anonymous runs with NO session (the cache is not read): it answers what a
