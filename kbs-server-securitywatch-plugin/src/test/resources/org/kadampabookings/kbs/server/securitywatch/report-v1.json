@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "environment": "production",
+  "generatedAt": "2026-11-26T06:02:11Z",
+  "run": {
+    "id": 412,
+    "trigger": "schedule",
+    "startedAt": "2026-11-26T06:00:07Z",
+    "finishedAt": "2026-11-26T06:02:11Z"
+  },
+  "checks": [
+    { "id": "inventory", "ok": true, "error": null },
+    { "id": "libraries-java", "ok": true, "error": null },
+    { "id": "libraries-npm", "ok": true, "error": null },
+    { "id": "osv", "ok": true, "error": null },
+    { "id": "nvd", "ok": true, "error": null },
+    { "id": "kev", "ok": true, "error": null },
+    { "id": "endoflife", "ok": true, "error": null },
+    { "id": "dockerhub", "ok": false, "error": "timeout" }
+  ],
+  "components": [
+    {
+      "id": "java-libraries",
+      "layer": "application",
+      "name": "Server libraries",
+      "where": "Application server",
+      "managedBy": "us",
+      "running": { "version": null, "source": "build", "asOf": "2026-11-25T18:20:00Z", "fact": null },
+      "packageCount": 93,
+      "latest": null,
+      "supportEnds": null,
+      "status": "vulnerable",
+      "openAdvisories": 2,
+      "failedChecks": [],
+      "actionIds": ["code-change:java-libraries:org.example:http-client"]
+    },
+    {
+      "id": "npm-libraries",
+      "layer": "application",
+      "name": "Front-end libraries",
+      "where": "Both web apps",
+      "managedBy": "us",
+      "running": { "version": null, "source": "build", "asOf": "2026-11-25T18:20:00Z", "fact": null },
+      "packageCount": 247,
+      "latest": null,
+      "supportEnds": null,
+      "status": "ok",
+      "openAdvisories": 0,
+      "failedChecks": [],
+      "actionIds": []
+    },
+    {
+      "id": "java-runtime",
+      "layer": "runtime",
+      "name": "Java runtime",
+      "where": "Application server image",
+      "managedBy": "us",
+      "running": { "version": "21.0.9", "source": "live", "asOf": "2026-11-26T06:00:07Z", "fact": "javaVersion" },
+      "packageCount": null,
+      "latest": { "version": "21.0.10", "releasedOn": "2026-11-20" },
+      "supportEnds": "2031-12-31",
+      "status": "update",
+      "openAdvisories": 0,
+      "failedChecks": [],
+      "actionIds": ["redeploy:java-runtime:21.0.10"]
+    },
+    {
+      "id": "os-image",
+      "layer": "runtime",
+      "name": "Operating system",
+      "where": "Application server image",
+      "managedBy": "us",
+      "running": { "version": "Ubuntu 22.04.5 LTS", "source": "live", "asOf": "2026-11-26T06:00:07Z", "fact": "osRelease" },
+      "packageCount": null,
+      "latest": null,
+      "supportEnds": "2027-06-01",
+      "status": "unknown",
+      "openAdvisories": 0,
+      "failedChecks": ["dockerhub"],
+      "actionIds": []
+    },
+    {
+      "id": "postgresql",
+      "layer": "data",
+      "name": "PostgreSQL",
+      "where": "Managed database",
+      "managedBy": "us",
+      "running": { "version": "17.2", "source": "live", "asOf": "2026-11-26T06:00:07Z", "fact": "postgresVersion" },
+      "packageCount": null,
+      "latest": { "version": "17.4", "releasedOn": "2026-11-12" },
+      "supportEnds": "2029-11-08",
+      "status": "vulnerable",
+      "openAdvisories": 12,
+      "failedChecks": [],
+      "actionIds": ["upgrade:postgresql:17.4"]
+    },
+    {
+      "id": "web-proxy",
+      "layer": "edge",
+      "name": "Web proxy (maintenance page)",
+      "where": "Maintenance image",
+      "managedBy": "us",
+      "running": { "version": "1.25", "source": "declared", "asOf": "2026-10-02", "fact": null },
+      "packageCount": null,
+      "latest": { "version": "1.30.1", "releasedOn": "2026-10-28" },
+      "supportEnds": "2025-06-24",
+      "status": "eol",
+      "openAdvisories": 0,
+      "failedChecks": [],
+      "actionIds": ["code-change:web-proxy:stable"]
+    },
+    {
+      "id": "legacy-runtime",
+      "layer": "other",
+      "name": "Legacy application Java runtime",
+      "where": "Legacy application image",
+      "managedBy": "us",
+      "running": { "version": "8u402", "source": "declared", "asOf": "2026-11-10", "fact": null },
+      "packageCount": null,
+      "latest": { "version": "8u402", "releasedOn": "2026-10-21" },
+      "supportEnds": "2027-03-31",
+      "status": "eol-soon",
+      "openAdvisories": 0,
+      "failedChecks": [],
+      "actionIds": ["decide:legacy-runtime:end-of-support"]
+    },
+    {
+      "id": "storage-appliance",
+      "layer": "other",
+      "name": "Storage appliance",
+      "where": "Partner site",
+      "managedBy": "other-party",
+      "running": { "version": "7.1.1", "source": "declared", "asOf": "2026-08-14", "fact": null },
+      "packageCount": null,
+      "latest": null,
+      "supportEnds": null,
+      "status": "vulnerable",
+      "openAdvisories": 1,
+      "failedChecks": [],
+      "actionIds": ["verify:storage-appliance:CVE-2024-00001"]
+    },
+    {
+      "id": "cloud-managed",
+      "layer": "edge",
+      "name": "Load balancer and container hosts",
+      "where": "Cloud provider",
+      "managedBy": "provider",
+      "running": null,
+      "packageCount": null,
+      "latest": null,
+      "supportEnds": null,
+      "status": "managed",
+      "openAdvisories": 0,
+      "failedChecks": [],
+      "actionIds": []
+    }
+  ],
+  "actions": [
+    {
+      "id": "verify:storage-appliance:CVE-2024-00001",
+      "componentId": "storage-appliance",
+      "kind": "verify",
+      "target": null,
+      "from": "7.1.1",
+      "to": null,
+      "severity": "critical",
+      "knownExploited": true,
+      "fixAvailable": true,
+      "publishedOn": "2026-11-18",
+      "dueDate": "2026-11-21",
+      "owner": "Partner site",
+      "needs": [],
+      "counts": { "total": 1, "critical": 1, "high": 0, "medium": 0, "low": 0, "uncertain": 1 },
+      "howTo": [
+        "Read the exact build number on the appliance's information page",
+        "Compare it with the fixed build named in the vendor's advisory",
+        "Update the appliance, or pause its database access until it is updated"
+      ],
+      "advisories": [
+        {
+          "id": "CVE-2024-00001",
+          "severity": "critical",
+          "cvss": 9.8,
+          "summary": "Remote code execution in the appliance's web interface; listed as exploited, with known ransomware use.",
+          "fixedIn": "7.1.1-42962-7",
+          "knownExploited": true,
+          "publishedOn": "2024-03-19",
+          "uncertain": true
+        }
+      ]
+    },
+    {
+      "id": "upgrade:postgresql:17.4",
+      "componentId": "postgresql",
+      "kind": "upgrade",
+      "target": null,
+      "from": "17.2",
+      "to": "17.4",
+      "severity": "high",
+      "knownExploited": false,
+      "fixAvailable": true,
+      "publishedOn": "2026-11-12",
+      "dueDate": "2026-11-26",
+      "owner": "Database",
+      "needs": ["provider-console", "maintenance-window"],
+      "counts": { "total": 12, "critical": 0, "high": 9, "medium": 3, "low": 0, "uncertain": 4 },
+      "howTo": [
+        "Check that the managed service offers the target version",
+        "Upgrade staging and run the smoke tests",
+        "Upgrade production in a maintenance window"
+      ],
+      "advisories": [
+        {
+          "id": "CVE-2026-00010",
+          "severity": "high",
+          "cvss": 8.8,
+          "summary": "A role that can create objects can run code as the database server's operating-system user.",
+          "fixedIn": "17.4",
+          "knownExploited": false,
+          "publishedOn": "2026-11-12",
+          "uncertain": false
+        },
+        {
+          "id": "CVE-2026-00011",
+          "severity": "high",
+          "cvss": 7.5,
+          "summary": "Memory disclosure through a crafted query plan.",
+          "fixedIn": "17.4",
+          "knownExploited": false,
+          "publishedOn": "2026-11-12",
+          "uncertain": false
+        },
+        {
+          "id": "CVE-2026-00012",
+          "severity": "medium",
+          "cvss": 5.4,
+          "summary": "Row security policies bypassed in a rare planner case.",
+          "fixedIn": "17.3",
+          "knownExploited": false,
+          "publishedOn": "2026-08-13",
+          "uncertain": true
+        }
+      ]
+    },
+    {
+      "id": "code-change:java-libraries:org.example:http-client",
+      "componentId": "java-libraries",
+      "kind": "code-change",
+      "target": "org.example:http-client",
+      "from": "2.12.4",
+      "to": "2.12.9",
+      "severity": "critical",
+      "knownExploited": false,
+      "fixAvailable": true,
+      "publishedOn": "2026-11-25",
+      "dueDate": "2026-12-02",
+      "owner": "Server",
+      "needs": [],
+      "counts": { "total": 2, "critical": 1, "high": 1, "medium": 0, "low": 0, "uncertain": 0 },
+      "howTo": [
+        "Raise the library's version where it is declared",
+        "Regenerate the build files, build, deploy to staging, then production"
+      ],
+      "advisories": [
+        {
+          "id": "GHSA-aaaa-bbbb-cccc",
+          "severity": "critical",
+          "cvss": 9.1,
+          "summary": "Request smuggling when a response is read through a shared connection.",
+          "fixedIn": "2.12.9",
+          "knownExploited": false,
+          "publishedOn": "2026-11-25",
+          "uncertain": false
+        },
+        {
+          "id": "GHSA-dddd-eeee-ffff",
+          "severity": "high",
+          "cvss": 7.4,
+          "summary": "Credentials sent again after a cross-origin redirect.",
+          "fixedIn": "2.12.6",
+          "knownExploited": false,
+          "publishedOn": "2026-09-03",
+          "uncertain": false
+        }
+      ]
+    },
+    {
+      "id": "code-change:web-proxy:stable",
+      "componentId": "web-proxy",
+      "kind": "code-change",
+      "target": null,
+      "from": "1.25",
+      "to": "stable",
+      "severity": "none",
+      "knownExploited": false,
+      "fixAvailable": true,
+      "publishedOn": "2025-06-24",
+      "dueDate": null,
+      "owner": "Server",
+      "needs": [],
+      "counts": { "total": 0, "critical": 0, "high": 0, "medium": 0, "low": 0, "uncertain": 0 },
+      "howTo": [
+        "Change the base image of the maintenance page to the current stable line",
+        "Record the new version in the inventory"
+      ],
+      "advisories": []
+    },
+    {
+      "id": "redeploy:java-runtime:21.0.10",
+      "componentId": "java-runtime",
+      "kind": "redeploy",
+      "target": null,
+      "from": "21.0.9",
+      "to": "21.0.10",
+      "severity": "none",
+      "knownExploited": false,
+      "fixAvailable": true,
+      "publishedOn": "2026-11-20",
+      "dueDate": null,
+      "owner": "Server",
+      "needs": [],
+      "counts": { "total": 0, "critical": 0, "high": 0, "medium": 0, "low": 0, "uncertain": 0 },
+      "howTo": [
+        "Run the deploy: the build pulls the current base image",
+        "Check the Java version on this page afterwards"
+      ],
+      "advisories": []
+    },
+    {
+      "id": "decide:legacy-runtime:end-of-support",
+      "componentId": "legacy-runtime",
+      "kind": "decide",
+      "target": null,
+      "from": "8u402",
+      "to": null,
+      "severity": "none",
+      "knownExploited": false,
+      "fixAvailable": false,
+      "publishedOn": null,
+      "dueDate": "2027-03-31",
+      "owner": "Server",
+      "needs": [],
+      "counts": { "total": 0, "critical": 0, "high": 0, "medium": 0, "low": 0, "uncertain": 0 },
+      "howTo": ["Choose a supported runtime before the support end date"],
+      "advisories": []
+    }
+  ],
+  "assessed": [
+    {
+      "id": "CVE-2026-00020",
+      "componentId": "web-proxy",
+      "decision": "not-applicable",
+      "reason": "Needs HTTP/2 to clients; the maintenance page serves plain HTTP/1.1 only.",
+      "decidedOn": "2026-11-25",
+      "reviewBy": "2027-02-25"
+    }
+  ]
+}

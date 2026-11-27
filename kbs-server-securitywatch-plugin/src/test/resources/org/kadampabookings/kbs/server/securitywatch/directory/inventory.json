@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "_about": "FICTIONAL test inventory for the module's checks: no real deployment is described here.",
+  "responseTimes": {"knownExploitedHours": 72, "criticalDays": 7, "highDays": 14},
+  "declaredStaleAfterDays": 90,
+  "imageMaxAgeDays": 14,
+  "eolSoonDays": 180,
+  "baseImage": {"repository": "example/base", "tag": "7"},
+  "components": [
+    {"id": "server-libraries", "layer": "application", "name": "Server libraries", "where": "Example server", "managedBy": "us",
+     "owner": "Server", "running": {"source": "build", "list": "java"}, "flaws": {"osv": {"ecosystem": "Maven"}},
+     "howTo": {"code-change": ["Raise the version in the build file"], "wait-vendor": ["Watch the project"]}},
+    {"id": "web-libraries", "layer": "application", "name": "Web libraries", "where": "Example web app", "managedBy": "us",
+     "owner": "Front end", "running": {"source": "build", "list": "npm"}, "flaws": {"osv": {"ecosystem": "npm"}},
+     "howTo": {"code-change": ["Update the lockfile"]}},
+    {"id": "store", "layer": "data", "name": "Example store", "where": "Example host", "managedBy": "us", "owner": "Data",
+     "needs": ["maintenance-window"],
+     "running": {"source": "live", "fact": "postgresVersion"},
+     "lifecycle": {"endoflife": "redis", "cycleFromVersion": "minor"},
+     "flaws": {"nvd": {"products": ["cpe:2.3:a:redis:redis"], "keywords": ["Example Server"]}, "kev": [{"vendor": "Apache", "product": "Struts"}]},
+     "howTo": {"upgrade": ["Upgrade the store"]}},
+    {"id": "edge", "layer": "edge", "name": "Example proxy", "where": "Example edge", "managedBy": "us", "owner": "Server",
+     "running": {"source": "declared", "version": "1.0", "asOf": "2026-01-01"},
+     "howTo": {"code-change": ["Change the image"], "verify": ["Read the version on the host"]}},
+    {"id": "os", "layer": "runtime", "name": "Operating system", "where": "Example image", "managedBy": "us", "owner": "Server",
+     "running": {"source": "live", "fact": "osRelease"},
+     "howTo": {"redeploy": ["Redeploy"], "decide": ["Choose a newer release"]}},
+    {"id": "cloud", "layer": "edge", "name": "Load balancer", "where": "Example provider", "managedBy": "provider", "owner": "Provider"},
+    {"id": "prod-only", "layer": "other", "name": "Production-only part", "where": "Elsewhere", "managedBy": "other-party",
+     "owner": "Partner", "environments": ["production"], "running": {"source": "declared", "version": "2.0", "asOf": "2026-11-20"}}
+  ],
+  "assessed": [
+    {"id": "CVE-2023-28856", "componentId": "store", "decision": "not-applicable", "reason": "Fictional: the feature is off.",
+     "decidedOn": "2026-11-01", "reviewBy": "2027-02-01"},
+    {"id": "CVE-2000-0001", "componentId": "store", "decision": "accepted", "reason": "Fictional and expired.",
+     "decidedOn": "2026-01-01", "reviewBy": "2026-02-01"}
+  ]
+}

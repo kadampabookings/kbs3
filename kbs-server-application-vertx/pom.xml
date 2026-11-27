@@ -245,5 +245,29 @@
             </dependency>
         </dependencies>
 
-    </dependencyManagement>
+    </dependencyManagement>    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.9.0</version>
+                <executions>
+                    <execution>
+                        <id>security-watch-java-libraries</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>list</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <sort>true</sort>
+                            <outputScope>false</outputScope>
+                            <appendOutput>false</appendOutput>
+                            <outputFile>${project.build.outputDirectory}/kbs/security-watch/java-libraries.txt</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

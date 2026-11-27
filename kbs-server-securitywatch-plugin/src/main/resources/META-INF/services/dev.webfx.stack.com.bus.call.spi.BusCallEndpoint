@@ -1,0 +1,3 @@
+org.kadampabookings.kbs.server.securitywatch.SecurityWatchStatusEndpoint
+org.kadampabookings.kbs.server.securitywatch.SecurityWatchSummaryEndpoint
+org.kadampabookings.kbs.server.securitywatch.SecurityWatchCheckNowEndpoint

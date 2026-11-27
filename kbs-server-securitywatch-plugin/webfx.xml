@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <!-- Security watch: once a day and on demand, the server checks the third-party layers it runs (its own Java
+         libraries, the front-end libraries, the Java runtime, the OS image, the database, and whatever else an
+         inventory file baked into the deployment declares) against public sources, and stores ONE report per run in
+         security_watch_run. Platform super administrators read it on a back-office page through the guarded bus
+         endpoints below.
+
+         The table is deliberately outside the domain model: the report is a list of what is unpatched, and any
+         client can read any table of the domain model. Switched OFF unless `enabled` reads true
+         (declare@kbs.server.securitywatch): off, the server never calls out.
+
+         Generic on purpose: this repository is public, so nothing here names what a deployment runs. The inventory
+         comes from the configured directory at run time. -->
+
+    <exported-packages>
+        <source-packages/>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+        <!-- The sources are called with Vert.x core's HttpClient directly (timeouts, no redirects, a streaming size cap),
+             as the lifecycle plugin opens its own Vert.x connection. -->
+        <source-module>io-vertx-core</source-module>
+        <source-module>webfx-platform-util-vertx</source-module>
+    </dependencies>
+
+    <providers>
+        <provider interface="dev.webfx.stack.com.bus.call.spi.BusCallEndpoint">org.kadampabookings.kbs.server.securitywatch.SecurityWatchStatusEndpoint</provider>
+        <provider interface="dev.webfx.stack.com.bus.call.spi.BusCallEndpoint">org.kadampabookings.kbs.server.securitywatch.SecurityWatchSummaryEndpoint</provider>
+        <provider interface="dev.webfx.stack.com.bus.call.spi.BusCallEndpoint">org.kadampabookings.kbs.server.securitywatch.SecurityWatchCheckNowEndpoint</provider>
+        <provider interface="dev.webfx.platform.boot.spi.ApplicationJob">org.kadampabookings.kbs.server.securitywatch.SecurityWatchJob</provider>
+    </providers>
+
+</project>
