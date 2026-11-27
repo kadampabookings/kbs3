@@ -137,6 +137,78 @@ public enum Invariant {
                                           + " unrestricted caller reads " + unscoped + ". Enforcement has"
                                           + " reached an entity outside ENFORCED_ROOTS.");
         }
+    },
+
+    /**
+     * {@code scoped = 0}, for a caller with no session at all.
+     *
+     * <p>The only relation here that needs NO baseline, and that is the point of it. Every other invariant
+     * compares what this caller read against what an unrestricted one reads, which presumes the read was
+     * legitimate and asks only how far it reached. This one asserts there was nothing to reach: a caller
+     * who is nobody must read none of it, so zero is the whole of the expectation and any number above it
+     * is the finding.
+     *
+     * <p>It therefore VIOLATES while an exposure stands, which is intended rather than a defect in the
+     * probe. A standing measurement of an open hole should read red until the hole closes, and go on
+     * reading green afterwards as the guard against its return. Recording today's number as an accepted
+     * baseline would do the opposite: it would make the exposure the thing we check has not changed.
+     *
+     * <p>Attach it only to a probe declared {@code anonymous}. On a signed-in probe it would assert that an
+     * authorised caller reads nothing, which is not a security property but a broken query.
+     */
+    /**
+     * {@code scoped > 0}, for a read a signed-out caller is SUPPOSED to be able to do.
+     *
+     * <p>The counterweight, and the reason it exists is that the dangerous failure here is not a hole left
+     * open but a door shut too hard. Anonymous {@code Document} reads carry resume-payment and the cart
+     * probe: a remedy one notch too broad does not leak anything, it stops people paying. That failure is
+     * silent in every probe that only measures exposure, because they all go greener as it gets worse.
+     *
+     * <p>A refusal VIOLATES this, which is the whole point of keeping a refusal distinct from a zero.
+     */
+    BOUNDED_READ_STILL_ANSWERS("a bounded read a signed-out caller is meant to make still answers") {
+        @Override
+        public Verdict evaluate(Measurement measurement) {
+            if (measurement.refused())
+                return Verdict.violated(this, "REFUSED. A read the cart and payment-return pages depend on"
+                                              + " was turned away: this is a remedy that has gone too wide,"
+                                              + " and the symptom in production is people unable to pay.");
+            if (measurement.scopedCount() > 0)
+                return Verdict.holds(this, measurement.scopedCount() + " — still answered");
+            // TWO CAUSES, AND THEY MEAN OPPOSITE THINGS, so this says how to tell them apart rather
+            // than leaving it to the reader at the worst moment. A cart with no booking answers 0 and is
+            // nothing; a cart WITH one answering 0 is the payment path down. Learned by nearly reporting
+            // the second when it was the first: `select uuid from cart limit 1` has no ORDER BY, so it
+            // need not return the same row twice, let alone one with a booking attached.
+            return Verdict.violated(this, "answered 0, which has two causes meaning opposite things."
+                                          + " Before concluding anything, check whether that cart has a"
+                                          + " booking at all: select count(*) from document d join cart c"
+                                          + " on c.id = d.cart_id where c.uuid = '<uuid>'. If that is 0,"
+                                          + " the parameter names an empty cart and this probe measured"
+                                          + " nothing. If it is not, a read resume-payment and the cart"
+                                          + " page depend on is returning nothing to a signed-out caller,"
+                                          + " which looks to a booker exactly like their booking having"
+                                          + " vanished — and they cannot pay.");
+        }
+    },
+
+    NOTHING_WITHOUT_A_SESSION("a caller with no session reads none of this") {
+        @Override
+        public Verdict evaluate(Measurement measurement) {
+            // A REFUSAL IS THE STRONGER PASS, and accepting it is what keeps this relation honest across
+            // fixes whose shape nobody has settled yet. Deny the person_ columns and the count becomes 0;
+            // refuse the unbounded statement outright and there is no count at all. Both mean the caller
+            // got nothing, which is the property. Asserting a zero COUNT would have read the second as a
+            // failure — the probe erroring where it should have gone green — and a probe whose pass looks
+            // like a crash is worse than no probe.
+            if (measurement.refused())
+                return Verdict.holds(this, "refused outright — the read never ran, which is more than zero");
+            if (measurement.scopedCount() == 0)
+                return Verdict.holds(this, "0 — a caller with no session reads none of this");
+            return Verdict.violated(this, "a caller with NO SESSION read " + measurement.scopedCount()
+                                          + ". Nothing authenticated this run: whatever these rows hold is"
+                                          + " readable by anyone who can reach the bus.");
+        }
     };
 
     private final String statement;
@@ -161,7 +233,27 @@ public enum Invariant {
      * @param reachable     whether this caller is granted this event, or null when nobody has said
      */
     public record Measurement(String probeName, String callerLabel, long scopedCount, Long unscopedCount,
-                              Boolean reachable) {}
+                              Boolean reachable, boolean refused) {
+
+        /** A measurement of an answer, which is what every probe before the no-session pair produced. */
+        public Measurement(String probeName, String callerLabel, long scopedCount, Long unscopedCount,
+                           Boolean reachable) {
+            this(probeName, callerLabel, scopedCount, unscopedCount, reachable, false);
+        }
+
+        /**
+         * The server turned this read away, so there is no count to judge.
+         *
+         * <p>Kept as a state of its own rather than folded into a zero, because the two are different
+         * facts: zero means the read ran and found nothing, a refusal means it never ran. A relation that
+         * wants "this caller got nothing" is satisfied by both, and one that wants "this caller can still
+         * work" is satisfied by neither — and those are opposite directions, so the distinction has to
+         * survive as far as the relation.
+         */
+        public static Measurement refused(String probeName, String callerLabel) {
+            return new Measurement(probeName, callerLabel, -1, null, null, true);
+        }
+    }
 
     /** One relation's answer. */
     public record Verdict(Invariant invariant, Outcome outcome, String detail) {

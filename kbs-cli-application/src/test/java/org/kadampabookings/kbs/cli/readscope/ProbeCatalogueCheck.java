@@ -129,7 +129,7 @@ public class ProbeCatalogueCheck {
 
         System.out.println();
         System.out.println("A probe record with no invariant is a legal record — the arbitrary-statement shape");
-        Probe arbitrary = new Probe("ad-hoc", "whatever was typed", null,
+        Probe arbitrary = new Probe("ad-hoc", "whatever was typed", null, false,
                                     "select count(1) as n from Event", List.of(), null, null, false);
         check("it constructs", arbitrary.invariants().isEmpty() && arbitrary.parameters().isEmpty());
         check("it belongs to no arm, so no arm refuses it",

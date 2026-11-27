@@ -39,6 +39,7 @@ import java.util.List;
 public record Probe(String name,
                     String summary,
                     Audience audience,
+                    boolean anonymous,
                     String dql,
                     List<String> parameters,
                     String rowsDql,
@@ -60,6 +61,28 @@ public record Probe(String name,
         return parameters.size();
     }
 
+    /**
+     * Why this probe must not be asked by a run with(out) a session, or null when it may.
+     *
+     * <p>Kept apart from {@link #audienceRefusal} because it is a different question, asked earlier. An
+     * arm is a property of a session's token; anonymity is the absence of a session altogether, so there is
+     * no token to carry an arm and nothing to confirm. A probe written for a signed-out caller measures
+     * what the server hands to anybody, and running it with a session would answer a different question
+     * under the same name — which is the whole failure {@code audienceRefusal} exists to prevent, one
+     * level further out.
+     */
+    public String anonymityRefusal(boolean runAnonymously) {
+        if (anonymous == runAnonymously)
+            return null;
+        return anonymous
+            ? "Probe '" + name + "' measures what a caller with NO session may read, so it must be run with"
+              + " --anonymous. Asked with a session it would answer for that caller instead, under a name"
+              + " that says otherwise."
+            : "Probe '" + name + "' is written for a signed-in caller and --anonymous was given. With no"
+              + " session there is no arm, no grant and no person for it to be about, so the number would"
+              + " mean nothing the probe's name claims.";
+    }
+
     /** Why this probe must not be asked under {@code actual}, or null when it may. */
     public String audienceRefusal(Audience actual) {
         if (audience == null || audience == actual)
@@ -72,7 +95,7 @@ public record Probe(String name,
 
     /** A one-line description for {@code probes} and the help text. */
     public String describe() {
-        return name + "  [" + (audience == null ? "either arm" : audience.optionValue()) + "]"
+        return name + "  [" + (anonymous ? "no session" : audience == null ? "either arm" : audience.optionValue()) + "]"
                + (parameters.isEmpty() ? "" : " <" + String.join("> <", parameters) + ">")
                + (showsPersonalData ? "  (counts only unless --rows)" : "")
                + "\n    " + summary;

@@ -400,7 +400,7 @@ public final class KbsCli {
     private static int probe(String[] args) throws Exception {
         CliArgs.Spec spec = commonSpec()
             .option("caller").option("limit").option("offset")
-            .flag("as-baseline").flag("rows").flag("confirm-personal-data");
+            .flag("as-baseline").flag("rows").flag("confirm-personal-data").flag("anonymous");
         // Every probe's parameter names become options, so --eventId works for the probes that take one and
         // is an unknown option for the probes that do not. Declaring a name twice is harmless; the point is
         // that a parameter added to a probe needs no second edit here.
@@ -420,13 +420,44 @@ public final class KbsCli {
         Object[] parameters = parametersFor(probe, parsed);
         RehearsalMatrix.Caller caller = callerOf(parsed);
         Path logDirectory = logDirectory(parsed);
-        SessionCache cache = new SessionCache(confDirectory(parsed));
-        SessionCache.Entry entry = requireSession(cache);
-        Audience audience = requireAudience(entry, parsed);
 
-        String audienceProblem = probe.audienceRefusal(audience);
-        if (audienceProblem != null)
-            throw new IllegalStateException(audienceProblem);
+        // Anonymity is settled before the session cache is touched, and the cache is then not opened at
+        // all: a run asking what a signed-out visitor reads must not be able to carry a cached session
+        // into the question by accident. Same rule, and the same pure refusal, as `query --anonymous`.
+        boolean anonymous = parsed.flag("anonymous");
+        String anonymousProblem = anonymousRefusal(anonymous, parsed.value("server", null),
+                                                   parsed.value("audience", null));
+        if (anonymousProblem != null)
+            throw new IllegalArgumentException(anonymousProblem);
+        String anonymityProblem = probe.anonymityRefusal(anonymous);
+        if (anonymityProblem != null)
+            throw new IllegalStateException(anonymityProblem);
+        // A caller label names a grant holder in the rehearsal matrix. Nobody holds a grant, so there is no
+        // cell to look up and the per-caller invariants would be evaluated against an identity this run
+        // does not have.
+        if (anonymous && caller != null)
+            throw new IllegalArgumentException(
+                "--anonymous takes no --caller: a run with no session is not any of the matrix's callers,"
+                + " and naming one would file this number under somebody's grant.");
+        // A baseline is "what a caller with no scope predicate reads", recorded by a platform super
+        // administrator. A signed-out run is the opposite end of the range, and storing its number under
+        // that name would make every later comparison read backwards.
+        if (anonymous && parsed.flag("as-baseline"))
+            throw new IllegalArgumentException(
+                "--anonymous cannot record a baseline: the baseline is what an UNRESTRICTED caller reads,"
+                + " and this run is the most restricted one there is.");
+
+        SessionCache.Entry entry = anonymous ? null : requireSession(new SessionCache(confDirectory(parsed)));
+        Audience audience = anonymous ? null : requireAudience(entry, parsed);
+        ServerEndpoint server = anonymous ? endpointOf(parsed.value("server", null))
+                                          : ServerEndpoint.parse(entry.server());
+        String callerName = anonymous ? ANONYMOUS_CALLER : entry.username();
+
+        if (!anonymous) {
+            String audienceProblem = probe.audienceRefusal(audience);
+            if (audienceProblem != null)
+                throw new IllegalStateException(audienceProblem);
+        }
 
         boolean showRows = parsed.flag("rows");
         if (showRows && !probe.hasRows())
@@ -441,34 +472,57 @@ public final class KbsCli {
         BaselineStore baselines = new BaselineStore(logDirectory);
         String baselineKey = BaselineStore.keyFor(probe.name(), parameters);
 
-        try (ClientRuntime runtime = ClientRuntime.connect(ServerEndpoint.parse(entry.server()), DATA_SOURCE_ID,
-                                                           timeout(parsed))) {
-            CallerSession session = CallerSession.restore(entry, timeout(parsed));
-            String confirmation = session.confirmAudience();
-            if (confirmation != null)
-                throw new IllegalStateException(confirmation);
-            String callerProblem = callerRefusal(caller, session.userId());
-            if (callerProblem != null)
-                throw new IllegalStateException(callerProblem);
+        try (ClientRuntime runtime = ClientRuntime.connect(server, DATA_SOURCE_ID, timeout(parsed))) {
+            if (!anonymous) {
+                CallerSession session = CallerSession.restore(entry, timeout(parsed));
+                String confirmation = session.confirmAudience();
+                if (confirmation != null)
+                    throw new IllegalStateException(confirmation);
+                String callerProblem = callerRefusal(caller, session.userId());
+                if (callerProblem != null)
+                    throw new IllegalStateException(callerProblem);
+            }
 
             DqlRunner runner = new DqlRunner(DATA_SOURCE_ID, timeout(parsed));
             long count;
+            boolean refused = false;
             try {
                 count = runner.run(probe.dql(), parameters).count();
             } catch (RuntimeException e) {
-                runLog.append(entry.username(), audience, probe.name(), probe.dql(), -1);
-                throw e;
+                // A REFUSAL IS AN ANSWER, not a breakdown — but only this one is. The server turning a read
+                // away is the outcome several of these probes exist to see, and rethrowing it exits 2,
+                // which is also what a dead bus, a bad argument and a typo exit with. A probe whose success
+                // cannot be told apart from the server being down tells nobody anything, so the one
+                // sentence the read policy answers with is recognised and carried into the relations.
+                //
+                // Matched NARROWLY and on purpose. Anything wider would swallow real breakage and report it
+                // as a clean pass, which is the failure this whole arrangement exists to prevent, so a
+                // statement that is merely wrong must still be an error. READ_POLICY_REFUSAL is the policy's
+                // own sentence, and AnonymousProbeCheck reads its source to pin that it still is.
+                if (!isReadPolicyRefusal(e)) {
+                    runLog.append(callerName, audience, probe.name(), probe.dql(), -1);
+                    throw e;
+                }
+                refused = true;
+                count = -1;
             }
-            runLog.append(entry.username(), audience, probe.name(), probe.dql(), count);
+            runLog.append(callerName, audience, probe.name(), probe.dql(), refused ? REFUSED_IN_LOG : count);
 
             System.out.println("probe    " + probe.name());
-            System.out.println("caller   " + entry.username()
-                               + (caller == null ? "" : " (--caller " + caller.label() + ": " + caller.grant() + ")"));
-            System.out.println("audience " + audience.optionValue() + " (confirmed from the token)");
+            System.out.println("caller   " + callerName
+                               + (anonymous ? " (no session: what a signed-out visitor may read)"
+                                            : caller == null ? ""
+                                            : " (--caller " + caller.label() + ": " + caller.grant() + ")"));
+            System.out.println("audience " + (anonymous ? "(none — a signed-out caller carries no arm)"
+                                                        : audience.optionValue() + " (confirmed from the token)"));
             System.out.println("dql      " + probe.dql());
             if (parameters.length > 0)
                 System.out.println("with     " + Arrays.toString(parameters));
-            ResultPrinter.printCount(System.out, "count", count);
+            if (refused)
+                System.out.println("refused  " + READ_POLICY_REFUSAL
+                                   + "  — turned away, so there is no count");
+            else
+                ResultPrinter.printCount(System.out, "count", count);
 
             if (parsed.flag("as-baseline")) {
                 baselines.store(baselineKey, count, System.currentTimeMillis());
@@ -482,7 +536,11 @@ public final class KbsCli {
                 return EXIT_OK;
             }
 
-            if (showRows) {
+            if (showRows && refused) {
+                System.out.println();
+                System.out.println("(no rows: this probe's count form was refused, so its row form would be"
+                                   + " refused too)");
+            } else if (showRows) {
                 System.out.println();
                 if (probe.showsPersonalData())
                     System.out.println("⚠️  These rows are personal data. They are not logged; the screen is"
@@ -490,13 +548,20 @@ public final class KbsCli {
                 int limit = parsed.intValue("limit", DEFAULT_LIMIT);
                 int offset = parsed.intValue("offset", 0);
                 DqlResult rows = runner.runPaged(probe.rowsDql(), parameters, limit, offset);
-                runLog.append(entry.username(), audience, probe.name() + " (rows)", probe.rowsDql(), rows.rowCount());
+                runLog.append(callerName, audience, probe.name() + " (rows)", probe.rowsDql(), rows.rowCount());
                 ResultPrinter.printRows(System.out, rows, offset);
             }
 
             BaselineStore.Baseline baseline = baselines.load(baselineKey);
             System.out.println();
-            if (baseline == null)
+            if (anonymous)
+                // NOT the usual nudge. A baseline is what an UNRESTRICTED caller reads, recorded by a
+                // platform super administrator — and --as-baseline is refused under --anonymous for that
+                // reason, so telling an operator to go and take one would send them at a door this command
+                // holds shut. An anonymous probe's relation needs no baseline anyway: it asserts zero.
+                System.out.println("unscoped (not applicable — a baseline is what an unrestricted caller"
+                                   + " reads, and this run is the most restricted one there is)");
+            else if (baseline == null)
                 System.out.println("No unscoped baseline for " + baselineKey + " — run this probe once as a"
                                    + " platform super administrator with --as-baseline.");
             else
@@ -509,9 +574,11 @@ public final class KbsCli {
                 System.out.println("The matrix does not declare whether " + caller.label() + " reaches this"
                                    + " event, so the per-cell invariants are not evaluated.");
 
-            Invariant.Measurement measurement = new Invariant.Measurement(
-                probe.name(), caller == null ? entry.username() : caller.label(), count,
-                baseline == null ? null : baseline.count(), reachable);
+            Invariant.Measurement measurement = refused
+                ? Invariant.Measurement.refused(probe.name(), caller == null ? callerName : caller.label())
+                : new Invariant.Measurement(
+                    probe.name(), caller == null ? callerName : caller.label(), count,
+                    baseline == null ? null : baseline.count(), reachable);
 
             System.out.println();
             if (probe.invariants().isEmpty()) {
@@ -533,11 +600,14 @@ public final class KbsCli {
         }
     }
 
+    /** What the run log and the screen call a run made with no session at all. */
+    static final String ANONYMOUS_CALLER = "anonymous";
+
     private static int query(String[] args) throws Exception {
         CliArgs parsed = commonSpec()
             .option("c").option("f").option("limit").option("offset")
             .repeatable("param")
-            .flag("count")
+            .flag("count").flag("anonymous").flag("confirm-personal-data")
             .parse(args);
         String statement = parsed.value("c", null);
         String file = parsed.value("f", null);
@@ -555,19 +625,34 @@ public final class KbsCli {
         Path confDirectory = confDirectory(parsed);
         if (file != null)
             statement = readStatementFile(confDirectory, file);
-        SessionCache cache = new SessionCache(confDirectory);
-        SessionCache.Entry entry = requireSession(cache);
-        Audience audience = requireAudience(entry, parsed);
         RunLog runLog = new RunLog(logDirectory);
 
-        try (ClientRuntime runtime = ClientRuntime.connect(ServerEndpoint.parse(entry.server()), DATA_SOURCE_ID,
-                                                           timeout(parsed))) {
-            CallerSession session = CallerSession.restore(entry, timeout(parsed));
-            String confirmation = session.confirmAudience();
-            if (confirmation != null)
-                throw new IllegalStateException(confirmation);
+        // Anonymous: no session is read, restored or sent - the run asks what a signed-out visitor may read. The
+        // cache is not even opened, so a session cached there can never ride along by accident.
+        boolean anonymous = parsed.flag("anonymous");
+        String anonymousProblem = anonymousRefusal(anonymous, parsed.value("server", null), parsed.value("audience", null));
+        if (anonymousProblem != null)
+            throw new IllegalArgumentException(anonymousProblem);
+        String rowsProblem = anonymousRowsRefusal(anonymous, parsed.flag("count"),
+                                                  parsed.flag("confirm-personal-data"));
+        if (rowsProblem != null)
+            throw new IllegalArgumentException(rowsProblem);
+        SessionCache.Entry entry = anonymous ? null : requireSession(new SessionCache(confDirectory));
+        Audience audience = anonymous ? null : requireAudience(entry, parsed);
+        ServerEndpoint server = anonymous ? endpointOf(parsed.value("server", null)) : ServerEndpoint.parse(entry.server());
+        String callerName = anonymous ? ANONYMOUS_CALLER : entry.username();
+
+        try (ClientRuntime runtime = ClientRuntime.connect(server, DATA_SOURCE_ID, timeout(parsed))) {
+            if (anonymous) {
+                System.out.println("caller   " + ANONYMOUS_CALLER + " (no session: what a signed-out visitor may read)");
+            } else {
+                CallerSession session = CallerSession.restore(entry, timeout(parsed));
+                String confirmation = session.confirmAudience();
+                if (confirmation != null)
+                    throw new IllegalStateException(confirmation);
+                System.out.println("caller   " + entry.username() + " (" + audience.optionValue() + ", confirmed)");
+            }
             DqlRunner runner = new DqlRunner(DATA_SOURCE_ID, timeout(parsed));
-            System.out.println("caller   " + entry.username() + " (" + audience.optionValue() + ", confirmed)");
             // A statement from -c was typed by the operator, so echoing it says what ran. A statement from
             // -f is FILE CONTENT, and printing file content is what turned this command into a way to read
             // a file aloud — see readStatementFile. The same reasoning governs what reaches the run log,
@@ -577,13 +662,20 @@ public final class KbsCli {
             System.out.println("dql      " + shown);
             if (parsed.flag("count")) {
                 long count = runner.run(statement, parameters).count();
-                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", shown, count);
+                runLog.append(callerName, audience, file == null ? "-c" : "-f", shown, count);
                 ResultPrinter.printCount(System.out, "count", count);
             } else {
                 int limit = parsed.intValue("limit", DEFAULT_LIMIT);
                 int offset = parsed.intValue("offset", 0);
                 DqlResult result = runner.runPaged(statement, parameters, limit, offset);
-                runLog.append(entry.username(), audience, file == null ? "-c" : "-f", shown, result.rowCount());
+                runLog.append(callerName, audience, file == null ? "-c" : "-f", shown, result.rowCount());
+                if (anonymous) {
+                    System.out.println();
+                    System.out.println("\u26a0\ufe0f  These rows were read with NO SESSION. Whatever is in them is"
+                                       + " readable by anyone who can reach this bus — which is the finding, if"
+                                       + " they hold anything personal. They are not logged; the screen is yours"
+                                       + " to clear.");
+                }
                 ResultPrinter.printRows(System.out, result, offset);
             }
             // No invariant: an arbitrary statement is a probe record with none, exactly as the design note
@@ -592,11 +684,84 @@ public final class KbsCli {
         }
     }
 
+    /**
+     * Why an {@code --anonymous} run cannot be made as asked, or null when it can (or is not anonymous).
+     *
+     * <p>It needs {@code --server}, because there is no cached session to say which server - and no default, for
+     * the reason signin gives. It refuses {@code --audience}: an anonymous caller has no token for the server to
+     * sign an audience into, and this executable claims neither arm (its name says neither, so
+     * {@code Meta.getBackoffice()} is null), so the server treats it as any signed-out visitor. Accepting the
+     * option would let a run say it tested the back office when it tested nobody's arm. Pure.
+     */
+    /**
+     * Why an anonymous run may not print rows without saying so twice, or null when it may.
+     *
+     * <p><b>Why only the anonymous case.</b> {@code probe} gates rows on a CATALOGUED probe declaring
+     * {@code showsPersonalData}; free-form DQL has nothing to declare, so {@code query} has never had such
+     * a gate and a signed-in run still does not. What {@code --anonymous} changed is not how much is read
+     * but what reading it means: a signed-in run is a named person who authenticated in order to look,
+     * while this one has no caller at all and the run log can only record "anonymous".
+     *
+     * <p>And the arithmetic runs the other way from the usual gate. What a signed-out caller can read is,
+     * by definition, data that is exposed — so the rows this flag prints are disproportionately the ones
+     * that should not have been readable. That is how the Document exposure surfaced: an ad-hoc
+     * {@code query --anonymous} projecting three {@code person_} columns printed a booker's details with
+     * nothing in the way. The count made the finding; the row only put a name on a screen.
+     *
+     * <p>A speed bump and not a prohibition, as the probe gate is: {@code --count} answers the question
+     * without rows, and {@code --confirm-personal-data} says the rows are wanted anyway. Deliberately NOT
+     * a check on the columns selected — {@code person_}, {@code email}, {@code passport} and whatever the
+     * next denormalised copy is called would be a list that is wrong the first time somebody adds to the
+     * schema, and a gate with holes in it is worse than an honest speed bump.
+     */
+    static String anonymousRowsRefusal(boolean anonymous, boolean count, boolean confirmed) {
+        if (!anonymous || count || confirmed)
+            return null;
+        return "Printing rows from an anonymous run needs --confirm-personal-data. With no session there is"
+               + " no caller to attribute this read to, and what a signed-out caller can reach is by"
+               + " definition exposed — so these rows are the likeliest of any to hold somebody's details."
+               + " Use --count to answer the question without them, or pass --confirm-personal-data to"
+               + " print them anyway. (Not a prohibition — a speed bump.)";
+    }
+
+    static String anonymousRefusal(boolean anonymous, String server, String audience) {
+        if (!anonymous)
+            return null;
+        if (server == null)
+            return "--anonymous needs --server: with no session there is nothing to say which server to ask.";
+        if (audience != null)
+            return "--anonymous takes no --audience: a signed-out caller has no token to carry an arm, so the server"
+                   + " answers it as any signed-out visitor whatever this run would claim.";
+        return null;
+    }
+
     // ---------------------------------------------------------------- shared option handling
 
     private static CliArgs.Spec commonSpec() {
         return new CliArgs.Spec()
             .option("server").option("audience").option("conf-dir").option("log-dir").option("timeout");
+    }
+
+    /**
+     * The one sentence {@code NoPrincipalReadPolicy} answers a refused read with.
+     *
+     * <p>Duplicated rather than imported: this module is a client and the policy is a server plugin it must
+     * not depend on. {@code AnonymousProbeCheck} reads the policy's source and asserts this still matches
+     * its {@code REFUSED} constant, so the duplication is pinned rather than hoped for — the arrangement
+     * {@code DeviceLoginGatewayCheck} already uses to hold a gateway's outcome codes against the migration
+     * that defines them.
+     */
+    static final String READ_POLICY_REFUSAL = "This query needs a signed-in caller";
+
+    /** What a refused read records: distinct from a failure's -1 and from a genuine count of 0. */
+    static final long REFUSED_IN_LOG = -2;
+
+    /** Whether this failure is the read policy turning the caller away, rather than anything going wrong. */
+    static boolean isReadPolicyRefusal(Throwable failure) {
+        for (Throwable t = failure; t != null; t = t.getCause())
+            if (t.getMessage() != null && t.getMessage().contains(READ_POLICY_REFUSAL))
+                return true;
+        return false;
     }
 
     private static Object[] parametersFor(Probe probe, CliArgs parsed) {
@@ -842,6 +1007,10 @@ public final class KbsCli {
 
               probe <name> [--<param> <value>] [--caller <label>] [--as-baseline]
                            [--rows [--confirm-personal-data]] [--limit <n>] [--offset <n>]
+                           [--anonymous --server <url>]
+                           --anonymous runs the probe with NO session, for the probes that
+                           measure what a signed-out visitor may read. It takes no --audience,
+                           no --caller and no --as-baseline, and the session cache is not opened.
               device-login [--as <label>] [--approval-origin <url>]
                            asks a person to approve this terminal in a browser, and waits for the
                            session they grant. For accounts a password cannot reach: the operator
@@ -850,9 +1019,18 @@ public final class KbsCli {
                            --server points at, so the page is named rather than linked unless
                            --approval-origin says where the back office is.
               query  -c "<dql>" | -f <file> [--param <value>]... [--count]
-                           [--limit <n>] [--offset <n>]
+                           [--limit <n>] [--offset <n>] [--anonymous --server <url>]
+                           [--confirm-personal-data]
+                           --anonymous runs with NO session, to see what a signed-out visitor
+                           may read. Printing its ROWS needs --confirm-personal-data as well:
+                           what a signed-out caller can reach is by definition exposed, so
+                           those rows are the likeliest to hold somebody's details. --count
+                           needs no such flag. [--anonymous --server <url>]
                            -f refuses any path inside the conf directory, and prints the path rather
                            than the file's contents: it must not become a way to read a file aloud.
+                           --anonymous runs with NO session (the cache is not read): it answers what a
+                           signed-out visitor may read - public data, and the proof that personal data
+                           is refused. It needs --server and takes no --audience.
 
             OPTIONS
               --server <url>      wss://host[:port] or http://localhost:8080. No default: a probe must say
