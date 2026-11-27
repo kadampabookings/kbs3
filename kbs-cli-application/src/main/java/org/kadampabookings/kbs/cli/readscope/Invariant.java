@@ -175,9 +175,20 @@ public enum Invariant {
                                               + " and the symptom in production is people unable to pay.");
             if (measurement.scopedCount() > 0)
                 return Verdict.holds(this, measurement.scopedCount() + " — still answered");
-            return Verdict.violated(this, "answered 0. Either the parameter names nothing, or a read those"
-                                          + " pages depend on now returns nothing, which looks to a booker"
-                                          + " exactly like their booking having vanished.");
+            // TWO CAUSES, AND THEY MEAN OPPOSITE THINGS, so this says how to tell them apart rather
+            // than leaving it to the reader at the worst moment. A cart with no booking answers 0 and is
+            // nothing; a cart WITH one answering 0 is the payment path down. Learned by nearly reporting
+            // the second when it was the first: `select uuid from cart limit 1` has no ORDER BY, so it
+            // need not return the same row twice, let alone one with a booking attached.
+            return Verdict.violated(this, "answered 0, which has two causes meaning opposite things."
+                                          + " Before concluding anything, check whether that cart has a"
+                                          + " booking at all: select count(*) from document d join cart c"
+                                          + " on c.id = d.cart_id where c.uuid = '<uuid>'. If that is 0,"
+                                          + " the parameter names an empty cart and this probe measured"
+                                          + " nothing. If it is not, a read resume-payment and the cart"
+                                          + " page depend on is returning nothing to a signed-out caller,"
+                                          + " which looks to a booker exactly like their booking having"
+                                          + " vanished — and they cannot pay.");
         }
     },
 
