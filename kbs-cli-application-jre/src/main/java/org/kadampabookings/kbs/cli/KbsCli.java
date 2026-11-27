@@ -12,6 +12,7 @@ import dev.webfx.stack.db.query.cli.RunLog;
 import dev.webfx.stack.db.query.cli.ServerEndpoint;
 import dev.webfx.stack.db.query.cli.SessionCache;
 import one.modality.crm.shared.services.authn.ModalityUserPrincipal;
+import one.modality.crm.shared.services.authn.AuthenticateWithCartCredentials;
 import one.modality.crm.shared.services.authn.RequestDeviceLoginCredentials;
 import org.kadampabookings.kbs.cli.readscope.Invariant;
 import org.kadampabookings.kbs.cli.readscope.Probe;
@@ -120,12 +121,13 @@ public final class KbsCli {
             }
             case "signin" -> signIn(rest);
             case "device-login" -> deviceLogin(rest);
+            case "guest" -> guestLogin(rest);
             case "signout" -> signOut(rest);
             case "status" -> status(rest);
             case "probe" -> probe(rest);
             case "query" -> query(rest);
             default -> throw new IllegalArgumentException(
-                "Unknown command '" + command + "'. Try: help, probes, rehearsal, signin, device-login,"
+                "Unknown command '" + command + "'. Try: help, probes, rehearsal, signin, device-login, guest,"
                 + " status, probe, query, signout.");
         };
     }
@@ -227,6 +229,107 @@ public final class KbsCli {
      * idea of where its back office lives is not something this client can check, and the control here is
      * precisely that the operator goes somewhere they already trust and types a code they read themselves.
      */
+    /** The caller label for a guest. NEVER the email — see guestLogin. */
+    static final String GUEST_CALLER = "guest";
+
+    /**
+     * Signs in as a GUEST: the identity a booking's own cart link buys.
+     *
+     * <h3>Why this identity and not another</h3>
+     *
+     * <p>Every other caller this tool can be is either a named person who signed in or nobody at all.
+     * A guest is neither, and the read rules were not obviously written for it.
+     * {@code NoPrincipalReadPolicy} governs "a caller who is nobody", and both of its arms ask
+     * {@code LogoutUserId.isLogoutUserIdOrNull(userId)} — true for null and for the logout sentinel, and
+     * FALSE for a {@code ModalityGuestPrincipal}, which is neither. So a guest is exempt from the closed
+     * roots and from the bounded-only arm alike, by construction rather than by decision.
+     *
+     * <p>Whether that matters is a question about data, and the honest answer was that nobody had asked
+     * it: the caller breakdown recorded in that policy's own javadoc — 2,278 user principals, 99
+     * restricted, 245 signed-out, 120 anonymous — has no guest row at all. The write side knows about
+     * guests ({@code PushSubscriptionWritePolicy}, {@code CallerLabel}); the read side never mentions one.
+     * This command exists so the question is measured rather than argued from source.
+     *
+     * <h3>What a cart uuid is</h3>
+     *
+     * <p>Not a parameter — a credential. {@code ModalityGuestAuthenticationGateway} looks the cart up,
+     * finds the booking-access magic link to redeem, validates it under the usual expiry and
+     * password-closed rules, and only then mints a session. So this is a real sign-in and the uuid is what
+     * buys it, which is why it is typed per run and never stored anywhere but the session cache that every
+     * other sign-in uses.
+     *
+     * <p><b>The caller is recorded as "guest" and never as the address.</b> The server takes the same care
+     * — {@code CallerLabel.of} maps a guest principal to the bare word so that no log line carries the
+     * email — and a run log that leaked what this one learns would be a poor place to find it out.
+     */
+    private static int guestLogin(String[] args) throws Exception {
+        CliArgs parsed = commonSpec().parse(args);
+        Path confDirectory = confDirectory(parsed);
+        ServerEndpoint endpoint = endpointOf(parsed.required("server",
+            "there is no default server, on purpose — a probe must say which one it asked"));
+        Audience audience = audienceOf(parsed.required("audience",
+            "a run must say which arm it is testing; see the help text"));
+        SessionCache cache = new SessionCache(confDirectory);
+        // READ AS A PASSWORD IS, never from the command line — the rule this file already states for a
+        // verification code, and for the same reason: this string MINTS A SESSION, so it is a credential
+        // whatever else it is. As an option it went into the shell's history for good and stood in `ps`
+        // for the life of the run. It remains a bearer value that travels in /cart/<uuid> links by design,
+        // which is why this is a speed bump rather than a claim that it is password-grade.
+        //
+        // No flag to bypass the prompt, as signIn has none: an escape hatch for scripting is exactly how
+        // the value gets back onto a command line, and nothing here runs unattended.
+        char[] cartSecret = null;
+        try (ClientRuntime runtime = ClientRuntime.connect(endpoint, DATA_SOURCE_ID, timeout(parsed))) {
+            cartSecret = ConsolePrompt.readPassword("Cart uuid (from the booking's link): ");
+            if (cartSecret == null || cartSecret.length == 0)
+                throw new IllegalArgumentException(
+                    "No cart uuid given. A guest session is bought with a booking's cart link and there is"
+                    + " no other way into one: the server redeems the booking-access link behind it.");
+            String cartUuid = new String(cartSecret);
+            // The gateway answers the call with an empty string and PUSHES the session, as the device
+            // login does — but within the SAME call, because no person has to read anything first. So the
+            // "before" token is captured before asking: capture it after, as the three-argument wait does,
+            // and a session that has already landed is indistinguishable from one that never came.
+            // SAID BEFORE IT HAPPENS. Redeeming is not a read: GuestBookingAccess.linkToRedeem mints and
+            // attaches a booking-access link when the cart has none, or has one for an address its
+            // bookings no longer carry. Every other command in this tool only reads, so an operator has no
+            // reason to expect otherwise unless told.
+            System.out.println("Redeeming a cart link. NOTE: this can WRITE — the server mints and attaches"
+                               + " a booking-access link when the cart has none. Staging, not production.");
+            String tokenBefore = CallerSession.currentToken();
+            CallerSession.callWithAudience(new AuthenticateWithCartCredentials(cartUuid), audience,
+                                           timeout(parsed), "Redeeming a cart link");
+            CallerSession session = CallerSession.awaitPushedSession(GUEST_CALLER, audience, timeout(parsed),
+                                                                     tokenBefore);
+            if (session == null)
+                throw new IllegalStateException(
+                    "The cart link was accepted but no session arrived. The gateway pushes it to this run's"
+                    + " address, so this is a delivery failure rather than a refusal — a refused link fails"
+                    + " the call above with its reason.");
+
+            String audienceProblem = session.confirmAudience();
+            if (audienceProblem != null) {
+                // The guest session's arm comes from the backoffice flag the CLIENT carried, and this
+                // executable carries neither. Not cached — see signIn for why a session whose arm is not
+                // the one asked for is ended rather than kept.
+                session.signOut(timeout(parsed));
+                throw new IllegalStateException(audienceProblem);
+            }
+            cache.store(new SessionCache.Entry(session.token(), GUEST_CALLER, audience, endpoint.describe(),
+                                               System.currentTimeMillis()));
+            System.out.println();
+            System.out.println("Signed in as a guest, confirmed " + audience.optionValue()
+                               + " (read back from the server's own token signature).");
+            System.out.println("The address this identity belongs to is NOT printed and NOT logged; the"
+                               + " caller is recorded as \"" + GUEST_CALLER + "\", as the server records it.");
+            System.out.println("Cached in " + cache.file() + " — a live session token; mode 600.");
+            return EXIT_OK;
+        } finally {
+            if (cartSecret != null)
+                Arrays.fill(cartSecret, '\0');
+        }
+    }
+
     private static int deviceLogin(String[] args) throws Exception {
         CliArgs parsed = commonSpec().option("as").option("approval-origin").parse(args);
         Path confDirectory = confDirectory(parsed);
@@ -1011,6 +1114,16 @@ public final class KbsCli {
                            --anonymous runs the probe with NO session, for the probes that
                            measure what a signed-out visitor may read. It takes no --audience,
                            no --caller and no --as-baseline, and the session cache is not opened.
+              guest        signs in as a GUEST — the identity a booking's cart link buys, which is
+                           neither a signed-in person nor nobody. The read rules govern "a caller
+                           who is nobody" and a guest is not that, so what one may read is a
+                           question nothing else here can ask.
+                           The cart uuid is PROMPTED FOR, like a password, and never taken as an
+                           option: it mints a session, so it must not sit in shell history. The
+                           address it belongs to is never printed or logged.
+                           ALONE IN THIS TOOL, IT CAN WRITE: the server mints and attaches a
+                           booking-access link when the cart has none. Staging, not production.
+
               device-login [--as <label>] [--approval-origin <url>]
                            asks a person to approve this terminal in a browser, and waits for the
                            session they grant. For accounts a password cannot reach: the operator
