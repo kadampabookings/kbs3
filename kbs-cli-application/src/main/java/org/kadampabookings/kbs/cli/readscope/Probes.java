@@ -269,7 +269,10 @@ public final class Probes {
         "select count(1) as n from Person",
         List.of(),
         "select id from Person order by id",
-        List.of(Invariant.NOTHING_WITHOUT_A_SESSION),
+        // REFUSED, not merely "nothing". Person is a closed root, so refusal is the only answer a server
+        // has here — and an answer of any size, zero included, means the run carried a principal it should
+        // not have. That makes this probe the canary for the HARNESS as well as the control for the server.
+        List.of(Invariant.REFUSED_WITHOUT_A_SESSION),
         false);
 
     private static final Map<String, Probe> BY_NAME = new LinkedHashMap<>();

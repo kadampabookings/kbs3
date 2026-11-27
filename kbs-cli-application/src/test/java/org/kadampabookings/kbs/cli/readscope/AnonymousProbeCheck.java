@@ -157,6 +157,30 @@ public final class AnonymousProbeCheck {
         check("its rows take the booking id and nothing from the booker, so it is not personal",
               cart != null && !cart.rowsDql().contains("person_") && !cart.showsPersonalData());
 
+        section("The control probe is the HARNESS's canary, so it demands a refusal and not a zero");
+        // Learned the hard way on 2026-11-27: an anonymous-flagged run answered 0 from Person and two
+        // sessions read it as the control breaking. Person has been a closed root since 2026-10-30, so
+        // every build refuses it; an unscoped read answers tens of thousands; a ZERO means a scope
+        // narrowed it, which needs a principal an anonymous caller has not got. The zero was evidence
+        // about the run, not about the server, and the wider relation could not say so.
+        Probe control = Probes.byName("persons-without-session");
+        check("the control asserts REFUSED specifically",
+              control != null && control.invariants().contains(Invariant.REFUSED_WITHOUT_A_SESSION));
+        check("and NOT the wider relation, which would accept the zero that misled us",
+              control != null && !control.invariants().contains(Invariant.NOTHING_WITHOUT_A_SESSION));
+        check("while the exposure probe keeps the wider one — either remedy shape is legitimate there",
+              details != null && details.invariants().contains(Invariant.NOTHING_WITHOUT_A_SESSION)
+              && !details.invariants().contains(Invariant.REFUSED_WITHOUT_A_SESSION));
+        check("a refusal holds it",
+              Invariant.REFUSED_WITHOUT_A_SESSION.evaluate(refusal).outcome()
+                  == Invariant.Verdict.Outcome.HOLDS);
+        check("ZERO violates it — the case that fooled us",
+              Invariant.REFUSED_WITHOUT_A_SESSION.evaluate(measured(0, null)).violated());
+        check("and so does any other answer",
+              Invariant.REFUSED_WITHOUT_A_SESSION.evaluate(measured(59_000, null)).violated());
+        check("and it says to suspect the run before the server",
+              Invariant.REFUSED_WITHOUT_A_SESSION.evaluate(measured(0, null)).detail().contains("RUN"));
+
         System.out.println();
         System.out.println("AnonymousProbeCheck: " + pass + " passed, " + fail + " failed");
         System.exit(fail == 0 ? 0 : 1);

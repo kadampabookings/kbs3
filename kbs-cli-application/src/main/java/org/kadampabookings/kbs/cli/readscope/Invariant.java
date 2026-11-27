@@ -192,6 +192,40 @@ public enum Invariant {
         }
     },
 
+    /**
+     * The read was REFUSED — not answered, not answered zero. For a root that is closed outright.
+     *
+     * <p>Narrower than {@link #NOTHING_WITHOUT_A_SESSION} on purpose, and the difference is the whole
+     * value. Where a remedy may legitimately deny columns or refuse a statement, either shape means the
+     * caller got nothing and the wider relation is right to take both. Where the ROOT is closed, refusal
+     * is the only correct behaviour a server has, so an ANSWER is not a weaker pass — it is evidence that
+     * the caller was not who the run claimed.
+     *
+     * <p><b>This exists because a zero was misread for half an afternoon, by two sessions.</b> An
+     * anonymous-flagged run answered 0 from {@code Person}. Both of us read it as the control having
+     * broken, and it is not what that means: the root has been closed since 2026-10-30, so every build in
+     * play refuses it, and an unscoped read would have answered tens of thousands rather than zero. A zero
+     * specifically means a scope narrowed the read — which requires a principal, which an anonymous caller
+     * does not have. The number was not evidence about the server. It was evidence about the run.
+     *
+     * <p>So the probe this is attached to is the harness's own canary. When it does not refuse, the other
+     * probes in that run were not asking as the caller they say they were, and their numbers describe
+     * somebody else. That is a thing to notice before reading them, not after acting on them.
+     */
+    REFUSED_WITHOUT_A_SESSION("a closed root REFUSES a caller with no session, rather than answering") {
+        @Override
+        public Verdict evaluate(Measurement measurement) {
+            if (measurement.refused())
+                return Verdict.holds(this, "refused — the caller was turned away, as a closed root must");
+            return Verdict.violated(this, "ANSWERED " + measurement.scopedCount() + " instead of refusing."
+                                          + " This root is closed, so a caller with no session cannot get an"
+                                          + " answer from it at all — not even zero, which would mean a"
+                                          + " scope narrowed the read and therefore that a principal was"
+                                          + " present. Suspect the RUN before the server: treat the other"
+                                          + " anonymous numbers from this run as describing somebody else.");
+        }
+    },
+
     NOTHING_WITHOUT_A_SESSION("a caller with no session reads none of this") {
         @Override
         public Verdict evaluate(Measurement measurement) {
