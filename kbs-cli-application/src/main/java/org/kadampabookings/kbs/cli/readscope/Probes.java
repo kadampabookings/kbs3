@@ -32,6 +32,7 @@ public final class Probes {
         "How many conversations of one event this back-office caller can read. The support inbox's own"
         + " question, asked about an event the picker may not offer.",
         Audience.BACK_OFFICE,
+        false,
         "select count(1) as n from Conversation where event=$1",
         List.of(EVENT),
         "select id, status, type, createdAt from Conversation where event=$1 order by id",
@@ -51,6 +52,7 @@ public final class Probes {
         "messages-for-event",
         "How many chat messages of one event this back-office caller can read.",
         Audience.BACK_OFFICE,
+        false,
         "select count(1) as n from ChatMessage where conversation.event=$1",
         List.of(EVENT),
         // Deliberately without `content`: the count answers every invariant, and the bodies are what the
@@ -67,6 +69,7 @@ public final class Probes {
         "reactions-for-event",
         "How many reactions on one event's messages this back-office caller can read.",
         Audience.BACK_OFFICE,
+        false,
         "select count(1) as n from ChatMessageReaction where message.conversation.event=$1",
         List.of(EVENT),
         "select id, emoji, message, createdAt from ChatMessageReaction where message.conversation.event=$1 order by id",
@@ -84,6 +87,7 @@ public final class Probes {
         "my-conversations",
         "How many conversations this front-office member can read. Should be their own and no others.",
         Audience.FRONT_OFFICE,
+        false,
         "select count(1) as n from Conversation where viewerPerson=CALLER_PERSON",
         List.of(),
         "select id, event, status, createdAt from Conversation where viewerPerson=CALLER_PERSON order by id",
@@ -100,6 +104,7 @@ public final class Probes {
         "Agent presence rows — an entity outside ENFORCED_ROOTS, which must answer the same for every caller"
         + " before and after a flip.",
         null, // either arm: that it is the same in both is the assertion
+        false,
         "select count(1) as n from ChatPresence where agent",
         List.of(),
         "select id, person, event, lastSeenAt from ChatPresence where agent order by id",
@@ -135,17 +140,86 @@ public final class Probes {
         "How many people a signed-in front-office member can count. The whole table before the member arm"
         + " (59,858 on staging); their own account's people after it.",
         Audience.FRONT_OFFICE,
+        false,
         "select count(1) as n from Person",
         List.of(),
         "select id, firstName, lastName, email from Person order by id",
         List.of(),
         true);
 
+    // ===== what a caller with NO SESSION may read =================================================
+
+    /**
+     * How many bookings a signed-out caller can count. <b>A measurement, with no invariant, and that is
+     * deliberate.</b>
+     *
+     * <p>Staging answered 294,713 on 2026-11-27 — the whole table. The obvious assertion would be that it
+     * should be zero, and it is the wrong one: {@code NoPrincipalReadPolicy} leaves {@code Document} open
+     * to a caller with no principal ON PURPOSE, because the cart and payment-return pages are reached
+     * without signing in and read {@code Document} to show a booker their own booking. Worse,
+     * {@code use-cart-view}'s existence probe relies in writing on generic reads NOT being row-filtered, so
+     * that it can tell "expired link" from "not yours". Closing this root outright would break that.
+     *
+     * <p>So this probe exists to be read beside its neighbour rather than to pass or fail. If that one ever
+     * reaches zero while this one does not, the fix was the right shape: the booking still exists to a
+     * stranger, the booker does not.
+     */
+    public static final Probe DOCUMENTS_WITHOUT_SESSION = new Probe(
+        "documents-without-session",
+        "How many bookings a caller with no session can count (294,713 on staging, 2026-11-27). A"
+        + " measurement, not an assertion: anonymous Document reads are deliberate — the cart and"
+        + " payment-return pages need them — so zero is not necessarily the right answer here.",
+        null, // no arm: a signed-out caller carries no token, so there is none to be about
+        true,
+        "select count(1) as n from Document",
+        List.of(),
+        "select id, event from Document order by id",
+        List.of(),
+        false);
+
+    /**
+     * How many bookings carry a booker's details readable by a caller with no session. <b>This is the one
+     * that must reach zero.</b>
+     *
+     * <p>Staging answered 294,060 on 2026-11-27, and the row form returns names, e-mail addresses and
+     * passport numbers. {@code document} holds 56 denormalised {@code person_} columns — the booker's
+     * details as they stood at booking time — and {@code NoPrincipalReadPolicy} keys on the ROOT entity, so
+     * closing {@code Person} says nothing about the copy of {@code Person} living on {@code Document}.
+     * Written up in {@code docs/security/anonymous-document-exposure.md}.
+     *
+     * <p><b>Why this pair of numbers and not one.</b> The neighbouring probe counts bookings; this one
+     * counts bookings whose booker is legible. The gap between them is the whole finding, and keeping them
+     * apart is what lets a fix be judged: a remedy that denies the {@code person_} columns while leaving
+     * the root readable sends this to zero and leaves that one alone, which is precisely the shape the
+     * cart pages can survive.
+     *
+     * <p><b>It fails today, by design.</b> See {@link Invariant#NOTHING_WITHOUT_A_SESSION}: a standing
+     * measurement of an open exposure should read red until it closes.
+     *
+     * <p>Marked as personal data, so its rows need {@code --confirm-personal-data} as well as
+     * {@code --rows}. That gate is why this belongs here rather than as a {@code query} invocation — a
+     * catalogued probe can declare what it will show, which free-form DQL cannot.
+     */
+    public static final Probe BOOKER_DETAILS_WITHOUT_SESSION = new Probe(
+        "booker-details-without-session",
+        "How many bookings expose their booker's name to a caller with no session (294,060 on staging,"
+        + " 2026-11-27). Must be zero: document's 56 denormalised person_ columns carry names, e-mail,"
+        + " phone and passport, and closing Person does not close the copy of it living here.",
+        null, // no arm: a signed-out caller carries no token, so there is none to be about
+        true,
+        "select count(1) as n from Document where person_firstName is not null",
+        List.of(),
+        "select id, person_firstName, person_lastName, person_email from Document"
+        + " where person_firstName is not null order by id",
+        List.of(Invariant.NOTHING_WITHOUT_A_SESSION),
+        true);
+
     private static final Map<String, Probe> BY_NAME = new LinkedHashMap<>();
 
     static {
         for (Probe probe : List.of(CONVERSATIONS_FOR_EVENT, MESSAGES_FOR_EVENT, REACTIONS_FOR_EVENT,
-                                   MY_CONVERSATIONS, UNENFORCED_ROOT, PERSONS_VISIBLE))
+                                   MY_CONVERSATIONS, UNENFORCED_ROOT, PERSONS_VISIBLE,
+                                   DOCUMENTS_WITHOUT_SESSION, BOOKER_DETAILS_WITHOUT_SESSION))
             BY_NAME.put(probe.name(), probe);
     }
 

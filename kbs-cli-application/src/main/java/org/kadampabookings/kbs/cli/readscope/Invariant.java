@@ -137,6 +137,34 @@ public enum Invariant {
                                           + " unrestricted caller reads " + unscoped + ". Enforcement has"
                                           + " reached an entity outside ENFORCED_ROOTS.");
         }
+    },
+
+    /**
+     * {@code scoped = 0}, for a caller with no session at all.
+     *
+     * <p>The only relation here that needs NO baseline, and that is the point of it. Every other invariant
+     * compares what this caller read against what an unrestricted one reads, which presumes the read was
+     * legitimate and asks only how far it reached. This one asserts there was nothing to reach: a caller
+     * who is nobody must read none of it, so zero is the whole of the expectation and any number above it
+     * is the finding.
+     *
+     * <p>It therefore VIOLATES while an exposure stands, which is intended rather than a defect in the
+     * probe. A standing measurement of an open hole should read red until the hole closes, and go on
+     * reading green afterwards as the guard against its return. Recording today's number as an accepted
+     * baseline would do the opposite: it would make the exposure the thing we check has not changed.
+     *
+     * <p>Attach it only to a probe declared {@code anonymous}. On a signed-in probe it would assert that an
+     * authorised caller reads nothing, which is not a security property but a broken query.
+     */
+    NOTHING_WITHOUT_A_SESSION("scoped = 0 for a caller with no session") {
+        @Override
+        public Verdict evaluate(Measurement measurement) {
+            if (measurement.scopedCount() == 0)
+                return Verdict.holds(this, "0 — a caller with no session reads none of this");
+            return Verdict.violated(this, "a caller with NO SESSION read " + measurement.scopedCount()
+                                          + ". Nothing authenticated this run: whatever these rows hold is"
+                                          + " readable by anyone who can reach the bus.");
+        }
     };
 
     private final String statement;

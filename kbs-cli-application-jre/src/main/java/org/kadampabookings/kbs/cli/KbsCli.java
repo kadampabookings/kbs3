@@ -400,7 +400,7 @@ public final class KbsCli {
     private static int probe(String[] args) throws Exception {
         CliArgs.Spec spec = commonSpec()
             .option("caller").option("limit").option("offset")
-            .flag("as-baseline").flag("rows").flag("confirm-personal-data");
+            .flag("as-baseline").flag("rows").flag("confirm-personal-data").flag("anonymous");
         // Every probe's parameter names become options, so --eventId works for the probes that take one and
         // is an unknown option for the probes that do not. Declaring a name twice is harmless; the point is
         // that a parameter added to a probe needs no second edit here.
@@ -420,13 +420,44 @@ public final class KbsCli {
         Object[] parameters = parametersFor(probe, parsed);
         RehearsalMatrix.Caller caller = callerOf(parsed);
         Path logDirectory = logDirectory(parsed);
-        SessionCache cache = new SessionCache(confDirectory(parsed));
-        SessionCache.Entry entry = requireSession(cache);
-        Audience audience = requireAudience(entry, parsed);
 
-        String audienceProblem = probe.audienceRefusal(audience);
-        if (audienceProblem != null)
-            throw new IllegalStateException(audienceProblem);
+        // Anonymity is settled before the session cache is touched, and the cache is then not opened at
+        // all: a run asking what a signed-out visitor reads must not be able to carry a cached session
+        // into the question by accident. Same rule, and the same pure refusal, as `query --anonymous`.
+        boolean anonymous = parsed.flag("anonymous");
+        String anonymousProblem = anonymousRefusal(anonymous, parsed.value("server", null),
+                                                   parsed.value("audience", null));
+        if (anonymousProblem != null)
+            throw new IllegalArgumentException(anonymousProblem);
+        String anonymityProblem = probe.anonymityRefusal(anonymous);
+        if (anonymityProblem != null)
+            throw new IllegalStateException(anonymityProblem);
+        // A caller label names a grant holder in the rehearsal matrix. Nobody holds a grant, so there is no
+        // cell to look up and the per-caller invariants would be evaluated against an identity this run
+        // does not have.
+        if (anonymous && caller != null)
+            throw new IllegalArgumentException(
+                "--anonymous takes no --caller: a run with no session is not any of the matrix's callers,"
+                + " and naming one would file this number under somebody's grant.");
+        // A baseline is "what a caller with no scope predicate reads", recorded by a platform super
+        // administrator. A signed-out run is the opposite end of the range, and storing its number under
+        // that name would make every later comparison read backwards.
+        if (anonymous && parsed.flag("as-baseline"))
+            throw new IllegalArgumentException(
+                "--anonymous cannot record a baseline: the baseline is what an UNRESTRICTED caller reads,"
+                + " and this run is the most restricted one there is.");
+
+        SessionCache.Entry entry = anonymous ? null : requireSession(new SessionCache(confDirectory(parsed)));
+        Audience audience = anonymous ? null : requireAudience(entry, parsed);
+        ServerEndpoint server = anonymous ? endpointOf(parsed.value("server", null))
+                                          : ServerEndpoint.parse(entry.server());
+        String callerName = anonymous ? ANONYMOUS_CALLER : entry.username();
+
+        if (!anonymous) {
+            String audienceProblem = probe.audienceRefusal(audience);
+            if (audienceProblem != null)
+                throw new IllegalStateException(audienceProblem);
+        }
 
         boolean showRows = parsed.flag("rows");
         if (showRows && !probe.hasRows())
@@ -441,30 +472,34 @@ public final class KbsCli {
         BaselineStore baselines = new BaselineStore(logDirectory);
         String baselineKey = BaselineStore.keyFor(probe.name(), parameters);
 
-        try (ClientRuntime runtime = ClientRuntime.connect(ServerEndpoint.parse(entry.server()), DATA_SOURCE_ID,
-                                                           timeout(parsed))) {
-            CallerSession session = CallerSession.restore(entry, timeout(parsed));
-            String confirmation = session.confirmAudience();
-            if (confirmation != null)
-                throw new IllegalStateException(confirmation);
-            String callerProblem = callerRefusal(caller, session.userId());
-            if (callerProblem != null)
-                throw new IllegalStateException(callerProblem);
+        try (ClientRuntime runtime = ClientRuntime.connect(server, DATA_SOURCE_ID, timeout(parsed))) {
+            if (!anonymous) {
+                CallerSession session = CallerSession.restore(entry, timeout(parsed));
+                String confirmation = session.confirmAudience();
+                if (confirmation != null)
+                    throw new IllegalStateException(confirmation);
+                String callerProblem = callerRefusal(caller, session.userId());
+                if (callerProblem != null)
+                    throw new IllegalStateException(callerProblem);
+            }
 
             DqlRunner runner = new DqlRunner(DATA_SOURCE_ID, timeout(parsed));
             long count;
             try {
                 count = runner.run(probe.dql(), parameters).count();
             } catch (RuntimeException e) {
-                runLog.append(entry.username(), audience, probe.name(), probe.dql(), -1);
+                runLog.append(callerName, audience, probe.name(), probe.dql(), -1);
                 throw e;
             }
-            runLog.append(entry.username(), audience, probe.name(), probe.dql(), count);
+            runLog.append(callerName, audience, probe.name(), probe.dql(), count);
 
             System.out.println("probe    " + probe.name());
-            System.out.println("caller   " + entry.username()
-                               + (caller == null ? "" : " (--caller " + caller.label() + ": " + caller.grant() + ")"));
-            System.out.println("audience " + audience.optionValue() + " (confirmed from the token)");
+            System.out.println("caller   " + callerName
+                               + (anonymous ? " (no session: what a signed-out visitor may read)"
+                                            : caller == null ? ""
+                                            : " (--caller " + caller.label() + ": " + caller.grant() + ")"));
+            System.out.println("audience " + (anonymous ? "(none — a signed-out caller carries no arm)"
+                                                        : audience.optionValue() + " (confirmed from the token)"));
             System.out.println("dql      " + probe.dql());
             if (parameters.length > 0)
                 System.out.println("with     " + Arrays.toString(parameters));
@@ -490,13 +525,20 @@ public final class KbsCli {
                 int limit = parsed.intValue("limit", DEFAULT_LIMIT);
                 int offset = parsed.intValue("offset", 0);
                 DqlResult rows = runner.runPaged(probe.rowsDql(), parameters, limit, offset);
-                runLog.append(entry.username(), audience, probe.name() + " (rows)", probe.rowsDql(), rows.rowCount());
+                runLog.append(callerName, audience, probe.name() + " (rows)", probe.rowsDql(), rows.rowCount());
                 ResultPrinter.printRows(System.out, rows, offset);
             }
 
             BaselineStore.Baseline baseline = baselines.load(baselineKey);
             System.out.println();
-            if (baseline == null)
+            if (anonymous)
+                // NOT the usual nudge. A baseline is what an UNRESTRICTED caller reads, recorded by a
+                // platform super administrator — and --as-baseline is refused under --anonymous for that
+                // reason, so telling an operator to go and take one would send them at a door this command
+                // holds shut. An anonymous probe's relation needs no baseline anyway: it asserts zero.
+                System.out.println("unscoped (not applicable — a baseline is what an unrestricted caller"
+                                   + " reads, and this run is the most restricted one there is)");
+            else if (baseline == null)
                 System.out.println("No unscoped baseline for " + baselineKey + " — run this probe once as a"
                                    + " platform super administrator with --as-baseline.");
             else
@@ -510,7 +552,7 @@ public final class KbsCli {
                                    + " event, so the per-cell invariants are not evaluated.");
 
             Invariant.Measurement measurement = new Invariant.Measurement(
-                probe.name(), caller == null ? entry.username() : caller.label(), count,
+                probe.name(), caller == null ? callerName : caller.label(), count,
                 baseline == null ? null : baseline.count(), reachable);
 
             System.out.println();
@@ -876,6 +918,10 @@ public final class KbsCli {
 
               probe <name> [--<param> <value>] [--caller <label>] [--as-baseline]
                            [--rows [--confirm-personal-data]] [--limit <n>] [--offset <n>]
+                           [--anonymous --server <url>]
+                           --anonymous runs the probe with NO session, for the probes that
+                           measure what a signed-out visitor may read. It takes no --audience,
+                           no --caller and no --as-baseline, and the session cache is not opened.
               device-login [--as <label>] [--approval-origin <url>]
                            asks a person to approve this terminal in a browser, and waits for the
                            session they grant. For accounts a password cannot reach: the operator
