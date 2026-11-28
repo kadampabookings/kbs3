@@ -126,14 +126,18 @@ public final class Probes {
      * them. The expected answer here is therefore no longer the table but a handful — a median of 1 on
      * staging, 51 for the largest account.
      *
-     * <p><b>Still no invariant, but the reason has changed.</b> It is no longer that there is nothing to
-     * satisfy; it is that there is nothing to compare against. {@code OWN_ROWS_ONLY} needs an unscoped
+     * <p><b>Still no invariant, but the reason has changed twice.</b> It is no longer that there is nothing
+     * to satisfy; it is that there is nothing to compare against. {@code OWN_ROWS_ONLY} needs an unscoped
      * baseline, and {@code ChatReadScope.tokenForCaller} hands MEMBER to every front-office caller — a
      * platform super administrator included, because the arm is the verified audience signed into the session
-     * token, not the caller's tier. No front-office run can record that baseline. Taking it from the back
-     * office, where {@code Person} stays unscoped until the back-office arm is built, would let one probe
-     * span both audiences, which is the one thing {@code Probe.audienceRefusal} exists to prevent. That is a
-     * design decision rather than a line of code, so it is written down here instead of taken.
+     * token, not the caller's tier. No front-office run can record that baseline.
+     *
+     * <p>This note used to add that the baseline could not be borrowed from the back office either, because
+     * one probe spanning both audiences is the thing {@code Probe.audienceRefusal} exists to prevent. That
+     * is still true, but the sentence it rested on — "where {@code Person} stays unscoped until the
+     * back-office arm is built" — <b>expired on 2026-11-29</b>, when that arm was written. The back office
+     * is no longer an unscoped baseline for {@code Person} at all; only a platform super administrator is,
+     * and {@link #PERSONS_IN_MY_CENTRES} is where that comparison now lives.
      */
     public static final Probe PERSONS_VISIBLE = new Probe(
         "persons-visible",
@@ -145,6 +149,87 @@ public final class Probes {
         List.of(),
         "select id, firstName, lastName, email from Person order by id",
         List.of(),
+        true);
+
+    /**
+     * The same statement as {@link #PERSONS_VISIBLE}, asked from the other arm — which is why it is a
+     * separate probe rather than an option on that one. {@code Probe.audienceRefusal} exists to stop one
+     * probe spanning both audiences, because the two arms are different questions and not two views of one.
+     *
+     * <p><b>This one CAN carry an invariant, and that is the difference.</b> A platform super administrator
+     * signing into the back office resolves to UNRESTRICTED and gets no predicate, so a run
+     * {@code --as-baseline} as that caller records the unscoped figure the front office could never record.
+     * {@code NEVER_WIDER} then holds every scoped back-office caller to it — the one direction that must
+     * never happen, and the check that would catch a two-armed condition injected with the wrong precedence
+     * ({@code <filter> and A or B} read as {@code (<filter> and A) or B}).
+     *
+     * <p>Measured on staging 2026-11-29, against a baseline of 59,858: organisation 108 sees <b>417</b>
+     * (a centre with no bookings at all, so the whole figure is its own people), organisation 187
+     * <b>3,670</b>, organisation 1 <b>25,367</b>. Those are predictions for a run to check, not results —
+     * they come from SQL, not from the bus.
+     */
+    public static final Probe PERSONS_IN_MY_CENTRES = new Probe(
+        "persons-in-my-centres",
+        "How many people a back office scoped to an organisation can count. Its centres' people plus its"
+        + " events' bookers (417 / 3,670 / 25,367 for orgs 108 / 187 / 1 on staging); 59,858 unscoped.",
+        Audience.BACK_OFFICE,
+        false,
+        "select count(1) as n from Person",
+        List.of(),
+        "select id, firstName, lastName, email from Person order by id",
+        List.of(Invariant.NEVER_WIDER),
+        true);
+
+    /**
+     * What a member may count of {@code Document} — a root that until 2026-11-29 was in no read scope at
+     * all, so a member, a centre operator and a platform super administrator each counted all 294,713.
+     * {@code document} carries 56 denormalised {@code person_} columns, so that was the booker's name,
+     * e-mail, phone and passport for every booking in the system, readable by anyone signed in.
+     *
+     * <p>No invariant, for the same reason {@link #PERSONS_VISIBLE} has none: every front-office caller
+     * resolves to MEMBER, so no front-office run can record the unscoped baseline that
+     * {@code NEVER_WIDER} compares against.
+     *
+     * <p>The row form selects {@code id} and {@code ref} only. A booking reference is not a name, but it
+     * identifies one person's booking, so the probe still declares itself as showing personal data and the
+     * run is gated behind {@code --confirm-personal-data}.
+     */
+    public static final Probe MY_BOOKINGS = new Probe(
+        "my-bookings",
+        "How many bookings a signed-in front-office member can count. All 294,713 before the member arm;"
+        + " the bookings of the people on their own account after it.",
+        Audience.FRONT_OFFICE,
+        false,
+        "select count(1) as n from Document",
+        List.of(),
+        "select id, ref from Document order by id",
+        List.of(),
+        true);
+
+    /**
+     * The same statement from the back-office arm, and the cheap half of the pair: {@code Document.event}
+     * is a foreign key on the row, so the rule is the granted-events expression applied directly, with no
+     * subquery over people and no {@code exists}. Measured on staging 2026-11-29 at <b>49 ms</b> for
+     * organisation 1 against 997 ms for {@link #PERSONS_IN_MY_CENTRES} over the same grant — the expensive
+     * direction is people, not bookings.
+     *
+     * <p>Carries {@code NEVER_WIDER} for the same reason as its Person counterpart: a super administrator
+     * can record the unscoped baseline from this arm, so there is something to compare against.
+     *
+     * <p>Expected on staging against a baseline of 294,713: organisation 108 <b>0</b> — it has 417 people
+     * and no bookings, which is the clearest row in the set — organisation 187 <b>9,270</b>, organisation 1
+     * <b>162,360</b>.
+     */
+    public static final Probe BOOKINGS_IN_MY_CENTRES = new Probe(
+        "bookings-in-my-centres",
+        "How many bookings a back office scoped to an organisation can count — those of its granted events"
+        + " (0 / 9,270 / 162,360 for orgs 108 / 187 / 1 on staging); 294,713 unscoped.",
+        Audience.BACK_OFFICE,
+        false,
+        "select count(1) as n from Document",
+        List.of(),
+        "select id, ref from Document order by id",
+        List.of(Invariant.NEVER_WIDER),
         true);
 
     // ===== what a caller with NO SESSION may read =================================================
@@ -280,6 +365,7 @@ public final class Probes {
     static {
         for (Probe probe : List.of(CONVERSATIONS_FOR_EVENT, MESSAGES_FOR_EVENT, REACTIONS_FOR_EVENT,
                                    MY_CONVERSATIONS, UNENFORCED_ROOT, PERSONS_VISIBLE,
+                                   PERSONS_IN_MY_CENTRES, MY_BOOKINGS, BOOKINGS_IN_MY_CENTRES,
                                    DOCUMENTS_WITHOUT_SESSION, BOOKER_DETAILS_WITHOUT_SESSION,
                                    CART_LOOKUP_WITHOUT_SESSION, PERSONS_WITHOUT_SESSION))
             BY_NAME.put(probe.name(), probe);
