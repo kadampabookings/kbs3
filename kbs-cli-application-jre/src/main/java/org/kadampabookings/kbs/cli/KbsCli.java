@@ -928,10 +928,33 @@ public final class KbsCli {
                                             + " is a " + cached.optionValue() + " one. Sign out and sign in"
                                             + " again for the other arm.");
         String server = parsed.value("server", null);
-        if (server != null && !server.equals(entry.server()))
+        if (server != null && !sameEndpoint(server, entry.server()))
             throw new IllegalStateException("--server " + server + " was asked for, but the cached session is"
                                             + " for " + entry.server() + ".");
         return cached;
+    }
+
+    /**
+     * Whether two {@code --server} values name the same endpoint.
+     *
+     * <p><b>Compared as PARSED endpoints, not as strings.</b> {@code signin} caches the normalised form,
+     * which carries the port, while a command line almost always omits it — so {@code wss://host} and
+     * {@code wss://host:443} are one server, and the string comparison this replaces called them two. It
+     * refused every signed-in probe that passed {@code --server} at all, including runs written the way the
+     * handover's own examples are, with a message naming two URLs that look identical until you count the
+     * characters. Found 2026-11-29 by a demonstration script that signed in four times and measured
+     * nothing.
+     *
+     * <p>A value that will not parse falls back to the string comparison, so a malformed {@code --server}
+     * still refuses rather than slipping through as "equal to nothing". The refusal itself is unchanged in
+     * intent: a run asked for one server and answered from another is the failure this guard exists for.
+     */
+    private static boolean sameEndpoint(String asked, String cached) {
+        ServerEndpoint askedEndpoint = ServerEndpoint.parse(asked);
+        ServerEndpoint cachedEndpoint = cached == null ? null : ServerEndpoint.parse(cached);
+        return askedEndpoint != null && cachedEndpoint != null
+               ? askedEndpoint.equals(cachedEndpoint)
+               : asked.equals(cached);
     }
 
     private static ServerEndpoint endpointOf(String url) {
